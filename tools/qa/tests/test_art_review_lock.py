@@ -140,3 +140,21 @@ class ArtReviewLockTests(unittest.TestCase):
                       "context_type":"gui_state","custom_reason":"Uncovered interface type needs GUI comparator.",
                       "reference_source":"Official client exact resource path and digest."}
         self.assertEqual(validate(row,"b"*64,True,c),[])
+
+    def test_local_preflight_exit_and_ci_output_contract(self):
+        from unittest.mock import patch
+        from tools.qa import art_review_lock as lock
+        from contextlib import redirect_stdout
+        import io
+        import os
+        with tempfile.TemporaryDirectory() as t, redirect_stdout(io.StringIO()):
+            out=Path(t)/"github-output"
+            args=["--projects",'["projects/demo"]']
+            with patch.object(lock,"changed",return_value=["projects/demo/src/main/resources/assets/demo/textures/block/test.png"]), patch.object(lock,"load_atlas",return_value={}), patch.object(lock,"project_errors",return_value=["Missing atlas evidence"]) as check, patch.dict(os.environ,{"GITHUB_OUTPUT":str(out)}):
+                self.assertEqual(lock.main(args+["--check"]),1)
+                self.assertFalse(out.exists())
+                self.assertEqual(lock.main(args),0)
+                self.assertEqual(out.read_text(),'blocked=["projects/demo"]\n')
+                self.assertTrue(check.call_args.args[3])
+                check.return_value=[]
+                self.assertEqual(lock.main(args+["--check"]),0)
