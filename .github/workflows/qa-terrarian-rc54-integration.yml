@@ -50,7 +50,7 @@ jobs:
       - name: Execute existing production server QA without release authorization
         run: |
           set -euo pipefail
-          python3 -m tools.qa.gate "$PROJECT" --jar "$PROJECT/build/libs/worldlogicterrain-neoforge-mc1.21.1-1.6.4.jar" --report terrarian-diagnostic-report.json --work terrarian-diagnostic-work
+          python3 -m tools.qa.gate "$PROJECT" --jar "$PROJECT/build/libs/worldlogicterrain-neoforge-mc1.21.1-1.6.5.jar" --report terrarian-diagnostic-report.json --work terrarian-diagnostic-work
       - name: Verify optional Metabolism 0.9.0 peer and run combined server diagnostic
         env:
           GH_TOKEN: ${{ github.token }}
@@ -79,15 +79,15 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: terrarian-1.6.4-core-1.2.1-NOT-RELEASE
-          path: projects/worldlogic-terrain-1.21.1-neoforge/build/libs/worldlogicterrain-neoforge-mc1.21.1-1.6.4.jar
+          name: terrarian-1.6.5-core-1.2.1-NOT-RELEASE
+          path: projects/worldlogic-terrain-1.21.1-neoforge/build/libs/worldlogicterrain-neoforge-mc1.21.1-1.6.5.jar
           if-no-files-found: warn
           retention-days: 7
       - name: Upload diagnostic QA evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: terrarian-1.6.4-diagnostic-evidence
+          name: terrarian-1.6.5-diagnostic-evidence
           path: |
             core-report/qa-report-0.json
             terrarian-diagnostic-report.json

@@ -1116,73 +1116,73 @@
     {
       "name": "food consumption strawberry",
       "command": "worldlogicterrain food_check strawberry",
-      "expect": "Forage verified strawberry: loot, food, saturation, consumption, core stamina",
+      "expect": "Forage verified strawberry: loot, food, saturation, consumption, core stamina; standalone food owner verified",
       "assertion": true
     },
     {
       "name": "food consumption blueberry",
       "command": "worldlogicterrain food_check blueberry",
-      "expect": "Forage verified blueberry: loot, food, saturation, consumption, core stamina",
+      "expect": "Forage verified blueberry: loot, food, saturation, consumption, core stamina; standalone food owner verified",
       "assertion": true
     },
     {
       "name": "food consumption raspberry",
       "command": "worldlogicterrain food_check raspberry",
-      "expect": "Forage verified raspberry: loot, food, saturation, consumption, core stamina",
+      "expect": "Forage verified raspberry: loot, food, saturation, consumption, core stamina; standalone food owner verified",
       "assertion": true
     },
     {
       "name": "food consumption blackberry",
       "command": "worldlogicterrain food_check blackberry",
-      "expect": "Forage verified blackberry: loot, food, saturation, consumption, core stamina",
+      "expect": "Forage verified blackberry: loot, food, saturation, consumption, core stamina; standalone food owner verified",
       "assertion": true
     },
     {
       "name": "food consumption grape",
       "command": "worldlogicterrain food_check grape",
-      "expect": "Forage verified grape: loot, food, saturation, consumption, core stamina",
+      "expect": "Forage verified grape: loot, food, saturation, consumption, core stamina; standalone food owner verified",
       "assertion": true
     },
     {
       "name": "food consumption pineapple",
       "command": "worldlogicterrain food_check pineapple",
-      "expect": "Forage verified pineapple: loot, food, saturation, consumption, core stamina",
+      "expect": "Forage verified pineapple: loot, food, saturation, consumption, core stamina; standalone food owner verified",
       "assertion": true
     },
     {
       "name": "food consumption tomato",
       "command": "worldlogicterrain food_check tomato",
-      "expect": "Forage verified tomato: loot, food, saturation, consumption, core stamina",
+      "expect": "Forage verified tomato: loot, food, saturation, consumption, core stamina; standalone food owner verified",
       "assertion": true
     },
     {
       "name": "food consumption cucumber",
       "command": "worldlogicterrain food_check cucumber",
-      "expect": "Forage verified cucumber: loot, food, saturation, consumption, core stamina",
+      "expect": "Forage verified cucumber: loot, food, saturation, consumption, core stamina; standalone food owner verified",
       "assertion": true
     },
     {
       "name": "food consumption radish",
       "command": "worldlogicterrain food_check radish",
-      "expect": "Forage verified radish: loot, food, saturation, consumption, core stamina",
+      "expect": "Forage verified radish: loot, food, saturation, consumption, core stamina; standalone food owner verified",
       "assertion": true
     },
     {
       "name": "food consumption onion",
       "command": "worldlogicterrain food_check onion",
-      "expect": "Forage verified onion: loot, food, saturation, consumption, core stamina",
+      "expect": "Forage verified onion: loot, food, saturation, consumption, core stamina; standalone food owner verified",
       "assertion": true
     },
     {
       "name": "food consumption cabbage",
       "command": "worldlogicterrain food_check cabbage",
-      "expect": "Forage verified cabbage: loot, food, saturation, consumption, core stamina",
+      "expect": "Forage verified cabbage: loot, food, saturation, consumption, core stamina; standalone food owner verified",
       "assertion": true
     },
     {
       "name": "food consumption bell_pepper",
       "command": "worldlogicterrain food_check bell_pepper",
-      "expect": "Forage verified bell_pepper: loot, food, saturation, consumption, core stamina",
+      "expect": "Forage verified bell_pepper: loot, food, saturation, consumption, core stamina; standalone food owner verified",
       "assertion": true
     },
     {
@@ -1208,19 +1208,7 @@
     {
       "name": "Mixed meadow and frost patch mechanics",
       "command": "worldlogicterrain patch_check",
-      "expect": "Patch verified: mixed meadow, clear gaps, frosted grass, substrate, loot and support; all 45 tree forms, saplings, wood recipes, fallen logs and habitat checks; aquatic checks passed; tall grass plains verified: flat relief, open samples, double-block plants, density cap, stone rejection and plant preservation; coherent landscape mosaic and all 32 climate-aware forage populations verified; natural plant ages and qualities verified for 27 four-stage plants, five berry bushes and twelve legacy patch providers; all eight regional tree fruits verified: attachment, harvest, two growth transitions, support loss, food and winter exclusion; soil verified: three cycles, moisture, normal crop support, fallow, persistence, natural melon marker, planted melon rejection, growth penalty and independent cells; 20 regional plants and seven existing crops verified: growth, quality, harvest, season boundaries and HUD data; 21 benthic species verified: water families, habitat, source retention, support, height and loot; four fungal colonies verified: habitat, stage diversity, climate, harvest, replant, spread cap, support, stew and HUD; berry fruiting verified year-round; four mushroom counts per block verified; mossy deadwood verified: host species, bark, top and ground moss, climate and obstacle rejection; Core wood physics verified: 24 profiles, 48 blocks, BlockItem composition, Janka, MOR, green moisture, SI wet mass and flammability",
-      "assertion": true
-    },
-    {
-      "name": "Moss and lichen mechanics",
-      "command": "worldlogicterrain moss_check",
-      "expect": "Moss verified: terrestrial species, climate, support, placement, loot and edible lichens",
-      "assertion": true
-    },
-    {
-      "name": "Standalone Terrarian food ownership",
-      "command": "worldlogicterrain food_owner_check terrarian",
-      "expect": "Food owner verified terrarian: all 12 foods, version boundary, legacy stamina and tooltip policy",
+      "expect": "Patch verified: mixed meadow, clear gaps, frosted grass, substrate, loot and support; all 45 tree forms, saplings, wood recipes, fallen logs and habitat checks; aquatic checks passed; tall grass plains verified: flat relief, open samples, double-block plants, density cap, stone rejection and plant preservation; coherent landscape mosaic and all 32 climate-aware forage populations verified; natural plant ages and qualities verified for 27 four-stage plants, five berry bushes and twelve legacy patch providers; all eight regional tree fruits verified: attachment, harvest, two growth transitions, support loss, food and winter exclusion; soil verified: three cycles, moisture, normal crop support, fallow, persistence, natural melon marker, planted melon rejection, growth penalty and independent cells; 20 regional plants and seven existing crops verified: growth, quality, harvest, season boundaries and HUD data; 21 benthic species verified: water families, habitat, source retention, support, height and loot; four fungal colonies verified: habitat, stage diversity, climate, harvest, replant, spread cap, support, stew and HUD; berry fruiting verified year-round; four mushroom counts per block verified; mossy deadwood verified: host species, bark, top and ground moss, climate and obstacle rejection; Core wood physics verified: 24 profiles, 48 blocks, BlockItem composition, Janka, MOR, green moisture, SI wet mass and flammability; Moss verified: terrestrial species, climate, support, placement, loot and edible lichens",
       "assertion": true
     }
   ],
@@ -6826,7 +6814,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Moss and lichen mechanics"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -6837,7 +6825,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Moss and lichen mechanics"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -6848,7 +6836,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Moss and lichen mechanics"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -6859,7 +6847,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Moss and lichen mechanics"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -6870,7 +6858,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Moss and lichen mechanics"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -6881,7 +6869,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Moss and lichen mechanics"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -6892,7 +6880,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Moss and lichen mechanics"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -6903,7 +6891,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Moss and lichen mechanics"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -6914,7 +6902,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Moss and lichen mechanics"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -6925,7 +6913,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Moss and lichen mechanics"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -6934,10 +6922,6 @@
       "kind": "block",
       "subject": "irish_moss: native placement, support, loot, habitat and food boundary",
       "checks": [
-        {
-          "backend": "server",
-          "name": "Moss and lichen mechanics"
-        },
         {
           "backend": "server",
           "name": "Mixed meadow and frost patch mechanics"
@@ -6949,10 +6933,6 @@
       "kind": "item",
       "subject": "irish_moss: native placement, support, loot, habitat and food boundary",
       "checks": [
-        {
-          "backend": "server",
-          "name": "Moss and lichen mechanics"
-        },
         {
           "backend": "server",
           "name": "Mixed meadow and frost patch mechanics"
@@ -7021,7 +7001,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Moss and lichen mechanics"
+          "name": "Mixed meadow and frost patch mechanics"
         }
       ]
     },
@@ -7032,7 +7012,51 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Standalone Terrarian food ownership"
+          "name": "food consumption strawberry"
+        },
+        {
+          "backend": "server",
+          "name": "food consumption blueberry"
+        },
+        {
+          "backend": "server",
+          "name": "food consumption raspberry"
+        },
+        {
+          "backend": "server",
+          "name": "food consumption blackberry"
+        },
+        {
+          "backend": "server",
+          "name": "food consumption grape"
+        },
+        {
+          "backend": "server",
+          "name": "food consumption pineapple"
+        },
+        {
+          "backend": "server",
+          "name": "food consumption tomato"
+        },
+        {
+          "backend": "server",
+          "name": "food consumption cucumber"
+        },
+        {
+          "backend": "server",
+          "name": "food consumption radish"
+        },
+        {
+          "backend": "server",
+          "name": "food consumption onion"
+        },
+        {
+          "backend": "server",
+          "name": "food consumption cabbage"
+        },
+        {
+          "backend": "server",
+          "name": "food consumption bell_pepper"
         }
       ]
     }

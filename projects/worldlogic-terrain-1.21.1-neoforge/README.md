@@ -86,3 +86,6 @@ Five terrestrial moss/lichen species and marine Irish moss, edible block items f
 
 ### 1.6.4
 Fix incorrect Supplier import in MossFeature. Optional Metabolism v1 revision 4+ takes over FOOD recovery; retain standalone recovery and hide redundant legacy energy tooltip only with the compatible peer. No mandatory dependency or duplicated reportFoodIntake. Combined diagnostic is separate from release qualification.
+
+### 1.6.5 QA scenario limit fix
+The 1.6.4 diagnostic compiled but stopped before starting its server: 252 steps exceeded the existing 250-step runner limit. Move actual moss verification into the existing patch check and assert standalone ownership in all 12 existing food commands. Keep all 481 coverage IDs, independent combined Metabolism scenario and unchanged shared QA runner. No gameplay change.

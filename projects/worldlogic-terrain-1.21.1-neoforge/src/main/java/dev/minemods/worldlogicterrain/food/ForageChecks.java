@@ -59,8 +59,9 @@ public final class ForageChecks {
             String id=StringArgumentType.getString(c,"food");
             if(!EXPECTED.containsKey(id))return 0;
             try {
+                require(!MetabolismBridge.automaticFood(),"Standalone food fixture requires Terrarian to own recovery");
                 check(c.getSource().getLevel(),id,EXPECTED.get(id));
-                c.getSource().sendSuccess(()->Component.literal("Forage verified "+id+": loot, food, saturation, consumption, core stamina"),false);
+                c.getSource().sendSuccess(()->Component.literal("Forage verified "+id+": loot, food, saturation, consumption, core stamina; standalone food owner verified"),false);
                 return 1;
             } catch (IllegalStateException ex) {c.getSource().sendFailure(Component.literal(ex.getMessage()));return 0;}
           }))));
