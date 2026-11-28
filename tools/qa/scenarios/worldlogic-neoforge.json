@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge 1.5.2 / active integration",
+  "name": "World Logic NeoForge 1.5.3 / downhill and failed-jump hotfix",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -2147,6 +2147,17 @@
         {
           "backend": "server",
           "name": "Live support and falling debris, material tags and saved data"
+        }
+      ]
+    },
+    {
+      "id": "core6-movement-falls-suspended",
+      "kind": "mechanic",
+      "subject": "Default-disabled downhill and failed jump Balance entry guards, explicit diagnostic reenable, unrelated landing/impact mechanics preserved",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core calculations and furnace mixin"
         }
       ]
     }

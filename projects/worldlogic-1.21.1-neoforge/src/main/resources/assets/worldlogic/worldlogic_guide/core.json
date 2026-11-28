@@ -160,11 +160,12 @@
       ],
       "body": {
         "ru": [
-          "На рыхлом песке и гравии торможение отличается от твёрдых поверхностей. Мокрый камень, глина и лёд хуже удерживают ноги. Не разгоняйся перед крутым спуском: при быстрой потере высоты можно потерять равновесие и упасть.",
-          "Приседание и медленное движение снижают риск. В темноте лучше использовать источник света: настройка яркости не заменяет освещение."
+          "На рыхлом песке и гравии торможение отличается от твёрдых поверхностей. Мокрый камень, глина и лёд хуже удерживают ноги.",
+          "Приседание и медленное движение снижают риск. В темноте лучше использовать источник света: настройка яркости не заменяет освещение.",
+          "Автоматические опрокидывания на спусках и при неудачных прыжках временно отключены. Обычный урон от падения сохранён."
         ],
         "en": [
-          "Loose sand and gravel brake differently from solid surfaces. Wet stone, clay and ice reduce footing. Avoid sprinting down steep slopes: rapid descent can cause a fall.",
+          "Loose sand and gravel brake differently from solid surfaces. Wet stone, clay and ice reduce footing. Automatic downhill and failed-jump knockdowns are temporarily disabled; ordinary fall damage remains.",
           "Sneak or move slowly on slopes. Carry light in the dark; brightness settings cannot replace illumination."
         ]
       }

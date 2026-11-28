@@ -41,7 +41,15 @@ public final class ReleaseChecks {
   check(Expedition.restRecovery(true)>Expedition.restRecovery(false),"shelter rest");
   check(Rules.addonSummary().contains("hydration=")&&Rules.addonSummary().contains("worldlogicterrain="),"all five addon ownership records");
   var baseline=Rules.preset("realistic");
-  for(String key:Rules.keys())check(Boolean.parseBoolean(baseline.get(key))==!key.equals("modeled_weather"),"realism default "+key);
+  for(String key:Rules.keys())check(Boolean.parseBoolean(baseline.get(key))==!java.util.Set.of("modeled_weather","downhill_falls","failed_jump_falls").contains(key),"realism default "+key);
+  var savedRules=Rules.snapshot();
+  try{
+   Rules.apply(baseline);
+   check(!Balance.fallReasonEnabled("slope")&&!Balance.fallReasonEnabled("jump"),"disabled downhill and failed jump falls");
+   check(Rules.on("physical_falls")&&Rules.on("heavy_landing")&&Balance.fallReasonEnabled("landing")&&Balance.fallReasonEnabled("collision"),"unrelated fall and impact mechanics retained");
+   var diagnostic=new java.util.LinkedHashMap<>(baseline);diagnostic.put("downhill_falls","true");diagnostic.put("failed_jump_falls","true");Rules.apply(diagnostic);
+   check(Balance.fallReasonEnabled("slope")&&Balance.fallReasonEnabled("jump"),"diagnostic reenable only");
+  }finally{Rules.apply(savedRules);}
   for(String family:Rules.tuningKeys())check(Double.parseDouble(baseline.get("strength."+family))==1,"realism intensity "+family);
   for(String retired:new String[]{"light","hardcore","custom"}){
    boolean rejected=false;try{Rules.preset(retired);}catch(IllegalArgumentException ex){rejected=true;}
