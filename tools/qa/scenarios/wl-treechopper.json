@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "WorldLogic TreeChopper 0.7.0 server regression (NeoForge FakePlayer event backend)",
+  "name": "WorldLogic TreeChopper 0.8.0 server regression (NeoForge FakePlayer event backend)",
   "steps": [
     {
       "command": "forceload add 992 992 1055 1055",
@@ -841,9 +841,6 @@
       "assertion": true
     },
     {
-      "wait": 3
-    },
-    {
       "command": "fill 1032 200 1048 1033 203 1049 minecraft:oak_log",
       "expect": "Changed the block|Successfully filled|Filled"
     },
@@ -1182,6 +1179,9 @@
       "name": "forest-start"
     },
     {
+      "wait": 2
+    },
+    {
       "command": "wltreechopper qa_crown_ownership",
       "expect": "TreeChopper crown ownership PASS",
       "assertion": true,
@@ -1192,6 +1192,12 @@
       "expect": "TreeChopper leafless section PASS",
       "assertion": true,
       "name": "leafless-section"
+    },
+    {
+      "command": "execute if block 996 200 1007 wl_treechopper:twig_oak",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "twig-fall-land"
     }
   ],
   "coverage": [
@@ -2366,7 +2372,7 @@
     {
       "id": "forest-start",
       "kind": "mechanic",
-      "subject": "Natural canopy produces a collectible stick, local repeat is bounded, 2x2 flint/stick recipe assembles a stone axe, missing flint rejected",
+      "subject": "Natural oak twig block, duplicate cap, right click pickup and left click break, actual falling twig and primitive recipe",
       "checks": [
         {
           "backend": "server",
@@ -2377,7 +2383,7 @@
     {
       "id": "crown-ownership",
       "kind": "mechanic",
-      "subject": "Nearest leaf support detaches owned leaves and preserves tied foreign/persistent foliage",
+      "subject": "Natural canopy ownership, natural vs persistent collision, foliage destruction preserves adjacent log, height and visual depth scaling",
       "checks": [
         {
           "backend": "server",
@@ -2393,6 +2399,17 @@
         {
           "backend": "server",
           "name": "leafless-section"
+        }
+      ]
+    },
+    {
+      "id": "twig-fall-land",
+      "kind": "mechanic",
+      "subject": "Falling oak branch lands as a persistent block",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "twig-fall-land"
         }
       ]
     }

@@ -45,11 +45,13 @@ public final class TreeChopper {
     private static final Map<String,DeferredBlock<StumpBlock>> STUMPS=new LinkedHashMap<>();
     private static final Map<String,DeferredBlock<Block>> UPPERS=new LinkedHashMap<>();
     private static final Map<String,DeferredBlock<FallenLogBlock>> FALLEN=new LinkedHashMap<>();
+    private static final Map<String,DeferredBlock<TwigBlock>> TWIGS=new LinkedHashMap<>();
     private static final String COOLDOWN="wl_treechopper:last_hit";
     static final String FALL="wl_treechopper_fall";
     private static final int FALL_TICKS=36;
     static {
         for(String name:SPECIES){
+            TWIGS.put(name,BLOCKS.register("twig_"+name,()->new TwigBlock(BlockBehaviour.Properties.of().strength(0).sound(SoundType.WOOD).noCollission().noOcclusion(),name)));
             CUTS.put(name,BLOCKS.register("cut_"+name,()->new CutBlock(BlockBehaviour.Properties.of().strength(2).sound(SoundType.WOOD).noOcclusion())));
             STUMPS.put(name,BLOCKS.register("stump_"+name,()->new StumpBlock(BlockBehaviour.Properties.of().strength(1.5f).sound(SoundType.WOOD).noOcclusion())));
             UPPERS.put(name,BLOCKS.register("fallen_upper_"+name,()->new Block(BlockBehaviour.Properties.of().strength(2).sound(SoundType.WOOD).noOcclusion().noCollission())));
@@ -75,6 +77,13 @@ public final class TreeChopper {
         NeoForge.EVENT_BUS.addListener(FallingTree::attack);
         NeoForge.EVENT_BUS.addListener(TreeQA::register);
         NeoForge.EVENT_BUS.addListener(ForestSticks::tick);
+    }
+    static BlockState twigState(BlockState leaf,Direction facing){
+        var id=BuiltInRegistries.BLOCK.getKey(leaf.getBlock());
+        String name=id.getPath().replaceFirst("_leaves$","");
+        var twig=TWIGS.get(name);
+        if(twig==null||!id.getNamespace().equals(CUSTOM.contains(name)?"worldlogicterrain":"minecraft"))return null;
+        return twig.get().defaultBlockState().setValue(TwigBlock.FACING,facing);
     }
     static BlockState original(String name){
         return BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath(CUSTOM.contains(name)?"worldlogicterrain":"minecraft",name+"_log")).defaultBlockState();

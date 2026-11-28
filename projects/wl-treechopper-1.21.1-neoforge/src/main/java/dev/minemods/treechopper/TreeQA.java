@@ -165,8 +165,16 @@ final class TreeQA {
             l.setBlock(p,oak,3);l.setBlock(p.above(),oak,3);l.setBlock(p.above(2),oak,3);
             l.setBlock(p.above(2).east(),leaves,3);l.setBlock(p.above(2).west(),leaves,3);
             if(!ForestSticks.offer(l,p.getX()+1,p.getZ(),false)||ForestSticks.offer(l,p.getX()+1,p.getZ(),false))return 0;
-            var ground=l.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class,new net.minecraft.world.phys.AABB(p.east()).inflate(1),ForestSticks::isForestStick);
-            if(ground.isEmpty())return 0;
+            var ground=l.getBlockState(p.east());
+            if(!(ground.getBlock() instanceof TwigBlock twig)||!twig.species.equals("oak"))return 0;
+            var fake=FakePlayerFactory.getMinecraft(l);fake.setPos(p.getX()+1.5,p.getY(),p.getZ()+.5);
+            fake.getInventory().clearContent();
+            twig.useWithoutItem(ground,l,p.east(),fake,new net.minecraft.world.phys.BlockHitResult(net.minecraft.world.phys.Vec3.atCenterOf(p.east()),Direction.UP,p.east(),false));
+            if(!l.getBlockState(p.east()).isAir()||!fake.getInventory().contains(new ItemStack(Items.STICK)))return 0;
+            if(!ForestSticks.offer(l,p.getX()-1,p.getZ(),false))return 0;
+            if(!fake.gameMode.destroyBlock(p.west())||!l.getBlockState(p.west()).isAir())return 0;
+            if(!ForestSticks.offer(l,p.getX()+1,p.getZ(),true))return 0;
+            if(l.getEntitiesOfClass(net.minecraft.world.entity.item.FallingBlockEntity.class,new net.minecraft.world.phys.AABB(p).inflate(5),e->e.getBlockState().getBlock() instanceof TwigBlock).isEmpty())return 0;
             var input=net.minecraft.world.item.crafting.CraftingInput.of(2,2,java.util.List.of(new ItemStack(Items.FLINT),ItemStack.EMPTY,new ItemStack(Items.STICK),new ItemStack(Items.STICK)));
             var recipe=l.getRecipeManager().getRecipeFor(net.minecraft.world.item.crafting.RecipeType.CRAFTING,input,l);
             if(recipe.isEmpty()||!recipe.get().id().equals(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(TreeChopper.ID,"primitive_axe"))||!recipe.get().value().assemble(input,l.registryAccess()).is(Items.STONE_AXE))return 0;
