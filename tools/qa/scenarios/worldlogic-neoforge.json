@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge RC22 production core/API regression",
+  "name": "World Logic NeoForge RC31 production core/API regression",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -129,6 +129,84 @@
     {
       "command": "weather clear 2400",
       "expect": "clear"
+    },
+    {
+      "name": "Extended preset registry, geological provinces, ore bodies and synthetic chunk carving",
+      "command": "worldlogic qa geology",
+      "expect": "WORLDLOGIC_GEOLOGY_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "All eight mineral types replace actual rock while preserving cave air and bedrock",
+      "command": "worldlogic qa ore_bodies",
+      "expect": "WORLDLOGIC_ORE_BODIES_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Unified custom biome registry and exact RC22 base-height regression seed a",
+      "command": "worldlogic qa unified_a",
+      "expect": "WORLDLOGIC_UNIFIED_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Unified custom biome registry and exact RC22 base-height regression seed b",
+      "command": "worldlogic qa unified_b",
+      "expect": "WORLDLOGIC_UNIFIED_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Regional ore body size limits, frequent shallow pockets and ordinary chunk abundance",
+      "command": "worldlogic qa ore_balance",
+      "expect": "WORLDLOGIC_ORE_BALANCE_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Karst shaft, connected gallery and flooded chamber across synthetic chunks",
+      "command": "worldlogic qa karst",
+      "expect": "WORLDLOGIC_KARST_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Worker-safe deterministic habitat API, soil controls and ten refined climate biome fixtures",
+      "command": "worldlogic qa worldgen_ecology",
+      "expect": "WORLDLOGIC_WORLDGEN_ECOLOGY_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Local weather nine types, spatial and temporal variation, exposure, temperature and client packet contract",
+      "command": "worldlogic qa local_weather",
+      "expect": "WORLDLOGIC_LOCAL_WEATHER_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks",
+      "command": "worldlogic qa hydrology",
+      "expect": "WORLDLOGIC_HYDROLOGY_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Detailed water origins, game drinkability, legacy mapping and actual covered/exposed water fixtures",
+      "command": "worldlogic qa water_profile",
+      "expect": "WORLDLOGIC_WATER_PROFILE_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality",
+      "command": "worldlogic qa native_water",
+      "expect": "WORLDLOGIC_NATIVE_WATER_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Environment analytics combustion/dust separation, soil deposition, action counters and persistent bounded history",
+      "command": "worldlogic qa analytics",
+      "expect": "WORLDLOGIC_ANALYTICS_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Worldgen water prediction, vegetation water withdrawal and root retention, salt accounting, recovery and persistence",
+      "command": "worldlogic qa plant_ecology",
+      "expect": "WORLDLOGIC_PLANT_ECOLOGY_PASSED",
+      "assertion": true
     }
   ],
   "coverage": [
@@ -276,6 +354,336 @@
         {
           "backend": "server",
           "name": "Conservative air heat and vapor transport, interpolation and persistence"
+        }
+      ]
+    },
+    {
+      "id": "extended-geology",
+      "kind": "mechanic",
+      "subject": "Extended preset registry, geological provinces, ore bodies and synthetic chunk carving",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Extended preset registry, geological provinces, ore bodies and synthetic chunk carving"
+        }
+      ]
+    },
+    {
+      "id": "ore-bodies-eight-types",
+      "kind": "mechanic",
+      "subject": "All eight mineral types replace actual rock while preserving cave air and bedrock",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All eight mineral types replace actual rock while preserving cave air and bedrock"
+        }
+      ]
+    },
+    {
+      "id": "unified-terrain-a",
+      "kind": "mechanic",
+      "subject": "Unified custom biome registry and exact RC22 base-height regression seed a",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Unified custom biome registry and exact RC22 base-height regression seed a"
+        }
+      ]
+    },
+    {
+      "id": "unified-terrain-b",
+      "kind": "mechanic",
+      "subject": "Unified custom biome registry and exact RC22 base-height regression seed b",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Unified custom biome registry and exact RC22 base-height regression seed b"
+        }
+      ]
+    },
+    {
+      "id": "ore-distribution-balance",
+      "kind": "mechanic",
+      "subject": "Regional ore body size limits, frequent shallow pockets and ordinary chunk abundance",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Regional ore body size limits, frequent shallow pockets and ordinary chunk abundance"
+        }
+      ]
+    },
+    {
+      "id": "karst-shaft-lake",
+      "kind": "mechanic",
+      "subject": "Karst shaft, connected gallery and flooded chamber across synthetic chunks",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Karst shaft, connected gallery and flooded chamber across synthetic chunks"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-ecology-api",
+      "kind": "mechanic",
+      "subject": "Worker-safe deterministic habitat API, soil controls and ten refined climate biome fixtures",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Worker-safe deterministic habitat API, soil controls and ten refined climate biome fixtures"
+        }
+      ]
+    },
+    {
+      "id": "local-weather-runtime-model",
+      "kind": "mechanic",
+      "subject": "Local weather nine types, spatial and temporal variation, exposure, temperature and client packet contract",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Local weather nine types, spatial and temporal variation, exposure, temperature and client packet contract"
+        }
+      ]
+    },
+    {
+      "id": "hydrology-soil-cycle",
+      "kind": "mechanic",
+      "subject": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
+        }
+      ]
+    },
+    {
+      "id": "soil-humus",
+      "kind": "block",
+      "subject": "worldlogic:humus classification, item, tags and placement",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
+        }
+      ]
+    },
+    {
+      "id": "soil-loam",
+      "kind": "block",
+      "subject": "worldlogic:loam classification, item, tags and placement",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
+        }
+      ]
+    },
+    {
+      "id": "soil-peat",
+      "kind": "block",
+      "subject": "worldlogic:peat classification, item, tags and placement",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
+        }
+      ]
+    },
+    {
+      "id": "soil-alluvial_silt",
+      "kind": "block",
+      "subject": "worldlogic:alluvial_silt classification, item, tags and placement",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
+        }
+      ]
+    },
+    {
+      "id": "soil-frozen_soil",
+      "kind": "block",
+      "subject": "worldlogic:frozen_soil classification, item, tags and placement",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
+        }
+      ]
+    },
+    {
+      "id": "water-profile-classification",
+      "kind": "mechanic",
+      "subject": "Detailed water origins, game drinkability, legacy mapping and actual covered/exposed water fixtures",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Detailed water origins, game drinkability, legacy mapping and actual covered/exposed water fixtures"
+        }
+      ]
+    },
+    {
+      "id": "native-water-conversion",
+      "kind": "mechanic",
+      "subject": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
+        }
+      ]
+    },
+    {
+      "id": "native-water-sea_water",
+      "kind": "item",
+      "subject": "worldlogic:sea_water and bucket identity, source/flow and pickup",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
+        }
+      ]
+    },
+    {
+      "id": "native-water-river_water",
+      "kind": "item",
+      "subject": "worldlogic:river_water and bucket identity, source/flow and pickup",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
+        }
+      ]
+    },
+    {
+      "id": "native-water-lake_water",
+      "kind": "item",
+      "subject": "worldlogic:lake_water and bucket identity, source/flow and pickup",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
+        }
+      ]
+    },
+    {
+      "id": "native-water-spring_water",
+      "kind": "item",
+      "subject": "worldlogic:spring_water and bucket identity, source/flow and pickup",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
+        }
+      ]
+    },
+    {
+      "id": "native-water-groundwater",
+      "kind": "item",
+      "subject": "worldlogic:groundwater and bucket identity, source/flow and pickup",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
+        }
+      ]
+    },
+    {
+      "id": "native-water-wetland_water",
+      "kind": "item",
+      "subject": "worldlogic:wetland_water and bucket identity, source/flow and pickup",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
+        }
+      ]
+    },
+    {
+      "id": "native-water-pond_water",
+      "kind": "item",
+      "subject": "worldlogic:pond_water and bucket identity, source/flow and pickup",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
+        }
+      ]
+    },
+    {
+      "id": "native-water-brackish_water",
+      "kind": "item",
+      "subject": "worldlogic:brackish_water and bucket identity, source/flow and pickup",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
+        }
+      ]
+    },
+    {
+      "id": "environment-analytics",
+      "kind": "mechanic",
+      "subject": "Environment analytics combustion/dust separation, soil deposition, action counters and persistent bounded history",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Environment analytics combustion/dust separation, soil deposition, action counters and persistent bounded history"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-water-prediction",
+      "kind": "mechanic",
+      "subject": "worldgen-water-prediction",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Worldgen water prediction, vegetation water withdrawal and root retention, salt accounting, recovery and persistence"
+        }
+      ]
+    },
+    {
+      "id": "plant-water-withdrawal",
+      "kind": "mechanic",
+      "subject": "plant-water-withdrawal",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Worldgen water prediction, vegetation water withdrawal and root retention, salt accounting, recovery and persistence"
+        }
+      ]
+    },
+    {
+      "id": "plant-root-retention",
+      "kind": "mechanic",
+      "subject": "plant-root-retention",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Worldgen water prediction, vegetation water withdrawal and root retention, salt accounting, recovery and persistence"
+        }
+      ]
+    },
+    {
+      "id": "soil-salinity",
+      "kind": "mechanic",
+      "subject": "soil-salinity",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Worldgen water prediction, vegetation water withdrawal and root retention, salt accounting, recovery and persistence"
+        }
+      ]
+    },
+    {
+      "id": "forest-recovery",
+      "kind": "mechanic",
+      "subject": "forest-recovery",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Worldgen water prediction, vegetation water withdrawal and root retention, salt accounting, recovery and persistence"
         }
       ]
     }

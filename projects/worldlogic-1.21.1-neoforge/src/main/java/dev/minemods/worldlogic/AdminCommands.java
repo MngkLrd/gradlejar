@@ -41,7 +41,42 @@ public final class AdminCommands {
    if(a.isEmpty())return reply(s,"Weather grid not active at this position.");
    var v=a.orElseThrow();return reply(s,String.format(Locale.ROOT,"Grid preview: %.1f hPa, %.1f C, %.2f g/kg vapor, %.0f%% RH, tick %d",v.pressureHpa(),v.airC(),v.vaporGkg(),v.relativeHumidityPercent(),v.modeledTick()));
   }));
+  var demo=Commands.literal("weather_demo").requires(s->s.hasPermission(4));
+  for(var kind:dev.minemods.worldlogic.api.WorldLogicApi.WeatherKind.values())
+   demo.then(Commands.literal(kind.name().toLowerCase(java.util.Locale.ROOT)).executes(c->{
+    var s=c.getSource();
+    return reply(s,LocalWeatherRuntime.demo(s.getLevel(),net.minecraft.core.BlockPos.containing(s.getPosition()),kind)?
+      "Local weather demo: "+kind+" (128 block radius, 120 seconds)":"Local weather demo requires active geographic preset and a loaded position.");
+   }));
+  demo.then(Commands.literal("stop").executes(c->{LocalWeatherRuntime.clearDemo(c.getSource().getLevel());return reply(c.getSource(),"Local weather demo stopped.");}));
+  root.then(demo);
+  root.then(Commands.literal("weather_local").executes(c->{
+   var s=c.getSource();var w=dev.minemods.worldlogic.api.WorldLogicApi.localWeather(s.getLevel(),net.minecraft.core.BlockPos.containing(s.getPosition()));
+   return reply(s,w.map(v->String.format(java.util.Locale.ROOT,"Local weather: %s, intensity %.0f%%, air delta %+.1f C, RH %.0f%%, gust %.1f m/s, fog %.0f%%, exposed=%s",v.kind(),100*v.intensity(),v.temperatureDeltaC(),v.relativeHumidityPercent(),v.gustMps(),100*v.fogDensity(),v.exposed())).orElse("Local weather inactive (unsupported world, unloaded point or regional_weather disabled)."));
+  }));
+  root.then(Commands.literal("hydrology").executes(c->{var s=c.getSource();var pos=net.minecraft.core.BlockPos.containing(s.getPosition());
+   var h=dev.minemods.worldlogic.api.WorldLogicApi.hydrology(s.getLevel(),pos);
+   return reply(s,h.map(v->String.format(java.util.Locale.ROOT,"Soil %s; saturation %.0f%%; water %.1f/%.1f mm; groundwater %.1f mm; snow %.1f mm; runoff %.2f mm; simulated=%s",v.soil(),v.saturation()*100,v.soilWaterMm(),v.capacityMm(),v.groundwaterMm(),v.snowWaterMm(),v.lastRunoffMm(),v.simulated())).orElse("Hydrology inactive or no soil at loaded cell."));
+  }));
+  root.then(Commands.literal("water").executes(c->{var s=c.getSource();
+   var p=net.minecraft.core.BlockPos.containing(s.getPosition());
+   var w=dev.minemods.worldlogic.api.WorldLogicApi.waterProfile(s.getLevel(),p);
+   return reply(s,String.format(java.util.Locale.ROOT,"Water: %s; quality=%s; salinity=%.1f g/kg; risk=%.2f; evidence=%s",w.kind(),w.quality(),w.salinityGkg(),w.contaminationRisk(),w.evidence()));
+  }));
   root.then(Commands.literal("qa").requires(s->s.hasPermission(4))
+   .then(Commands.literal("plant_ecology").executes(c->{try{PlantEcologyChecks.verify(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_PLANT_ECOLOGY_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
+   .then(Commands.literal("analytics").executes(c->{try{AnalyticsChecks.verify(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_ANALYTICS_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
+   .then(Commands.literal("native_water").executes(c->{try{NaturalWaterChecks.verify(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_NATIVE_WATER_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
+   .then(Commands.literal("water_profile").executes(c->{try{WaterClassificationChecks.verify(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_WATER_PROFILE_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
+   .then(Commands.literal("hydrology").executes(c->{try{HydrologyChecks.verify(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_HYDROLOGY_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
+   .then(Commands.literal("local_weather").executes(c->{try{LocalWeatherChecks.verify(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_LOCAL_WEATHER_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
+   .then(Commands.literal("worldgen_ecology").executes(c->{try{WorldgenApiChecks.verify(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_WORLDGEN_ECOLOGY_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
+   .then(Commands.literal("ore_balance").executes(c->{try{GeologyChecks.verifyBalance(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_ORE_BALANCE_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
+   .then(Commands.literal("karst").executes(c->{try{GeologyChecks.verifyKarst(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_KARST_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
+   .then(Commands.literal("unified_a").executes(c->{try{BiomeChecks.verify(c.getSource().getLevel(),1234L);return reply(c.getSource(),"WORLDLOGIC_UNIFIED_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
+   .then(Commands.literal("unified_b").executes(c->{try{BiomeChecks.verify(c.getSource().getLevel(),-6487130996193510395L);return reply(c.getSource(),"WORLDLOGIC_UNIFIED_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
+   .then(Commands.literal("ore_bodies").executes(c->{try{GeologyChecks.verifyOres(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_ORE_BODIES_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
+   .then(Commands.literal("geology").executes(c->{try{GeologyChecks.verify(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_GEOLOGY_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
    .then(Commands.literal("transport_grid").executes(c->{try{ApiChecks.verifyTransportGrid(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_TRANSPORT_GRID_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
    .then(Commands.literal("weather_controller").executes(c->{try{ApiChecks.verifyWeatherController(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_WEATHER_CONTROLLER_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
    .then(Commands.literal("recovery").executes(c->{try{ApiChecks.verifyRecovery(c.getSource().getLevel());return reply(c.getSource(),"WORLDLOGIC_RECOVERY_PASSED");}catch(Exception e){return reply(c.getSource(),"FAIL: "+e);}}))
