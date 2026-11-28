@@ -12,6 +12,7 @@ Read this contract for every task. Follow the relevant existing document below; 
 | Gameplay and regression assignment | [QA assignment](docs/QA-ASSIGNMENT-TEMPLATE.md) |
 | Network player actions | [Bot actions](docs/BOT-ACTIONS.md) |
 | Recipes | [Recipe QA](docs/RECIPE-QA.md) |
+| Mod naming, versioning and delivery filenames | [Mandatory naming standard](docs/MOD-NAMING.md) |
 | Textures, models, animations, HUD and GUI | [Visual QA and art standard](docs/VISUAL-QA.md), [vanilla art atlas](docs/VANILLA-ART-ATLAS.md), and original Blockbench guide |
 
 ## Non-negotiable contract and delivery verification
@@ -67,6 +68,12 @@ Keep Minecraft version, build-tool versions, loader API compilation version, ins
 - Compile against a suitable compatible API baseline when practical. Raise a minimum only when a required API, dependency, known compatibility defect or explicit owner requirement makes it necessary. Prefer a simple compatible implementation over an unnecessary loader upgrade; never lower a minimum by editing metadata alone when the code requires a newer API.
 - Validate the exact final JAR on the chosen minimum supported runtime loader (use the actual pinned `qa.loader_version` for that check, or record separate evidence if build/test versions differ). A successful build or test on a newer loader does not establish a lower minimum. Preserve existing evidenced compatibility on updates; when changing loader/API requirements, verify the affected minimum and a relevant newer compatible build where useful. No exhaustive testing of every intermediate patch is required.
 - Report the actual minimum tested loader and any necessary restriction briefly. If the true minimum cannot be established, distinguish a conservative tested range from an unverified broader range; do not silently lock to the latest or invent compatibility. Do not modify the central registry or unrelated ports just to make a local project pass.
+
+## Unified mod naming and versioning — mandatory
+
+Follow [MOD-NAMING.md](docs/MOD-NAMING.md) for all mods, cores, addons and ports from their next versioned delivery. Use one stable public name: `series_addon` (core: `series_core`) or `modname` for standalone products. Product version is exactly three nonnegative integers `MAJOR.MINOR.PATCH`: major release generation, major feature/content update within that generation, and patch/smaller update. Keep Minecraft and loader separate. Do not create new product versions with RC, alpha, beta, dev, build labels or a fourth numeric component; record development status and build provenance separately. Preserve the actual product version in Gradle, metadata, profile, dependencies and release notes. Do not silently invent a historical RC-to-version mapping or reset a published version.
+
+Player-facing JAR names use `series_addon_A.B.C_MC_LOADER.jar` or `modname_A.B.C_MC_LOADER.jar`, e.g. `worldlogic_trauma_1.2.3_1.21.1_neoforge.jar`. Lowercase ASCII, underscores as separators, numeric product version before exact Minecraft version. Preserve existing registry IDs, namespaces, Java packages, slugs and dependency identities unless explicitly authorized to migrate them. Current Build Hub's older canonical filenames still govern its exact QA and package checks: use the checksum-preserving delivery helper after eligibility verification until canonical packaging migration is separately tested. Never rename input artifacts or bypass existing QA. No historical mass renaming or forced port builds.
 
 ## Mandatory for new projects
 1. Define Minecraft, loader, Java, Gradle, mappings and real dependencies. Use `tools/qa/compatibility.json` as the reference matrix; it contains tested/pinned baseline choices, not a universal promise of compatibility.
