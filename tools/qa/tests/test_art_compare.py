@@ -42,5 +42,6 @@ class ArtCompareTests(unittest.TestCase):
     def test_reference_path_safety(self):
         from tools.qa.art_compare import reference_path
         self.assertEqual(reference_path("item/copper_ingot"),"assets/minecraft/textures/item/copper_ingot.png")
-        for value in ("item/../secret","item//a","https://example.com/a","gui/x"):
+        self.assertEqual(reference_path("models/armor/iron_layer_1"),"assets/minecraft/textures/models/armor/iron_layer_1.png")
+        for value in ("models/armor/../secret","item/../secret","item//a","https://example.com/a","gui/x"):
             with self.assertRaises(ValueError): reference_path(value)

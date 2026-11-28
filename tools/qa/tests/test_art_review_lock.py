@@ -122,7 +122,9 @@ class ArtReviewLockTests(unittest.TestCase):
     def test_catalog_integrity_and_custom_uncovered_profile(self):
         from tools.qa.art_review_lock import load_atlas
         c=load_atlas()
-        self.assertEqual(len(c["references"]),57)
+        self.assertEqual(len(c["references"]),100)
+        self.assertEqual(len(c["benchmark_r9_reference_ids"]),57)
+        self.assertTrue(set(c["benchmark_r9_reference_ids"]).issubset(c["references"]))
         all_refs=set()
         for rule in c["rules"].values():
             self.assertTrue(set(rule["profiles"]).issubset(PROFILES))
@@ -158,3 +160,44 @@ class ArtReviewLockTests(unittest.TestCase):
                 self.assertTrue(check.call_args.args[3])
                 check.return_value=[]
                 self.assertEqual(lock.main(args+["--check"]),0)
+
+    def test_equipment_path_profile_and_counterpart(self):
+        from tools.qa.art_review_lock import equipment_errors, conventional_profile, load_atlas
+        c=load_atlas()
+        self.assertEqual(conventional_profile("assets/demo/textures/item/copper_axe.png"),"tool")
+        self.assertEqual(conventional_profile("assets/demo/textures/item/copper_chestplate_overlay.png"),"armor_icon_overlay")
+        with tempfile.TemporaryDirectory() as t:
+            root=Path(t);project="projects/demo"
+            prefix=project+"/src/main/resources/assets/demo/textures/"
+            path=prefix+"item/copper_chestplate.png"
+            uv=prefix+"models/armor/copper_layer_1.png"
+            f=root/uv;f.parent.mkdir(parents=True);f.write_bytes(b"uv")
+            row={"material_profile":"armor_icon","equipment":{"slots":["chestplate"],
+                "binding":"Material resolves outer copper layer.",
+                "client_status":"NOT_RUN","client_evidence":"Graphical client is not available.",
+                "counterparts":[{"slot":"chestplate","role":"worn_uv","path":uv,"sha256":hashlib.sha256(b"uv").hexdigest()}]}}
+            self.assertEqual(equipment_errors(root,project,[],path,row,c),[])
+            f.write_bytes(b"changed")
+            self.assertTrue(any("stale" in e for e in equipment_errors(root,project,[],path,row,c)))
+            row["material_profile"]="other"
+            self.assertTrue(any("requires armor_icon" in e for e in equipment_errors(root,project,[],path,row,c)))
+
+    def test_armor_layers_and_context(self):
+        from tools.qa.art_review_lock import equipment_errors, load_atlas
+        c=load_atlas()
+        path="projects/demo/src/main/resources/assets/demo/textures/models/armor/copper_layer_2.png"
+        row={"material_profile":"armor_uv","equipment":{"slots":["chestplate"],
+             "binding":"Actual inner layer resource binding.",
+             "client_status":"NOT_RUN","client_evidence":"No graphical client in this environment.",
+             "counterparts":[{"slot":"chestplate","role":"icon","vanilla_reference":"item/iron_chestplate",
+             "sha256":c["references"]["item/iron_chestplate"],"reuse_reason":"Explicitly reuse existing vanilla inventory model."}]}}
+        self.assertTrue(any("inner/outer" in e for e in equipment_errors(Path("."),"projects/demo",[],path,row,c)))
+        row,c=self.atlas_row()
+        row["material_profile"]="armor_uv"
+        row["findings"]={k:f"Fixture observation for distinct criterion {k}" for k in COMMON+PROFILES["armor_uv"]}
+        ref="models/armor/iron_layer_1"
+        row["references"]=[{"id":"minecraft:"+ref,"minecraft":"1.21.1","sha256":c["references"][ref]}]
+        row["atlas"].update(rule="armor_metal_uv",reference="minecraft:"+ref,context_type="icon_family")
+        self.assertTrue(any("model/UV" in e for e in validate(row,"b"*64,True,c)))
+        row["atlas"]["context_type"]="model_uv"
+        self.assertEqual(validate(row,"b"*64,True,c),[])
