@@ -128,6 +128,72 @@ final class TreeQA {
             if(axe.getDamageValue()!=expected){c.getSource().sendFailure(Component.literal("TreeChopper multi-root wear FAILED: "+axe.getDamageValue()+" expected "+expected));return 0;}
             c.getSource().sendSuccess(()->Component.literal("TreeChopper multi-root PASS"),false);return 1;
           }))))
+          .then(Commands.literal("qa_crosscut").executes(c->{
+            ServerLevel l=c.getSource().getLevel();BlockPos p=new BlockPos(1002,200,1017);
+            l.setBlock(p,net.minecraft.world.level.block.Blocks.OAK_LOG.defaultBlockState(),3);
+            l.setBlock(p.above(),net.minecraft.world.level.block.Blocks.OAK_LOG.defaultBlockState(),3);
+            l.setBlock(p.above(2),net.minecraft.world.level.block.Blocks.OAK_LOG.defaultBlockState(),3);
+            l.setBlock(p.above(3),net.minecraft.world.level.block.Blocks.OAK_LEAVES.defaultBlockState().setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.DISTANCE,1),3);
+            var fake=FakePlayerFactory.getMinecraft(l);fake.setItemSlot(EquipmentSlot.MAINHAND,new ItemStack(Items.IRON_AXE));
+            int previous=0;boolean felled=false;
+            for(int i=0;i<12;i++){
+                Direction side=i%2==0?Direction.NORTH:Direction.EAST;
+                fake.setPos(p.getX()+.5+side.getStepX()*2,p.getY(),p.getZ()+.5+side.getStepZ()*2);
+                TreeChopper.qaResetCooldown(fake);
+                NeoForge.EVENT_BUS.post(new PlayerInteractEvent.LeftClickBlock(fake,p,side,PlayerInteractEvent.LeftClickBlock.Action.START));
+                if(l.getBlockState(p).getBlock() instanceof StumpBlock){felled=true;break;}
+                var snapshot=TreeChopperApi.cut(l,p);
+                if(snapshot.isEmpty()||snapshot.get().totalPermille()<=previous||(i==1&&(snapshot.get().north()==0||snapshot.get().east()==0)))return 0;
+                previous=snapshot.get().totalPermille();
+            }
+            if(!felled||ChopEffort.progress(new int[]{300,0,300,0})!=600||!ChopEffort.severed(new int[]{500,0,500,0})||!ChopEffort.severed(new int[]{620,130,0,0}))return 0;
+            c.getSource().sendSuccess(()->Component.literal("TreeChopper cumulative cut PASS"),false);return 1;
+          }))
+          .then(Commands.literal("qa_forest_start").executes(c->{
+            ServerLevel l=c.getSource().getLevel();BlockPos p=new BlockPos(995,200,1007);
+            var oak=net.minecraft.world.level.block.Blocks.OAK_LOG.defaultBlockState();
+            var leaves=net.minecraft.world.level.block.Blocks.OAK_LEAVES.defaultBlockState().setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.DISTANCE,1);
+            l.setBlock(p,oak,3);l.setBlock(p.above(),oak,3);l.setBlock(p.above(2),oak,3);
+            l.setBlock(p.above(2).east(),leaves,3);l.setBlock(p.above(2).west(),leaves,3);
+            if(!ForestSticks.offer(l,p.getX()+1,p.getZ(),false)||ForestSticks.offer(l,p.getX()+1,p.getZ(),false))return 0;
+            var ground=l.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class,new net.minecraft.world.phys.AABB(p.east()).inflate(1),ForestSticks::isForestStick);
+            if(ground.isEmpty())return 0;
+            var input=net.minecraft.world.item.crafting.CraftingInput.of(2,2,java.util.List.of(new ItemStack(Items.FLINT),ItemStack.EMPTY,new ItemStack(Items.STICK),new ItemStack(Items.STICK)));
+            var recipe=l.getRecipeManager().getRecipeFor(net.minecraft.world.item.crafting.RecipeType.CRAFTING,input,l);
+            if(recipe.isEmpty()||!recipe.get().id().equals(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(TreeChopper.ID,"primitive_axe"))||!recipe.get().value().assemble(input,l.registryAccess()).is(Items.STONE_AXE))return 0;
+            var invalid=net.minecraft.world.item.crafting.CraftingInput.of(2,2,java.util.List.of(ItemStack.EMPTY,ItemStack.EMPTY,new ItemStack(Items.STICK),new ItemStack(Items.STICK)));
+            if(l.getRecipeManager().getRecipeFor(net.minecraft.world.item.crafting.RecipeType.CRAFTING,invalid,l).isPresent())return 0;
+            c.getSource().sendSuccess(()->Component.literal("TreeChopper forest start PASS"),false);return 1;
+          }))
+          .then(Commands.literal("qa_crown_ownership").executes(c->{
+            ServerLevel l=c.getSource().getLevel();BlockPos p=new BlockPos(1020,210,1015);
+            var oak=net.minecraft.world.level.block.Blocks.OAK_LOG.defaultBlockState();
+            var leaves=net.minecraft.world.level.block.Blocks.OAK_LEAVES.defaultBlockState();
+            l.setBlock(p,oak,3);l.setBlock(p.east(4),oak,3);
+            l.setBlock(p.east(),leaves.setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.DISTANCE,1),3);
+            l.setBlock(p.east(2),leaves.setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.DISTANCE,2),3);
+            l.setBlock(p.east(3),leaves.setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.DISTANCE,1),3);
+            l.setBlock(p.north(),leaves.setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.PERSISTENT,true),3);
+            var owned=CrownOwnership.owned(l,java.util.Set.of(p));
+            if(!owned.contains(p.east())||owned.contains(p.east(2))||owned.contains(p.east(3))||owned.contains(p.north()))return 0;
+            c.getSource().sendSuccess(()->Component.literal("TreeChopper crown ownership PASS"),false);return 1;
+          }))
+          .then(Commands.literal("qa_leafless_cut").executes(c->{
+            ServerLevel l=c.getSource().getLevel();BlockPos p=new BlockPos(1038,203,1004);
+            var oak=net.minecraft.world.level.block.Blocks.OAK_LOG.defaultBlockState();
+            // An existing notched log remains a valid tree section even if the foliage is already gone.
+            l.setBlock(p.below(),oak,3);
+            l.setBlock(p,net.minecraft.core.registries.BuiltInRegistries.BLOCK.get(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(TreeChopper.ID,"cut_oak")).defaultBlockState(),3);
+            l.setBlock(p.above(),oak,3);l.setBlock(p.above(2),oak,3);
+            var fake=FakePlayerFactory.getMinecraft(l);fake.setItemSlot(EquipmentSlot.MAINHAND,new ItemStack(Items.IRON_AXE));
+            fake.setPos(p.getX()+.5,p.getY(),p.getZ()-2);
+            for(int i=0;i<12&&!(l.getBlockState(p).getBlock() instanceof StumpBlock);i++){
+                TreeChopper.qaResetCooldown(fake);
+                NeoForge.EVENT_BUS.post(new PlayerInteractEvent.LeftClickBlock(fake,p,Direction.NORTH,PlayerInteractEvent.LeftClickBlock.Action.START));
+            }
+            if(!(l.getBlockState(p).getBlock() instanceof StumpBlock)||!l.getBlockState(p.above()).isAir()||!l.getBlockState(p.above(2)).isAir())return 0;
+            c.getSource().sendSuccess(()->Component.literal("TreeChopper leafless section PASS"),false);return 1;
+          }))
           .then(Commands.literal("qa_balance_math").executes(c->{
             int[] deep={620,0,0,0};int guide=FallBalance.guideForStrike(deep,1,-1);
             int back=FallBalance.counterWork(deep,1,guide,400);
@@ -362,10 +428,11 @@ final class TreeQA {
             var fake=FakePlayerFactory.getMinecraft(l);
             fake.setPos(p.getX()+.5,p.getY(),p.getZ()-1.5);
             fake.setItemSlot(EquipmentSlot.MAINHAND,ItemStack.EMPTY);
+            var before=l.getBlockState(p);
             var click=NeoForge.EVENT_BUS.post(new PlayerInteractEvent.LeftClickBlock(fake,p,Direction.NORTH,PlayerInteractEvent.LeftClickBlock.Action.START));
             boolean destroyed=fake.gameMode.destroyBlock(p);
-            if(click.isCanceled()||!destroyed||!l.getBlockState(p).isAir()){c.getSource().sendFailure(Component.literal("TreeChopper hand break FAILED"));return 0;}
-            c.getSource().sendSuccess(()->Component.literal("TreeChopper hand break allowed"),false);return 1;
+            if(!click.isCanceled()||destroyed||!before.equals(l.getBlockState(p))){c.getSource().sendFailure(Component.literal("TreeChopper hand protection FAILED"));return 0;}
+            c.getSource().sendSuccess(()->Component.literal("TreeChopper hand break blocked"),false);return 1;
           })))
           .then(Commands.literal("qa_axe_break").then(Commands.argument("pos",BlockPosArgument.blockPos()).executes(c->{
             ServerLevel l=c.getSource().getLevel();

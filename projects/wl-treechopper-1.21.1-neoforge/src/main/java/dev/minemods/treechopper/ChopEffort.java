@@ -16,10 +16,11 @@ final class ChopEffort {
         return Math.max(1,(int)Math.round((100+25*Math.max(0,speed))*clamp(power)*(.9+.2*clamp(roll))/(mass*Math.max(.1,resistance))));
     }
     static int depth(int work){return work<=0?0:Math.min(4,Math.max(1,work/250));}
-    static boolean severed(int[] w){
-        return Math.max(Math.max(w[0],w[1]),Math.max(w[2],w[3]))>=COMPLETE
-            || (w[0]>0&&w[1]>0&&w[0]+w[1]>=750)
-            || (w[2]>0&&w[3]>0&&w[2]+w[3]>=750)
-            || w[0]+w[1]+w[2]+w[3]>=1250;
+    /** Every face contributes to one trunk. Counter-cuts gain up to 25% efficiency. */
+    static int progress(int[] w){
+        int sum=w[0]+w[1]+w[2]+w[3];
+        int opposed=Math.min(w[0],w[1])+Math.min(w[2],w[3]);
+        return Math.min(COMPLETE,sum+Math.min(250,2*opposed));
     }
+    static boolean severed(int[] w){return progress(w)>=COMPLETE;}
 }

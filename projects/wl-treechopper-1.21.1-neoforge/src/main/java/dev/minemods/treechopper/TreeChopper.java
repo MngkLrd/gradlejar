@@ -74,6 +74,7 @@ public final class TreeChopper {
         NeoForge.EVENT_BUS.addListener(TreeChopper::tickDisplay);
         NeoForge.EVENT_BUS.addListener(FallingTree::attack);
         NeoForge.EVENT_BUS.addListener(TreeQA::register);
+        NeoForge.EVENT_BUS.addListener(ForestSticks::tick);
     }
     static BlockState original(String name){
         return BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath(CUSTOM.contains(name)?"worldlogicterrain":"minecraft",name+"_log")).defaultBlockState();
@@ -121,9 +122,15 @@ public final class TreeChopper {
         if(PROTECTION_CHECK.get() || event.getPlayer().isCreative() || event.getPlayer().isSpectator() || !(event.getLevel() instanceof ServerLevel level))return;
         BlockState state=event.getState();
         if(state.getBlock() instanceof FallenLogBlock){event.setCanceled(true);return;}
-        if(!(event.getPlayer().getMainHandItem().getItem() instanceof AxeItem))return;
+        if(!(event.getPlayer().getMainHandItem().getItem() instanceof AxeItem)){
+            if(requiresAxe(state))event.setCanceled(true);
+            return;
+        }
         String s=species(state);
         if(s!=null && (state.getBlock() instanceof CutBlock || !scan(level,event.getPos(),s).isEmpty()))event.setCanceled(true);
+    }
+    static boolean requiresAxe(BlockState state){
+        return state.is(BlockTags.LOGS)||species(state)!=null||state.getBlock() instanceof StumpBlock||state.getBlock() instanceof FallenLogBlock;
     }
     private static int upperLogs(List<Piece> tree){return (int)tree.stream().filter(Piece::log).count();}
     private static boolean ground(BlockState state){
@@ -193,11 +200,14 @@ public final class TreeChopper {
             }
             return;
         }
+        ItemStack axe=player.getMainHandItem();
+        if(!(axe.getItem() instanceof AxeItem)){
+            if(requiresAxe(old))event.setCanceled(true);
+            return;
+        }
         String s=species(old);
         if(s==null)return;
         boolean cut=old.getBlock() instanceof CutBlock;
-        ItemStack axe=player.getMainHandItem();
-        if(!(axe.getItem() instanceof AxeItem))return;
         List<Piece> tree=scan(level,pos,s);
         if(tree.isEmpty()&&!cut)return;
         event.setCanceled(true);
@@ -253,8 +263,7 @@ public final class TreeChopper {
         player.swing(InteractionHand.MAIN_HAND,true);
         if(!(player instanceof FakePlayer)){
             if(severed&&!allReady)player.displayClientMessage(Component.translatable("message.wl_treechopper.supports",readySupports(level,supports,pos,work),supports.size()),true);
-            else if(guide>=0&&!severed)player.displayClientMessage(Component.translatable("message.wl_treechopper.directed_cut"),true);
-            else if(!severed)player.displayClientMessage(Component.translatable("message.wl_treechopper.cut_progress",work[idx]/10),true);
+            else if(!severed)player.displayClientMessage(Component.translatable("message.wl_treechopper.cut_progress",ChopEffort.progress(work)/10),true);
         }
         level.playSound(null,pos,SoundEvents.WOOD_HIT,SoundSource.BLOCKS,1f,.8f+level.random.nextFloat()*.25f);
         level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK,original(s)),pos.getX()+.5+side.getStepX()*.47,pos.getY()+.5,pos.getZ()+.5+side.getStepZ()*.47,8,.12,.12,.12,.08);
@@ -264,7 +273,7 @@ public final class TreeChopper {
         axe.hurtAndBreak(felled?wear:1,player,EquipmentSlot.MAINHAND);
     }
     private record Piece(BlockPos pos,BlockState state,boolean log){}
-    private static boolean naturalLeaf(BlockState b){
+    static boolean naturalLeaf(BlockState b){
         return b.is(BlockTags.LEAVES)&&b.hasProperty(BlockStateProperties.PERSISTENT)&&!b.getValue(BlockStateProperties.PERSISTENT);
     }
     private static boolean sameLog(BlockState b,BlockState source){return !source.isAir()&&b.is(source.getBlock());}
@@ -273,7 +282,8 @@ public final class TreeChopper {
         BlockState source=original(species);
         if(source.isAir()||!l.hasChunkAt(base.below()))return List.of();
         BlockState below=l.getBlockState(base.below());
-        if(!(below.is(BlockTags.DIRT)||below.is(BlockTags.LOGS)||below.is(Blocks.MUD)||below.is(Blocks.CLAY)||below.is(BlockTags.SAND)))return List.of();
+        boolean previousCut=below.getBlock() instanceof StumpBlock||below.getBlock() instanceof CutBlock||l.getBlockState(base).getBlock() instanceof CutBlock;
+        if(!(previousCut||below.isAir()||below.is(BlockTags.DIRT)||below.is(BlockTags.LOGS)||below.is(Blocks.MUD)||below.is(Blocks.CLAY)||below.is(BlockTags.SAND)))return List.of();
         Set<BlockPos> logs=new LinkedHashSet<>();
         ArrayDeque<BlockPos> queue=new ArrayDeque<>();
         List<BlockPos> roots=roots(l,base,species);
@@ -287,7 +297,10 @@ public final class TreeChopper {
                 if(dy==0&&Math.abs(dx)+Math.abs(dz)>1)continue;
                 BlockPos n=p.offset(dx,dy,dz);
                 if(n.equals(base)||logs.contains(n)||n.getY()<=base.getY())continue;
-                if(n.getY()-base.getY()>32||Math.abs(n.getX()-base.getX())>10||Math.abs(n.getZ()-base.getZ())>10)continue;
+                if(n.getY()-base.getY()>64||Math.abs(n.getX()-base.getX())>16||Math.abs(n.getZ()-base.getZ())>16){
+                    if(l.hasChunkAt(n)&&sameLog(l.getBlockState(n),source))return List.of(); // never cut a truncated crown
+                    continue;
+                }
                 if(!l.hasChunkAt(n))continue;
                 if(sameLog(l.getBlockState(n),source)){
                     if(logs.size()>=256)return List.of();
@@ -301,28 +314,8 @@ public final class TreeChopper {
             BlockPos foot=log.below();
             if(!rootSet.contains(foot)&&l.hasChunkAt(foot)&&baseLog(l.getBlockState(foot),species,source))return List.of();
         }
-        String namespace=CUSTOM.contains(species)?"worldlogicterrain":"minecraft";
-        var leafId=ResourceLocation.fromNamespaceAndPath(namespace,species+"_leaves");
-        Set<BlockPos> leaves=new LinkedHashSet<>();
-        for(BlockPos log:logs){
-            if(rootSet.contains(log))continue;
-            for(int dy=-3;dy<=3;dy++)for(int dx=-3;dx<=3;dx++)for(int dz=-3;dz<=3;dz++){
-                if(Math.abs(dx)+Math.abs(dy)+Math.abs(dz)>4)continue;
-                BlockPos n=log.offset(dx,dy,dz);
-                if(n.getY()<=base.getY()||leaves.contains(n)||!l.hasChunkAt(n))continue;
-                BlockState b=l.getBlockState(n);
-                if(naturalLeaf(b)&&BuiltInRegistries.BLOCK.getKey(b.getBlock()).equals(leafId)){
-                    // Avoid collecting foliage immediately attached to an unrelated trunk.
-                    boolean foreign=false;
-                    for(Direction d:Direction.values()){
-                        BlockPos near=n.relative(d);
-                        if(l.hasChunkAt(near)&&l.getBlockState(near).is(BlockTags.LOGS)&&!logs.contains(near)){foreign=true;break;}
-                    }
-                    if(!foreign){if(leaves.size()>=384)return List.of();leaves.add(n);}
-                }
-            }
-        }
-        if(leaves.isEmpty())return List.of();
+        Set<BlockPos> leaves=CrownOwnership.owned(l,logs);
+        if(leaves.isEmpty()&&!previousCut)return List.of();
         List<Piece> out=new ArrayList<>(logs.size()+leaves.size());
         for(BlockPos n:logs)if(!rootSet.contains(n))out.add(new Piece(n,l.getBlockState(n),true));
         for(BlockPos n:leaves)out.add(new Piece(n,l.getBlockState(n),false));
@@ -487,7 +480,7 @@ public final class TreeChopper {
             if(source.contains(p))continue;
             if(!l.hasChunkAt(p)||l.isOutsideBuildHeight(p))return false;
             BlockState state=l.getBlockState(p);
-            if(state.isAir())continue;
+            if(state.isAir()||naturalLeaf(state))continue;
             for(AABB shape:state.getCollisionShape(l,p).toAabbs()){
                 AABB world=shape.move(x,y,z);if(!box.intersects(world))continue;
                 Vec3 delta=world.getCenter().subtract(center);boolean separated=false;

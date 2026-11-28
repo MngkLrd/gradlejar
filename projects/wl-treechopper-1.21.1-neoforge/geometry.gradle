@@ -10,7 +10,7 @@ tasks.register('generateTreeGeometry') {
         def root=generated.get().asFile
         def emit={String path,Object data -> def f=new File(root,path); f.parentFile.mkdirs(); f.text=JsonOutput.toJson(data) }
         def asset='assets/wl_treechopper/'
-        def en=['message.wl_treechopper.cut_progress':'Cut on this side: %s%%','message.wl_treechopper.axe_worn':'Not enough axe durability to fell the tree (need %s).']; def ru=['message.wl_treechopper.cut_progress':'Сруб с этой стороны: %s%%','message.wl_treechopper.axe_worn':'Недостаточно прочности топора для валки дерева (нужно %s).']
+        def en=['message.wl_treechopper.cut_progress':'Total cut: %s%%','message.wl_treechopper.axe_worn':'Not enough axe durability to fell the tree (need %s).']; def ru=['message.wl_treechopper.cut_progress':'Общий сруб: %s%%','message.wl_treechopper.axe_worn':'Недостаточно прочности топора для валки дерева (нужно %s).']
         en.putAll(['message.wl_treechopper.landing_blocked':'Tree fall is obstructed. Clear the path or strike from another side.','message.wl_treechopper.find_notch':'Strike the visible notch.','message.wl_treechopper.notch_order':'Process the preceding notch first.']); ru.putAll(['message.wl_treechopper.landing_blocked':'Путь падения перекрыт. Освободи его или ударь с другой стороны.','message.wl_treechopper.find_notch':'Ударь по зазубрине на стволе.','message.wl_treechopper.notch_order':'Сначала обработай предыдущую зазубрину.']);
         en['message.wl_treechopper.supports']='Cut supports: %s/%s'; ru['message.wl_treechopper.supports']='Прорублено опор: %s/%s'
         en['message.wl_treechopper.directed_cut']='Directional notch and back cut'; ru['message.wl_treechopper.directed_cut']='Направляющий сруб и обратный пропил'

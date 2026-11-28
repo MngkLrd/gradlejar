@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "WorldLogic TreeChopper 0.6.5 server regression (NeoForge FakePlayer event backend)",
+  "name": "WorldLogic TreeChopper 0.7.0 server regression (NeoForge FakePlayer event backend)",
   "steps": [
     {
       "command": "forceload add 992 992 1055 1055",
@@ -580,7 +580,7 @@
     },
     {
       "command": "wltreechopper qa_break 1040 200 1028",
-      "expect": "TreeChopper hand break allowed",
+      "expect": "TreeChopper hand break blocked",
       "assertion": true,
       "name": "hand-bypass"
     },
@@ -591,14 +591,10 @@
       "name": "hand-intact"
     },
     {
-      "command": "execute if block 1040 200 1028 minecraft:air",
+      "command": "execute if block 1040 200 1028 minecraft:oak_log",
       "expect": "Test passed",
       "assertion": true,
       "name": "hand-no-felling"
-    },
-    {
-      "command": "setblock 1040 200 1028 minecraft:oak_log",
-      "expect": "Changed the block|Successfully filled|Filled"
     },
     {
       "command": "wltreechopper qa_axe_break 1040 200 1028",
@@ -647,7 +643,7 @@
     },
     {
       "command": "wltreechopper qa_break 1040 200 1028",
-      "expect": "TreeChopper hand break allowed",
+      "expect": "TreeChopper hand break blocked",
       "assertion": true,
       "name": "hand-cut-break"
     },
@@ -1172,6 +1168,30 @@
       "expect": "TreeChopper branched terrain support PASS",
       "assertion": true,
       "name": "branched-ground-support"
+    },
+    {
+      "command": "wltreechopper qa_crosscut",
+      "expect": "TreeChopper cumulative cut PASS",
+      "assertion": true,
+      "name": "cumulative-cut"
+    },
+    {
+      "command": "wltreechopper qa_forest_start",
+      "expect": "TreeChopper forest start PASS",
+      "assertion": true,
+      "name": "forest-start"
+    },
+    {
+      "command": "wltreechopper qa_crown_ownership",
+      "expect": "TreeChopper crown ownership PASS",
+      "assertion": true,
+      "name": "crown-ownership"
+    },
+    {
+      "command": "wltreechopper qa_leafless_cut",
+      "expect": "TreeChopper leafless section PASS",
+      "assertion": true,
+      "name": "leafless-section"
     }
   ],
   "coverage": [
@@ -1673,7 +1693,7 @@
     {
       "id": "hand-bypass",
       "kind": "mechanic",
-      "subject": "Bare-hand ordinary mining is not canceled and removes a natural log through server game mode",
+      "subject": "Bare-hand mining is blocked on natural raw timber by both interaction and BreakEvent",
       "checks": [
         {
           "backend": "server",
@@ -1684,7 +1704,7 @@
     {
       "id": "hand-intact",
       "kind": "mechanic",
-      "subject": "Bare-hand destruction leaves the upper log intact (no tree felling)",
+      "subject": "Bare-hand strike leaves upper timber intact",
       "checks": [
         {
           "backend": "server",
@@ -1739,7 +1759,7 @@
     {
       "id": "hand-no-felling",
       "kind": "mechanic",
-      "subject": "Bare hand leaves air instead of a stump",
+      "subject": "Bare-hand strike leaves the base log intact",
       "checks": [
         {
           "backend": "server",
@@ -1761,7 +1781,7 @@
     {
       "id": "hand-cut-break",
       "kind": "mechanic",
-      "subject": "Bare hand can also remove an existing notched log normally",
+      "subject": "Bare hands cannot bypass an existing notch",
       "checks": [
         {
           "backend": "server",
@@ -2329,6 +2349,50 @@
         {
           "backend": "server",
           "name": "branched-ground-support"
+        }
+      ]
+    },
+    {
+      "id": "cumulative-cut",
+      "kind": "mechanic",
+      "subject": "Real alternating perpendicular axe strikes increase shared cut progress, preserve individual faces and fell the trunk",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "cumulative-cut"
+        }
+      ]
+    },
+    {
+      "id": "forest-start",
+      "kind": "mechanic",
+      "subject": "Natural canopy produces a collectible stick, local repeat is bounded, 2x2 flint/stick recipe assembles a stone axe, missing flint rejected",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "forest-start"
+        }
+      ]
+    },
+    {
+      "id": "crown-ownership",
+      "kind": "mechanic",
+      "subject": "Nearest leaf support detaches owned leaves and preserves tied foreign/persistent foliage",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "crown-ownership"
+        }
+      ]
+    },
+    {
+      "id": "leafless-section",
+      "kind": "mechanic",
+      "subject": "Existing notch can fell remaining logs with no leaves",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "leafless-section"
         }
       ]
     }
