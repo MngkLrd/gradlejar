@@ -117,16 +117,21 @@ final class FallingTree {
         }
         return groups;
     }
+    private static double lowerStep(ServerLevel l,CompoundTag f,List<CompoundTag> group){
+        // Resolve real contact to approximately 1 mm, instead of leaving a visible 1/8-block gap.
+        for(double step=.125;step>=.0009765625;step*=.5)if(canLower(l,f,group,step))return step;
+        return 0;
+    }
     /** Gravity continues after release of the hinge, including independently supported remnants. */
     private static boolean settle(ServerLevel l,CompoundTag f){
         List<List<CompoundTag>> groups=components(f);boolean moved=false;
         if(mask(f)==0){
             List<CompoundTag> whole=new ArrayList<>();groups.forEach(whole::addAll);
-            for(int i=0;i<4;i++){if(!canLower(l,f,whole,.125))break;f.putDouble("dropY",f.getDouble("dropY")-.125);moved=true;}
+            for(int i=0;i<4;i++){double step=lowerStep(l,f,whole);if(step==0)break;f.putDouble("dropY",f.getDouble("dropY")-step);moved=true;}
         }else for(List<CompoundTag> group:groups){
             for(int i=0;i<4;i++){
-                if(!canLower(l,f,group,.125))break;
-                for(CompoundTag m:group)m.putDouble("extraDrop",m.getDouble("extraDrop")-.125);
+                double step=lowerStep(l,f,group);if(step==0)break;
+                for(CompoundTag m:group)m.putDouble("extraDrop",m.getDouble("extraDrop")-step);
                 moved=true;
             }
         }

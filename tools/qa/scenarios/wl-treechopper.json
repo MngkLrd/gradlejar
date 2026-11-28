@@ -1166,6 +1166,65 @@
       "expect": "Test passed",
       "assertion": true,
       "name": "gravity-no-floating-block"
+    },
+    {
+      "command": "setblock 994 200 1017 minecraft:dirt",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 994 200 1014 minecraft:stone",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 994 201 1017 994 204 1017 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 994 205 1017 minecraft:oak_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_hit 994 201 1017 north 16",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "wait": 5
+    },
+    {
+      "command": "execute if block 994 201 1014 wl_treechopper:fallen_oak",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "gravity-supported-middle"
+    },
+    {
+      "command": "wltreechopper qa_buck 994 201 1014 1",
+      "expect": "TreeChopper bucking PASS",
+      "assertion": true,
+      "name": "gravity-remove-middle"
+    },
+    {
+      "command": "execute if block 994 200 1013 wl_treechopper:fallen_oak",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "gravity-detached-crown"
+    },
+    {
+      "command": "execute if block 994 200 1015 wl_treechopper:fallen_oak",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "gravity-detached-base"
+    },
+    {
+      "command": "execute if block 994 201 1013 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "gravity-detached-no-float"
+    },
+    {
+      "command": "execute if block 994 200 1014 minecraft:stone",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "gravity-support-preserved"
     }
   ],
   "coverage": [
@@ -2270,6 +2329,37 @@
         {
           "backend": "server",
           "name": "gravity-no-floating-block"
+        }
+      ]
+    },
+    {
+      "id": "gravity-remnants",
+      "kind": "mechanic",
+      "subject": "Middle section harvested first from a trunk supported on a pedestal; both remaining detached sections settle to lower floor, terrain preserved",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "gravity-supported-middle"
+        },
+        {
+          "backend": "server",
+          "name": "gravity-remove-middle"
+        },
+        {
+          "backend": "server",
+          "name": "gravity-detached-crown"
+        },
+        {
+          "backend": "server",
+          "name": "gravity-detached-base"
+        },
+        {
+          "backend": "server",
+          "name": "gravity-detached-no-float"
+        },
+        {
+          "backend": "server",
+          "name": "gravity-support-preserved"
         }
       ]
     }
