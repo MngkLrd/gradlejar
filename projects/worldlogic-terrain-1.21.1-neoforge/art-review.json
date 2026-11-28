@@ -7756,7 +7756,7 @@
         "light_and_volume": "Actual full-volume cuboids and distinct face orientations produce volume rather than alpha planes.",
         "material_continuity": "Same species-specific palette across opaque mat and branches; UVs retain one texel per model unit.",
         "edge_variation": "Asymmetric branch ends, varying height and clear spaces between stems.",
-        "variant_identity": "Low horizontal creeping shoots with several raised uneven patches.",
+        "variant_identity": "The lowest member of the moss family reaches only four model units; it spreads rather than standing upright.",
         "vanilla_comparison": "Vanilla moss carpet supplies one-unit thickness and block footprint, with original species-specific textures and branches.",
         "functional_material_cues": "Visible carpet side faces support attached raised vegetation; no disconnected voxel elements."
       },
@@ -7798,7 +7798,7 @@
         "light_and_volume": "Actual full-volume cuboids and distinct face orientations produce volume rather than alpha planes.",
         "material_continuity": "Same species-specific palette across opaque mat and branches; UVs retain one texel per model unit.",
         "edge_variation": "Asymmetric branch ends, varying height and clear spaces between stems.",
-        "variant_identity": "Two rounded stepped cushions with smaller offsets.",
+        "variant_identity": "The paired mounds make this six-unit moss denser than sheet moss; the color ramp is brighter and warmer.",
         "vanilla_comparison": "Vanilla moss carpet supplies one-unit thickness and block footprint, with original species-specific textures and branches.",
         "functional_material_cues": "Visible carpet side faces support attached raised vegetation; no disconnected voxel elements."
       },
@@ -7840,7 +7840,7 @@
         "light_and_volume": "Actual full-volume cuboids and distinct face orientations produce volume rather than alpha planes.",
         "material_continuity": "Same species-specific palette across opaque mat and branches; UVs retain one texel per model unit.",
         "edge_variation": "Asymmetric branch ends, varying height and clear spaces between stems.",
-        "variant_identity": "Olive and ochre clustered shoots with short radial branches.",
+        "variant_identity": "Yellow-green and ochre coloration differentiates the eight-unit bog shoots from the more saturated forest moss.",
         "vanilla_comparison": "Vanilla moss carpet supplies one-unit thickness and block footprint, with original species-specific textures and branches.",
         "functional_material_cues": "Visible carpet side faces support attached raised vegetation; no disconnected voxel elements."
       },
@@ -7882,7 +7882,7 @@
         "light_and_volume": "Actual full-volume cuboids and distinct face orientations produce volume rather than alpha planes.",
         "material_continuity": "Same species-specific palette across opaque mat and branches; UVs retain one texel per model unit.",
         "edge_variation": "Asymmetric branch ends, varying height and clear spaces between stems.",
-        "variant_identity": "Brown broad upright lobes with stepped asymmetric forks.",
+        "variant_identity": "Warm tan-to-brown palette and wider lobe tips distinguish this ten-unit terrestrial lichen from the pale twig-like reindeer lichen.",
         "vanilla_comparison": "Vanilla moss carpet supplies one-unit thickness and block footprint, with original species-specific textures and branches.",
         "functional_material_cues": "Visible carpet side faces support attached raised vegetation; no disconnected voxel elements."
       },
@@ -7924,7 +7924,7 @@
         "light_and_volume": "Actual full-volume cuboids and distinct face orientations produce volume rather than alpha planes.",
         "material_continuity": "Same species-specific palette across opaque mat and branches; UVs retain one texel per model unit.",
         "edge_variation": "Asymmetric branch ends, varying height and clear spaces between stems.",
-        "variant_identity": "Pale gray-green fine forked stems extend along both horizontal axes.",
+        "variant_identity": "The thirty-cuboid, eleven-unit pale branching network is the finest and most ramified of the terrestrial lichens.",
         "vanilla_comparison": "Vanilla moss carpet supplies one-unit thickness and block footprint, with original species-specific textures and branches.",
         "functional_material_cues": "Visible carpet side faces support attached raised vegetation; no disconnected voxel elements."
       },
@@ -7966,7 +7966,7 @@
         "light_and_volume": "Actual full-volume cuboids and distinct face orientations produce volume rather than alpha planes.",
         "material_continuity": "Same species-specific palette across opaque mat and branches; UVs retain one texel per model unit.",
         "edge_variation": "Asymmetric branch ends, varying height and clear spaces between stems.",
-        "variant_identity": "Burgundy layered marine branching lobes of uneven height.",
+        "variant_identity": "The red-purple palette and twelve-unit maximum height separate the marine alga from all terrestrial green and brown species.",
         "vanilla_comparison": "Vanilla moss carpet supplies one-unit thickness and block footprint, with original species-specific textures and branches.",
         "functional_material_cues": "Visible carpet side faces support attached raised vegetation; no disconnected voxel elements."
       },
@@ -8003,7 +8003,7 @@
         "light_and_volume": "Darker patch perimeter and lighter inner growth.",
         "material_continuity": "Transparent gaps preserve the original wood color and grain.",
         "edge_variation": "Broken boundaries interrupt the patch rhythm.",
-        "variant_identity": "Irregular long green clusters leave strips of native bark visible.",
+        "variant_identity": "A diagonal chain of larger green groups differentiates this broadleaf treatment from the narrower conifer pattern.",
         "vanilla_comparison": "Compared native bark scale and lichen-like cutout behavior; distinct original overlay.",
         "functional_material_cues": "Superficial moss cover leaves the host grain and exposed log end intact."
       },
@@ -8017,7 +8017,8 @@
         "native_view": "Irregular long green clusters leave strips of native bark visible.",
         "context_type": "tile_3x3",
         "context_view": "Actual 3x3 nearest-neighbor overlay tiles examined on approximated bark-color grounds, not an actual game-client render. Model review/client lighting NOT_RUN.",
-        "custom_reason": "Transparent superficial moss layer, distinct from an opaque bark material."
+        "custom_reason": "Transparent superficial moss layer, distinct from an opaque bark material.",
+        "reference_source": "Version-pinned misode/mcmeta 1.21.1-assets assets/minecraft/textures/block/oak_log.png; actual PNG reopened alongside the four original transparent overlays. Reference SHA-256 retained from the established repository atlas; no direct vanilla pixel reuse."
       }
     },
     "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/bark_moss_dark.png": {
@@ -8039,7 +8040,7 @@
         "light_and_volume": "Darker patch perimeter and lighter inner growth.",
         "material_continuity": "Transparent gaps preserve the original wood color and grain.",
         "edge_variation": "Broken boundaries interrupt the patch rhythm.",
-        "variant_identity": "Dark subdued green patches retain the dark host bark as the dominant surface.",
+        "variant_identity": "The darkest palette has restrained olive highlights and open regions that retain dark host bark.",
         "vanilla_comparison": "Compared native bark scale and lichen-like cutout behavior; distinct original overlay.",
         "functional_material_cues": "Superficial moss cover leaves the host grain and exposed log end intact."
       },
@@ -8053,7 +8054,8 @@
         "native_view": "Dark subdued green patches retain the dark host bark as the dominant surface.",
         "context_type": "tile_3x3",
         "context_view": "Actual 3x3 nearest-neighbor overlay tiles examined on approximated bark-color grounds, not an actual game-client render. Model review/client lighting NOT_RUN.",
-        "custom_reason": "Transparent superficial moss layer, distinct from an opaque bark material."
+        "custom_reason": "Transparent superficial moss layer, distinct from an opaque bark material.",
+        "reference_source": "Version-pinned misode/mcmeta 1.21.1-assets assets/minecraft/textures/block/oak_log.png; actual PNG reopened alongside the four original transparent overlays. Reference SHA-256 retained from the established repository atlas; no direct vanilla pixel reuse."
       }
     },
     "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/bark_moss_birch.png": {
@@ -8075,7 +8077,7 @@
         "light_and_volume": "Darker patch perimeter and lighter inner growth.",
         "material_continuity": "Transparent gaps preserve the original wood color and grain.",
         "edge_variation": "Broken boundaries interrupt the patch rhythm.",
-        "variant_identity": "Brighter asymmetric green patches contrast with pale native bark.",
+        "variant_identity": "The lightest overlay palette of the four contains clustered yellow-green highlights against transparent margins.",
         "vanilla_comparison": "Compared native bark scale and lichen-like cutout behavior; distinct original overlay.",
         "functional_material_cues": "Superficial moss cover leaves the host grain and exposed log end intact."
       },
@@ -8089,7 +8091,8 @@
         "native_view": "Brighter asymmetric green patches contrast with pale native bark.",
         "context_type": "tile_3x3",
         "context_view": "Actual 3x3 nearest-neighbor overlay tiles examined on approximated bark-color grounds, not an actual game-client render. Model review/client lighting NOT_RUN.",
-        "custom_reason": "Transparent superficial moss layer, distinct from an opaque bark material."
+        "custom_reason": "Transparent superficial moss layer, distinct from an opaque bark material.",
+        "reference_source": "Version-pinned misode/mcmeta 1.21.1-assets assets/minecraft/textures/block/oak_log.png; actual PNG reopened alongside the four original transparent overlays. Reference SHA-256 retained from the established repository atlas; no direct vanilla pixel reuse."
       }
     },
     "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/bark_moss_conifer.png": {
@@ -8111,7 +8114,7 @@
         "light_and_volume": "Darker patch perimeter and lighter inner growth.",
         "material_continuity": "Transparent gaps preserve the original wood color and grain.",
         "edge_variation": "Broken boundaries interrupt the patch rhythm.",
-        "variant_identity": "Cool green narrow patches follow the host bark's long furrows.",
+        "variant_identity": "The cool muted green ramp and narrow separated patches fit darker conifer bark without obscuring it.",
         "vanilla_comparison": "Compared native bark scale and lichen-like cutout behavior; distinct original overlay.",
         "functional_material_cues": "Superficial moss cover leaves the host grain and exposed log end intact."
       },
@@ -8125,7 +8128,8 @@
         "native_view": "Cool green narrow patches follow the host bark's long furrows.",
         "context_type": "tile_3x3",
         "context_view": "Actual 3x3 nearest-neighbor overlay tiles examined on approximated bark-color grounds, not an actual game-client render. Model review/client lighting NOT_RUN.",
-        "custom_reason": "Transparent superficial moss layer, distinct from an opaque bark material."
+        "custom_reason": "Transparent superficial moss layer, distinct from an opaque bark material.",
+        "reference_source": "Version-pinned misode/mcmeta 1.21.1-assets assets/minecraft/textures/block/oak_log.png; actual PNG reopened alongside the four original transparent overlays. Reference SHA-256 retained from the established repository atlas; no direct vanilla pixel reuse."
       }
     },
     "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/climbing_ivy.png": {
@@ -8147,7 +8151,7 @@
         "light_and_volume": "Dark stems and shaded leaf interiors meet lighter exposed details; model gives independent orientations for standing foliage.",
         "material_continuity": "Coherent species-specific colors distinguish green vegetation, woody tissue and fallen organic material.",
         "edge_variation": "Asymmetric edges and clear gaps between groups.",
-        "variant_identity": "Dark climbing woody stem with offset lobed leaves.",
+        "variant_identity": "A single irregular central woody line with several offset lobed leaves contrasts with the two long stems of woodland vine.",
         "vanilla_comparison": "Compared actual vanilla native-scale plant/ground-cutout reference; no direct reproduction.",
         "functional_material_cues": "Species-specific stems, leaf groups, thorns or forest debris distinguish its visible role."
       },
@@ -8184,7 +8188,7 @@
         "light_and_volume": "Dark stems and shaded leaf interiors meet lighter exposed details; model gives independent orientations for standing foliage.",
         "material_continuity": "Coherent species-specific colors distinguish green vegetation, woody tissue and fallen organic material.",
         "edge_variation": "Asymmetric edges and clear gaps between groups.",
-        "variant_identity": "Two winding brown stems and sparse warm-green leaf groups.",
+        "variant_identity": "Two slender undulating vertical stems and smaller sparse leaf groups distinguish the vine from the denser ivy.",
         "vanilla_comparison": "Compared actual vanilla native-scale plant/ground-cutout reference; no direct reproduction.",
         "functional_material_cues": "Species-specific stems, leaf groups, thorns or forest debris distinguish its visible role."
       },
@@ -8221,7 +8225,7 @@
         "light_and_volume": "Dark stems and shaded leaf interiors meet lighter exposed details; model gives independent orientations for standing foliage.",
         "material_continuity": "Coherent species-specific colors distinguish green vegetation, woody tissue and fallen organic material.",
         "edge_variation": "Asymmetric edges and clear gaps between groups.",
-        "variant_identity": "Upright green stem with paired serrated leaf groups and light tips.",
+        "variant_identity": "A tall single green stalk with paired leaves and pointed light pixels differs from the branched brown thorn scrub.",
         "vanilla_comparison": "Compared actual vanilla native-scale plant/ground-cutout reference; no direct reproduction.",
         "functional_material_cues": "Species-specific stems, leaf groups, thorns or forest debris distinguish its visible role."
       },
@@ -8258,7 +8262,7 @@
         "light_and_volume": "Dark stems and shaded leaf interiors meet lighter exposed details; model gives independent orientations for standing foliage.",
         "material_continuity": "Coherent species-specific colors distinguish green vegetation, woody tissue and fallen organic material.",
         "edge_variation": "Asymmetric edges and clear gaps between groups.",
-        "variant_identity": "Spiny green foliage and a mauve composite flower head.",
+        "variant_identity": "The mauve flower at the top makes the thistle identifiable apart from the two nonflowering prickly plants.",
         "vanilla_comparison": "Compared actual vanilla native-scale plant/ground-cutout reference; no direct reproduction.",
         "functional_material_cues": "Species-specific stems, leaf groups, thorns or forest debris distinguish its visible role."
       },
@@ -8295,7 +8299,7 @@
         "light_and_volume": "Dark stems and shaded leaf interiors meet lighter exposed details; model gives independent orientations for standing foliage.",
         "material_continuity": "Coherent species-specific colors distinguish green vegetation, woody tissue and fallen organic material.",
         "edge_variation": "Asymmetric edges and clear gaps between groups.",
-        "variant_identity": "Forked brown stems with pale thorns and separated leaf clusters.",
+        "variant_identity": "The wide forked brown structure and small pale pointed spurs distinguish scrub from the mostly green upright nettle.",
         "vanilla_comparison": "Compared actual vanilla native-scale plant/ground-cutout reference; no direct reproduction.",
         "functional_material_cues": "Species-specific stems, leaf groups, thorns or forest debris distinguish its visible role."
       },
@@ -8332,7 +8336,7 @@
         "light_and_volume": "Dark stems and shaded leaf interiors meet lighter exposed details; model gives independent orientations for standing foliage.",
         "material_continuity": "Coherent species-specific colors distinguish green vegetation, woody tissue and fallen organic material.",
         "edge_variation": "Asymmetric edges and clear gaps between groups.",
-        "variant_identity": "Scattered ochre and brown slender needles crossing at different angles.",
+        "variant_identity": "Long narrow ochre slivers remain individually readable rather than resembling broad decomposing leaf pieces.",
         "vanilla_comparison": "Compared actual vanilla native-scale plant/ground-cutout reference; no direct reproduction.",
         "functional_material_cues": "Species-specific stems, leaf groups, thorns or forest debris distinguish its visible role."
       },
@@ -8369,7 +8373,7 @@
         "light_and_volume": "Dark stems and shaded leaf interiors meet lighter exposed details; model gives independent orientations for standing foliage.",
         "material_continuity": "Coherent species-specific colors distinguish green vegetation, woody tissue and fallen organic material.",
         "edge_variation": "Asymmetric edges and clear gaps between groups.",
-        "variant_identity": "Broken irregular umber bark fragments with dark grain and warm exposed edges.",
+        "variant_identity": "Chunky angular brown pieces with light exposed edges distinguish woody debris from thin needles.",
         "vanilla_comparison": "Compared actual vanilla native-scale plant/ground-cutout reference; no direct reproduction.",
         "functional_material_cues": "Species-specific stems, leaf groups, thorns or forest debris distinguish its visible role."
       },
@@ -8406,7 +8410,7 @@
         "light_and_volume": "Dark stems and shaded leaf interiors meet lighter exposed details; model gives independent orientations for standing foliage.",
         "material_continuity": "Coherent species-specific colors distinguish green vegetation, woody tissue and fallen organic material.",
         "edge_variation": "Asymmetric edges and clear gaps between groups.",
-        "variant_identity": "Uneven olive-brown broad leaf pieces with dark vein strokes.",
+        "variant_identity": "Broad muted olive-brown fragments and vein lines distinguish damp leaves from the linear needle debris.",
         "vanilla_comparison": "Compared actual vanilla native-scale plant/ground-cutout reference; no direct reproduction.",
         "functional_material_cues": "Species-specific stems, leaf groups, thorns or forest debris distinguish its visible role."
       },

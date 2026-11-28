@@ -3,7 +3,7 @@ loaderVersion="[1,)"
 license="All Rights Reserved"
 [[mods]]
 modId="worldlogicterrain"
-version="1.7.0"
+version="1.7.1"
 displayName="WorldLogic: Terrarian"
 description="Natural vegetation, ecological forests and surface mobility for WorldLogic."
 [[dependencies.worldlogicterrain]]
