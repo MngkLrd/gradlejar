@@ -7733,225 +7733,255 @@
       }
     },
     "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/sheet_moss_atlas.png": {
-      "sha256": "d0fa60183a85235bc04aad562c8163c6bfb05790e1f6b664d9b8416035cd1218",
+      "sha256": "3e4d09581460cb4f94345620c676f9c68a7459d4c0d7edd2ab23d1ab3e4386f9",
       "verdict": "PASS",
       "material_profile": "other",
       "references": [
+        {
+          "id": "minecraft:block/moss_block",
+          "minecraft": "1.21.1",
+          "sha256": "ff2be8de2198aa42ce405734b69e69a2c220cd6996e2e170f29e4f5a8f649eb1"
+        },
         {
           "id": "minecraft:block/fern",
           "minecraft": "1.21.1",
           "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
         }
       ],
-      "comparison": "Actual original 32x32 atlas and vanilla 1.21.1 fern viewed as a nearest-neighbor family sheet. Low connected dark-green mat and short spreading shoots. The atlas uses two 16x16 native-scale cutouts rather than a stretched texture. No source pixels copied.",
+      "comparison": "Actual 32x32 opaque atlas at native scale and voxel-model raster views from opposite corners inspected. Compared version-pinned vanilla moss_block pixels and moss_carpet parent reference. Low horizontal creeping shoots with several raised uneven patches. The original carpet is one unit thick with visible side faces; 14 full-volume elements replace the former zero-thickness planes. No vanilla pixels copied.",
       "findings": {
-        "silhouette": "Low connected dark-green mat and short spreading shoots.",
-        "cluster_structure": "Connected mat patches and separately drawn upright tips.",
-        "micro_contrast": "Four neighboring material colors distinguish dark margins and lighter tips.",
-        "light_and_volume": "Dark base edge and selected highlights identify raised growth; upright cutouts add height.",
-        "material_continuity": "The species-specific ramp remains coherent across the mat and upright frond.",
-        "edge_variation": "Asymmetric transparent edges and separated growth points.",
-        "variant_identity": "Low connected dark-green mat and short spreading shoots.",
-        "vanilla_comparison": "Vanilla fern provides native-scale foliage and structural transparency, not the species outline.",
-        "functional_material_cues": "A ground-contact mat and multiple independently oriented fronds identify the low colony."
+        "silhouette": "Low horizontal creeping shoots with several raised uneven patches.",
+        "cluster_structure": "Contiguous low carpet and individually shaped branch groups connected to its surface.",
+        "micro_contrast": "Clustered neighboring six-color values; lighter frond tips and darker side ramp.",
+        "light_and_volume": "Actual full-volume cuboids and distinct face orientations produce volume rather than alpha planes.",
+        "material_continuity": "Same species-specific palette across opaque mat and branches; UVs retain one texel per model unit.",
+        "edge_variation": "Asymmetric branch ends, varying height and clear spaces between stems.",
+        "variant_identity": "Low horizontal creeping shoots with several raised uneven patches.",
+        "vanilla_comparison": "Vanilla moss carpet supplies one-unit thickness and block footprint, with original species-specific textures and branches.",
+        "functional_material_cues": "Visible carpet side faces support attached raised vegetation; no disconnected voxel elements."
       },
       "atlas": {
         "revision": "r9",
         "rule": "custom",
-        "reference": "minecraft:block/fern",
+        "reference": "minecraft:block/moss_block",
         "reference_minecraft": "1.21.1",
-        "applied_pattern": "Native-scale cutouts with intentional structural transparency.",
-        "reference_limit": "Fern is not a moss or lichen; the mat and branch silhouette are original.",
-        "native_view": "Low connected dark-green mat and short spreading shoots.",
-        "context_type": "placed_cutout",
-        "context_view": "Actual nearest-neighbor atlas family preview on muted terrain-color background inspected; model UV ranges checked in source. Graphical client and in-world lighting NOT_RUN.",
-        "custom_reason": "Moss and lichen mat plus upright frond atlas has no exact vanilla role.",
-        "reference_source": "misode/mcmeta 1.21.1-assets block/fern.png actual PNG inspected, checksum recorded by prior asset review."
+        "applied_pattern": "Native carpet thickness and clustered palette transitions, opaque faces with independent atlas regions.",
+        "reference_limit": "Vanilla moss carpet has no raised branches; all additional geometry and texture are original.",
+        "native_view": "Low horizontal creeping shoots with several raised uneven patches.",
+        "context_type": "model_uv",
+        "context_view": "Exact occupied-voxel geometry and atlas-sampled visible faces statically rasterized from two opposite corners and inspected; connectedness validated. 14 elements, maximum height 4/16. Not an actual client render or shader test.",
+        "custom_reason": "Full-volume species-specific moss/lichen geometry with 32px atlas; no exact vanilla role.",
+        "reference_source": "misode/mcmeta 1.21.1-assets block/moss_block.png actual PNG inspected, SHA-256 computed from decoded bytes; moss_carpet model inspected."
       }
     },
     "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/cushion_moss_atlas.png": {
-      "sha256": "9f5596c3d87f5dabcfd8b780fc0afd6832d8d596a338c3b72852bc675301130d",
+      "sha256": "35868e5c2e7ea894de725e14290bd1c8061691840d20601981651912a0123efa",
       "verdict": "PASS",
       "material_profile": "other",
       "references": [
+        {
+          "id": "minecraft:block/moss_block",
+          "minecraft": "1.21.1",
+          "sha256": "ff2be8de2198aa42ce405734b69e69a2c220cd6996e2e170f29e4f5a8f649eb1"
+        },
         {
           "id": "minecraft:block/fern",
           "minecraft": "1.21.1",
           "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
         }
       ],
-      "comparison": "Actual original 32x32 atlas and vanilla 1.21.1 fern viewed as a nearest-neighbor family sheet. Two rounded, light green cushions and compact upright tips. The atlas uses two 16x16 native-scale cutouts rather than a stretched texture. No source pixels copied.",
+      "comparison": "Actual 32x32 opaque atlas at native scale and voxel-model raster views from opposite corners inspected. Compared version-pinned vanilla moss_block pixels and moss_carpet parent reference. Two rounded stepped cushions with smaller offsets. The original carpet is one unit thick with visible side faces; 13 full-volume elements replace the former zero-thickness planes. No vanilla pixels copied.",
       "findings": {
-        "silhouette": "Two rounded, light green cushions and compact upright tips.",
-        "cluster_structure": "Connected mat patches and separately drawn upright tips.",
-        "micro_contrast": "Four neighboring material colors distinguish dark margins and lighter tips.",
-        "light_and_volume": "Dark base edge and selected highlights identify raised growth; upright cutouts add height.",
-        "material_continuity": "The species-specific ramp remains coherent across the mat and upright frond.",
-        "edge_variation": "Asymmetric transparent edges and separated growth points.",
-        "variant_identity": "Two rounded, light green cushions and compact upright tips.",
-        "vanilla_comparison": "Vanilla fern provides native-scale foliage and structural transparency, not the species outline.",
-        "functional_material_cues": "A ground-contact mat and multiple independently oriented fronds identify the low colony."
+        "silhouette": "Two rounded stepped cushions with smaller offsets.",
+        "cluster_structure": "Contiguous low carpet and individually shaped branch groups connected to its surface.",
+        "micro_contrast": "Clustered neighboring six-color values; lighter frond tips and darker side ramp.",
+        "light_and_volume": "Actual full-volume cuboids and distinct face orientations produce volume rather than alpha planes.",
+        "material_continuity": "Same species-specific palette across opaque mat and branches; UVs retain one texel per model unit.",
+        "edge_variation": "Asymmetric branch ends, varying height and clear spaces between stems.",
+        "variant_identity": "Two rounded stepped cushions with smaller offsets.",
+        "vanilla_comparison": "Vanilla moss carpet supplies one-unit thickness and block footprint, with original species-specific textures and branches.",
+        "functional_material_cues": "Visible carpet side faces support attached raised vegetation; no disconnected voxel elements."
       },
       "atlas": {
         "revision": "r9",
         "rule": "custom",
-        "reference": "minecraft:block/fern",
+        "reference": "minecraft:block/moss_block",
         "reference_minecraft": "1.21.1",
-        "applied_pattern": "Native-scale cutouts with intentional structural transparency.",
-        "reference_limit": "Fern is not a moss or lichen; the mat and branch silhouette are original.",
-        "native_view": "Two rounded, light green cushions and compact upright tips.",
-        "context_type": "placed_cutout",
-        "context_view": "Actual nearest-neighbor atlas family preview on muted terrain-color background inspected; model UV ranges checked in source. Graphical client and in-world lighting NOT_RUN.",
-        "custom_reason": "Moss and lichen mat plus upright frond atlas has no exact vanilla role.",
-        "reference_source": "misode/mcmeta 1.21.1-assets block/fern.png actual PNG inspected, checksum recorded by prior asset review."
+        "applied_pattern": "Native carpet thickness and clustered palette transitions, opaque faces with independent atlas regions.",
+        "reference_limit": "Vanilla moss carpet has no raised branches; all additional geometry and texture are original.",
+        "native_view": "Two rounded stepped cushions with smaller offsets.",
+        "context_type": "model_uv",
+        "context_view": "Exact occupied-voxel geometry and atlas-sampled visible faces statically rasterized from two opposite corners and inspected; connectedness validated. 13 elements, maximum height 6/16. Not an actual client render or shader test.",
+        "custom_reason": "Full-volume species-specific moss/lichen geometry with 32px atlas; no exact vanilla role.",
+        "reference_source": "misode/mcmeta 1.21.1-assets block/moss_block.png actual PNG inspected, SHA-256 computed from decoded bytes; moss_carpet model inspected."
       }
     },
     "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/sphagnum_moss_atlas.png": {
-      "sha256": "5f5e16598962a7037ed5eaad3a4161c1471d996bc7608d702e8dba5121e71e7c",
+      "sha256": "ffa92b0a58af100d1dab3e63826e76124fc9201854ecd772f23cfadb60275ed6",
       "verdict": "PASS",
       "material_profile": "other",
       "references": [
+        {
+          "id": "minecraft:block/moss_block",
+          "minecraft": "1.21.1",
+          "sha256": "ff2be8de2198aa42ce405734b69e69a2c220cd6996e2e170f29e4f5a8f649eb1"
+        },
         {
           "id": "minecraft:block/fern",
           "minecraft": "1.21.1",
           "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
         }
       ],
-      "comparison": "Actual original 32x32 atlas and vanilla 1.21.1 fern viewed as a nearest-neighbor family sheet. Olive ochre broken rosette with pale forked growing tips. The atlas uses two 16x16 native-scale cutouts rather than a stretched texture. No source pixels copied.",
+      "comparison": "Actual 32x32 opaque atlas at native scale and voxel-model raster views from opposite corners inspected. Compared version-pinned vanilla moss_block pixels and moss_carpet parent reference. Olive and ochre clustered shoots with short radial branches. The original carpet is one unit thick with visible side faces; 20 full-volume elements replace the former zero-thickness planes. No vanilla pixels copied.",
       "findings": {
-        "silhouette": "Olive ochre broken rosette with pale forked growing tips.",
-        "cluster_structure": "Connected mat patches and separately drawn upright tips.",
-        "micro_contrast": "Four neighboring material colors distinguish dark margins and lighter tips.",
-        "light_and_volume": "Dark base edge and selected highlights identify raised growth; upright cutouts add height.",
-        "material_continuity": "The species-specific ramp remains coherent across the mat and upright frond.",
-        "edge_variation": "Asymmetric transparent edges and separated growth points.",
-        "variant_identity": "Olive ochre broken rosette with pale forked growing tips.",
-        "vanilla_comparison": "Vanilla fern provides native-scale foliage and structural transparency, not the species outline.",
-        "functional_material_cues": "A ground-contact mat and multiple independently oriented fronds identify the low colony."
+        "silhouette": "Olive and ochre clustered shoots with short radial branches.",
+        "cluster_structure": "Contiguous low carpet and individually shaped branch groups connected to its surface.",
+        "micro_contrast": "Clustered neighboring six-color values; lighter frond tips and darker side ramp.",
+        "light_and_volume": "Actual full-volume cuboids and distinct face orientations produce volume rather than alpha planes.",
+        "material_continuity": "Same species-specific palette across opaque mat and branches; UVs retain one texel per model unit.",
+        "edge_variation": "Asymmetric branch ends, varying height and clear spaces between stems.",
+        "variant_identity": "Olive and ochre clustered shoots with short radial branches.",
+        "vanilla_comparison": "Vanilla moss carpet supplies one-unit thickness and block footprint, with original species-specific textures and branches.",
+        "functional_material_cues": "Visible carpet side faces support attached raised vegetation; no disconnected voxel elements."
       },
       "atlas": {
         "revision": "r9",
         "rule": "custom",
-        "reference": "minecraft:block/fern",
+        "reference": "minecraft:block/moss_block",
         "reference_minecraft": "1.21.1",
-        "applied_pattern": "Native-scale cutouts with intentional structural transparency.",
-        "reference_limit": "Fern is not a moss or lichen; the mat and branch silhouette are original.",
-        "native_view": "Olive ochre broken rosette with pale forked growing tips.",
-        "context_type": "placed_cutout",
-        "context_view": "Actual nearest-neighbor atlas family preview on muted terrain-color background inspected; model UV ranges checked in source. Graphical client and in-world lighting NOT_RUN.",
-        "custom_reason": "Moss and lichen mat plus upright frond atlas has no exact vanilla role.",
-        "reference_source": "misode/mcmeta 1.21.1-assets block/fern.png actual PNG inspected, checksum recorded by prior asset review."
+        "applied_pattern": "Native carpet thickness and clustered palette transitions, opaque faces with independent atlas regions.",
+        "reference_limit": "Vanilla moss carpet has no raised branches; all additional geometry and texture are original.",
+        "native_view": "Olive and ochre clustered shoots with short radial branches.",
+        "context_type": "model_uv",
+        "context_view": "Exact occupied-voxel geometry and atlas-sampled visible faces statically rasterized from two opposite corners and inspected; connectedness validated. 20 elements, maximum height 8/16. Not an actual client render or shader test.",
+        "custom_reason": "Full-volume species-specific moss/lichen geometry with 32px atlas; no exact vanilla role.",
+        "reference_source": "misode/mcmeta 1.21.1-assets block/moss_block.png actual PNG inspected, SHA-256 computed from decoded bytes; moss_carpet model inspected."
       }
     },
     "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/iceland_moss_atlas.png": {
-      "sha256": "0f7faf92224fa3c34b91884a468fa69d4eeab5c8506433166dab33e85992837e",
+      "sha256": "4a29184efd5f3ca85ffbd788b5812cd2168ce66104f66ebbdccc48aea8a51783",
       "verdict": "PASS",
       "material_profile": "other",
       "references": [
+        {
+          "id": "minecraft:block/moss_block",
+          "minecraft": "1.21.1",
+          "sha256": "ff2be8de2198aa42ce405734b69e69a2c220cd6996e2e170f29e4f5a8f649eb1"
+        },
         {
           "id": "minecraft:block/fern",
           "minecraft": "1.21.1",
           "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
         }
       ],
-      "comparison": "Actual original 32x32 atlas and vanilla 1.21.1 fern viewed as a nearest-neighbor family sheet. Brown olive lichen with upright branching lobes and warm tips. The atlas uses two 16x16 native-scale cutouts rather than a stretched texture. No source pixels copied.",
+      "comparison": "Actual 32x32 opaque atlas at native scale and voxel-model raster views from opposite corners inspected. Compared version-pinned vanilla moss_block pixels and moss_carpet parent reference. Brown broad upright lobes with stepped asymmetric forks. The original carpet is one unit thick with visible side faces; 21 full-volume elements replace the former zero-thickness planes. No vanilla pixels copied.",
       "findings": {
-        "silhouette": "Brown olive lichen with upright branching lobes and warm tips.",
-        "cluster_structure": "Connected mat patches and separately drawn upright tips.",
-        "micro_contrast": "Four neighboring material colors distinguish dark margins and lighter tips.",
-        "light_and_volume": "Dark base edge and selected highlights identify raised growth; upright cutouts add height.",
-        "material_continuity": "The species-specific ramp remains coherent across the mat and upright frond.",
-        "edge_variation": "Asymmetric transparent edges and separated growth points.",
-        "variant_identity": "Brown olive lichen with upright branching lobes and warm tips.",
-        "vanilla_comparison": "Vanilla fern provides native-scale foliage and structural transparency, not the species outline.",
-        "functional_material_cues": "A ground-contact mat and multiple independently oriented fronds identify the low colony."
+        "silhouette": "Brown broad upright lobes with stepped asymmetric forks.",
+        "cluster_structure": "Contiguous low carpet and individually shaped branch groups connected to its surface.",
+        "micro_contrast": "Clustered neighboring six-color values; lighter frond tips and darker side ramp.",
+        "light_and_volume": "Actual full-volume cuboids and distinct face orientations produce volume rather than alpha planes.",
+        "material_continuity": "Same species-specific palette across opaque mat and branches; UVs retain one texel per model unit.",
+        "edge_variation": "Asymmetric branch ends, varying height and clear spaces between stems.",
+        "variant_identity": "Brown broad upright lobes with stepped asymmetric forks.",
+        "vanilla_comparison": "Vanilla moss carpet supplies one-unit thickness and block footprint, with original species-specific textures and branches.",
+        "functional_material_cues": "Visible carpet side faces support attached raised vegetation; no disconnected voxel elements."
       },
       "atlas": {
         "revision": "r9",
         "rule": "custom",
-        "reference": "minecraft:block/fern",
+        "reference": "minecraft:block/moss_block",
         "reference_minecraft": "1.21.1",
-        "applied_pattern": "Native-scale cutouts with intentional structural transparency.",
-        "reference_limit": "Fern is not a moss or lichen; the mat and branch silhouette are original.",
-        "native_view": "Brown olive lichen with upright branching lobes and warm tips.",
-        "context_type": "placed_cutout",
-        "context_view": "Actual nearest-neighbor atlas family preview on muted terrain-color background inspected; model UV ranges checked in source. Graphical client and in-world lighting NOT_RUN.",
-        "custom_reason": "Moss and lichen mat plus upright frond atlas has no exact vanilla role.",
-        "reference_source": "misode/mcmeta 1.21.1-assets block/fern.png actual PNG inspected, checksum recorded by prior asset review."
+        "applied_pattern": "Native carpet thickness and clustered palette transitions, opaque faces with independent atlas regions.",
+        "reference_limit": "Vanilla moss carpet has no raised branches; all additional geometry and texture are original.",
+        "native_view": "Brown broad upright lobes with stepped asymmetric forks.",
+        "context_type": "model_uv",
+        "context_view": "Exact occupied-voxel geometry and atlas-sampled visible faces statically rasterized from two opposite corners and inspected; connectedness validated. 21 elements, maximum height 10/16. Not an actual client render or shader test.",
+        "custom_reason": "Full-volume species-specific moss/lichen geometry with 32px atlas; no exact vanilla role.",
+        "reference_source": "misode/mcmeta 1.21.1-assets block/moss_block.png actual PNG inspected, SHA-256 computed from decoded bytes; moss_carpet model inspected."
       }
     },
     "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/reindeer_moss_atlas.png": {
-      "sha256": "b69b809c89a4cf097852a36391ffb41dbd1379d01a4d38338c106b5613e468c7",
+      "sha256": "e3dac24f06c3b439148aeb32681e505875b2933c0cf0f0de8ef4028004d130f2",
       "verdict": "PASS",
       "material_profile": "other",
       "references": [
+        {
+          "id": "minecraft:block/moss_block",
+          "minecraft": "1.21.1",
+          "sha256": "ff2be8de2198aa42ce405734b69e69a2c220cd6996e2e170f29e4f5a8f649eb1"
+        },
         {
           "id": "minecraft:block/fern",
           "minecraft": "1.21.1",
           "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
         }
       ],
-      "comparison": "Actual original 32x32 atlas and vanilla 1.21.1 fern viewed as a nearest-neighbor family sheet. Ash-gray branching lichen with distinct pale forked silhouettes. The atlas uses two 16x16 native-scale cutouts rather than a stretched texture. No source pixels copied.",
+      "comparison": "Actual 32x32 opaque atlas at native scale and voxel-model raster views from opposite corners inspected. Compared version-pinned vanilla moss_block pixels and moss_carpet parent reference. Pale gray-green fine forked stems extend along both horizontal axes. The original carpet is one unit thick with visible side faces; 30 full-volume elements replace the former zero-thickness planes. No vanilla pixels copied.",
       "findings": {
-        "silhouette": "Ash-gray branching lichen with distinct pale forked silhouettes.",
-        "cluster_structure": "Connected mat patches and separately drawn upright tips.",
-        "micro_contrast": "Four neighboring material colors distinguish dark margins and lighter tips.",
-        "light_and_volume": "Dark base edge and selected highlights identify raised growth; upright cutouts add height.",
-        "material_continuity": "The species-specific ramp remains coherent across the mat and upright frond.",
-        "edge_variation": "Asymmetric transparent edges and separated growth points.",
-        "variant_identity": "Ash-gray branching lichen with distinct pale forked silhouettes.",
-        "vanilla_comparison": "Vanilla fern provides native-scale foliage and structural transparency, not the species outline.",
-        "functional_material_cues": "A ground-contact mat and multiple independently oriented fronds identify the low colony."
+        "silhouette": "Pale gray-green fine forked stems extend along both horizontal axes.",
+        "cluster_structure": "Contiguous low carpet and individually shaped branch groups connected to its surface.",
+        "micro_contrast": "Clustered neighboring six-color values; lighter frond tips and darker side ramp.",
+        "light_and_volume": "Actual full-volume cuboids and distinct face orientations produce volume rather than alpha planes.",
+        "material_continuity": "Same species-specific palette across opaque mat and branches; UVs retain one texel per model unit.",
+        "edge_variation": "Asymmetric branch ends, varying height and clear spaces between stems.",
+        "variant_identity": "Pale gray-green fine forked stems extend along both horizontal axes.",
+        "vanilla_comparison": "Vanilla moss carpet supplies one-unit thickness and block footprint, with original species-specific textures and branches.",
+        "functional_material_cues": "Visible carpet side faces support attached raised vegetation; no disconnected voxel elements."
       },
       "atlas": {
         "revision": "r9",
         "rule": "custom",
-        "reference": "minecraft:block/fern",
+        "reference": "minecraft:block/moss_block",
         "reference_minecraft": "1.21.1",
-        "applied_pattern": "Native-scale cutouts with intentional structural transparency.",
-        "reference_limit": "Fern is not a moss or lichen; the mat and branch silhouette are original.",
-        "native_view": "Ash-gray branching lichen with distinct pale forked silhouettes.",
-        "context_type": "placed_cutout",
-        "context_view": "Actual nearest-neighbor atlas family preview on muted terrain-color background inspected; model UV ranges checked in source. Graphical client and in-world lighting NOT_RUN.",
-        "custom_reason": "Moss and lichen mat plus upright frond atlas has no exact vanilla role.",
-        "reference_source": "misode/mcmeta 1.21.1-assets block/fern.png actual PNG inspected, checksum recorded by prior asset review."
+        "applied_pattern": "Native carpet thickness and clustered palette transitions, opaque faces with independent atlas regions.",
+        "reference_limit": "Vanilla moss carpet has no raised branches; all additional geometry and texture are original.",
+        "native_view": "Pale gray-green fine forked stems extend along both horizontal axes.",
+        "context_type": "model_uv",
+        "context_view": "Exact occupied-voxel geometry and atlas-sampled visible faces statically rasterized from two opposite corners and inspected; connectedness validated. 30 elements, maximum height 11/16. Not an actual client render or shader test.",
+        "custom_reason": "Full-volume species-specific moss/lichen geometry with 32px atlas; no exact vanilla role.",
+        "reference_source": "misode/mcmeta 1.21.1-assets block/moss_block.png actual PNG inspected, SHA-256 computed from decoded bytes; moss_carpet model inspected."
       }
     },
     "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/irish_moss_atlas.png": {
-      "sha256": "9de99162ce642e2ad26288722ea7526cea02effb11b0f4757a626ccc36454b7b",
+      "sha256": "f6409745587e2ba36cd71849842be6bd2dae5680ea2e022268d60078745d83d7",
       "verdict": "PASS",
       "material_profile": "other",
       "references": [
+        {
+          "id": "minecraft:block/moss_block",
+          "minecraft": "1.21.1",
+          "sha256": "ff2be8de2198aa42ce405734b69e69a2c220cd6996e2e170f29e4f5a8f649eb1"
+        },
         {
           "id": "minecraft:block/fern",
           "minecraft": "1.21.1",
           "sha256": "c8e5d55a1b10a92cd398540412ebf2f035d14c66aa21ec126bb2da6596f94746"
         }
       ],
-      "comparison": "Actual original 32x32 atlas and vanilla 1.21.1 fern viewed as a nearest-neighbor family sheet. Deep burgundy algal holdfast with branching red fronds. The atlas uses two 16x16 native-scale cutouts rather than a stretched texture. No source pixels copied.",
+      "comparison": "Actual 32x32 opaque atlas at native scale and voxel-model raster views from opposite corners inspected. Compared version-pinned vanilla moss_block pixels and moss_carpet parent reference. Burgundy layered marine branching lobes of uneven height. The original carpet is one unit thick with visible side faces; 22 full-volume elements replace the former zero-thickness planes. No vanilla pixels copied.",
       "findings": {
-        "silhouette": "Deep burgundy algal holdfast with branching red fronds.",
-        "cluster_structure": "Connected mat patches and separately drawn upright tips.",
-        "micro_contrast": "Four neighboring material colors distinguish dark margins and lighter tips.",
-        "light_and_volume": "Dark base edge and selected highlights identify raised growth; upright cutouts add height.",
-        "material_continuity": "The species-specific ramp remains coherent across the mat and upright frond.",
-        "edge_variation": "Asymmetric transparent edges and separated growth points.",
-        "variant_identity": "Deep burgundy algal holdfast with branching red fronds.",
-        "vanilla_comparison": "Vanilla fern provides native-scale foliage and structural transparency, not the species outline.",
-        "functional_material_cues": "A ground-contact mat and multiple independently oriented fronds identify the low colony."
+        "silhouette": "Burgundy layered marine branching lobes of uneven height.",
+        "cluster_structure": "Contiguous low carpet and individually shaped branch groups connected to its surface.",
+        "micro_contrast": "Clustered neighboring six-color values; lighter frond tips and darker side ramp.",
+        "light_and_volume": "Actual full-volume cuboids and distinct face orientations produce volume rather than alpha planes.",
+        "material_continuity": "Same species-specific palette across opaque mat and branches; UVs retain one texel per model unit.",
+        "edge_variation": "Asymmetric branch ends, varying height and clear spaces between stems.",
+        "variant_identity": "Burgundy layered marine branching lobes of uneven height.",
+        "vanilla_comparison": "Vanilla moss carpet supplies one-unit thickness and block footprint, with original species-specific textures and branches.",
+        "functional_material_cues": "Visible carpet side faces support attached raised vegetation; no disconnected voxel elements."
       },
       "atlas": {
         "revision": "r9",
         "rule": "custom",
-        "reference": "minecraft:block/fern",
+        "reference": "minecraft:block/moss_block",
         "reference_minecraft": "1.21.1",
-        "applied_pattern": "Native-scale cutouts with intentional structural transparency.",
-        "reference_limit": "Fern is not a moss or lichen; the mat and branch silhouette are original.",
-        "native_view": "Deep burgundy algal holdfast with branching red fronds.",
-        "context_type": "placed_cutout",
-        "context_view": "Actual nearest-neighbor atlas family preview on muted terrain-color background inspected; model UV ranges checked in source. Graphical client and in-world lighting NOT_RUN.",
-        "custom_reason": "Moss and lichen mat plus upright frond atlas has no exact vanilla role.",
-        "reference_source": "misode/mcmeta 1.21.1-assets block/fern.png actual PNG inspected, checksum recorded by prior asset review."
+        "applied_pattern": "Native carpet thickness and clustered palette transitions, opaque faces with independent atlas regions.",
+        "reference_limit": "Vanilla moss carpet has no raised branches; all additional geometry and texture are original.",
+        "native_view": "Burgundy layered marine branching lobes of uneven height.",
+        "context_type": "model_uv",
+        "context_view": "Exact occupied-voxel geometry and atlas-sampled visible faces statically rasterized from two opposite corners and inspected; connectedness validated. 22 elements, maximum height 12/16. Not an actual client render or shader test.",
+        "custom_reason": "Full-volume species-specific moss/lichen geometry with 32px atlas; no exact vanilla role.",
+        "reference_source": "misode/mcmeta 1.21.1-assets block/moss_block.png actual PNG inspected, SHA-256 computed from decoded bytes; moss_carpet model inspected."
       }
     },
     "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/bark_moss_broadleaf.png": {

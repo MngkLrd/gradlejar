@@ -89,3 +89,6 @@ Fix incorrect Supplier import in MossFeature. Optional Metabolism v1 revision 4+
 
 ### 1.6.5 QA scenario limit fix
 The 1.6.4 diagnostic compiled but stopped before starting its server: 252 steps exceeded the existing 250-step runner limit. Move actual moss verification into the existing patch check and assert standalone ownership in all 12 existing food commands. Keep all 481 coverage IDs, independent combined Metabolism scenario and unchanged shared QA runner. No gameplay change.
+
+### 1.6.6 — moss geometry correction
+Player screenshot exposed flat crossed planes and a zero-thickness foundation. All six moss/lichen models now have a full 16×16×1 carpet and original opaque 32px atlas, 13–30 actual solid cuboids, connected branches, native 1:1 UVs. Four existing rotations preserved. Static two-angle voxel raster and face connectivity inspected; Gradle verifyMossVolume enforces geometry and texture rules. Existing spawning, food, source water, IDs and collision behavior unchanged. In-client visual test and shader rendering not yet verified.
