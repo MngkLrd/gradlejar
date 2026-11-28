@@ -24,6 +24,7 @@ DOCS = (
     "docs/development/MOD-NAMING.md",
     "docs/development/MOD-ADAPTATION.md",
     "docs/development/ECOSYSTEM-INTEGRATION.md",
+    "docs/development/AGENT-ISSUE-INBOX.md",
     "docs/README.md",
     "docs/art/BLOCK-ART.md",
     "docs/art/STRUCTURE-QA.md",

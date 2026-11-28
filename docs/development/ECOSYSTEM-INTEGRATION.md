@@ -74,6 +74,8 @@ The existing Build Hub plan now prints an advisory ecosystem impact preview for 
 
 ## 5. Direct developer coordination
 
+Apply the mandatory lightweight [Agent Issue Inbox](AGENT-ISSUE-INBOX.md) protocol for recipient routing, one scoped start-of-iteration lookup, execution, evidence and explicit closure. Reuse that inbox snapshot for this section; do not run a second repository-wide search.
+
 When a needed contract is absent, first inspect existing issues/PRs to avoid duplicates. Open or update one GitHub issue in the shared repository addressed to the actual provider owner, with capability ID, concrete gameplay need, exact inputs/outputs/units, read/write/lifecycle semantics, affected consumers and target, compatibility expectations, fallback/blocker, and executable acceptance criteria. Link it from the consumer PR/manifest and provider PR when available. Bundle related needs into a coherent domain contract instead of requesting unrelated speculative methods or repeatedly asking for individual fields.
 
 Provider owners check relevant outstanding requests at the start of each continuation, review related consumer source before extending the API, document delivered signatures/version/semantics and link their exact commit, QA evidence and artifacts in the issue. Consumer owners check the issue and actual provider source before resuming the integration. No routine human relay, no duplicate issues, no modifications to another owner's product without authorization; propose isolated provider fixes through the appropriate owner/PR. Escalate only real design conflicts, product-scope decisions or unresolved blockers. GitHub is the durable handoff; this process does not imply autonomous background communication between inactive agents.
