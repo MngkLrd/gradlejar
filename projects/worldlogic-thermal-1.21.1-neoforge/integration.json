@@ -149,6 +149,14 @@
       "required": false,
       "status": "implemented",
       "fallback": "Old Core retains native inventory shortcut and optional EMI; Patchouli resources load only with a compatible Core book."
+    },
+    {
+      "id": "worldlogic:excavation",
+      "version": 1,
+      "min_revision": 1,
+      "required": false,
+      "status": "implemented",
+      "fallback": "Old Core local permission only; API 21 probe failure denies direct harvest."
     }
   ],
   "features": [
@@ -183,16 +191,20 @@
         "projects/worldlogic-thermal-1.21.1-neoforge/src/main/java/dev/minemods/thermal/server/WaterExposure.java",
         "projects/worldlogic-thermal-1.21.1-neoforge/src/main/java/dev/minemods/thermal/content/WallInsulationBlock.java",
         "projects/worldlogic-thermal-1.21.1-neoforge/src/main/java/dev/minemods/thermal/content/SnowGathering.java",
-        "projects/worldlogic-thermal-1.21.1-neoforge/src/main/java/dev/minemods/thermal/content/VentBlock.java"
+        "projects/worldlogic-thermal-1.21.1-neoforge/src/main/java/dev/minemods/thermal/content/VentBlock.java",
+        "projects/worldlogic-thermal-1.21.1-neoforge/src/main/java/dev/minemods/thermal/content/HarvestPermission.java",
+        "projects/worldlogic-thermal-1.21.1-neoforge/src/main/java/dev/minemods/thermal/content/FiberHarvest.java"
       ],
       "provides": [
         "worldlogic:room_climate"
       ],
       "consumes": [
         "worldlogic:environment",
-        "worldlogic:material_properties"
+        "worldlogic:material_properties",
+        "worldlogic:excavation",
+        "worldlogic:survival_physics"
       ],
-      "integration_review": "RC54 Core API 15 PhysicalMaterials thermalResistance is authoritative for series wall resistance. Thermal owns cladding placement, geometric thickness and room air evolution; API exposes the actual face query used by the solver. Straw uses vanilla hay fire hooks, clay is nonflammable; native block lifecycle invalidates actual room state, so no separate fire capability or duplicate material table is needed. Enclosed air receives bounded waste heat from living noncreative nonspectator occupants, using Thermal's room solver and Core material profiles for snow/ice; no new resource deduction or global weather change. Leaf canopy consumes optional Terrarian resource tags; compact snow insulation and bare-handed packing operate on actual vanilla snow. No duplicate provider state."
+      "integration_review": "RC54 Core API 15 PhysicalMaterials thermalResistance is authoritative for series wall resistance. Thermal owns cladding placement, geometric thickness and room air evolution; API exposes the actual face query used by the solver. Straw uses vanilla hay fire hooks, clay is nonflammable; native block lifecycle invalidates actual room state, so no separate fire capability or duplicate material table is needed. Enclosed air receives bounded waste heat from living noncreative nonspectator occupants, using Thermal's room solver and Core material profiles for snow/ice; no new resource deduction or global weather change. Leaf canopy consumes optional Terrarian resource tags; compact snow insulation and bare-handed packing operate on actual vanilla snow. No duplicate provider state. Core 1.5.1 protection-only break check gates direct gathering and accepted work charges Core once; no foreign state."
     },
     {
       "id": "devices_and_clothing",
@@ -237,7 +249,8 @@
         "worldlogic:material_properties",
         "worldlogic:hydration_physiology",
         "worldlogic:metabolism_physiology",
-        "worldlogic:trauma_status"
+        "worldlogic:trauma_status",
+        "worldlogic:excavation"
       ],
       "ref": "tools/qa/scenarios/worldlogic-thermal.json",
       "status": "implemented"

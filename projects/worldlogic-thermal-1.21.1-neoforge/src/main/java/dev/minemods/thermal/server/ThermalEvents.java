@@ -131,7 +131,7 @@ public final class ThermalEvents {
     }
     public static void registerCommands(RegisterCommandsEvent event) {
         var qa=Commands.literal("qa").requires(s->s.hasPermission(2));
-        for(String name:new String[]{"climate","dry","heat","blocked","armor","effects","conditions","weather","history","comfort","fixtures","clothing","fiber_work","creative_tab","portable","advanced_clothes","devices","textile","adaptation","frostbite","nutrition","room_inertia","room_ventilation","room_humidity","room_persistence","room_cache","village_climate","integration","water_exposure","room_response","hud_signals","physical_materials","wall_insulation","insulation_fire","snow_shelter","leaf_canopy","polar_survival","admin_restore","presentation"}) {
+        for(String name:new String[]{"climate","dry","heat","blocked","armor","effects","conditions","weather","history","comfort","fixtures","clothing","fiber_work","creative_tab","portable","advanced_clothes","devices","textile","adaptation","frostbite","nutrition","room_inertia","room_ventilation","room_humidity","room_persistence","room_cache","village_climate","integration","water_exposure","room_response","hud_signals","physical_materials","wall_insulation","insulation_fire","snow_shelter","leaf_canopy","polar_survival","admin_restore","presentation","core_heal","gather_protection"}) {
             qa.then(Commands.literal(name).executes(c->{
                 ThermalChecks.verify(c.getSource().getLevel(),name);
                 c.getSource().sendSuccess(()->Component.literal("THERMAL_QA_"+name+"_PASS"),false);

@@ -76,14 +76,17 @@ public final class PhysicalBridge {
   if(!(stack.getItem() instanceof dev.minemods.thermal.content.ClimateGarment))return List.of();
   String n=BuiltInRegistries.ITEM.getKey(stack.getItem()).getPath();
   return switch(n){
-   case "fur_hat","fur_boots" -> List.of(new Layer("fur",.018),new Layer("leather",.002));
+   case "fur_hat" -> List.of(new Layer("fur",.020),new Layer("leather",.002));
+   case "fur_boots" -> List.of(new Layer("fur",.022),new Layer("leather",.002));
    case "fur_coat" -> List.of(new Layer("fur",.025),new Layer("leather",.002));
-   case "grass_hood","grass_coat","grass_leggings","grass_boots" -> List.of(new Layer("straw",.020));
-   case "wool_underwear" -> List.of(new Layer("wool",.012));
-   case "waxed_cloak" -> List.of(new Layer("flax",.007),new Layer("wax",.001));
-   case "leather_face_mask" -> List.of(new Layer("leather",.004));
-   case "linen_clothes","light_tunic","desert_headwear" -> List.of(new Layer("flax",.002));
-   case "sun_hat","straw_cape" -> List.of(new Layer("straw",.005));
+   case "grass_hood","grass_coat","grass_leggings","grass_boots" -> List.of(new Layer("straw",.021));
+   case "wool_underwear" -> List.of(new Layer("wool",.018));
+   case "waxed_cloak" -> List.of(new Layer("flax",.013),new Layer("wax",.001));
+   case "leather_face_mask" -> List.of(new Layer("leather",.004),new Layer("wool",.009));
+   case "linen_clothes","light_tunic" -> List.of(new Layer("flax",.0022));
+   case "desert_headwear" -> List.of(new Layer("flax",.003));
+   case "sun_hat" -> List.of(new Layer("straw",.005));
+   case "straw_cape" -> List.of(new Layer("straw",.008));
    default -> List.of();
   };
  }

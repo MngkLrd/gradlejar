@@ -1,10 +1,10 @@
-name: Thermal Core 1.5.0 exact-artifact diagnostic
+name: Thermal Core 1.5.1 exact-artifact diagnostic
 on:
   pull_request:
     paths:
       - 'projects/worldlogic-thermal-1.21.1-neoforge/**'
       - 'tools/qa/scenarios/worldlogic-thermal.json'
-      - '.github/workflows/qa-thermal-core150-integration.yml'
+      - '.github/workflows/qa-thermal-core151-integration.yml'
   workflow_dispatch:
 permissions:
   contents: read
@@ -15,8 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 35
     env:
-      CORE_HASH: 581e25d192c55123599cbc5ed380db10f708c2981345ba8683f83e64df910805
-      CORE_NAME: worldlogic-neoforge-mc1.21.1-1.5.0.jar
+      CORE_HASH: a966fb939988e794586cd6a1ea18fafe340296447b67ef8a9827963328e20548
+      CORE_NAME: worldlogic-neoforge-mc1.21.1-1.5.1.jar
       PROJECT: projects/worldlogic-thermal-1.21.1-neoforge
       MINEMODS_DEP_CACHE: ${{ github.workspace }}/.thermal-diagnostic-cache
     steps:
@@ -35,10 +35,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          gh api "repos/$GITHUB_REPOSITORY/actions/runs/46119926441" --jq '.head_sha + " " + .conclusion' | grep -Fx 'e69ac212de92609f3200eb30de34a411ba46d684 success'
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/46123087105" --jq '.head_sha + " " + .conclusion' | grep -Fx '4a3e510fd4dcfae50e4292b2b2f95eca2f26a0e4 success'
           mkdir -p core-candidate core-report "$MINEMODS_DEP_CACHE"
-          gh run download 46119926441 --repo "$GITHUB_REPOSITORY" --name jar-worldlogic-1.21.1-neoforge-1.5.0-0 --dir core-candidate
-          gh run download 46119926441 --repo "$GITHUB_REPOSITORY" --name qa-report-0-1 --dir core-report
+          gh run download 46123087105 --repo "$GITHUB_REPOSITORY" --name jar-worldlogic-1.21.1-neoforge-1.5.1-0 --dir core-candidate
+          gh run download 46123087105 --repo "$GITHUB_REPOSITORY" --name qa-report-0-1 --dir core-report
           python3 -c 'import json,os; r=json.load(open("core-report/qa-report-0.json")); assert r["jar"]==os.environ["CORE_NAME"] and r["sha256"]==os.environ["CORE_HASH"] and r["eligible"] is True and r["qa_level"]==4'
           echo "$CORE_HASH  core-candidate/$CORE_NAME" | sha256sum -c -
           cp "core-candidate/$CORE_NAME" "$MINEMODS_DEP_CACHE/$CORE_HASH"
@@ -54,11 +54,11 @@ jobs:
           import json,os,pathlib
           p=pathlib.Path(os.environ["PROJECT"])/"build-profile.json"
           o=json.loads(p.read_text())
-          o["qa"]["dependencies"]=[{"name":os.environ["CORE_NAME"],"url":"https://github.com/MngkLrd/gradlejar/actions/runs/46119926441/artifacts/15253830826","sha256":os.environ["CORE_HASH"]}]
+          o["qa"]["dependencies"]=[{"name":os.environ["CORE_NAME"],"url":"https://github.com/MngkLrd/gradlejar/actions/runs/46123087105/artifacts/15254721484","sha256":os.environ["CORE_HASH"]}]
           p.write_text(json.dumps(o,indent=2))
           PY
           status=0
-          python3 -m tools.qa.gate "$PROJECT" --jar "$PROJECT/build/libs/worldlogic_thermal-neoforge-mc1.21.1-0.12.0.jar" --report thermal-exact-report.json --work thermal-exact-work || status=$?
+          python3 -m tools.qa.gate "$PROJECT" --jar "$PROJECT/build/libs/worldlogic_thermal-neoforge-mc1.21.1-0.12.1.jar" --report thermal-exact-report.json --work thermal-exact-work || status=$?
           python3 - <<'PY'
           import json,pathlib,os
           p=pathlib.Path("thermal-exact-report.json")
@@ -66,7 +66,7 @@ jobs:
           r["diagnostic_gate_passed"]=r.get("eligible") is True
           r["eligible"]=False
           r["diagnostic_core_sha256"]=os.environ["CORE_HASH"]
-          r["release_blocker"]="Core natural soil/ore QA run 46119926518 failed; this is not release authorization."
+          r["release_blocker"]="Core 1.5.1 independent natural-world QA 46123087116 is not certified by this addon diagnostic; this is not release authorization."
           p.write_text(json.dumps(r,indent=2))
           PY
           git restore -- "$PROJECT/build-profile.json"
@@ -75,7 +75,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: thermal-core150-NOT-RELEASE-evidence
+          name: thermal-core151-NOT-RELEASE-evidence
           path: |
             core-report/qa-report-0.json
             thermal-build.log
@@ -87,7 +87,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: thermal-0.12.0-core150-NOT-RELEASE
-          path: projects/worldlogic-thermal-1.21.1-neoforge/build/libs/worldlogic_thermal-neoforge-mc1.21.1-0.12.0.jar
+          name: thermal-0.12.1-core151-NOT-RELEASE
+          path: projects/worldlogic-thermal-1.21.1-neoforge/build/libs/worldlogic_thermal-neoforge-mc1.21.1-0.12.1.jar
           if-no-files-found: warn
           retention-days: 7

@@ -166,6 +166,28 @@ final class RoomChecks {
      var unoccupied=RoomPhysics.step(initial,new RoomPhysics.Inputs(-30,60,.035,.22,.35,8,0,0,0),120);
      require(compact.air()>unoccupied.air()+10&&unoccupied.air()==-30,"compact shelter gives meaningful but bounded warmth");
     }
+    case "gather_protection" -> {
+     BlockPos snow=CENTER.east(3);old.put(snow,l.getBlockState(snow));l.setBlock(snow,Blocks.SNOW_BLOCK.defaultBlockState(),3);
+     var actual=l.getBlockState(snow);
+     require(!HarvestPermission.allowed(l,snow,p,Blocks.STONE.defaultBlockState()),"stale target rejected");
+     require(!HarvestPermission.allowed(l,new BlockPos(1000000,100,1000000),p,actual),"unloaded target rejected");
+     java.lang.reflect.Method marker=null;
+     try{marker=Class.forName("dev.minemods.worldlogic.api.WorldLogicBreaks").getMethod("isProtectionProbe",net.neoforged.neoforge.event.level.BlockEvent.BreakEvent.class);}
+     catch(ClassNotFoundException|NoSuchMethodException oldCore){}
+     if(marker!=null){
+      final java.lang.reflect.Method probe=marker;
+      final int[] seen={0};
+      java.util.function.Consumer<net.neoforged.neoforge.event.level.BlockEvent.BreakEvent> deny=event->{
+       if(!event.getPos().equals(snow))return;
+       try{if(Boolean.TRUE.equals(probe.invoke(null,event))){seen[0]++;event.setCanceled(true);}}
+       catch(ReflectiveOperationException ex){throw new IllegalStateException(ex);}
+      };
+      net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(deny);
+      try{require(!SnowGathering.gather(l,snow,p)&&l.getBlockState(snow).equals(actual)&&seen[0]==1,"canceled Core probe leaves actual snow untouched");}
+      finally{net.neoforged.neoforge.common.NeoForge.EVENT_BUS.unregister(deny);}
+     }
+     require(SnowGathering.gather(l,snow,p)&&l.getBlockState(snow).isAir(),"permitted gathering succeeds");
+    }
     case "room_ventilation" -> {
      door(l,false);l.setBlock(WINDOW,Blocks.GLASS_PANE.defaultBlockState(),2);heater(l,true);
      var closed=run(l,10,50,.7,now,60);

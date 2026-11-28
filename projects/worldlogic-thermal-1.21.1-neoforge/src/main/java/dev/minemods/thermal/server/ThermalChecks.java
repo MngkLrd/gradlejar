@@ -175,10 +175,21 @@ final class ThermalChecks {
                 case "frostbite" -> ClimateEvolutionChecks.frostbite(l,p);
                 case "nutrition" -> ClimateEvolutionChecks.nutrition(l,p);
                 case "room_inertia" -> ClimateEvolutionChecks.room(l,p);
-                case "room_ventilation","room_humidity","room_persistence","room_cache","wall_insulation","insulation_fire","snow_shelter","leaf_canopy","polar_survival" -> RoomChecks.verify(l,p,name);
+                case "room_ventilation","room_humidity","room_persistence","room_cache","wall_insulation","insulation_fire","snow_shelter","leaf_canopy","polar_survival","gather_protection" -> RoomChecks.verify(l,p,name);
                 case "village_climate" -> ClimateEvolutionChecks.settlement(l,p);
                 case "integration" -> IntegrationChecks.verify(l,p);
                 case "presentation" -> {ThermalEvents.update(p);dev.minemods.thermal.integration.CorePresentation.verify(p);}
+                case "core_heal" -> {
+                    java.lang.reflect.Method heal;
+                    try{heal=WorldLogicApi.class.getMethod("adminRestore",net.minecraft.server.level.ServerPlayer.class);}
+                    catch(NoSuchMethodException oldCore){require(WorldLogicApi.class.getField("API_REVISION").getInt(null)<21,"Core API 21 must provide heal");break;}
+                    var tag=new CompoundTag();tag.putDouble("body",30);tag.putDouble("skinWet",.8);tag.putInt("coldSeconds",60);tag.putDouble("adaptCold",.3);n.put(ThermalEvents.KEY,tag);ThermalEvents.penalty(p,.2);
+                    Object result=heal.invoke(null,p);
+                    var restored=(java.util.List<?>)result.getClass().getMethod("restored").invoke(result);
+                    require(restored.contains("worldlogic_thermal"),"Core actually calls Thermal heal: "+restored);
+                    var after=n.getCompound(ThermalEvents.KEY);
+                    require(after.getDouble("body")==37&&after.getDouble("skinWet")==0&&after.getInt("coldSeconds")==0&&after.getDouble("adaptCold")==.3,"coordinated heal resets only transient temperature state");
+                }
                 case "water_exposure","room_response","hud_signals" -> StabilityChecks.verify(l,p,name);
                 case "physical_materials" -> PhysicalChecks.verify(l,p);
                 case "admin_restore" -> {

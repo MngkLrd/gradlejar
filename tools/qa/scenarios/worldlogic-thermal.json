@@ -266,6 +266,18 @@
       "command": "thermal qa presentation",
       "expect": "THERMAL_QA_presentation_PASS",
       "assertion": true
+    },
+    {
+      "name": "Core 1.5.1 admin coordinator invokes actual Thermal reset",
+      "command": "thermal qa core_heal",
+      "expect": "THERMAL_QA_core_heal_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Direct emergency gathering rejects stale or canceled Core protection probes",
+      "command": "thermal qa gather_protection",
+      "expect": "THERMAL_QA_gather_protection_PASS",
+      "assertion": true
     }
   ],
   "coverage": [
@@ -706,6 +718,28 @@
         {
           "backend": "server",
           "name": "Core presentation registry and actual Thermal processing descriptors"
+        }
+      ]
+    },
+    {
+      "id": "core-heal",
+      "kind": "mechanic",
+      "subject": "Core 1.5.1 admin coordinator invokes actual Thermal reset",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core 1.5.1 admin coordinator invokes actual Thermal reset"
+        }
+      ]
+    },
+    {
+      "id": "gather-protection",
+      "kind": "mechanic",
+      "subject": "Direct emergency gathering rejects stale or canceled Core protection probes",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Direct emergency gathering rejects stale or canceled Core protection probes"
         }
       ]
     }

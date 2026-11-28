@@ -25,8 +25,11 @@ public final class FiberHarvest {
   e.setCancellationResult(InteractionResult.SUCCESS);e.setCanceled(true);
  }
  public static boolean harvest(ServerLevel level,BlockPos pos,Player p){
-  if(!canHarvest(level.getBlockState(pos)))return false;
+  if(!level.hasChunkAt(pos))return false;
+  var state=level.getBlockState(pos);
+  if(!canHarvest(state)||!HarvestPermission.allowed(level,pos,p,state))return false;
   if(!level.destroyBlock(pos,false,p))return false;
+  HarvestPermission.accepted(p,.15);
   Block.popResource(level,pos,new ItemStack(ThermalContent.RAW_FIBER.get(),1));return true;
  }
 }

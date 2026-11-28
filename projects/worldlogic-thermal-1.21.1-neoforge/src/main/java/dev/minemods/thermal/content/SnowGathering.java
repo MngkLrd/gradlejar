@@ -20,11 +20,13 @@ public final class SnowGathering {
   e.setCancellationResult(InteractionResult.SUCCESS);e.setCanceled(true);
  }
  public static boolean gather(ServerLevel l,BlockPos pos,Player p){
-  if(!l.mayInteract(p,pos)||!p.mayBuild()||p.isCreative()||p.isSpectator())return false;
+  if(!l.hasChunkAt(pos)||!l.mayInteract(p,pos)||!p.mayBuild()||p.isCreative()||p.isSpectator())return false;
   var s=l.getBlockState(pos);
   if(!s.is(Blocks.SNOW)&&!s.is(Blocks.SNOW_BLOCK))return false;
+  if(!HarvestPermission.allowed(l,pos,p,s))return false;
   var drop=s.is(Blocks.SNOW_BLOCK)?new ItemStack(Items.SNOW_BLOCK):new ItemStack(Items.SNOWBALL,Math.max(1,s.getValue(SnowLayerBlock.LAYERS)/2));
   if(!l.destroyBlock(pos,false,p))return false;
+  HarvestPermission.accepted(p,.10);
   Block.popResource(l,pos,drop);
   return true;
  }
