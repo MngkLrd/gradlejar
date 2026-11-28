@@ -381,6 +381,226 @@
           "Seven soil types can be tilled. Drying or trampling restores the original soil. Terrarian can read soil properties."
         ]
       }
+    },
+    {
+      "id": "mineral_hematite",
+      "title": {
+        "ru": "Гематит",
+        "en": "Hematite"
+      },
+      "models": [
+        "worldlogic:hematite_ore",
+        "worldlogic:deepslate_hematite_ore",
+        "worldlogic:hematite"
+      ],
+      "body": {
+        "ru": [
+          "Оксид железа, от красноватого до металлически-серого; осадочные и железистые метаморфические залежи.",
+          "Номинальная плотность минерала: 5260 кг/м³. Твёрдость по Моосу: 5.5. В игре добывается железной или более прочной киркой. Без шёлкового касания выпадает образец. Переплавки и новых производственных рецептов нет."
+        ],
+        "en": [
+          "Iron oxide, reddish to metallic gray; sedimentary and iron-rich metamorphic bodies.",
+          "Nominal mineral density: 5260 kg/m³; Mohs hardness 5.5. Mine using iron or better pickaxe. Without Silk Touch, drops a specimen. No smelting or new production recipes."
+        ]
+      }
+    },
+    {
+      "id": "mineral_magnetite",
+      "title": {
+        "ru": "Магнетит",
+        "en": "Magnetite"
+      },
+      "models": [
+        "worldlogic:magnetite_ore",
+        "worldlogic:deepslate_magnetite_ore",
+        "worldlogic:magnetite"
+      ],
+      "body": {
+        "ru": [
+          "Тёмный оксид железа, магматические и железистые породы.",
+          "Номинальная плотность минерала: 5170 кг/м³. Твёрдость по Моосу: 5.5. В игре добывается железной или более прочной киркой. Без шёлкового касания выпадает образец. Переплавки и новых производственных рецептов нет."
+        ],
+        "en": [
+          "Dark iron oxide, magmatic and iron-rich rock.",
+          "Nominal mineral density: 5170 kg/m³; Mohs hardness 5.5. Mine using iron or better pickaxe. Without Silk Touch, drops a specimen. No smelting or new production recipes."
+        ]
+      }
+    },
+    {
+      "id": "mineral_cassiterite",
+      "title": {
+        "ru": "Касситерит",
+        "en": "Cassiterite"
+      },
+      "models": [
+        "worldlogic:cassiterite_ore",
+        "worldlogic:deepslate_cassiterite_ore",
+        "worldlogic:cassiterite"
+      ],
+      "body": {
+        "ru": [
+          "Оксид олова, часто связан с гранитами и гидротермальными жилами.",
+          "Номинальная плотность минерала: 6900 кг/м³. Твёрдость по Моосу: 6.5. В игре добывается железной или более прочной киркой. Без шёлкового касания выпадает образец. Переплавки и новых производственных рецептов нет."
+        ],
+        "en": [
+          "Tin oxide, commonly associated with granite-related hydrothermal veins.",
+          "Nominal mineral density: 6900 kg/m³; Mohs hardness 6.5. Mine using iron or better pickaxe. Without Silk Touch, drops a specimen. No smelting or new production recipes."
+        ]
+      }
+    },
+    {
+      "id": "mineral_galena",
+      "title": {
+        "ru": "Галенит",
+        "en": "Galena"
+      },
+      "models": [
+        "worldlogic:galena_ore",
+        "worldlogic:deepslate_galena_ore",
+        "worldlogic:galena"
+      ],
+      "body": {
+        "ru": [
+          "Сульфид свинца, серый минерал с кубической спайностью, карбонатные жилы.",
+          "Номинальная плотность минерала: 7500 кг/м³. Твёрдость по Моосу: 2.5. В игре добывается каменной или более прочной киркой. Без шёлкового касания выпадает образец. Переплавки и новых производственных рецептов нет."
+        ],
+        "en": [
+          "Lead sulfide, gray cubic cleavage, carbonate-hosted veins.",
+          "Nominal mineral density: 7500 kg/m³; Mohs hardness 2.5. Mine using stone or better pickaxe. Without Silk Touch, drops a specimen. No smelting or new production recipes."
+        ]
+      }
+    },
+    {
+      "id": "mineral_sphalerite",
+      "title": {
+        "ru": "Сфалерит",
+        "en": "Sphalerite"
+      },
+      "models": [
+        "worldlogic:sphalerite_ore",
+        "worldlogic:deepslate_sphalerite_ore",
+        "worldlogic:sphalerite"
+      ],
+      "body": {
+        "ru": [
+          "Сульфид цинка, бурый или медово-жёлтый, гидротермальные залежи.",
+          "Номинальная плотность минерала: 4000 кг/м³. Твёрдость по Моосу: 3.8. В игре добывается каменной или более прочной киркой. Без шёлкового касания выпадает образец. Переплавки и новых производственных рецептов нет."
+        ],
+        "en": [
+          "Zinc sulfide, brown to honey-colored, hydrothermal deposits.",
+          "Nominal mineral density: 4000 kg/m³; Mohs hardness 3.8. Mine using stone or better pickaxe. Without Silk Touch, drops a specimen. No smelting or new production recipes."
+        ]
+      }
+    },
+    {
+      "id": "mineral_pyrite",
+      "title": {
+        "ru": "Пирит",
+        "en": "Pyrite"
+      },
+      "models": [
+        "worldlogic:pyrite_ore",
+        "worldlogic:deepslate_pyrite_ore",
+        "worldlogic:pyrite"
+      ],
+      "body": {
+        "ru": [
+          "Сульфид железа с латунно-жёлтыми кубическими кристаллами.",
+          "Номинальная плотность минерала: 5000 кг/м³. Твёрдость по Моосу: 6.2. В игре добывается железной или более прочной киркой. Без шёлкового касания выпадает образец. Переплавки и новых производственных рецептов нет."
+        ],
+        "en": [
+          "Iron sulfide with brass-colored cubic crystals.",
+          "Nominal mineral density: 5000 kg/m³; Mohs hardness 6.2. Mine using iron or better pickaxe. Without Silk Touch, drops a specimen. No smelting or new production recipes."
+        ]
+      }
+    },
+    {
+      "id": "mineral_malachite",
+      "title": {
+        "ru": "Малахит",
+        "en": "Malachite"
+      },
+      "models": [
+        "worldlogic:malachite_ore",
+        "worldlogic:deepslate_malachite_ore",
+        "worldlogic:malachite"
+      ],
+      "body": {
+        "ru": [
+          "Зелёный карбонат меди, приповерхностная зона окисления медных залежей.",
+          "Номинальная плотность минерала: 3950 кг/м³. Твёрдость по Моосу: 3.8. В игре добывается каменной или более прочной киркой. Без шёлкового касания выпадает образец. Переплавки и новых производственных рецептов нет."
+        ],
+        "en": [
+          "Green copper carbonate, near-surface oxidation zone of copper deposits.",
+          "Nominal mineral density: 3950 kg/m³; Mohs hardness 3.8. Mine using stone or better pickaxe. Without Silk Touch, drops a specimen. No smelting or new production recipes."
+        ]
+      }
+    },
+    {
+      "id": "mineral_bauxite",
+      "title": {
+        "ru": "Боксит",
+        "en": "Bauxite"
+      },
+      "models": [
+        "worldlogic:bauxite_ore",
+        "worldlogic:deepslate_bauxite_ore",
+        "worldlogic:bauxite"
+      ],
+      "body": {
+        "ru": [
+          "Алюминийсодержащая порода выветривания, неглубокие залежи; свойства изменчивы.",
+          "Номинальная плотность минерала: 2500 кг/м³. Твёрдость по Моосу: 2.5. В игре добывается каменной или более прочной киркой. Без шёлкового касания выпадает образец. Переплавки и новых производственных рецептов нет."
+        ],
+        "en": [
+          "Aluminum-rich weathering rock, shallow deposits; variable physical properties.",
+          "Nominal mineral density: 2500 kg/m³; Mohs hardness 2.5. Mine using stone or better pickaxe. Without Silk Touch, drops a specimen. No smelting or new production recipes."
+        ]
+      }
+    },
+    {
+      "id": "mineral_fluorite",
+      "title": {
+        "ru": "Флюорит",
+        "en": "Fluorite"
+      },
+      "models": [
+        "worldlogic:fluorite_ore",
+        "worldlogic:deepslate_fluorite_ore",
+        "worldlogic:fluorite"
+      ],
+      "body": {
+        "ru": [
+          "Фторид кальция, часто кубические кристаллы в карбонатных и гидротермальных жилах.",
+          "Номинальная плотность минерала: 3180 кг/м³. Твёрдость по Моосу: 4. В игре добывается каменной или более прочной киркой. Без шёлкового касания выпадает образец. Переплавки и новых производственных рецептов нет."
+        ],
+        "en": [
+          "Calcium fluoride, often cubic crystals in carbonate and hydrothermal veins.",
+          "Nominal mineral density: 3180 kg/m³; Mohs hardness 4. Mine using stone or better pickaxe. Without Silk Touch, drops a specimen. No smelting or new production recipes."
+        ]
+      }
+    },
+    {
+      "id": "mineral_cinnabar",
+      "title": {
+        "ru": "Киноварь",
+        "en": "Cinnabar"
+      },
+      "models": [
+        "worldlogic:cinnabar_ore",
+        "worldlogic:deepslate_cinnabar_ore",
+        "worldlogic:cinnabar"
+      ],
+      "body": {
+        "ru": [
+          "Красный сульфид ртути, связан с гидротермальной активностью. Только игровой коллекционный образец.",
+          "Номинальная плотность минерала: 8100 кг/м³. Твёрдость по Моосу: 2.2. В игре добывается каменной или более прочной киркой. Без шёлкового касания выпадает образец. Переплавки и новых производственных рецептов нет."
+        ],
+        "en": [
+          "Red mercury sulfide, associated with hydrothermal activity. Collectible game specimen only.",
+          "Nominal mineral density: 8100 kg/m³; Mohs hardness 2.2. Mine using stone or better pickaxe. Without Silk Touch, drops a specimen. No smelting or new production recipes."
+        ]
+      }
     }
   ]
 }

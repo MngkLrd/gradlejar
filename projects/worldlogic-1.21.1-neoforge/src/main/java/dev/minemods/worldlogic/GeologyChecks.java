@@ -83,6 +83,14 @@ public final class GeologyChecks {
     }
    require(count>0,"actual chunk generated ore "+ore);counts.put(ore,count);
   }
+  for(String name:MineralContent.IDS){
+   var ore=GeologyModel.Ore.valueOf(name.toUpperCase(java.util.Locale.ROOT));
+   var shallow=MineralContent.ore(ore,false);var deep=MineralContent.ore(ore,true);
+   require(MineralContent.type(shallow)==ore&&MineralContent.type(deep)==ore,"registered ore variants "+name);
+   var profile=dev.minemods.worldlogic.api.PhysicalMaterials.block(shallow);
+   require(profile.components().size()==2&&Double.isFinite(dev.minemods.worldlogic.api.PhysicalMaterials.evaluate(profile,dev.minemods.worldlogic.api.PhysicalMaterials.State.reference()).massKg()),"ore mass "+name);
+   require(dev.minemods.worldlogic.api.PhysicalMaterials.itemResult(new net.minecraft.world.item.ItemStack(MineralContent.specimen(ore))).massKg()>0,"specimen mass "+name);
+  }
   org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_ORE_FIXTURES {}",counts);
  }
  public static void verifyBalance(ServerLevel l){
