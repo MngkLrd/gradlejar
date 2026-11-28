@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/template_farmland",
+  "textures": {
+    "dirt": "worldlogic:block/laterite",
+    "top": "worldlogic:block/laterite_farmland"
+  }
+}

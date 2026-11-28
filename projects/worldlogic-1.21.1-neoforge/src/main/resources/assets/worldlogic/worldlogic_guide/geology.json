@@ -1,0 +1,386 @@
+{
+  "schema": 1,
+  "id": "geology",
+  "order": 80,
+  "requires": "worldlogic",
+  "title": {
+    "ru": "Геология и руды",
+    "en": "Geology and ores"
+  },
+  "source": "WorldLogic 1.1.0 development",
+  "pages": [
+    {
+      "id": "geography",
+      "title": {
+        "ru": "География и биомы",
+        "en": "Geography and biomes"
+      },
+      "models": [
+        "minecraft:grass_block",
+        "minecraft:sand",
+        "minecraft:gravel",
+        "minecraft:stone"
+      ],
+      "body": {
+        "ru": [
+          "Материки, горы, широты и влажность определяют природные зоны. В новом мире RC32 активны 58 биомов; старые идентификаторы сохранены для сохранений.",
+          "Уровень моря Y=63. Мир простирается от Y=-256 до Y=511. Прибрежные биомы должны находиться у воды, а песчаные берега состоят преимущественно из песка.",
+          "Тропики обычно теплее, высокогорья и полярные области холоднее. Растения и деревья зависят от Terrarian; ванильное морское наполнение временно восстановлено."
+        ],
+        "en": [
+          "Continents, mountains, latitude and moisture shape ecological zones. RC32 uses 58 active biomes for new worlds; old IDs remain for saves.",
+          "Sea level is Y=63; world bounds are Y=-256 to 511. Shores belong near water, with sandy beaches mainly sand.",
+          "Tropics tend to be warm; mountains and polar regions cold. Terrarian supplies terrestrial flora; vanilla marine decoration is temporarily restored."
+        ]
+      }
+    },
+    {
+      "id": "geology",
+      "title": {
+        "ru": "Руды и пещеры",
+        "en": "Ores and caves"
+      },
+      "models": [
+        "minecraft:iron_ore",
+        "minecraft:copper_ore",
+        "minecraft:deepslate_diamond_ore",
+        "minecraft:calcite"
+      ],
+      "body": {
+        "ru": [
+          "Руды формируются региональными месторождениями и более мелкими залежами. Геология зависит от местности и глубины, поэтому не все ресурсы распределены одинаково.",
+          "Ищи подходящие породы и исследуй несколько участков, а не только одну высоту. Встречаются карстовые полости, шахты, глубокие пещеры и подземная вода.",
+          "Ванильные рудные жилы в новом Realistic отключены. Не рассчитывай на старые таблицы добычи; полная природная проверка месторождений ещё не завершена."
+        ],
+        "en": [
+          "Ores form regional deposits and smaller pockets. Geology depends on location and depth, so resources are not uniformly distributed.",
+          "Look for suitable host rocks and explore different areas. Karst cavities, shafts, deep caves and groundwater can occur.",
+          "Vanilla ore veins are disabled in new Realistic worlds. Old mining tables are not reliable; full natural-world deposit QA remains incomplete."
+        ]
+      }
+    },
+    {
+      "id": "soil",
+      "title": {
+        "ru": "Почвы и экология",
+        "en": "Soils and ecology"
+      },
+      "models": [
+        "worldlogic:humus",
+        "worldlogic:loam",
+        "worldlogic:peat",
+        "worldlogic:alluvial_silt",
+        "worldlogic:frozen_soil"
+      ],
+      "body": {
+        "ru": [
+          "Гумус — органическая почва; суглинок — минеральная; торф удерживает влагу; аллювиальный ил связан с осадками воды; мёрзлая почва хуже пропускает воду.",
+          "Осадки пополняют запас воды в почве, снег накапливается и тает, часть влаги испаряется, уходит в грунт или сток. Модель учитывает проницаемость и плодородие.",
+          "Экология корней, опада и засоления доступна через ядро. Автоматический полный жизненный цикл растений ещё не реализован."
+        ],
+        "en": [
+          "Humus is organic soil; loam mineral-rich; peat retains moisture; alluvial silt represents water deposits; frozen soil limits infiltration.",
+          "Precipitation replenishes soil water; snow accumulates and melts; water evaporates, recharges groundwater or runs off. Permeability and fertility matter.",
+          "Root, litter and salinity budgets are available through Core. A complete automatic plant lifecycle is not implemented."
+        ]
+      }
+    },
+    {
+      "id": "vertical",
+      "title": {
+        "ru": "Вертикальное устройство мира",
+        "en": "Vertical world structure"
+      },
+      "models": [
+        "minecraft:stone",
+        "minecraft:deepslate",
+        "minecraft:bedrock"
+      ],
+      "body": {
+        "ru": [
+          "Realistic: нижняя граница Y=-256, верхняя Y=511, море Y=63. Подземная часть расширена относительно ванильной.",
+          "Руды и пещеры определяются моделью геологических районов. Старые чанки не пересоздаются; новую генерацию ищи в новых чанках."
+        ],
+        "en": [
+          "Realistic extends from Y=-256 to 511, with sea level at 63. The underground is expanded beyond vanilla.",
+          "Geological districts determine ores and caves. Existing chunks are not regenerated."
+        ]
+      }
+    },
+    {
+      "id": "sedimentary",
+      "title": {
+        "ru": "Осадочная провинция",
+        "en": "Sedimentary province"
+      },
+      "models": [
+        "minecraft:coal_ore",
+        "minecraft:iron_ore"
+      ],
+      "body": {
+        "ru": [
+          "Пластовые залежи угля и железа; угольные региональные тела на Y 20–68 и −38…10, железо −65…−12.",
+          "Диапазоны относятся к центрам моделируемых тел, а не к гарантированным слоям. Обычные и региональные карманы могут пересекаться."
+        ],
+        "en": [
+          "Layered coal and iron deposits; regional coal centers Y 20–68 and −38…10, iron −65…−12.",
+          "Ranges describe modeled body centers, not guaranteed layers. Background pockets and regional bodies may overlap."
+        ]
+      }
+    },
+    {
+      "id": "carbonate",
+      "title": {
+        "ru": "Карбонатная провинция",
+        "en": "Carbonate province"
+      },
+      "models": [
+        "minecraft:calcite",
+        "minecraft:coal_ore"
+      ],
+      "body": {
+        "ru": [
+          "Похожее распределение угля и железа, но возможны карстовые галереи, камеры и подземные озёра. Большие поверхностные шахты редки.",
+          "Диапазоны относятся к центрам моделируемых тел, а не к гарантированным слоям. Обычные и региональные карманы могут пересекаться."
+        ],
+        "en": [
+          "Similar coal and iron distribution, with possible karst galleries, chambers and underground lakes. Large surface shafts are rare.",
+          "Ranges describe modeled body centers, not guaranteed layers. Background pockets and regional bodies may overlap."
+        ]
+      }
+    },
+    {
+      "id": "intrusive",
+      "title": {
+        "ru": "Интрузивная провинция",
+        "en": "Intrusive province"
+      },
+      "models": [
+        "minecraft:copper_ore",
+        "minecraft:gold_ore",
+        "minecraft:iron_ore"
+      ],
+      "body": {
+        "ru": [
+          "Региональные центры меди Y −24…48, золота −75…−20 и железа −80…−30.",
+          "Диапазоны относятся к центрам моделируемых тел, а не к гарантированным слоям. Обычные и региональные карманы могут пересекаться."
+        ],
+        "en": [
+          "Regional copper centers Y −24…48, gold −75…−20 and iron −80…−30.",
+          "Ranges describe modeled body centers, not guaranteed layers. Background pockets and regional bodies may overlap."
+        ]
+      }
+    },
+    {
+      "id": "metamorphic",
+      "title": {
+        "ru": "Метаморфическая провинция",
+        "en": "Metamorphic province"
+      },
+      "models": [
+        "minecraft:gold_ore",
+        "minecraft:emerald_ore",
+        "minecraft:lapis_ore"
+      ],
+      "body": {
+        "ru": [
+          "Центры золота Y −125…−40, изумрудов 10…65 и лазурита −55…15.",
+          "Диапазоны относятся к центрам моделируемых тел, а не к гарантированным слоям. Обычные и региональные карманы могут пересекаться."
+        ],
+        "en": [
+          "Gold centers Y −125…−40, emerald 10…65 and lapis −55…15.",
+          "Ranges describe modeled body centers, not guaranteed layers. Background pockets and regional bodies may overlap."
+        ]
+      }
+    },
+    {
+      "id": "craton",
+      "title": {
+        "ru": "Кратон",
+        "en": "Craton"
+      },
+      "models": [
+        "minecraft:deepslate_iron_ore",
+        "minecraft:deepslate_diamond_ore",
+        "minecraft:deepslate_redstone_ore"
+      ],
+      "body": {
+        "ru": [
+          "Глубокие региональные тела железа Y −145…−70 и редстоуна −190…−120. Возможны редкие алмазные тела с центром −188…−140.",
+          "Диапазоны относятся к центрам моделируемых тел, а не к гарантированным слоям. Обычные и региональные карманы могут пересекаться."
+        ],
+        "en": [
+          "Deep regional iron centers Y −145…−70 and redstone −190…−120. Rare diamond bodies may center at −188…−140.",
+          "Ranges describe modeled body centers, not guaranteed layers. Background pockets and regional bodies may overlap."
+        ]
+      }
+    },
+    {
+      "id": "pockets",
+      "title": {
+        "ru": "Мелкие рудные карманы",
+        "en": "Small ore pockets"
+      },
+      "models": [
+        "minecraft:coal_ore",
+        "minecraft:iron_ore",
+        "minecraft:copper_ore"
+      ],
+      "body": {
+        "ru": [
+          "Независимые карманы в сетке 16×16: уголь обычно на 6–23 блока ниже поверхности, железо на 12–39, дополнительные уголь/медь на 27–56. Глубокие карманы используют абсолютные Y.",
+          "Диапазоны относятся к центрам моделируемых тел, а не к гарантированным слоям. Обычные и региональные карманы могут пересекаться."
+        ],
+        "en": [
+          "Independent pockets on a 16×16 grid: coal 6–23 below surface, iron 12–39, additional coal/copper 27–56. Deep pockets use absolute Y.",
+          "Ranges describe modeled body centers, not guaranteed layers. Background pockets and regional bodies may overlap."
+        ]
+      }
+    },
+    {
+      "id": "deep_ores",
+      "title": {
+        "ru": "Глубинная добыча",
+        "en": "Deep mining"
+      },
+      "models": [
+        "minecraft:deepslate_diamond_ore",
+        "minecraft:deepslate_redstone_ore",
+        "minecraft:deepslate_gold_ore"
+      ],
+      "body": {
+        "ru": [
+          "Глубокие карманы железа/лазурита имеют центры Y −115…−35, редстоуна/золота −215…−80, возможных алмазов −225…−105. Границы не гарантируют руду в каждой точке.",
+          "Диапазоны относятся к центрам моделируемых тел, а не к гарантированным слоям. Обычные и региональные карманы могут пересекаться."
+        ],
+        "en": [
+          "Deep iron/lapis pocket centers Y −115…−35, redstone/gold −215…−80, possible diamonds −225…−105. Ranges do not guarantee ore at every position.",
+          "Ranges describe modeled body centers, not guaranteed layers. Background pockets and regional bodies may overlap."
+        ]
+      }
+    },
+    {
+      "id": "landscape_profiles",
+      "title": {
+        "ru": "Горы, долины и плато",
+        "en": "Mountains, valleys and plateaux"
+      },
+      "models": [
+        "minecraft:stone",
+        "minecraft:gravel",
+        "minecraft:grass_block"
+      ],
+      "body": {
+        "ru": [
+          "Горные массивы сохраняют географию материков. Склоны и предгорья учитывают соседние вершины, а долины — высоты по обе стороны.",
+          "Высокие плато и низкие равнины сохраняют свой характер. Локальные изменения рельефа не изменяют расположение материков и высоту уровня моря."
+        ],
+        "en": [
+          "Mountain systems retain continental geography. Slopes and foothills respond to surrounding peaks, and valleys consider elevated terrain on opposite sides.",
+          "High plateaux and low plains retain their character. Local relief adjustments do not move continents or sea level."
+        ]
+      }
+    },
+    {
+      "id": "erosion",
+      "title": {
+        "ru": "Эрозия и отложения",
+        "en": "Erosion and sediments"
+      },
+      "models": [
+        "minecraft:gravel",
+        "worldlogic:alluvial_silt",
+        "minecraft:stone"
+      ],
+      "body": {
+        "ru": [
+          "На влажных склонах сток может формировать мелкие ложбины. На выпуклых склонах порода постепенно разрушается, а в спокойных влажных понижениях откладывается ил.",
+          "Каменистые осыпи и аллювиальный ил появляются с учётом формы рельефа. Это начальная география мира, не динамическое разрушение построек игрока."
+        ],
+        "en": [
+          "On moist slopes runoff can shape shallow gullies. Convex slopes wear down; silt accumulates in quiet humid depressions.",
+          "Rock scree and alluvial silt follow relief profiles. This is initial terrain generation, not dynamic erosion of player buildings."
+        ]
+      }
+    },
+    {
+      "id": "coral_coasts",
+      "title": {
+        "ru": "Коралловые побережья",
+        "en": "Coral coasts"
+      },
+      "models": [
+        "minecraft:tube_coral_block",
+        "minecraft:brain_coral_block",
+        "minecraft:fire_coral_block",
+        "minecraft:calcite"
+      ],
+      "body": {
+        "ru": [
+          "В тёплой мелкой морской воде растут пять видов кораллов. Береговые рифы примыкают к суше, барьерные отделены лагуной, отдельные колонии образуют пятнистые рифы.",
+          "Рифовые гребни остаются под водой, а лагуны сохраняют свободные песчаные участки. Холодные и глубокие океаны не получают тропические коралловые колонии."
+        ],
+        "en": [
+          "Five coral types grow in warm shallow seawater. Fringing reefs follow the shore, barrier reefs are separated by a lagoon, and scattered colonies form patch reefs.",
+          "Reef crests stay submerged and lagoons retain open sandy areas. Cold and deep oceans do not receive tropical coral colonies."
+        ]
+      }
+    },
+    {
+      "id": "natural_ground",
+      "title": {
+        "ru": "Природные грунты",
+        "en": "Natural ground materials"
+      },
+      "models": [
+        "worldlogic:white_sand",
+        "worldlogic:volcanic_sand",
+        "worldlogic:chernozem",
+        "worldlogic:sandy_loam",
+        "worldlogic:laterite",
+        "worldlogic:volcanic_ash",
+        "worldlogic:volcanic_tuff"
+      ],
+      "body": {
+        "ru": [
+          "Чернозём формируется под степной и луговой растительностью. Супесь характерна для более сухих участков, латеритная почва для влажных тёплых областей. Плодородие и водоудержание различаются.",
+          "Белый карбонатный песок встречается на тёплых побережьях, связанных с рифами. Чёрный песок связан с вулканическими областями; пепел и туф с древними вулканическими конусами.",
+          "Вулканы имеют кратеры и слои базальта и туфа. Это не активные извержения; новые формы генерируются только в новых чанках."
+        ],
+        "en": [
+          "Chernozem forms in steppe and meadow soils. Sandy loam occurs on drier ground, lateritic soils in warm wet regions. Fertility and water retention differ.",
+          "White carbonate sand occurs on warm reef-associated coasts. Black sand is linked to volcanic areas; ash and tuff to volcanic cones.",
+          "Volcanoes have craters and basalt/tuff layers. They are dormant terrain features, generated only in new chunks."
+        ]
+      }
+    },
+    {
+      "id": "rock_working",
+      "title": {
+        "ru": "Породы и обработка камня",
+        "en": "Rocks and stoneworking"
+      },
+      "models": [
+        "worldlogic:limestone",
+        "worldlogic:shale",
+        "worldlogic:slate",
+        "worldlogic:gneiss",
+        "worldlogic:polished_gneiss",
+        "worldlogic:limestone_bricks",
+        "minecraft:stonecutter"
+      ],
+      "body": {
+        "ru": [
+          "Известняк образует карбонатные пласты, глинистый сланец — осадочные, гнейс и кровельный сланец — метаморфические. Пласты продолжаются вглубь мира; прочность пород различается.",
+          "Камнерез создаёт шлифованные блоки, каменные кирпичи, плиты, ступени и ограды. Из блока получается две плиты либо один другой результат.",
+          "Семь видов почвы можно вспахать. При высыхании или вытаптывании сохраняется исходная земля. Показатели почвы доступны Terrarian."
+        ],
+        "en": [
+          "Limestone forms carbonate layers, shale sedimentary layers, gneiss and slate metamorphic layers. Strata continue deep underground and hardness varies.",
+          "A stonecutter produces polished blocks, bricks, slabs, stairs and walls: two slabs or one other result from a full block.",
+          "Seven soil types can be tilled. Drying or trampling restores the original soil. Terrarian can read soil properties."
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,1173 @@
+{
+  "schema": 1,
+  "id": "biomes",
+  "order": 999,
+  "requires": "worldlogic",
+  "title": {
+    "ru": "Атлас биомов",
+    "en": "Biome atlas"
+  },
+  "source": "WorldLogic RC33",
+  "pages": [
+    {
+      "id": "polar_desert",
+      "title": {
+        "ru": "Полярная пустыня",
+        "en": "Polar Desert"
+      },
+      "models": [
+        "minecraft:sand"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:polar_desert. Климатические индексы классификатора: температура -1.2 … -0.55, влажность -1.2 … -0.68.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:polar_desert. Classifier indices: temperature -1.2 … -0.55, humidity -1.2 … -0.68.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "dry_tundra",
+      "title": {
+        "ru": "Сухая тундра",
+        "en": "Dry Tundra"
+      },
+      "models": [
+        "minecraft:snow_block"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:dry_tundra. Климатические индексы классификатора: температура -1.2 … -0.55, влажность -0.46 … -0.22.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:dry_tundra. Classifier indices: temperature -1.2 … -0.55, humidity -0.46 … -0.22.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "shrub_tundra",
+      "title": {
+        "ru": "Кустарниковая тундра",
+        "en": "Shrub Tundra"
+      },
+      "models": [
+        "minecraft:snow_block"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:shrub_tundra. Климатические индексы классификатора: температура -1.2 … -0.55, влажность -0.22 … 0.12.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:shrub_tundra. Classifier indices: temperature -1.2 … -0.55, humidity -0.22 … 0.12.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "moist_tundra",
+      "title": {
+        "ru": "Влажная тундра",
+        "en": "Moist Tundra"
+      },
+      "models": [
+        "minecraft:snow_block"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:moist_tundra. Климатические индексы классификатора: температура -1.2 … -0.55, влажность 0.12 … 0.48.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:moist_tundra. Classifier indices: temperature -1.2 … -0.55, humidity 0.12 … 0.48.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "arctic_wetland",
+      "title": {
+        "ru": "Арктическое болото",
+        "en": "Arctic Wetland"
+      },
+      "models": [
+        "minecraft:grass_block"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:arctic_wetland. Климатические индексы классификатора: температура -1.2 … -0.55, влажность 0.48 … 1.2.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:arctic_wetland. Classifier indices: temperature -1.2 … -0.55, humidity 0.48 … 1.2.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "cold_steppe",
+      "title": {
+        "ru": "Холодная степь",
+        "en": "Cold Steppe"
+      },
+      "models": [
+        "minecraft:grass_block"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:cold_steppe. Климатические индексы классификатора: температура -0.55 … -0.22, влажность -1.2 … -0.55.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:cold_steppe. Classifier indices: temperature -0.55 … -0.22, humidity -1.2 … -0.55.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "forest_tundra",
+      "title": {
+        "ru": "Лесотундра",
+        "en": "Forest Tundra"
+      },
+      "models": [
+        "minecraft:snow_block"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:forest_tundra. Климатические индексы классификатора: температура -0.55 … -0.22, влажность -0.55 … -0.22.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:forest_tundra. Classifier indices: temperature -0.55 … -0.22, humidity -0.55 … -0.22.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "continental_taiga",
+      "title": {
+        "ru": "Континентальная тайга",
+        "en": "Continental Taiga"
+      },
+      "models": [
+        "minecraft:grass_block"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:continental_taiga. Климатические индексы классификатора: температура -0.55 … -0.22, влажность -0.06 … 0.3.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:continental_taiga. Classifier indices: temperature -0.55 … -0.22, humidity -0.06 … 0.3.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "boreal_peatland",
+      "title": {
+        "ru": "Бореальные торфяники",
+        "en": "Boreal Peatland"
+      },
+      "models": [
+        "minecraft:grass_block"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:boreal_peatland. Климатические индексы классификатора: температура -0.55 … -0.22, влажность 0.48 … 1.2.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:boreal_peatland. Classifier indices: temperature -0.55 … -0.22, humidity 0.48 … 1.2.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "temperate_desert",
+      "title": {
+        "ru": "Умеренная пустыня",
+        "en": "Temperate Desert"
+      },
+      "models": [
+        "minecraft:sand"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:temperate_desert. Климатические индексы классификатора: температура -0.22 … 0.16, влажность -1.2 … -0.55.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:temperate_desert. Classifier indices: temperature -0.22 … 0.16, humidity -1.2 … -0.55.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "temperate_steppe",
+      "title": {
+        "ru": "Умеренная степь",
+        "en": "Temperate Steppe"
+      },
+      "models": [
+        "minecraft:grass_block"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:temperate_steppe. Климатические индексы классификатора: температура -0.22 … 0.16, влажность -0.4 … -0.22.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:temperate_steppe. Classifier indices: temperature -0.22 … 0.16, humidity -0.4 … -0.22.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "prairie",
+      "title": {
+        "ru": "Прерия",
+        "en": "Prairie"
+      },
+      "models": [
+        "minecraft:grass_block"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:prairie. Климатические индексы классификатора: температура -0.22 … 0.16, влажность -0.22 … 0.12.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:prairie. Classifier indices: temperature -0.22 … 0.16, humidity -0.22 … 0.12.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "mixed_forest",
+      "title": {
+        "ru": "Смешанный лес",
+        "en": "Mixed Forest"
+      },
+      "models": [
+        "minecraft:grass_block"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:mixed_forest. Климатические индексы классификатора: температура -0.22 … 0.16, влажность 0.12 … 0.3.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:mixed_forest. Classifier indices: temperature -0.22 … 0.16, humidity 0.12 … 0.3.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "temperate_rainforest",
+      "title": {
+        "ru": "Умеренный дождевой лес",
+        "en": "Temperate Rainforest"
+      },
+      "models": [
+        "minecraft:grass_block"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:temperate_rainforest. Климатические индексы классификатора: температура -0.22 … 0.16, влажность 0.48 … 1.2.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:temperate_rainforest. Classifier indices: temperature -0.22 … 0.16, humidity 0.48 … 1.2.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "subtropical_desert",
+      "title": {
+        "ru": "Субтропическая пустыня",
+        "en": "Subtropical Desert"
+      },
+      "models": [
+        "minecraft:sand"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:subtropical_desert. Климатические индексы классификатора: температура 0.16 … 0.38, влажность -1.2 … -0.55.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:subtropical_desert. Classifier indices: temperature 0.16 … 0.38, humidity -1.2 … -0.55.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "mediterranean_scrub",
+      "title": {
+        "ru": "Средиземноморское редколесье",
+        "en": "Mediterranean Scrub"
+      },
+      "models": [
+        "minecraft:grass_block"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:mediterranean_scrub. Климатические индексы классификатора: температура 0.16 … 0.38, влажность -0.55 … -0.4.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:mediterranean_scrub. Classifier indices: temperature 0.16 … 0.38, humidity -0.55 … -0.4.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "subtropical_grassland",
+      "title": {
+        "ru": "Субтропический луг",
+        "en": "Subtropical Grassland"
+      },
+      "models": [
+        "minecraft:grass_block"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:subtropical_grassland. Климатические индексы классификатора: температура 0.16 … 0.38, влажность -0.22 … 0.12.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:subtropical_grassland. Classifier indices: temperature 0.16 … 0.38, humidity -0.22 … 0.12.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "warm_broadleaf_forest",
+      "title": {
+        "ru": "Тёплый широколиственный лес",
+        "en": "Warm Broadleaf Forest"
+      },
+      "models": [
+        "minecraft:grass_block"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:warm_broadleaf_forest. Климатические индексы классификатора: температура 0.16 … 0.38, влажность 0.12 … 0.48.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:warm_broadleaf_forest. Classifier indices: temperature 0.16 … 0.38, humidity 0.12 … 0.48.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "subtropical_rainforest",
+      "title": {
+        "ru": "Субтропический дождевой лес",
+        "en": "Subtropical Rainforest"
+      },
+      "models": [
+        "minecraft:grass_block"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:subtropical_rainforest. Климатические индексы классификатора: температура 0.16 … 0.38, влажность 0.48 … 1.2.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:subtropical_rainforest. Classifier indices: temperature 0.16 … 0.38, humidity 0.48 … 1.2.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "hot_desert",
+      "title": {
+        "ru": "Жаркая пустыня",
+        "en": "Hot Desert"
+      },
+      "models": [
+        "minecraft:sand"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:hot_desert. Климатические индексы классификатора: температура 0.38 … 1.2, влажность -1.2 … -0.64.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:hot_desert. Classifier indices: temperature 0.38 … 1.2, humidity -1.2 … -0.64.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "thorn_scrub",
+      "title": {
+        "ru": "Колючее редколесье",
+        "en": "Thorn Scrub"
+      },
+      "models": [
+        "minecraft:grass_block"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:thorn_scrub. Климатические индексы классификатора: температура 0.38 … 1.2, влажность -0.48 … -0.3.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:thorn_scrub. Classifier indices: temperature 0.38 … 1.2, humidity -0.48 … -0.3.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "dry_savanna",
+      "title": {
+        "ru": "Сухая саванна",
+        "en": "Dry Savanna"
+      },
+      "models": [
+        "minecraft:grass_block"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:dry_savanna. Климатические индексы классификатора: температура 0.38 … 1.2, влажность -0.3 … -0.1.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:dry_savanna. Classifier indices: temperature 0.38 … 1.2, humidity -0.3 … -0.1.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "humid_savanna",
+      "title": {
+        "ru": "Влажная саванна",
+        "en": "Humid Savanna"
+      },
+      "models": [
+        "minecraft:grass_block"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:humid_savanna. Климатические индексы классификатора: температура 0.38 … 1.2, влажность -0.1 … 0.18.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:humid_savanna. Classifier indices: temperature 0.38 … 1.2, humidity -0.1 … 0.18.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "tropical_monsoon_forest",
+      "title": {
+        "ru": "Муссонный лес",
+        "en": "Tropical Monsoon Forest"
+      },
+      "models": [
+        "minecraft:grass_block"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:tropical_monsoon_forest. Климатические индексы классификатора: температура 0.38 … 1.2, влажность 0.32 … 0.48.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:tropical_monsoon_forest. Classifier indices: temperature 0.38 … 1.2, humidity 0.32 … 0.48.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "equatorial_rainforest",
+      "title": {
+        "ru": "Экваториальный дождевой лес",
+        "en": "Equatorial Rainforest"
+      },
+      "models": [
+        "minecraft:grass_block"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:equatorial_rainforest. Климатические индексы классификатора: температура 0.38 … 1.2, влажность 0.48 … 1.2.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:equatorial_rainforest. Classifier indices: temperature 0.38 … 1.2, humidity 0.48 … 1.2.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "polar_ocean",
+      "title": {
+        "ru": "Полярный океан",
+        "en": "Polar Ocean"
+      },
+      "models": [
+        "worldlogic:sea_water_bucket"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:polar_ocean. Климатические индексы классификатора: температура -1.2 … -0.55, влажность -1.2 … 1.2.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:polar_ocean. Classifier indices: temperature -1.2 … -0.55, humidity -1.2 … 1.2.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "polar_deep_ocean",
+      "title": {
+        "ru": "Полярные глубины",
+        "en": "Polar Deep Ocean"
+      },
+      "models": [
+        "worldlogic:sea_water_bucket"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:polar_deep_ocean. Климатические индексы классификатора: температура -1.2 … -0.55, влажность -1.2 … 1.2.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:polar_deep_ocean. Classifier indices: temperature -1.2 … -0.55, humidity -1.2 … 1.2.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "cold_ocean",
+      "title": {
+        "ru": "Холодный океан",
+        "en": "Cold Ocean"
+      },
+      "models": [
+        "worldlogic:sea_water_bucket"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:cold_ocean. Климатические индексы классификатора: температура -0.55 … -0.22, влажность -1.2 … 1.2.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:cold_ocean. Classifier indices: temperature -0.55 … -0.22, humidity -1.2 … 1.2.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "cold_deep_ocean",
+      "title": {
+        "ru": "Холодные океанические глубины",
+        "en": "Cold Deep Ocean"
+      },
+      "models": [
+        "worldlogic:sea_water_bucket"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:cold_deep_ocean. Климатические индексы классификатора: температура -0.55 … -0.22, влажность -1.2 … 1.2.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:cold_deep_ocean. Classifier indices: temperature -0.55 … -0.22, humidity -1.2 … 1.2.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "temperate_ocean",
+      "title": {
+        "ru": "Умеренный океан",
+        "en": "Temperate Ocean"
+      },
+      "models": [
+        "worldlogic:sea_water_bucket"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:temperate_ocean. Климатические индексы классификатора: температура -0.22 … 0.16, влажность -1.2 … 1.2.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:temperate_ocean. Classifier indices: temperature -0.22 … 0.16, humidity -1.2 … 1.2.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "temperate_deep_ocean",
+      "title": {
+        "ru": "Умеренные океанические глубины",
+        "en": "Temperate Deep Ocean"
+      },
+      "models": [
+        "worldlogic:sea_water_bucket"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:temperate_deep_ocean. Климатические индексы классификатора: температура -0.22 … 0.16, влажность -1.2 … 1.2.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:temperate_deep_ocean. Classifier indices: temperature -0.22 … 0.16, humidity -1.2 … 1.2.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "subtropical_ocean",
+      "title": {
+        "ru": "Субтропический океан",
+        "en": "Subtropical Ocean"
+      },
+      "models": [
+        "worldlogic:sea_water_bucket"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:subtropical_ocean. Климатические индексы классификатора: температура 0.16 … 0.38, влажность -1.2 … 1.2.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:subtropical_ocean. Classifier indices: temperature 0.16 … 0.38, humidity -1.2 … 1.2.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "warm_deep_ocean",
+      "title": {
+        "ru": "Тёплые океанические глубины",
+        "en": "Warm Deep Ocean"
+      },
+      "models": [
+        "worldlogic:sea_water_bucket"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:warm_deep_ocean. Климатические индексы классификатора: температура 0.16 … 1.2, влажность -1.2 … 1.2.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:warm_deep_ocean. Classifier indices: temperature 0.16 … 1.2, humidity -1.2 … 1.2.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "tropical_ocean",
+      "title": {
+        "ru": "Тропический океан",
+        "en": "Tropical Ocean"
+      },
+      "models": [
+        "worldlogic:sea_water_bucket"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:tropical_ocean. Климатические индексы классификатора: температура 0.38 … 1.2, влажность -1.2 … 1.2.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:tropical_ocean. Classifier indices: temperature 0.38 … 1.2, humidity -1.2 … 1.2.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "arctic_coast",
+      "title": {
+        "ru": "Арктическое побережье",
+        "en": "Arctic Coast"
+      },
+      "models": [
+        "minecraft:grass_block"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:arctic_coast. Климатические индексы классификатора: температура -1.2 … -0.45, влажность -1.2 … 1.2.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:arctic_coast. Classifier indices: temperature -1.2 … -0.45, humidity -1.2 … 1.2.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "rocky_coast",
+      "title": {
+        "ru": "Скалистое побережье",
+        "en": "Rocky Coast"
+      },
+      "models": [
+        "minecraft:grass_block"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:rocky_coast. Климатические индексы классификатора: температура -0.45 … 0.38, влажность -1.2 … -0.1.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:rocky_coast. Classifier indices: temperature -0.45 … 0.38, humidity -1.2 … -0.1.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "temperate_sandy_coast",
+      "title": {
+        "ru": "Песчаное побережье",
+        "en": "Temperate Sandy Coast"
+      },
+      "models": [
+        "minecraft:grass_block"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:temperate_sandy_coast. Климатические индексы классификатора: температура -0.45 … 0.38, влажность -0.1 … 1.2.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:temperate_sandy_coast. Classifier indices: temperature -0.45 … 0.38, humidity -0.1 … 1.2.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "tropical_sandy_coast",
+      "title": {
+        "ru": "Тропическое побережье",
+        "en": "Tropical Sandy Coast"
+      },
+      "models": [
+        "minecraft:grass_block"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:tropical_sandy_coast. Климатические индексы классификатора: температура 0.38 … 1.2, влажность -1.2 … 0.45.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:tropical_sandy_coast. Classifier indices: temperature 0.38 … 1.2, humidity -1.2 … 0.45.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "mangrove_coast",
+      "title": {
+        "ru": "Мангровое побережье",
+        "en": "Mangrove Coast"
+      },
+      "models": [
+        "minecraft:grass_block"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:mangrove_coast. Климатические индексы классификатора: температура 0.38 … 1.2, влажность 0.45 … 1.2.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:mangrove_coast. Classifier indices: temperature 0.38 … 1.2, humidity 0.45 … 1.2.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "nival_zone",
+      "title": {
+        "ru": "Нивальный пояс",
+        "en": "Nival Zone"
+      },
+      "models": [
+        "minecraft:grass_block"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:nival_zone. Климатические индексы классификатора: температура -1.2 … -0.65, влажность -1.2 … 1.2.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:nival_zone. Classifier indices: temperature -1.2 … -0.65, humidity -1.2 … 1.2.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "alpine_tundra",
+      "title": {
+        "ru": "Альпийская тундра",
+        "en": "Alpine Tundra"
+      },
+      "models": [
+        "minecraft:snow_block"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:alpine_tundra. Климатические индексы классификатора: температура -1.2 … -0.25, влажность -1.2 … 1.2.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:alpine_tundra. Classifier indices: temperature -1.2 … -0.25, humidity -1.2 … 1.2.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "alpine_meadow",
+      "title": {
+        "ru": "Альпийские луга",
+        "en": "Alpine Meadow"
+      },
+      "models": [
+        "minecraft:grass_block"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:alpine_meadow. Климатические индексы классификатора: температура -0.25 … 0.38, влажность -0.15 … 1.2.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:alpine_meadow. Classifier indices: temperature -0.25 … 0.38, humidity -0.15 … 1.2.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "montane_conifer_forest",
+      "title": {
+        "ru": "Горный хвойный лес",
+        "en": "Montane Conifer Forest"
+      },
+      "models": [
+        "minecraft:grass_block"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:montane_conifer_forest. Климатические индексы классификатора: температура -0.65 … -0.25, влажность -1.2 … 1.2.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:montane_conifer_forest. Classifier indices: temperature -0.65 … -0.25, humidity -1.2 … 1.2.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "montane_cloud_forest",
+      "title": {
+        "ru": "Горный облачный лес",
+        "en": "Montane Cloud Forest"
+      },
+      "models": [
+        "minecraft:grass_block"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:montane_cloud_forest. Климатические индексы классификатора: температура 0.38 … 1.2, влажность -0.15 … 1.2.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:montane_cloud_forest. Classifier indices: temperature 0.38 … 1.2, humidity -0.15 … 1.2.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "montane_dry_scrub",
+      "title": {
+        "ru": "Горное сухое редколесье",
+        "en": "Montane Dry Scrub"
+      },
+      "models": [
+        "minecraft:grass_block"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:montane_dry_scrub. Климатические индексы классификатора: температура -0.25 … 1.2, влажность -1.2 … -0.15.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:montane_dry_scrub. Classifier indices: temperature -0.25 … 1.2, humidity -1.2 … -0.15.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "temperate_marsh",
+      "title": {
+        "ru": "Умеренное болото",
+        "en": "Temperate Marsh"
+      },
+      "models": [
+        "minecraft:grass_block"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:temperate_marsh. Климатические индексы классификатора: температура -0.22 … 0.38, влажность 0.36 … 1.2.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:temperate_marsh. Classifier indices: temperature -0.22 … 0.38, humidity 0.36 … 1.2.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "tropical_floodplain",
+      "title": {
+        "ru": "Тропическая пойма",
+        "en": "Tropical Floodplain"
+      },
+      "models": [
+        "minecraft:grass_block"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:tropical_floodplain. Климатические индексы классификатора: температура 0.38 … 1.2, влажность 0.38 … 1.2.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:tropical_floodplain. Classifier indices: temperature 0.38 … 1.2, humidity 0.38 … 1.2.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "limestone_cavern",
+      "title": {
+        "ru": "Известняковые пещеры",
+        "en": "Limestone Cavern"
+      },
+      "models": [
+        "minecraft:stone"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:limestone_cavern. Климатические индексы классификатора: температура -1.2 … 1.2, влажность -1.2 … 0.45.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:limestone_cavern. Classifier indices: temperature -1.2 … 1.2, humidity -1.2 … 0.45.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "humid_cavern",
+      "title": {
+        "ru": "Влажные пещеры",
+        "en": "Humid Cavern"
+      },
+      "models": [
+        "minecraft:stone"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:humid_cavern. Климатические индексы классификатора: температура -1.2 … 1.2, влажность 0.45 … 1.2.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:humid_cavern. Classifier indices: temperature -1.2 … 1.2, humidity 0.45 … 1.2.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "deep_rock_cavern",
+      "title": {
+        "ru": "Глубинные пещеры",
+        "en": "Deep Rock Cavern"
+      },
+      "models": [
+        "minecraft:stone"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:deep_rock_cavern. Климатические индексы классификатора: температура -1.2 … 1.2, влажность -1.2 … 1.2.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:deep_rock_cavern. Classifier indices: temperature -1.2 … 1.2, humidity -1.2 … 1.2.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "polar_gravel_desert",
+      "title": {
+        "ru": "Полярная щебнистая пустыня",
+        "en": "Polar gravel desert"
+      },
+      "models": [
+        "minecraft:sand"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:polar_gravel_desert. Климатические индексы классификатора: температура -1.2 … -0.55, влажность -0.68 … -0.46.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:polar_gravel_desert. Classifier indices: temperature -1.2 … -0.55, humidity -0.68 … -0.46.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "light_conifer_taiga",
+      "title": {
+        "ru": "Светлохвойная тайга",
+        "en": "Light conifer taiga"
+      },
+      "models": [
+        "minecraft:grass_block"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:light_conifer_taiga. Климатические индексы классификатора: температура -0.55 … -0.22, влажность -0.22 … -0.06.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:light_conifer_taiga. Classifier indices: temperature -0.55 … -0.22, humidity -0.22 … -0.06.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "dark_conifer_taiga",
+      "title": {
+        "ru": "Темнохвойная тайга",
+        "en": "Dark conifer taiga"
+      },
+      "models": [
+        "minecraft:grass_block"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:dark_conifer_taiga. Климатические индексы классификатора: температура -0.55 … -0.22, влажность 0.3 … 0.48.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:dark_conifer_taiga. Classifier indices: temperature -0.55 … -0.22, humidity 0.3 … 0.48.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "shortgrass_steppe",
+      "title": {
+        "ru": "Низкотравная степь",
+        "en": "Shortgrass steppe"
+      },
+      "models": [
+        "minecraft:grass_block"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:shortgrass_steppe. Климатические индексы классификатора: температура -0.22 … 0.16, влажность -0.55 … -0.4.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:shortgrass_steppe. Classifier indices: temperature -0.22 … 0.16, humidity -0.55 … -0.4.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "temperate_deciduous_forest",
+      "title": {
+        "ru": "Умеренный листопадный лес",
+        "en": "Temperate deciduous forest"
+      },
+      "models": [
+        "minecraft:grass_block"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:temperate_deciduous_forest. Климатические индексы классификатора: температура -0.22 … 0.16, влажность 0.3 … 0.48.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:temperate_deciduous_forest. Classifier indices: temperature -0.22 … 0.16, humidity 0.3 … 0.48.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "sclerophyll_woodland",
+      "title": {
+        "ru": "Жестколистное редколесье",
+        "en": "Sclerophyll woodland"
+      },
+      "models": [
+        "minecraft:grass_block"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:sclerophyll_woodland. Климатические индексы классификатора: температура 0.16 … 0.38, влажность -0.4 … -0.22.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:sclerophyll_woodland. Classifier indices: temperature 0.16 … 0.38, humidity -0.4 … -0.22.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "rock_desert",
+      "title": {
+        "ru": "Каменистая пустыня",
+        "en": "Rock desert"
+      },
+      "models": [
+        "minecraft:sand"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:rock_desert. Климатические индексы классификатора: температура 0.38 … 1.2, влажность -0.64 … -0.48.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:rock_desert. Classifier indices: temperature 0.38 … 1.2, humidity -0.64 … -0.48.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    },
+    {
+      "id": "seasonal_tropical_forest",
+      "title": {
+        "ru": "Сезонный тропический лес",
+        "en": "Seasonal tropical forest"
+      },
+      "models": [
+        "minecraft:grass_block"
+      ],
+      "body": {
+        "ru": [
+          "Активный биом Realistic: worldlogic:seasonal_tropical_forest. Климатические индексы классификатора: температура 0.38 … 1.2, влажность 0.18 … 0.32.",
+          "Это диапазоны входных параметров, не градусы или проценты; отдельные интервалы могут быть разрывными. Реальная растительность зависит от Terrarian и условий местности."
+        ],
+        "en": [
+          "Active Realistic biome: worldlogic:seasonal_tropical_forest. Classifier indices: temperature 0.38 … 1.2, humidity 0.18 … 0.32.",
+          "These are input index ranges, not Celsius or percent; disjoint intervals may exist. Actual vegetation depends on Terrarian and local conditions."
+        ]
+      }
+    }
+  ]
+}
