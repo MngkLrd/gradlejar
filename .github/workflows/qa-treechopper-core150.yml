@@ -31,8 +31,9 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          gh api "repos/$GITHUB_REPOSITORY/contents/tools/qa/ecosystem.py?ref=2ef31184d8bcdd5541a095ffd738fbdadbc7bfda" --jq .content | base64 -d > /tmp/treechopper-ecosystem.py
-          python3 /tmp/treechopper-ecosystem.py --root "$GITHUB_WORKSPACE" --check-project projects/wl-treechopper-1.21.1-neoforge
+          mkdir -p "$RUNNER_TEMP/treechopper-schema/tools/qa"
+          gh api "repos/$GITHUB_REPOSITORY/contents/tools/qa/ecosystem.py?ref=2ef31184d8bcdd5541a095ffd738fbdadbc7bfda" --jq .content | base64 -d > "$RUNNER_TEMP/treechopper-schema/tools/qa/ecosystem.py"
+          python3 "$RUNNER_TEMP/treechopper-schema/tools/qa/ecosystem.py" --root "$GITHUB_WORKSPACE" --check-project projects/wl-treechopper-1.21.1-neoforge
       - name: Verify peer run and artifact identities
         env:
           GH_TOKEN: ${{ github.token }}
