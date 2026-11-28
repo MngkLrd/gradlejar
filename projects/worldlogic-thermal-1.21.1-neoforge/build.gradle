@@ -62,11 +62,20 @@ tasks.register('verifyThermalGuide') {
             def category = parser.parse(new File(base, loc+'/categories/thermal_survival.json'))
             assert category.flag == 'mod:worldlogic_thermal'
             def entries = new File(base, loc+'/entries/thermal_survival').listFiles().findAll { it.name.endsWith('.json') }
-            assert entries.size() == 7
+            assert entries.size() == 10
             entries.each { entry ->
                 def data = parser.parse(entry)
                 assert data.category == 'worldlogic:thermal_survival' && data.flag == 'mod:worldlogic_thermal'
                 assert data.pages[0].type == 'patchouli:spotlight' && data.pages[0].link_recipe
+                data.pages.findAll { it.type == 'patchouli:image' }.each { page ->
+                    assert !page.images.isEmpty()
+                    page.images.each { image -> assert file('src/main/resources/assets/'+image.replace(':','/')).isFile() }
+                }
+                data.pages.findAll { it.type == 'patchouli:multiblock' }.each { page ->
+                    assert page.multiblock.pattern.flatten().join('').count('0') == 1
+                    assert page.multiblock.pattern.collect { it.size() }.unique().size() == 1
+                    assert page.multiblock.pattern.flatten().collect { it.length() }.unique().size() == 1
+                }
                 data.pages.findAll { it.type == 'patchouli:crafting' }.each { page ->
                     assert page.recipe.startsWith('worldlogic_thermal:')
                     assert file('src/main/resources/data/worldlogic_thermal/recipe/'+page.recipe.split(':')[1]+'.json').isFile()

@@ -905,7 +905,7 @@
       }
     },
     "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/item/raw_fiber_bundle.png": {
-      "sha256": "13ab3494b47c0965b8785e72ad14392ddad77a1969eba63e8f6cb032920eec48",
+      "sha256": "1e84332e5a1f46aa716abd04e76c3674b8e4b02f7fe8b9a329b0d6314df958d4",
       "verdict": "PASS",
       "material_profile": "other",
       "references": [
@@ -915,11 +915,11 @@
           "sha256": "9ed5d3338d238528fa04c9fd86bd1e5f87a194576eed3f5e6bb86dcf18470039"
         }
       ],
-      "comparison": "Wheat stalk structure guides a green raw fiber bundle with a contrasting tie",
+      "comparison": "Existing reviewed wheat-derived stem silhouette preserved; fresh green ramp shifted for stronger distinction from dried golden fiber.",
       "findings": {
         "silhouette": "Several narrow upward stems tied near base",
         "cluster_structure": "Green stalk clusters overlap at lower bundle",
-        "micro_contrast": "Neighboring leaf greens separate adjacent stems",
+        "micro_contrast": "More saturated green midtones separate the raw material from the golden dry stage without changing the shaded outline.",
         "light_and_volume": "Left plant strips brighter than inner overlap",
         "material_continuity": "Greens are consistent across raw plant strands",
         "edge_variation": "Uneven stem tips form branching silhouette",
@@ -934,9 +934,9 @@
         "reference_minecraft": "1.21.1",
         "applied_pattern": "Green stalk clusters overlap at lower bundle. Left plant strips brighter than inner overlap.",
         "reference_limit": "Wheat is dry and golden; retain green fresh leaves and uneven stem tips. Green raw stage contrasts with dry golden fibers.",
-        "native_view": "Several narrow upward stems tied near base. Neighboring leaf greens separate adjacent stems.",
+        "native_view": "Native 16x16 silhouette and 5x enlarged comparison inspected; brighter green remains distinct from golden dry fiber.",
         "context_type": "icon_family",
-        "context_view": "Greens are consistent across raw plant strands. Uneven stem tips form branching silhouette.",
+        "context_view": "Original and new raw icon and dry fiber were compared with the guide frames; tie and silhouette retained.",
         "custom_reason": "Loose harvested green stems are not a tree sapling or foliage block; wheat supplies the directed stem silhouette.",
         "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 extracted source PNG, directly viewed in the contact sheet; SHA-256 of inspected mirror bytes recorded above."
       }
@@ -3423,6 +3423,117 @@
         "context_type": "model_uv",
         "context_view": "Original colored layer supplies all material continuity. All edges remain fully transparent by design. Static atlas layout only, not a gameplay render.",
         "custom_reason": "The deliberately transparent technical dye layer is not a visible material or an artistic clothing texture; no catalog rule applies to an empty overlay.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 extracted source PNG, directly viewed in the contact sheet; SHA-256 of inspected mirror bytes recorded above."
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/gui/guide/fiber_stage_0.png": {
+      "sha256": "9f61f26a659ece55212e8c13008fcb4d4f90017e020e7b9fbc0ac12bd2f6e92c",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/wheat",
+          "minecraft": "1.21.1",
+          "sha256": "9ed5d3338d238528fa04c9fd86bd1e5f87a194576eed3f5e6bb86dcf18470039"
+        }
+      ],
+      "comparison": "Instructional diagram of actual FiberRenderer 8x8 cell grid, using existing Thermal raw/clean textures and icon at nearest neighbor. Static illustration, not gameplay screenshot.",
+      "findings": {
+        "silhouette": "Square 8x8 workpiece with progress bar and stage icon",
+        "cluster_structure": "Uniform cell grid reproduces actual 64-cell mask",
+        "micro_contrast": "Dark grid separates cells; gold clean and green raw textures remain distinct",
+        "light_and_volume": "Top-down schematic intentionally flat; no simulated lighting",
+        "material_continuity": "Existing workpiece texture retained at nearest neighbor",
+        "edge_variation": "Uniform square frame; edges deliberately match diagram",
+        "variant_identity": "Uncleaned green",
+        "vanilla_comparison": "Wheat reference shows separated stalk tips",
+        "functional_material_cues": "Stage icon and progress bar indicate processing outcome"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/wheat",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Green stalk clusters overlap at lower bundle. Left plant strips brighter than inner overlap.",
+        "reference_limit": "Wheat is dry and golden; retain green fresh leaves and uneven stem tips. Green raw stage contrasts with dry golden fibers.",
+        "native_view": "200x200 content within 256x256 Patchouli page; stages viewed side by side.",
+        "context_type": "icon_family",
+        "context_view": "Three sequential diagrams show actual green to gold material and cross-shaped scraper cell selection.",
+        "custom_reason": "Instructional UI diagram uses existing in-game textures, wheat as material reference only; not an item or block sprite.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 extracted source PNG, directly viewed in the contact sheet; SHA-256 of inspected mirror bytes recorded above."
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/gui/guide/fiber_stage_1.png": {
+      "sha256": "6bb5b5c72ae1dc810ba8847d631949dbfbb09ad74cd51a28cf9270a4dc15957c",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/wheat",
+          "minecraft": "1.21.1",
+          "sha256": "9ed5d3338d238528fa04c9fd86bd1e5f87a194576eed3f5e6bb86dcf18470039"
+        }
+      ],
+      "comparison": "Instructional diagram of actual FiberRenderer 8x8 cell grid, using existing Thermal raw/clean textures and icon at nearest neighbor. Static illustration, not gameplay screenshot.",
+      "findings": {
+        "silhouette": "Square 8x8 workpiece with progress bar and stage icon",
+        "cluster_structure": "Uniform cell grid reproduces actual 64-cell mask",
+        "micro_contrast": "Dark grid separates cells; gold clean and green raw textures remain distinct",
+        "light_and_volume": "Top-down schematic intentionally flat; no simulated lighting",
+        "material_continuity": "Existing workpiece texture retained at nearest neighbor",
+        "edge_variation": "Uniform square frame; edges deliberately match diagram",
+        "variant_identity": "Partial clean with highlighted cross",
+        "vanilla_comparison": "Wheat reference shows separated stalk tips",
+        "functional_material_cues": "Stage icon and progress bar indicate processing outcome"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/wheat",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Green stalk clusters overlap at lower bundle. Left plant strips brighter than inner overlap.",
+        "reference_limit": "Wheat is dry and golden; retain green fresh leaves and uneven stem tips. Green raw stage contrasts with dry golden fibers.",
+        "native_view": "200x200 content within 256x256 Patchouli page; stages viewed side by side.",
+        "context_type": "icon_family",
+        "context_view": "Three sequential diagrams show actual green to gold material and cross-shaped scraper cell selection.",
+        "custom_reason": "Instructional UI diagram uses existing in-game textures, wheat as material reference only; not an item or block sprite.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 extracted source PNG, directly viewed in the contact sheet; SHA-256 of inspected mirror bytes recorded above."
+      }
+    },
+    "projects/worldlogic-thermal-1.21.1-neoforge/src/main/resources/assets/worldlogic_thermal/textures/gui/guide/fiber_stage_2.png": {
+      "sha256": "86a65615b41e2c3d96ecc079645bf26efbce5e2fee4874c72ab90ff98ae2ca2d",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/wheat",
+          "minecraft": "1.21.1",
+          "sha256": "9ed5d3338d238528fa04c9fd86bd1e5f87a194576eed3f5e6bb86dcf18470039"
+        }
+      ],
+      "comparison": "Instructional diagram of actual FiberRenderer 8x8 cell grid, using existing Thermal raw/clean textures and icon at nearest neighbor. Static illustration, not gameplay screenshot.",
+      "findings": {
+        "silhouette": "Square 8x8 workpiece with progress bar and stage icon",
+        "cluster_structure": "Uniform cell grid reproduces actual 64-cell mask",
+        "micro_contrast": "Dark grid separates cells; gold clean and green raw textures remain distinct",
+        "light_and_volume": "Top-down schematic intentionally flat; no simulated lighting",
+        "material_continuity": "Existing workpiece texture retained at nearest neighbor",
+        "edge_variation": "Uniform square frame; edges deliberately match diagram",
+        "variant_identity": "Fully clean golden",
+        "vanilla_comparison": "Wheat reference shows separated stalk tips",
+        "functional_material_cues": "Stage icon and progress bar indicate processing outcome"
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/wheat",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Green stalk clusters overlap at lower bundle. Left plant strips brighter than inner overlap.",
+        "reference_limit": "Wheat is dry and golden; retain green fresh leaves and uneven stem tips. Green raw stage contrasts with dry golden fibers.",
+        "native_view": "200x200 content within 256x256 Patchouli page; stages viewed side by side.",
+        "context_type": "icon_family",
+        "context_view": "Three sequential diagrams show actual green to gold material and cross-shaped scraper cell selection.",
+        "custom_reason": "Instructional UI diagram uses existing in-game textures, wheat as material reference only; not an item or block sprite.",
         "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 extracted source PNG, directly viewed in the contact sheet; SHA-256 of inspected mirror bytes recorded above."
       }
     }

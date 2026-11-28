@@ -1,0 +1,39 @@
+{
+  "name": "First clothing",
+  "category": "worldlogic:thermal_survival",
+  "icon": "worldlogic_thermal:straw_cape",
+  "sortnum": 7,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogic_thermal:straw_cape",
+      "link_recipe": true,
+      "text": "Emergency cape: four raw plant bundles in the 2×2 grid. No stone, workbench, spindle or thread. Modest temporary protection; full garments are warmer."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:emergency_straw_cape"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "For full garments, process bundles on stone into fiber, then thread and cloth. Woven coat, leggings, hood and boots need a workbench. Dry clothes protect better."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:grass_hood"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:grass_coat"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:grass_leggings"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:grass_boots"
+    }
+  ],
+  "flag": "mod:worldlogic_thermal"
+}

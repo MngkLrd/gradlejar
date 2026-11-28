@@ -2,21 +2,61 @@
   "name": "Primitive textile processing",
   "category": "worldlogic:thermal_survival",
   "icon": "worldlogic_thermal:raw_fiber_bundle",
-  "sortnum": 4,
+  "sortnum": 6,
   "pages": [
     {
       "type": "patchouli:spotlight",
       "item": "worldlogic_thermal:raw_fiber_bundle",
       "link_recipe": true,
-      "text": "Use an empty main hand on eligible grasses, reeds, nettle or vines to collect a raw bundle. Place it on suitable stone."
+      "text": "Empty-hand right-click eligible grass, frosted grass, reeds or other plants. Pick up the green bundle. Right-click the top of a suitable stone with the bundle."
+    },
+    {
+      "type": "patchouli:multiblock",
+      "name": "Work surface",
+      "multiblock": {
+        "pattern": [
+          [
+            "W"
+          ],
+          [
+            "0"
+          ]
+        ],
+        "mapping": {
+          "0": "minecraft:stone",
+          "W": "worldlogic_thermal:fiber_workpiece"
+        }
+      },
+      "enable_visualize": false,
+      "text": "Bundle on stone. The workpiece block is not crafted."
+    },
+    {
+      "type": "patchouli:image",
+      "title": "Cleaning: 64 cells",
+      "images": [
+        "worldlogic_thermal:textures/gui/guide/fiber_stage_0.png",
+        "worldlogic_thermal:textures/gui/guide/fiber_stage_1.png",
+        "worldlogic_thermal:textures/gui/guide/fiber_stage_2.png"
+      ],
+      "border": false,
+      "text": "Flip through the frames: green bundle → cleaning → golden fiber. Left-click a cell; scraper clears a cross."
     },
     {
       "type": "patchouli:text",
-      "text": "Left-click all 64 cells, by hand or with a stone scraper. Scraper clears a cross. Sneak-left retrieves unfinished work; after completion click again for four dry fibers."
+      "title": "Hand processing",
+      "text": "Clean all 64 cells by hand without tools. Sneak + left-click retrieves the unfinished bundle with its progress. When all cells are golden, left-click again for four fibers."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:plant_thread"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:woven_fiber"
     },
     {
       "type": "patchouli:text",
-      "text": "Spindle: two fibers in offhand, spindle in main hand, right-click for four threads. Loom: load three threads, wait five seconds, collect two woven fibers. JEI/Core Recipes shows actual processes."
+      "text": "Without a workbench: 2 fibers → 1 thread, 3 threads → 1 cloth in the 2×2 grid. Spindle and loom improve yield: 2 fibers → 4 threads, 3 threads → 2 cloth."
     },
     {
       "type": "patchouli:crafting",

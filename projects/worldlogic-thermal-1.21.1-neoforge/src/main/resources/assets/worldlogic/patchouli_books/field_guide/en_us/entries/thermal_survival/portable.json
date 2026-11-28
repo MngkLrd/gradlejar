@@ -2,13 +2,18 @@
   "name": "Portable warmth and cooling",
   "category": "worldlogic:thermal_survival",
   "icon": "worldlogic_thermal:hot_stone",
-  "sortnum": 6,
+  "sortnum": 9,
   "pages": [
     {
       "type": "patchouli:spotlight",
       "item": "worldlogic_thermal:hot_stone",
       "link_recipe": true,
       "text": "Right-click an active heat source with a hot stone, leather warmer or insulated flask. Keep the charged item in your hotbar. Charcoal warmer additionally consumes coal or charcoal from offhand."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "First protection",
+      "text": "In heat, first seek shade, remove excess insulation, avoid sprinting and drink. In cold, avoid water and wind, shelter and wear dry clothing. Then craft portable warming or cooling items."
     },
     {
       "type": "patchouli:text",

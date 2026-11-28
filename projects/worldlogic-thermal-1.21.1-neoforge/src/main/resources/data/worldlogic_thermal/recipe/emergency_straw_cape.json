@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "worldlogic_thermal:raw_fiber_bundle"
+    },
+    {
+      "item": "worldlogic_thermal:raw_fiber_bundle"
+    },
+    {
+      "item": "worldlogic_thermal:raw_fiber_bundle"
+    },
+    {
+      "item": "worldlogic_thermal:raw_fiber_bundle"
+    }
+  ],
+  "result": {
+    "id": "worldlogic_thermal:straw_cape",
+    "count": 1
+  }
+}

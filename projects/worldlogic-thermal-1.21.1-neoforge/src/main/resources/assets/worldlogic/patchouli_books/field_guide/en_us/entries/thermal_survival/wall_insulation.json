@@ -2,7 +2,7 @@
   "name": "Exterior insulation",
   "category": "worldlogic:thermal_survival",
   "icon": "worldlogic_thermal:straw_insulation",
-  "sortnum": 2,
+  "sortnum": 4,
   "pages": [
     {
       "type": "patchouli:spotlight",

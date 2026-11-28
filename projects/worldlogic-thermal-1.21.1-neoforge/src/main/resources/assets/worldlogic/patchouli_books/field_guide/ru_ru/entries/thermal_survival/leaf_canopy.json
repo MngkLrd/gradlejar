@@ -2,7 +2,7 @@
   "name": "Лиственный навес",
   "category": "worldlogic:thermal_survival",
   "icon": "worldlogic_thermal:leaf_canopy",
-  "sortnum": 1,
+  "sortnum": 3,
   "pages": [
     {
       "type": "patchouli:spotlight",
@@ -17,6 +17,32 @@
     {
       "type": "patchouli:crafting",
       "recipe": "worldlogic_thermal:leaf_canopy"
+    },
+    {
+      "type": "patchouli:multiblock",
+      "name": "Навес у дерева",
+      "enable_visualize": true,
+      "multiblock": {
+        "pattern": [
+          [
+            "LC",
+            "CC"
+          ],
+          [
+            "0_",
+            "__"
+          ],
+          [
+            "L_",
+            "__"
+          ]
+        ],
+        "mapping": {
+          "C": "worldlogic_thermal:leaf_canopy",
+          "L": "#minecraft:logs"
+        }
+      },
+      "text": "Пример крепления к стволу. Навес открыт с боков, поэтому не заменяет закрытую комнату."
     }
   ],
   "flag": "mod:worldlogic_thermal"

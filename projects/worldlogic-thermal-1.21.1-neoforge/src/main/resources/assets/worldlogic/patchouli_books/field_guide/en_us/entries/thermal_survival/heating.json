@@ -2,13 +2,18 @@
   "name": "Heating and ventilation",
   "category": "worldlogic:thermal_survival",
   "icon": "worldlogic_thermal:clay_hearth",
-  "sortnum": 3,
+  "sortnum": 5,
   "pages": [
     {
       "type": "patchouli:spotlight",
       "item": "worldlogic_thermal:clay_hearth",
       "link_recipe": true,
       "text": "A clay hearth or lit campfire gives radiant heat. A closed room retains heat after the source goes out. More insulation means slower loss, not an extra heat source."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "First minutes",
+      "text": "Start with shelter and existing heat sources. Campfires, hearths and stoves give local radiant heat with line of sight. When fuel is unavailable, an enclosed snow shelter retains body heat."
     },
     {
       "type": "patchouli:text",

@@ -2,7 +2,7 @@
   "name": "Шерсть, шкуры и ремонт",
   "category": "worldlogic:thermal_survival",
   "icon": "worldlogic_thermal:felting_board",
-  "sortnum": 5,
+  "sortnum": 8,
   "pages": [
     {
       "type": "patchouli:spotlight",

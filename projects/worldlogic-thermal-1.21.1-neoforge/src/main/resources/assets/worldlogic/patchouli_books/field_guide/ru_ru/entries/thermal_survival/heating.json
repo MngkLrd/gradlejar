@@ -2,13 +2,18 @@
   "name": "Отопление и вентиляция",
   "category": "worldlogic:thermal_survival",
   "icon": "worldlogic_thermal:clay_hearth",
-  "sortnum": 3,
+  "sortnum": 5,
   "pages": [
     {
       "type": "patchouli:spotlight",
       "item": "worldlogic_thermal:clay_hearth",
       "link_recipe": true,
       "text": "Глиняный очаг или зажжённый костёр дают лучистое тепло. Закрытое помещение сохраняет тепло после затухания. Утепление замедляет потери, а не создаёт тепло."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Первые минуты",
+      "text": "Сначала используйте укрытие и уже имеющиеся источники тепла. Костёр, очаг и печь греют только в радиусе действия и при прямой видимости. Если нет топлива, закрытое иглу удерживает тепло тела."
     },
     {
       "type": "patchouli:text",

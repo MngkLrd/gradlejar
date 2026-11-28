@@ -1,0 +1,30 @@
+{
+  "name": "First minutes: survival",
+  "category": "worldlogic:thermal_survival",
+  "icon": "minecraft:compass",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "minecraft:snowball",
+      "link_recipe": true,
+      "text": "Do not start with a long crafting chain. Reduce exposure first. Check Body and Weather, then choose actions for the biome."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Polar desert",
+      "text": "Polar spawn: 1) sneak + empty-hand right-click snow. 2) collect blocks or pack four snowballs. 3) seal a small cavity. 4) check Room. Do not search for wood before shelter."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Forest and tundra",
+      "text": "Forest: seek tree cover, collect four leaf inputs for two canopy panels. In dry cold gather grass for a cape. Wind requires walls, not just a roof."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Heat and water",
+      "text": "Heat: shade, light clothing, water, less sprinting. In cold avoid getting wet and swimming. Water can chill the body even at mild air temperatures."
+    }
+  ],
+  "flag": "mod:worldlogic_thermal"
+}
