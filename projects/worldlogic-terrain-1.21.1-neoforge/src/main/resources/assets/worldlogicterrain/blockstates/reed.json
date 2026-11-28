@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=lower": {
+      "model": "worldlogicterrain:block/reed"
+    },
+    "half=upper": {
+      "model": "worldlogicterrain:block/reed_top"
+    }
+  }
+}

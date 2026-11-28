@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "worldlogicterrain:block/marsh_marigold"
+      },
+      {
+        "model": "worldlogicterrain:block/marsh_marigold",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/marsh_marigold",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/marsh_marigold",
+        "y": 270
+      }
+    ]
+  }
+}

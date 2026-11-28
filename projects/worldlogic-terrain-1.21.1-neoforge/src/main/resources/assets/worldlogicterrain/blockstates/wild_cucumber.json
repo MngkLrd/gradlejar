@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "worldlogicterrain:block/wild_cucumber"
+      },
+      {
+        "model": "worldlogicterrain:block/wild_cucumber",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/wild_cucumber",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/wild_cucumber",
+        "y": 270
+      }
+    ]
+  }
+}

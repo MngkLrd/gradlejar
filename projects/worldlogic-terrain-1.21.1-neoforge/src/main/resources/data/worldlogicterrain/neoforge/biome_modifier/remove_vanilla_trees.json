@@ -1,0 +1,8 @@
+{
+  "type": "neoforge:remove_features",
+  "biomes": "#worldlogicterrain:tree_habitat",
+  "features": "#worldlogicterrain:replaced_vanilla_trees",
+  "steps": [
+    "vegetal_decoration"
+  ]
+}

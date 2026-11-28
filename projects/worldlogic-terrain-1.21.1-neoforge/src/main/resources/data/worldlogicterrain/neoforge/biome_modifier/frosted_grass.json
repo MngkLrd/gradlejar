@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#worldlogicterrain:frosted_ground",
+  "features": "worldlogicterrain:patch_frosted_grass",
+  "step": "vegetal_decoration"
+}

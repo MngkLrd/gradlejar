@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=lower": {
+      "model": "worldlogicterrain:block/cattail"
+    },
+    "half=upper": {
+      "model": "worldlogicterrain:block/cattail_top"
+    }
+  }
+}

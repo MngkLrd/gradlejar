@@ -1,0 +1,31 @@
+{
+  "replace": false,
+  "values": [
+    "worldlogicterrain:willow_log",
+    "worldlogicterrain:willow_planks",
+    "worldlogicterrain:larch_log",
+    "worldlogicterrain:larch_planks",
+    "worldlogicterrain:pine_log",
+    "worldlogicterrain:pine_planks",
+    "worldlogicterrain:fir_log",
+    "worldlogicterrain:fir_planks",
+    "worldlogicterrain:cedar_log",
+    "worldlogicterrain:cedar_planks",
+    "worldlogicterrain:maple_log",
+    "worldlogicterrain:maple_planks",
+    "worldlogicterrain:beech_log",
+    "worldlogicterrain:beech_planks",
+    "worldlogicterrain:alder_log",
+    "worldlogicterrain:alder_planks",
+    "worldlogicterrain:palm_log",
+    "worldlogicterrain:palm_planks",
+    "worldlogicterrain:date_palm_log",
+    "worldlogicterrain:date_palm_planks",
+    "worldlogicterrain:baobab_log",
+    "worldlogicterrain:baobab_planks",
+    "worldlogicterrain:ebony_log",
+    "worldlogicterrain:ebony_planks",
+    "worldlogicterrain:mahogany_log",
+    "worldlogicterrain:mahogany_planks"
+  ]
+}

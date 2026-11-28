@@ -1,0 +1,27 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:plains",
+    "minecraft:savanna",
+    "minecraft:savanna_plateau",
+    "minecraft:windswept_savanna",
+    "minecraft:jungle",
+    "minecraft:sparse_jungle",
+    {
+      "id": "worldlogic:subtropical_grassland",
+      "required": false
+    },
+    {
+      "id": "worldlogic:humid_savanna",
+      "required": false
+    },
+    {
+      "id": "worldlogic:warm_broadleaf_forest",
+      "required": false
+    },
+    {
+      "id": "worldlogic:seasonal_tropical_forest",
+      "required": false
+    }
+  ]
+}

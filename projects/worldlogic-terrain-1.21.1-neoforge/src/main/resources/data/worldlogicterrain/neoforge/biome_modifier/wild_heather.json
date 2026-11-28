@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#worldlogicterrain:heather",
+  "features": "worldlogicterrain:patch_wild_heather",
+  "step": "vegetal_decoration"
+}

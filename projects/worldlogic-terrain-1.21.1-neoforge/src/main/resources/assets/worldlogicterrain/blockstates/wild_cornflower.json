@@ -1,0 +1,22 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "worldlogicterrain:block/wild_cornflower",
+        "y": 0
+      },
+      {
+        "model": "worldlogicterrain:block/wild_cornflower",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/wild_cornflower",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/wild_cornflower",
+        "y": 270
+      }
+    ]
+  }
+}

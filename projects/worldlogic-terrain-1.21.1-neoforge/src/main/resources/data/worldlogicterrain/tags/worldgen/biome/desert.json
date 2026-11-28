@@ -1,0 +1,18 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:desert",
+    "minecraft:badlands",
+    "minecraft:wooded_badlands",
+    "minecraft:eroded_badlands",
+    "minecraft:savanna",
+    {
+      "id": "#worldlogic:vegetation/desert",
+      "required": false
+    },
+    {
+      "id": "#worldlogic:vegetation/scrub",
+      "required": false
+    }
+  ]
+}

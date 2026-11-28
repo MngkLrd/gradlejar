@@ -1,0 +1,38 @@
+{
+  "variants": {
+    "ripe=true": [
+      {
+        "model": "worldlogicterrain:block/wild_strawberry"
+      },
+      {
+        "model": "worldlogicterrain:block/wild_strawberry",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/wild_strawberry",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/wild_strawberry",
+        "y": 270
+      }
+    ],
+    "ripe=false": [
+      {
+        "model": "worldlogicterrain:block/wild_strawberry_unripe"
+      },
+      {
+        "model": "worldlogicterrain:block/wild_strawberry_unripe",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/wild_strawberry_unripe",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/wild_strawberry_unripe",
+        "y": 270
+      }
+    ]
+  }
+}

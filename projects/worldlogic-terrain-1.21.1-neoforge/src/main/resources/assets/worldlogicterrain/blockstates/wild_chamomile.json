@@ -1,0 +1,22 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "worldlogicterrain:block/wild_chamomile",
+        "y": 0
+      },
+      {
+        "model": "worldlogicterrain:block/wild_chamomile",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/wild_chamomile",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/wild_chamomile",
+        "y": 270
+      }
+    ]
+  }
+}

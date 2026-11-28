@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#worldlogicterrain:meadow",
+  "features": "worldlogicterrain:patch_wild_clover",
+  "step": "vegetal_decoration"
+}

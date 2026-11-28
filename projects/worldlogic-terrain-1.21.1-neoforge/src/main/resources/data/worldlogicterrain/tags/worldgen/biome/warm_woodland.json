@@ -1,0 +1,31 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:jungle",
+    "minecraft:sparse_jungle",
+    "minecraft:bamboo_jungle",
+    "minecraft:forest",
+    "minecraft:savanna",
+    "minecraft:wooded_badlands",
+    {
+      "id": "worldlogic:warm_broadleaf_forest",
+      "required": false
+    },
+    {
+      "id": "worldlogic:sclerophyll_woodland",
+      "required": false
+    },
+    {
+      "id": "worldlogic:seasonal_tropical_forest",
+      "required": false
+    },
+    {
+      "id": "worldlogic:subtropical_rainforest",
+      "required": false
+    },
+    {
+      "id": "worldlogic:humid_savanna",
+      "required": false
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:swamp",
+    "minecraft:mangrove_swamp",
+    "minecraft:river",
+    {
+      "id": "worldlogic:temperate_marsh",
+      "required": false
+    },
+    {
+      "id": "worldlogic:boreal_peatland",
+      "required": false
+    },
+    {
+      "id": "worldlogic:tropical_floodplain",
+      "required": false
+    },
+    {
+      "id": "worldlogic:mangrove_coast",
+      "required": false
+    }
+  ]
+}

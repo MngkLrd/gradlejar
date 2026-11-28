@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#worldlogicterrain:marsh_flower",
+  "features": "worldlogicterrain:patch_marsh_marigold",
+  "step": "vegetal_decoration"
+}

@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#worldlogicterrain:bracken",
+  "features": "worldlogicterrain:patch_bracken",
+  "step": "vegetal_decoration"
+}
