@@ -55,6 +55,7 @@ public final class TraumaCommands {
                             })));
         }
         event.getDispatcher().register(root);
+        event.getDispatcher().register(Commands.literal("traumadeath").executes(ctx->dev.minemods.traumacraft.event.DeathReports.openLast(ctx.getSource().getPlayerOrException())));
         event.getDispatcher().register(Commands.literal("traumaphysiology").executes(ctx->{
             ServerPlayer p=ctx.getSource().getPlayerOrException();
             var snapshot=dev.minemods.traumacraft.api.TraumaApi.physiology(p);

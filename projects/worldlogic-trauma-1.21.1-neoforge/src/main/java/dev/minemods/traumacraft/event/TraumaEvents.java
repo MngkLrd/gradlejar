@@ -29,7 +29,7 @@ public final class TraumaEvents {
         ModNetwork.progress(p,0,0);
     }
     public static void resetAfterDeath(ServerPlayer p) {
-        DeathReports.clear(p);
+        DeathReports.resetHistory(p);
         MetabolismBridge.forget(p);
         ClimbManager.cancel(p);
         TreatmentManager.forget(p);
@@ -41,9 +41,11 @@ public final class TraumaEvents {
         ModNetwork.progress(p,0,0);
     }
     public static void onLogout(PlayerEvent.PlayerLoggedOutEvent e) {
-        if(e.getEntity() instanceof ServerPlayer p){DeathReports.clear(p);MetabolismBridge.forget(p);ClimbManager.cancel(p);ClimbManager.forget(p);BodyStates.flush(p);BodyStates.forget(p);TreatmentManager.forget(p);}
+        if(e.getEntity() instanceof ServerPlayer p){DeathReports.resetHistory(p);MetabolismBridge.forget(p);ClimbManager.cancel(p);ClimbManager.forget(p);BodyStates.flush(p);BodyStates.forget(p);TreatmentManager.forget(p);}
     }
     public static void onClone(PlayerEvent.Clone e) {
+        DeathReports.copyArchive(e.getOriginal(),e.getEntity());
+        if(e.getOriginal() instanceof ServerPlayer oldPlayer)DeathReports.resetHistory(oldPlayer);
         BodyStates.copy(e.getOriginal(),e.getEntity(),e.isWasDeath());
         LegacyFrostExposure.clonePlayer(e.getOriginal(),e.getEntity(),e.isWasDeath());
         WaterIllness.clonePlayer(e.getOriginal(),e.getEntity(),e.isWasDeath());
@@ -75,7 +77,9 @@ public final class TraumaEvents {
         // Engine kill/void are not physical impacts; retain the real pre-death anatomy in the report.
         if(VitalityBridge.engineFatalSource(e.getSource())){DeathReports.clear(p);return;}
         boolean alreadyFatal=b.vitalDestroyed()||b.fatalBloodLoss();
+        var beforeImpact=TraumaHistory.Snapshot.of(b);
         applyDamage(p,b,e.getSource(),amount);
+        DeathReports.observe(p,TraumaHistory.Kind.IMPACT,DeathReports.origin(e.getSource()),beforeImpact,b);
         DeathReports.hit(p,b,e.getSource(),alreadyFatal);
         // Anatomical damage is the only normal survival damage. Preserve engine-level kill/void.
         if(!VitalityBridge.engineFatalSource(e.getSource())) e.setNewDamage(b.vitalDestroyed()?Math.max(amount,p.getHealth()+p.getAbsorptionAmount()+1):0f);
@@ -169,7 +173,9 @@ public final class TraumaEvents {
         boolean resting=!ClimbManager.active(p)&&WorldLogicBridge.resting(p);
         var thermal=ThermalBridge.condition(p);
         var support=dev.minemods.traumacraft.integration.OrganSupport.read(p,thermal,nutrition);
+        var beforePhysiology=TraumaHistory.Snapshot.of(b);
         b.physiologySecond(p.getAirSupply()>0,resting,support.repair(),support.circulation());
+        DeathReports.observe(p,TraumaHistory.Kind.INTERNAL_DECLINE,DeathReport.Origin.SYSTEMIC,beforePhysiology,b);
         if(b.organs().unconscious()){TreatmentManager.cancel(p);ClimbManager.cancel(p);}
         if(b.vitalDestroyed()||b.fatalBloodLoss()){fatalCollapse(p,b.fatalBloodLoss()?DeathReport.Cause.INTERNAL_BLEEDING:DeathReport.Cause.HYPOXIA);return;}
         WaterIllness.tick(p);
@@ -185,7 +191,9 @@ public final class TraumaEvents {
         }
         MetabolismBridge.record(p,Math.max(0,totalHp(b)-before));
         if(p.tickCount%40==0 && b.hasBleeding()) {
+            var beforeBleed=TraumaHistory.Snapshot.of(b);
             b.bleedStep();
+            DeathReports.observe(p,TraumaHistory.Kind.EXTERNAL_BLEED,DeathReport.Origin.SYSTEMIC,beforeBleed,b);
             if(b.vitalDestroyed()||b.fatalBloodLoss()){fatalCollapse(p,DeathReport.Cause.EXTERNAL_BLEEDING);return;}
         }
         if(BodyStates.flush(p) || p.tickCount%40==0) ModNetwork.sync(p);

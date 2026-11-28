@@ -16,7 +16,27 @@ public final class DeathReports {
     private DeathReports(){}
     private record Context(Cause cause,Origin origin,String sourceId,boolean collapse){}
     private static final WeakHashMap<ServerPlayer,Context> PENDING=new WeakHashMap<>();
+    private static final String ARCHIVE="traumacraft_last_death_v1";
+    private static final WeakHashMap<ServerPlayer,TraumaHistory> HISTORY=new WeakHashMap<>();
     public static void clear(ServerPlayer p){PENDING.remove(p);}
+    public static void resetHistory(ServerPlayer p){clear(p);HISTORY.remove(p);}
+    public static void observe(ServerPlayer p,TraumaHistory.Kind kind,Origin origin,TraumaHistory.Snapshot before,BodyState b){
+        HISTORY.computeIfAbsent(p,key->new TraumaHistory()).observe(p.tickCount,kind,origin,before,b);
+    }
+    public static DeathReport attachHistory(ServerPlayer p,DeathReport r){var h=HISTORY.get(p);return h==null?r:r.withHistory(h.snapshot(p.tickCount));}
+    public static void copyArchive(net.minecraft.world.entity.player.Player old,net.minecraft.world.entity.player.Player next){
+        if(old.getPersistentData().contains(ARCHIVE,7))next.getPersistentData().putByteArray(ARCHIVE,old.getPersistentData().getByteArray(ARCHIVE));
+    }
+    public static void remember(ServerPlayer p,DeathReport report){
+        var buf=new net.minecraft.network.RegistryFriendlyByteBuf(io.netty.buffer.Unpooled.buffer(),p.registryAccess());
+        try{dev.minemods.traumacraft.network.DeathReportPacket.CODEC.encode(buf,new dev.minemods.traumacraft.network.DeathReportPacket(report));byte[] data=new byte[buf.readableBytes()];buf.readBytes(data);if(data.length<=4096)p.getPersistentData().putByteArray(ARCHIVE,data);}finally{buf.release();}
+    }
+    public static java.util.Optional<DeathReport> last(ServerPlayer p){
+        byte[] data=p.getPersistentData().getByteArray(ARCHIVE);if(data.length==0||data.length>4096)return java.util.Optional.empty();
+        var buf=new net.minecraft.network.RegistryFriendlyByteBuf(io.netty.buffer.Unpooled.wrappedBuffer(data),p.registryAccess());
+        try{var report=dev.minemods.traumacraft.network.DeathReportPacket.CODEC.decode(buf).report();return buf.isReadable()?java.util.Optional.empty():java.util.Optional.of(report);}catch(RuntimeException malformed){return java.util.Optional.empty();}finally{buf.release();}
+    }
+    public static int openLast(ServerPlayer p){var report=last(p);if(report.isEmpty()){p.sendSystemMessage(net.minecraft.network.chat.Component.translatable("death.traumacraft.no_archive"));return 0;}if(!p.isAlive())return 0;ModNetwork.archivedDeath(p,report.get());return 1;}
     public static Origin origin(DamageSource s){
         if(s.is(DamageTypes.GENERIC_KILL))return Origin.COMMAND;
         if(s.is(DamageTypes.FELL_OUT_OF_WORLD))return Origin.VOID;
@@ -56,6 +76,7 @@ public final class DeathReports {
     public static void onDeath(LivingDeathEvent e){
         if(e.isCanceled()||!(e.getEntity() instanceof ServerPlayer p)||p.isCreative()||p.isSpectator())return;
         // isAlive() is deliberately NOT a guard: death callback can run after health reached zero.
-        ModNetwork.death(p,consume(p,BodyStates.get(p),e.getSource()));
+        var report=attachHistory(p,consume(p,BodyStates.get(p),e.getSource()));
+        remember(p,report);resetHistory(p);ModNetwork.death(p,report);
     }
 }

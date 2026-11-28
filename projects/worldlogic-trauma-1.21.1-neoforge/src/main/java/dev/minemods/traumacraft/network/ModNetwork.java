@@ -11,9 +11,9 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 public final class ModNetwork {
     private ModNetwork(){}
     public static void register(RegisterPayloadHandlersEvent event){
-        var registrar=event.registrar("12");
+        var registrar=event.registrar("13");
         registrar.playToClient(DeathReportPacket.TYPE,DeathReportPacket.CODEC,(m,c)->{
-            if(FMLEnvironment.dist==Dist.CLIENT)dev.minemods.traumacraft.client.ClientDeathReport.accept(m.report());
+            if(FMLEnvironment.dist==Dist.CLIENT)dev.minemods.traumacraft.client.ClientDeathReport.accept(m);
         });
         registrar.playToClient(SyncBodyStatePacket.TYPE,SyncBodyStatePacket.STREAM_CODEC,(m,c)->{
             if(FMLEnvironment.dist==Dist.CLIENT)ClientBodyState.accept(m);
@@ -30,6 +30,7 @@ public final class ModNetwork {
         });
         registrar.playToServer(ApplyMedicalPacket.TYPE,ApplyMedicalPacket.STREAM_CODEC,ApplyMedicalPacket::handle);
     }
+    public static void archivedDeath(ServerPlayer p,dev.minemods.traumacraft.health.DeathReport report){if(!(p instanceof FakePlayer)&&p.connection!=null)PacketDistributor.sendToPlayer(p,new DeathReportPacket(report,true));}
     public static void death(ServerPlayer p,dev.minemods.traumacraft.health.DeathReport report){
         if(!(p instanceof FakePlayer)&&p.connection!=null)PacketDistributor.sendToPlayer(p,new DeathReportPacket(report));
     }

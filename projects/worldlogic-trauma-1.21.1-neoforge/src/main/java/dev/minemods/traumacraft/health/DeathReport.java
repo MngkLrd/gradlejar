@@ -4,7 +4,10 @@ import dev.minemods.traumacraft.network.SyncBodyStatePacket;
 
 /** Frozen medical state, distinct from the live body that will reset on respawn. */
 public record DeathReport(Cause cause,Origin origin,String sourceId,int criticalRegions,int criticalOrgans,
-                          int bleedingRegions,int bleedingOrgans,SyncBodyStatePacket body) {
+                          int bleedingRegions,int bleedingOrgans,SyncBodyStatePacket body,java.util.List<TraumaHistory.Entry> history) {
+    public DeathReport{history=java.util.List.copyOf(history);}
+    public DeathReport(Cause cause,Origin origin,String sourceId,int criticalRegions,int criticalOrgans,int bleedingRegions,int bleedingOrgans,SyncBodyStatePacket body){this(cause,origin,sourceId,criticalRegions,criticalOrgans,bleedingRegions,bleedingOrgans,body,java.util.List.of());}
+    public DeathReport withHistory(java.util.List<TraumaHistory.Entry> entries){return new DeathReport(cause,origin,sourceId,criticalRegions,criticalOrgans,bleedingRegions,bleedingOrgans,body,entries);}
     public enum Cause { DIRECT_TRAUMA, VITAL_DESTRUCTION, EXTERNAL_BLEEDING, INTERNAL_BLEEDING, BLOOD_LOSS, HYPOXIA, VANILLA }
     public enum Origin { FALL, EXPLOSION, FIRE, PROJECTILE, ATTACK, FREEZE, DROWNING, VOID, COMMAND, STARVATION, SUFFOCATION, MAGIC, LIGHTNING, OTHER, SYSTEMIC }
     public boolean critical(BodyPart p){return (criticalRegions&(1<<p.ordinal()))!=0;}
