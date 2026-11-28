@@ -1,0 +1,426 @@
+{
+  "schema": 1,
+  "target": "forge-mc1.21.1",
+  "status": "draft",
+  "scenario": "tools/qa/scenarios/traumatic-worldlogic-rc16.json",
+  "backend": "Draft RCON component fixture (unconnected vanilla ServerPlayer, not a network player)",
+  "coverage": [
+    {
+      "id": "TR-STATE",
+      "assertions": [
+        "TR-STATE"
+      ],
+      "state": "NOT_RUN"
+    },
+    {
+      "id": "TR-TREAT",
+      "assertions": [
+        "TR-TREAT"
+      ],
+      "state": "NOT_RUN"
+    },
+    {
+      "id": "TR-BRIDGE",
+      "assertions": [
+        "TR-BRIDGE"
+      ],
+      "state": "NOT_RUN"
+    },
+    {
+      "id": "TR-DAMAGE",
+      "assertions": [
+        "TR-DAMAGE"
+      ],
+      "state": "NOT_RUN"
+    },
+    {
+      "id": "TR-NETWORK",
+      "state": "UNSUPPORTED",
+      "reason": "Forge modded protocol backend not available"
+    },
+    {
+      "id": "TR-UI",
+      "state": "NOT_RUN",
+      "reason": "requires graphical client"
+    },
+    {
+      "id": "TR-LIFECYCLE",
+      "state": "NOT_RUN",
+      "reason": "requires actual login, dimension change and respawn"
+    },
+    {
+      "id": "TR-ITEMS",
+      "state": "NOT_RUN",
+      "reason": "requires item acquisition, consumption and menu checks",
+      "items": [
+        "adrenaline_injector",
+        "analgesic_tablets",
+        "antiseptic",
+        "bandage",
+        "bone_mender",
+        "compact_medkit",
+        "compression_wrap",
+        "endurance_injector",
+        "field_medkit",
+        "focus_injector",
+        "fracture_brace",
+        "guardian_injector",
+        "hemostatic_gel",
+        "herbal_extract",
+        "medical_polymer",
+        "medical_pouch",
+        "medkit",
+        "oversized_medkit",
+        "rag_dressing",
+        "recovery_serum",
+        "splint",
+        "sterile_fabric",
+        "sterile_patch",
+        "surgical_kit",
+        "syringe_body",
+        "tourniquet",
+        "trauma_kit"
+      ]
+    },
+    {
+      "id": "TR-RECIPES",
+      "state": "NOT_RUN",
+      "reason": "actual crafting fixtures still required",
+      "recipes": [
+        "adrenaline_injector",
+        "analgesic_tablets",
+        "antiseptic",
+        "bandage",
+        "bone_mender",
+        "compact_medkit",
+        "compression_wrap",
+        "endurance_injector",
+        "field_medkit",
+        "focus_injector",
+        "fracture_brace",
+        "guardian_injector",
+        "hemostatic_gel",
+        "herbal_extract",
+        "medical_polymer",
+        "medical_pouch",
+        "medkit",
+        "oversized_medkit",
+        "rag_dressing",
+        "recovery_serum",
+        "splint",
+        "sterile_fabric",
+        "sterile_patch",
+        "surgical_kit",
+        "syringe_body",
+        "tourniquet",
+        "trauma_kit"
+      ]
+    },
+    {
+      "id": "TR-ART-medical_pouch",
+      "targets": [
+        "forge-mc1.21.1"
+      ],
+      "asset": "assets/traumacraft/textures/item/medical_pouch.png",
+      "state": "NOT_RUN",
+      "reason": "PR visual lint and final client inventory/in-hand checks required",
+      "expected": "16x16 opaque palette clusters with intentional transparent silhouette; item model renders correct asset"
+    },
+    {
+      "id": "TR-ART-medkit",
+      "targets": [
+        "forge-mc1.21.1"
+      ],
+      "asset": "assets/traumacraft/textures/item/medkit.png",
+      "state": "NOT_RUN",
+      "reason": "PR visual lint and final client inventory/in-hand checks required",
+      "expected": "16x16 opaque palette clusters with intentional transparent silhouette; item model renders correct asset"
+    },
+    {
+      "id": "TR-ART-rag_dressing",
+      "targets": [
+        "forge-mc1.21.1"
+      ],
+      "asset": "assets/traumacraft/textures/item/rag_dressing.png",
+      "state": "NOT_RUN",
+      "reason": "PR visual lint and final client inventory/in-hand checks required",
+      "expected": "16x16 opaque palette clusters with intentional transparent silhouette; item model renders correct asset"
+    },
+    {
+      "id": "TR-ART-compression_wrap",
+      "targets": [
+        "forge-mc1.21.1"
+      ],
+      "asset": "assets/traumacraft/textures/item/compression_wrap.png",
+      "state": "NOT_RUN",
+      "reason": "PR visual lint and final client inventory/in-hand checks required",
+      "expected": "16x16 opaque palette clusters with intentional transparent silhouette; item model renders correct asset"
+    },
+    {
+      "id": "TR-ART-sterile_fabric",
+      "targets": [
+        "forge-mc1.21.1"
+      ],
+      "asset": "assets/traumacraft/textures/item/sterile_fabric.png",
+      "state": "NOT_RUN",
+      "reason": "PR visual lint and final client inventory/in-hand checks required",
+      "expected": "16x16 opaque palette clusters with intentional transparent silhouette; item model renders correct asset"
+    },
+    {
+      "id": "TR-ART-splint",
+      "targets": [
+        "forge-mc1.21.1"
+      ],
+      "asset": "assets/traumacraft/textures/item/splint.png",
+      "state": "NOT_RUN",
+      "reason": "PR visual lint and final client inventory/in-hand checks required",
+      "expected": "16x16 opaque palette clusters with intentional transparent silhouette; item model renders correct asset"
+    },
+    {
+      "id": "TR-ART-antiseptic",
+      "targets": [
+        "forge-mc1.21.1"
+      ],
+      "asset": "assets/traumacraft/textures/item/antiseptic.png",
+      "state": "NOT_RUN",
+      "reason": "PR visual lint and final client inventory/in-hand checks required",
+      "expected": "16x16 opaque palette clusters with intentional transparent silhouette; item model renders correct asset"
+    },
+    {
+      "id": "TR-ART-bandage",
+      "targets": [
+        "forge-mc1.21.1"
+      ],
+      "asset": "assets/traumacraft/textures/item/bandage.png",
+      "state": "NOT_RUN",
+      "reason": "PR visual lint and final client inventory/in-hand checks required",
+      "expected": "16x16 opaque palette clusters with intentional transparent silhouette; item model renders correct asset"
+    },
+    {
+      "id": "TR-HUD-PIXEL",
+      "state": "NOT_RUN",
+      "reason": "graphical client required",
+      "expected": "HUD renders at integer 1x when injured; no healthy/creative HUD; no hotbar overlap at narrow scales"
+    },
+    {
+      "id": "TR-ANATOMY-UI",
+      "state": "NOT_RUN",
+      "reason": "graphical client required",
+      "expected": "2x anatomy, correct mirrored sides and treatment hit targets, qualitative localized statuses, small-screen vanilla fallback, no misleading raw HP total"
+    },
+    {
+      "id": "TR-HUD-ATLAS",
+      "targets": [
+        "forge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "reason": "Graphical client is not available; local geometry and PNG checks separately passed",
+      "expected": "All seven zones use the correct palette; mirrored leg alignment; 2 px abdomen-to-leg gap; 20x20 icon frames and independent dynamic injury overlays; click targets match body sprite coordinates."
+    },
+    {
+      "id": "TR-HUD-FRAME",
+      "targets": [
+        "forge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "reason": "Graphical client required",
+      "expected": "76x94 HUD fits beside hotbar; at narrow GUI width relocates to top-left; healthy and creative HUD remains hidden."
+    },
+    {
+      "id": "TR-HUD-BLEED",
+      "targets": [
+        "forge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "reason": "Graphical client and real server synchronization not available; pure selector regression passed",
+      "component_test": "drafts/traumatic-worldlogic-1.21.1-forge/src/test/java/dev/minemods/traumacraft/client/gui/HudStatusLayoutCheck.java",
+      "expected": "Show if any bleeding severity is positive; remove when all bleeding is stopped"
+    },
+    {
+      "id": "TR-HUD-FRACTURE",
+      "targets": [
+        "forge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "reason": "Graphical client and real server synchronization not available; pure selector regression passed",
+      "component_test": "drafts/traumatic-worldlogic-1.21.1-forge/src/test/java/dev/minemods/traumacraft/client/gui/HudStatusLayoutCheck.java",
+      "expected": "Show if any fracture exists, including stabilized; remove after all recover"
+    },
+    {
+      "id": "TR-HUD-CONCUSSION",
+      "targets": [
+        "forge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "reason": "Graphical client and real server synchronization not available; pure selector regression passed",
+      "component_test": "drafts/traumatic-worldlogic-1.21.1-forge/src/test/java/dev/minemods/traumacraft/client/gui/HudStatusLayoutCheck.java",
+      "expected": "Show while server concussion ticks > 0; disappear on expiry"
+    },
+    {
+      "id": "TR-HUD-PAINKILLER",
+      "targets": [
+        "forge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "reason": "Graphical client and real server synchronization not available; pure selector regression passed",
+      "component_test": "drafts/traumatic-worldlogic-1.21.1-forge/src/test/java/dev/minemods/traumacraft/client/gui/HudStatusLayoutCheck.java",
+      "expected": "Show while server painkiller ticks > 0; disappear on expiry"
+    },
+    {
+      "id": "TR-HUD-COMPACT",
+      "targets": [
+        "forge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "reason": "Graphical client and real server synchronization not available; pure selector regression passed",
+      "component_test": "drafts/traumatic-worldlogic-1.21.1-forge/src/test/java/dev/minemods/traumacraft/client/gui/HudStatusLayoutCheck.java",
+      "expected": "No placeholders; reflow rows for all active combinations; hide healthy/dead player HUD"
+    },
+    {
+      "id": "TR-TAB-DEFAULT",
+      "targets": [
+        "forge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "reason": "Requires graphical client and actual server interaction",
+      "expected": "New inventory opens at vanilla width, medical panel hidden; healthy body all green on opening tab"
+    },
+    {
+      "id": "TR-TAB-TOGGLE",
+      "targets": [
+        "forge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "reason": "Requires graphical client and actual server interaction",
+      "expected": "Click tab toggles panel; no loss of inventory cursor stack; closing and reopening inventory resets tab"
+    },
+    {
+      "id": "TR-TAB-LIMBS",
+      "targets": [
+        "forge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "reason": "Requires graphical client and actual server interaction",
+      "expected": "Click each independent limb to apply medicine; splint only on treated limb; both legs and both arms independently show overlays; overlay disappears after recovery"
+    },
+    {
+      "id": "TR-TAB-ACTIVE",
+      "targets": [
+        "forge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "reason": "Requires graphical client and actual server interaction",
+      "expected": "Display only active effects in two-column grid; zero placeholders"
+    },
+    {
+      "id": "TR-TAB-RECIPE",
+      "targets": [
+        "forge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "reason": "Requires graphical client and actual server interaction",
+      "expected": "Vanilla recipe book and medical tab do not overlap; narrow screen stays vanilla"
+    },
+    {
+      "id": "TR-TAB-CURSOR",
+      "targets": [
+        "forge-mc1.21.1"
+      ],
+      "state": "NOT_RUN",
+      "reason": "Requires graphical client and actual server interaction",
+      "expected": "Click empty medical panel must not drop cursor item"
+    }
+  ],
+  "draft_project": "drafts/traumatic-worldlogic-1.21.1-forge",
+  "prior_ci": {
+    "run_id": 45955276725,
+    "status": "FAIL",
+    "stage": "compileJava",
+    "first_error": "Forge 52.1.0 has no net.minecraftforge.common.util.FakePlayer",
+    "corrected_in_source": true,
+    "correction_verified": false
+  },
+  "visual_iteration": {
+    "basis": "AGENTS.md and docs/VISUAL-QA.md at da52c261ded3cfe3a5e3598e522798cfc881c28d; Blockbench Minecraft Style Guide",
+    "reference": "Minecraft 1.21.1 paper, stick, leather, bundle, rabbit_hide, string, glass_bottle; sampled from minecraft-assets 1.21.1 mirror; no redistribution",
+    "changed_items": [
+      "medical_pouch",
+      "medkit",
+      "rag_dressing",
+      "compression_wrap",
+      "sterile_fabric",
+      "splint",
+      "antiseptic",
+      "bandage"
+    ],
+    "native_size": "16x16",
+    "local_art_review": "native-size and nearest-neighbor comparison inspected; splint targeted correction",
+    "shared_visual_qa": "NOT_RUN on new revision at authoring time; existing PR workflow expected",
+    "client": "NOT_RUN"
+  },
+  "hud_approved_art": {
+    "basis": "User-approved detailed reference, resampled and adapted to native GUI sprites (not an exact high-resolution copy)",
+    "scope": "Minecraft 1.21.1 Forge 52.1.0 / World Logic RC16 only",
+    "assets": [
+      "status/concussion.png",
+      "trauma/body.png",
+      "status/bleeding.png",
+      "status/fracture.png",
+      "trauma/panel.png",
+      "status/painkiller.png",
+      "trauma/overlays.png"
+    ],
+    "native_panel": [
+      76,
+      94
+    ],
+    "status_sprite": [
+      20,
+      20
+    ],
+    "atlas": [
+      240,
+      84
+    ],
+    "state_columns": 5,
+    "body_axis": 22,
+    "hip_gap": 2,
+    "checks": "Local native sprite decode/alpha/geometry and enlarged pixel preview; game screenshot NOT_RUN",
+    "blocker": "User requested visual iteration without JAR; graphical client cannot be started here (no Gradle/client dependencies; Maven DNS unavailable). Existing experimental client workflow resolves only enrolled projects and builds a JAR; draft must not be enrolled as workaround.",
+    "shared_visual_qa": "GUI sprites are excluded from item/block/entity regex; general workflow success must not be claimed as coverage of these sprites."
+  },
+  "hud_status_layout": {
+    "scope": "Forge 1.21.1 / World Logic RC16",
+    "status_ids": [
+      "bleeding",
+      "fracture",
+      "concussion",
+      "painkiller"
+    ],
+    "source": "Server BodyState / SyncBodyStatePacket, no fabricated status, no vanilla-effect duplication",
+    "asset_dimensions": [
+      20,
+      20
+    ],
+    "asset_verification": "All four existing approved PNGs match their Git blob SHA-1 and decoded as 20x20 RGBA with binary alpha",
+    "local_logic_test": {
+      "state": "PASS",
+      "backend": "OpenJDK 21.0.12.1 standalone Java (not Minecraft)",
+      "source": "drafts/traumatic-worldlogic-1.21.1-forge/src/main/java/dev/minemods/traumacraft/client/gui/HudStatusLayout.java",
+      "test": "drafts/traumatic-worldlogic-1.21.1-forge/src/test/java/dev/minemods/traumacraft/client/gui/HudStatusLayoutCheck.java",
+      "combinations": 16,
+      "removal_transitions": 32,
+      "result": "PASS: 16 combinations, 32 removal transitions, timer boundaries and visibility",
+      "source_blob": "7da202be428f7118a06ad3d94ba62d7febcc7146",
+      "test_blob": "14132023473253e0689d377250d0206b8303e72b"
+    },
+    "full_client": "NOT_RUN",
+    "production_jar": "NOT_RUN (visual-only iteration; user requested no JAR in preceding turn)"
+  },
+  "inventory_tab": {
+    "scope": "Forge 1.21.1 / World Logic RC16",
+    "status": "NOT_RUN",
+    "reason": "Graphical client and mod compile unavailable; current draft excluded from standard release build; no workflow-dispatch action available in connector.",
+    "behavior": "Default closed, vanilla width 176; click Trauma tab expands real inventory panel; same BodyVisual renderer and same active condition icons as HUD; each limb has independent state; recipe book is mutually exclusive; no fabricated status icons; narrow GUI retains vanilla inventory."
+  }
+}

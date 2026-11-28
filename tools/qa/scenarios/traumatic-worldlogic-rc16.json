@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "name": "Traumatic RC16 integration: dedicated server component regressions",
+  "steps": [
+    {
+      "command": "traumaqa state",
+      "expect": "TRAUMAQA state PASS",
+      "assertion": true,
+      "name": "TR-STATE: seven zones, 440 HP, independent damage and NBT roundtrip"
+    },
+    {
+      "command": "traumaqa treatment",
+      "expect": "TRAUMAQA treatment PASS",
+      "assertion": true,
+      "name": "TR-TREAT: reject healthy target, stop bleeding, stabilize fracture, recover over time"
+    },
+    {
+      "command": "traumaqa bridge",
+      "expect": "TRAUMAQA bridge PASS",
+      "assertion": true,
+      "name": "TR-BRIDGE: World Logic injury predicate, max penalty, arm signal, legacy migration"
+    },
+    {
+      "command": "traumaqa damage",
+      "expect": "TRAUMAQA damage PASS",
+      "assertion": true,
+      "name": "TR-DAMAGE: post-mitigation fall, no duplicate local damage, creative exclusion"
+    }
+  ]
+}
