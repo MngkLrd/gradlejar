@@ -1,0 +1,139 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "minecraft:block/brain_coral_block",
+    "main": "minecraft:block/brain_coral_block",
+    "accent": "minecraft:block/pink_terracotta"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        3
+      ],
+      "to": [
+        12,
+        1,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#main"
+        },
+        "south": {
+          "texture": "#main"
+        },
+        "east": {
+          "texture": "#main"
+        },
+        "west": {
+          "texture": "#main"
+        },
+        "up": {
+          "texture": "#main"
+        },
+        "down": {
+          "texture": "#main"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        1,
+        5
+      ],
+      "to": [
+        9,
+        2,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#main"
+        },
+        "south": {
+          "texture": "#main"
+        },
+        "east": {
+          "texture": "#main"
+        },
+        "west": {
+          "texture": "#main"
+        },
+        "up": {
+          "texture": "#main"
+        },
+        "down": {
+          "texture": "#main"
+        }
+      }
+    },
+    {
+      "from": [
+        10,
+        0,
+        7
+      ],
+      "to": [
+        14,
+        2,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#accent"
+        },
+        "south": {
+          "texture": "#accent"
+        },
+        "east": {
+          "texture": "#accent"
+        },
+        "west": {
+          "texture": "#accent"
+        },
+        "up": {
+          "texture": "#accent"
+        },
+        "down": {
+          "texture": "#accent"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        0,
+        1
+      ],
+      "to": [
+        8,
+        1,
+        4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#accent"
+        },
+        "south": {
+          "texture": "#accent"
+        },
+        "east": {
+          "texture": "#accent"
+        },
+        "west": {
+          "texture": "#accent"
+        },
+        "up": {
+          "texture": "#accent"
+        },
+        "down": {
+          "texture": "#accent"
+        }
+      }
+    }
+  ]
+}

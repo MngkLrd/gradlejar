@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "worldlogicterrain:block/red_dulse"
+      },
+      {
+        "model": "worldlogicterrain:block/red_dulse",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/red_dulse",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/red_dulse",
+        "y": 270
+      }
+    ]
+  }
+}

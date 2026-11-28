@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "worldlogicterrain:block/sea_lettuce"
+      },
+      {
+        "model": "worldlogicterrain:block/sea_lettuce",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/sea_lettuce",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/sea_lettuce",
+        "y": 270
+      }
+    ]
+  }
+}

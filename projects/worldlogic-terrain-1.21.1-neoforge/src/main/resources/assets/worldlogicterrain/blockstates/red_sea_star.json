@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "worldlogicterrain:block/red_sea_star"
+      },
+      {
+        "model": "worldlogicterrain:block/red_sea_star",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/red_sea_star",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/red_sea_star",
+        "y": 270
+      }
+    ]
+  }
+}

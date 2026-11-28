@@ -95,6 +95,7 @@ public final class AquaticChecks {
                 require(predictor.predict(p,p,p.getY()-1,river,Blocks.GRAVEL.defaultBlockState())==AquaticHabitat.Kind.RIVER,"RC31 river prediction");
                 require(predictor.predict(p,p.above(10),p.getY()+8,river,Blocks.STONE.defaultBlockState())==AquaticHabitat.Kind.GROUNDWATER,"RC31 groundwater prediction");
             }
+            BenthicChecks.verify(l);
             return tested;
         }finally{
             l.setBlock(p.above(),upper,2);l.setBlock(p,saved,2);l.setBlock(p.below(),floor,2);

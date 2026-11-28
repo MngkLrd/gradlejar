@@ -27,7 +27,7 @@ public final class AquaticFeature extends Feature<NoneFeatureConfiguration> {
     @Override public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> c){
         var l=c.level();var r=c.random();int x0=c.origin().getX()&~15,z0=c.origin().getZ()&~15;
         var prediction=AquaticHabitat.prediction(l,c.chunkGenerator());
-        boolean any=false;
+        boolean any=BenthicEcology.generate(l,prediction,r,x0,z0);
         for(int i=0;i<24;i++){
             int x=x0+r.nextInt(16),z=z0+r.nextInt(16);
             BlockPos p=new BlockPos(x,l.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,x,z),z);

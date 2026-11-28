@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "worldlogicterrain:block/eelgrass"
+      },
+      {
+        "model": "worldlogicterrain:block/eelgrass",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/eelgrass",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/eelgrass",
+        "y": 270
+      }
+    ]
+  }
+}

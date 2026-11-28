@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "worldlogicterrain:block/sea_fan"
+      },
+      {
+        "model": "worldlogicterrain:block/sea_fan",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/sea_fan",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/sea_fan",
+        "y": 270
+      }
+    ]
+  }
+}

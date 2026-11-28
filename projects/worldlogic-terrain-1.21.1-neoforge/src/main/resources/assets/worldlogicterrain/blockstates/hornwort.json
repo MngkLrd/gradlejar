@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "worldlogicterrain:block/hornwort"
+      },
+      {
+        "model": "worldlogicterrain:block/hornwort",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/hornwort",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/hornwort",
+        "y": 270
+      }
+    ]
+  }
+}

@@ -96,6 +96,11 @@ public final class TerrainContent {
                 BlockBehaviour.Properties.of().noCollission().noOcclusion().instabreak().sound(SoundType.GRASS).randomTicks()));
             PLANTS.add(ITEMS.register(id,()->new dev.minemods.worldlogicterrain.growth.SeasonalSeedItem(block.get())));
         }
+        for(var species:dev.minemods.worldlogicterrain.water.BenthicSpecies.values()){
+            var block=BLOCKS.register(species.id,()->new dev.minemods.worldlogicterrain.water.BenthicBlock(species,
+                BlockBehaviour.Properties.of().noCollission().noOcclusion().instabreak().sound(SoundType.WET_GRASS).randomTicks()));
+            PLANTS.add(ITEMS.register(species.id,()->new BlockItem(block.get(),new Item.Properties())));
+        }
         for(var fruit:dev.minemods.worldlogicterrain.tree.TreeFruit.values()){
             BLOCKS.register(fruit.blockId(),()->new dev.minemods.worldlogicterrain.block.HangingFruitBlock(fruit,
                 BlockBehaviour.Properties.of().noCollission().noOcclusion().instabreak().sound(SoundType.GRASS).randomTicks()));

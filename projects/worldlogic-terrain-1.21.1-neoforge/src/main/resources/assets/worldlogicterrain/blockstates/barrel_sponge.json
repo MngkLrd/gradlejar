@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "worldlogicterrain:block/barrel_sponge"
+      },
+      {
+        "model": "worldlogicterrain:block/barrel_sponge",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/barrel_sponge",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/barrel_sponge",
+        "y": 270
+      }
+    ]
+  }
+}

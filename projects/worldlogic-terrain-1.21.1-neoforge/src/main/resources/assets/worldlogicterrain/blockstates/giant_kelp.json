@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "worldlogicterrain:block/giant_kelp"
+      },
+      {
+        "model": "worldlogicterrain:block/giant_kelp",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/giant_kelp",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/giant_kelp",
+        "y": 270
+      }
+    ]
+  }
+}
