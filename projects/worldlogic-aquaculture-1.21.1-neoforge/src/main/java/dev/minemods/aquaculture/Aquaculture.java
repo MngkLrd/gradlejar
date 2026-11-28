@@ -63,7 +63,7 @@ public final class Aquaculture {
  public Aquaculture(IEventBus bus){
   ENTITIES.register(bus);ITEMS.register(bus);TABS.register(bus);bus.addListener(this::attributes);
   bus.addListener((net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent event)->event.enqueueWork(AquaPhysical::register));
-  NeoForge.EVENT_BUS.addListener(AquaSpawns::filter);NeoForge.EVENT_BUS.addListener(AquaSpawns::placement);NeoForge.EVENT_BUS.addListener(PopulationRuntime::tick);NeoForge.EVENT_BUS.addListener(PopulationRuntime::load);NeoForge.EVENT_BUS.addListener(PopulationRuntime::unload);NeoForge.EVENT_BUS.addListener(this::drops);NeoForge.EVENT_BUS.addListener(this::commands);
+  NeoForge.EVENT_BUS.addListener(AquaBreathing::breathe);NeoForge.EVENT_BUS.addListener(AquaBreathing::drown);NeoForge.EVENT_BUS.addListener(AquaSpawns::filter);NeoForge.EVENT_BUS.addListener(AquaSpawns::placement);NeoForge.EVENT_BUS.addListener(PopulationRuntime::tick);NeoForge.EVENT_BUS.addListener(PopulationRuntime::load);NeoForge.EVENT_BUS.addListener(PopulationRuntime::unload);NeoForge.EVENT_BUS.addListener(this::drops);NeoForge.EVENT_BUS.addListener(this::commands);
  }
  private void attributes(EntityAttributeCreationEvent e){
   for(MarineSpecies s:MarineSpecies.values())e.put(MARINE.get(s).get(),MarineAnimal.attributes(s).build());

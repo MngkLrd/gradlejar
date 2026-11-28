@@ -5,8 +5,7 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "FishImmersionMixin",
-    "FishAirMixin",
-    "FishNativeDrowningMixin"
+    "FishAirMixin"
   ],
   "injectors": {
     "defaultRequire": 1

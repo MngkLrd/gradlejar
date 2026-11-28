@@ -67,7 +67,7 @@ jobs:
         with:
           name: aqua-rc54-NOT-RELEASE
           path: |
-            projects/worldlogic-aquaculture-1.21.1-neoforge/build/libs/worldlogic_aqua-neoforge-mc1.21.1-0.4.2.jar
+            projects/worldlogic-aquaculture-1.21.1-neoforge/build/libs/worldlogic_aqua-neoforge-mc1.21.1-0.4.3.jar
             exact-evidence/report.json
             exact-evidence/runtime/logs/
           if-no-files-found: warn
