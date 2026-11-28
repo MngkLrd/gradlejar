@@ -10,7 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.*;
 import java.util.*;
 public final class MetabolismScreen extends Screen{
- private final Screen parent;private int tab,page;private final ArrayList<Hit> hits=new ArrayList<>();
+ private final Screen parent;private int tab,page;private final Button[] tabs=new Button[6];private final ArrayList<Hit> hits=new ArrayList<>();
  private record Hit(int x,int y,int w,int h,Component text,Component description,Component value){}
  private record Row(String key,String value,float fraction,boolean risk,Item icon){}
  private static final String[] TABS={"overview","nutrition","energy","digestion","recovery","history"};
@@ -25,7 +25,7 @@ public final class MetabolismScreen extends Screen{
  private int usable(){return ClientSetup.contentWidth(width);}
  @Override protected void init(){
   int w=Math.max(15,(usable()-16)/TABS.length);
-  for(int i=0;i<TABS.length;i++){final int k=i;var button=Button.builder(Component.literal(font.plainSubstrByWidth(tr("tab."+TABS[i]).getString(),Math.max(1,w-10))),b->{tab=k;page=0;}).bounds(8+i*w,27,w-2,20).build();button.setTooltip(Tooltip.create(tr("tab."+TABS[i])));addRenderableWidget(button);}
+  for(int i=0;i<TABS.length;i++){final int k=i;var button=Button.builder(Component.literal(font.plainSubstrByWidth(tr("tab."+TABS[i]).getString(),Math.max(1,w-10))),b->{tab=k;page=0;}).bounds(8+i*w,27,w-2,20).build();button.setTooltip(Tooltip.create(tr("tab."+TABS[i])));tabs[i]=addRenderableWidget(button);}
   addRenderableWidget(Button.builder(Component.literal("<"),b->page=Math.max(0,page-1)).bounds(8,height-25,24,20).build());
   addRenderableWidget(Button.builder(Component.literal(">"),b->page++).bounds(34,height-25,24,20).build());
   addRenderableWidget(Button.builder(Component.translatable("gui.back"),b->onClose()).bounds(Math.max(60,usable()-86),height-25,78,20).build());
@@ -72,14 +72,15 @@ public final class MetabolismScreen extends Screen{
  }
  private void row(GuiGraphics g,Row r,int x,int y,int w,int mx,int my){
   boolean hovered=mx>=x&&mx<x+w&&my>=y&&my<y+32;
-  g.fill(x,y,x+w,y+32,hovered?0xff41494d:0xff2e3437);
-  g.fill(x,y,x+w,y+1,0xff626b70);g.fill(x,y+31,x+w,y+32,0xff171b1d);
+  g.fill(x,y,x+w,y+32,0xff777777);
+  g.fill(x+1,y+1,x+w,y+32,0xffeeeeee);
+  g.fill(x+1,y+1,x+w-1,y+31,hovered?0xffe3e3e3:0xffb7b7b7);
   g.renderItem(new ItemStack(r.icon),x+4,y+7);
   String label=font.plainSubstrByWidth(tr("stat."+r.key).getString(),Math.max(1,w-30));
-  g.drawString(font,label,x+24,y+3,0xffeeeeee,false);
-  int c=r.fraction<0?0xffdddddd:color(r.risk?1-r.fraction:r.fraction);
+  g.drawString(font,label,x+24,y+3,0xff383838,false);
+  int c=r.fraction<0?0xff555555:textColor(r.risk?1-r.fraction:r.fraction);
   g.drawString(font,font.plainSubstrByWidth(r.value,Math.max(1,w-30)),x+24,y+14,c,false);
-  if(r.fraction>=0){int bar=w-30;g.fill(x+24,y+25,x+24+bar,y+29,0xff171b1d);int filled=Math.round(Math.max(0,Math.min(1,r.fraction))*bar);if(filled>0)g.fill(x+24,y+25,x+24+filled,y+28,c);}
+  if(r.fraction>=0){int bar=w-30;g.fill(x+24,y+25,x+24+bar,y+29,0xff777777);g.fill(x+25,y+26,x+24+bar-1,y+28,0xff383838);int filled=Math.round(Math.max(0,Math.min(1,r.fraction))*Math.max(0,bar-2));if(filled>0)g.fill(x+25,y+26,x+25+filled,y+28,barColor(r.risk?1-r.fraction:r.fraction));}
   hits.add(new Hit(x,y,w,32,tr("stat."+r.key),tr("help."+r.key),Component.literal(r.value)));
  }
  private void line(GuiGraphics g,int x,int y,int x2,int y2,int c){
@@ -88,19 +89,19 @@ public final class MetabolismScreen extends Screen{
  }
  private void radar(GuiGraphics g,float[] v,int x,int y,int w,int h){
   int cx=x+w/2,cy=y+h/2+5,r=Math.min(w/2-24,h/2-25);
-  g.fill(x,y,x+w,y+h,0xff2e3437);g.renderOutline(x,y,w,h,0xff626b70);
-  g.drawCenteredString(font,tr("profile"),cx,y+7,0xffe6dfc9);
+  g.fill(x,y,x+w,y+h,0xff777777);g.fill(x+1,y+1,x+w,y+h,0xffeeeeee);g.fill(x+1,y+1,x+w-1,y+h-1,0xffb7b7b7);
+  center(g,tr("profile"),cx,y+7,0xff383838);
   float[] values={v[0],v[1],v[2],v[3],(v[4]+v[5]+v[6])/3,(v[7]+v[8]+v[9])/3};
   String[] keys={"protein","fat","carb","fiber","vitamins","minerals"};
   Item[] icons={Items.COOKED_BEEF,Items.SALMON,Items.BREAD,Items.CARROT,Items.APPLE,Items.IRON_NUGGET};
   int[] px=new int[6],py=new int[6];
   for(int ring=1;ring<=4;ring++)for(int i=0;i<6;i++){
    double a=i*Math.PI/3-Math.PI/2,b=(i+1)*Math.PI/3-Math.PI/2;
-   double d=r*ring/4.0;line(g,cx+(int)Math.round(Math.cos(a)*d),cy+(int)Math.round(Math.sin(a)*d),cx+(int)Math.round(Math.cos(b)*d),cy+(int)Math.round(Math.sin(b)*d),0xff626b70);
+   double d=r*ring/4.0;line(g,cx+(int)Math.round(Math.cos(a)*d),cy+(int)Math.round(Math.sin(a)*d),cx+(int)Math.round(Math.cos(b)*d),cy+(int)Math.round(Math.sin(b)*d),0xff888888);
   }
   for(int i=0;i<6;i++){
    double a=i*Math.PI/3-Math.PI/2;double xx=Math.cos(a),yy=Math.sin(a);
-   line(g,cx,cy,cx+(int)Math.round(xx*r),cy+(int)Math.round(yy*r),0xff626b70);
+   line(g,cx,cy,cx+(int)Math.round(xx*r),cy+(int)Math.round(yy*r),0xff888888);
    px[i]=cx+(int)Math.round(xx*r*Math.min(1,values[i]));py[i]=cy+(int)Math.round(yy*r*Math.min(1,values[i]));
    int ix=cx+(int)Math.round(xx*(r+11))-8,iy=cy+(int)Math.round(yy*(r+11))-8;
    g.renderItem(new ItemStack(icons[i]),ix,iy);
@@ -109,18 +110,30 @@ public final class MetabolismScreen extends Screen{
   for(int yy=cy-r;yy<=cy+r;yy++){
    var intersections=new ArrayList<Integer>();
    for(int i=0;i<6;i++){int j=(i+1)%6;if((py[i]<=yy&&py[j]>yy)||(py[j]<=yy&&py[i]>yy))intersections.add(px[i]+(int)Math.round((double)(yy-py[i])*(px[j]-px[i])/(py[j]-py[i])));}
-   Collections.sort(intersections);for(int i=0;i+1<intersections.size();i+=2)g.fill(intersections.get(i),yy,intersections.get(i+1)+1,yy+1,0x709fca72);
+   Collections.sort(intersections);for(int i=0;i+1<intersections.size();i+=2)g.fill(intersections.get(i),yy,intersections.get(i+1)+1,yy+1,0x60729954);
   }
-  for(int i=0;i<6;i++){int j=(i+1)%6;line(g,px[i],py[i],px[j],py[j],0xffa4cc72);g.fill(px[i]-1,py[i]-1,px[i]+2,py[i]+2,0xffe7eacb);}
+  for(int i=0;i<6;i++){int j=(i+1)%6;line(g,px[i],py[i],px[j],py[j],0xff38663a);g.fill(px[i]-1,py[i]-1,px[i]+2,py[i]+2,0xff38663a);}
  }
- private int color(float v){return v<.4?0xffe3796b:v<.8?0xffe2bd62:0xff9fca72;}
+ private int textColor(float v){return v<.4?0xff9c3030:v<.8?0xff80501e:0xff315c33;}
+ private int barColor(float v){return v<.4?0xffc66553:v<.8?0xffc5a35b:0xff729954;}
+ private void center(GuiGraphics g,Component text,int x,int y,int c){g.drawString(font,text,x-font.width(text)/2,y,c,false);}
+ private void frame(GuiGraphics g,int x,int y,int w,int h){
+  if(w<6||h<6)return;
+  g.fill(x+2,y,x+w-2,y+h,0xff343434);g.fill(x,y+2,x+w,y+h-2,0xff343434);
+  g.fill(x+2,y+1,x+w-2,y+h-1,0xffeeeeee);g.fill(x+1,y+3,x+w-1,y+h-3,0xffeeeeee);
+  g.fill(x+3,y+3,x+w-3,y+h-3,0xffc6c6c6);
+  g.fill(x+w-3,y+3,x+w-2,y+h-3,0xff555555);g.fill(x+3,y+h-3,x+w-3,y+h-2,0xff555555);
+ }
+ @Override public void renderBackground(GuiGraphics g,int mx,int my,float delta){g.fill(0,0,width,height,0x99000000);}
  @Override public void render(GuiGraphics g,int mx,int my,float delta){
-  hits.clear();g.fill(0,0,width,height,0xff1a1e21);g.drawCenteredString(font,title,usable()/2,10,0xfff0eee7);
+  hits.clear();for(int i=0;i<tabs.length;i++)if(tabs[i]!=null)tabs[i].active=i!=tab;
+  super.render(g,mx,my,delta);
+  frame(g,8,4,usable()-16,20);center(g,title,usable()/2,10,0xff383838);
   int left=8,right=usable()-8,top=53,bottom=height-31;
-  g.fill(left,top,right,bottom,0xff252a2d);g.renderOutline(left,top,right-left,bottom-top,0xff697276);
+  frame(g,left,top,right-left,bottom-top);
   var state=MetabolismSync.client;var player=Minecraft.getInstance().player;
-  if(state==null||player==null||!state.player().equals(player.getUUID()))g.drawCenteredString(font,tr("waiting"),usable()/2,top+8,0xffdddddd);
-  else if(!state.active())g.drawCenteredString(font,tr("inactive"),usable()/2,top+8,0xffdddddd);
+  if(state==null||player==null||!state.player().equals(player.getUUID()))center(g,tr("waiting"),usable()/2,top+8,0xff444444);
+  else if(!state.active())center(g,tr("inactive"),usable()/2,top+8,0xff444444);
   else {
    var values=state.values();var data=rows(values,state.anatomical());int cols=usable()>=430?3:usable()>=280?2:1;
    int start=left+4;
@@ -132,7 +145,6 @@ public final class MetabolismScreen extends Screen{
    }
    g.drawString(font,(page+1)+"/"+(maxPage+1),63,height-18,0xffd0d0d0,false);
   }
-  super.render(g,mx,my,delta);
   for(var h:hits)if(mx>=h.x&&mx<h.x+h.w&&my>=h.y&&my<h.y+h.h){
    var lines=new ArrayList<net.minecraft.util.FormattedCharSequence>();
    lines.add(h.text.getVisualOrderText());lines.addAll(font.split(h.description,Math.max(80,Math.min(230,usable()-20))));lines.add(h.value.getVisualOrderText());
