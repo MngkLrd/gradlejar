@@ -14,7 +14,7 @@ import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 /** Server thread only. Pending context is consumed by the actual death event, never by a merely lethal-looking hit. */
 public final class DeathReports {
     private DeathReports(){}
-    private record Context(Cause cause,Origin origin,String sourceId){}
+    private record Context(Cause cause,Origin origin,String sourceId,boolean collapse){}
     private static final WeakHashMap<ServerPlayer,Context> PENDING=new WeakHashMap<>();
     public static void clear(ServerPlayer p){PENDING.remove(p);}
     public static Origin origin(DamageSource s){
@@ -26,23 +26,31 @@ public final class DeathReports {
         if(s.is(DamageTypeTags.IS_EXPLOSION))return Origin.EXPLOSION;
         if(s.is(DamageTypeTags.IS_FIRE))return Origin.FIRE;
         if(s.is(DamageTypeTags.IS_PROJECTILE))return Origin.PROJECTILE;
-        return s.getEntity()!=null?Origin.ATTACK:Origin.OTHER;
+        return switch(s.getMsgId()){
+            case "starve" -> Origin.STARVATION;
+            case "inWall","cramming" -> Origin.SUFFOCATION;
+            case "magic","indirectMagic","wither","dragonBreath" -> Origin.MAGIC;
+            case "lightningBolt" -> Origin.LIGHTNING;
+            default -> s.getEntity()!=null?Origin.ATTACK:Origin.OTHER;
+        };
     }
-    public static void hit(ServerPlayer p,BodyState b,DamageSource source){
+    private static String sourceId(DamageSource s){String id=s.getMsgId();return id.substring(0,Math.min(128,id.length()));}
+    public static void hit(ServerPlayer p,BodyState b,DamageSource source,boolean alreadyFatal){
+        if(VitalityBridge.engineFatalSource(source)){clear(p);return;}
+        if(alreadyFatal){collapse(p,b,null);return;}
         clear(p);
-        if(!VitalityBridge.engineFatalSource(source)&&b.vitalDestroyed())
-            PENDING.put(p,new Context(Cause.DIRECT_TRAUMA,origin(source),source.getMsgId()));
+        if(b.vitalDestroyed())PENDING.put(p,new Context(Cause.DIRECT_TRAUMA,origin(source),sourceId(source),false));
     }
     public static void collapse(ServerPlayer p,BodyState b,Cause phase){
-        if(phase==null&&PENDING.containsKey(p))return;
+        if(phase==null&&PENDING.containsKey(p)){var old=PENDING.get(p);PENDING.put(p,new Context(old.cause(),old.origin(),old.sourceId(),true));return;}
         Cause cause=phase;
         if(cause==null)cause=b.fatalBloodLoss()?Cause.BLOOD_LOSS:Cause.VITAL_DESTRUCTION;
         Origin origin=cause==Cause.HYPOXIA&&p.getAirSupply()<=0?Origin.DROWNING:Origin.SYSTEMIC;
-        PENDING.put(p,new Context(cause,origin,""));
+        PENDING.put(p,new Context(cause,origin,"",true));
     }
     public static DeathReport consume(ServerPlayer p,BodyState b,DamageSource source){
         var context=PENDING.remove(p);
-        if(context==null||(!b.vitalDestroyed()&&!b.fatalBloodLoss()))return DeathReport.capture(b,Cause.VANILLA,origin(source),source.getMsgId());
+        if(context==null||(!b.vitalDestroyed()&&!b.fatalBloodLoss())||(!context.collapse()&&(VitalityBridge.engineFatalSource(source)||!context.sourceId().equals(sourceId(source)))))return DeathReport.capture(b,Cause.VANILLA,origin(source),sourceId(source));
         return DeathReport.capture(b,context.cause(),context.origin(),context.sourceId());
     }
     public static void onDeath(LivingDeathEvent e){

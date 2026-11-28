@@ -1009,5 +1009,13 @@
     "client": "NOT_RUN: actual graphical render, hidden slot mouse/keyboard/cursor interaction, unconscious view and live motion; bot does not support custom GUI/protocol",
     "integration": "NOT_RUN: standalone dependency is Core RC22; public inputs tested with deterministic coefficients; reverse metabolism/hydration effects require their owner consuming TraumaApi.physiology",
     "remaining": "No pulse/respiratory rate, no separate organ entity hitboxes or prone animation; final balance deferred to 0.8.6. No new diseases."
+  },
+  "version_0_8_6": {
+    "version": "0.8.6",
+    "scope": "Owner-prioritized post-mortem report, independent of living diagnosis and medical treatment; no balance changes (deferred). Actual LivingDeathEvent captures final state, explicit lethal phase and source, distinct fatal and bleed flags, snapshot protocol 12, vanilla screen preserved, localized report.",
+    "server": "traumaqa deathreport deterministic server fixture: fall, external/internal blood loss, hypoxic brain death, native kill and stale context, reset, actual codec; actual network death ordering NOT_RUN",
+    "static_gui": "checkHudStatusLayout: 30 report layouts and native fallback bounds",
+    "client": "NOT_RUN: real vanilla death screen transition, report hover, respawn/hardcore, instant respawn gamerule and live network ordering; custom protocol unsupported by bot",
+    "remaining": "No full damage history, unknown native source uses original death message; no arbitrary fatal organ inference. No changes to organs/treatments/damage balance."
   }
 }

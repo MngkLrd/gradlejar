@@ -130,6 +130,17 @@ public final class HudStatusLayoutCheck {
         }
         require(!MedicalDashboardLayout.available(320,200),"too small");
         System.out.println("PASS: "+dashboards+" exclusive medical dashboard layouts");
+        int deathLayouts=0;
+        for(int w:new int[]{300,320,330,480,640,960})for(int h:new int[]{174,202,240,270,480}){
+            var l=DeathReportLayout.of(w,h);
+            require(l.x()>0&&l.y()>0&&l.x()+l.width()<w&&l.y()+l.height()<h,"death report margins");
+            require(l.bodyX()+48*l.scale()<l.regionX()&&l.regionX()<l.regionRight()&&l.regionRight()<l.organX(),"death columns");
+            require(l.bodyY()+82*l.scale()<=l.footerY()&&l.rowTop()+7*l.regionRow()<=l.footerY()&&l.rowTop()+9*l.organRow()<=l.footerY(),"all death rows visible");
+            require(l.organRow()>=9&&l.buttonY()>=l.footerY()+11&&l.buttonY()+18<=l.y()+l.height()&&l.buttonX()+116<=l.x()+l.width(),"death exit and labels");
+            deathLayouts++;
+        }
+        require(!DeathReportLayout.available(299,174)&&!DeathReportLayout.available(300,173),"small screen falls back to native death screen");
+        System.out.println("PASS: "+deathLayouts+" death report layouts");
         System.out.println("PASS: 16 combinations, "+transitions+" removal transitions, timer boundaries and visibility");
     }
 }

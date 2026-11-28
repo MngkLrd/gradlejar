@@ -127,6 +127,12 @@
       "expect": "TRAUMAQA organs PASS",
       "assertion": true,
       "name": "TR-ORGANS: integrity, internal bleeding, oxygen, perfusion, recovery, persistence and API"
+    },
+    {
+      "command": "traumaqa deathreport",
+      "expect": "TRAUMAQA deathreport PASS",
+      "assertion": true,
+      "name": "TR-DEATH-REPORT: fatal origin, causal markers, blood loss, hypoxia, frozen snapshot and packet"
     }
   ],
   "coverage": [
@@ -883,6 +889,34 @@
         {
           "backend": "server",
           "name": "TR-ORGANS: integrity, internal bleeding, oxygen, perfusion, recovery, persistence and API"
+        }
+      ]
+    },
+    {
+      "id": "tr-death-cause",
+      "kind": "mechanic",
+      "subject": "Direct fall and vital destruction, external/internal bleeding, hypoxic brain failure, native command and stale-context exclusion",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-DEATH-REPORT: fatal origin, causal markers, blood loss, hypoxia, frozen snapshot and packet"
+        }
+      ]
+    },
+    {
+      "id": "tr-death-snapshot",
+      "kind": "mechanic",
+      "subject": "Fatal anatomical marks distinct from destroyed limbs and active bleeding; immutable-from-live-body snapshot survives reset; actual codec roundtrip",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-DEATH-REPORT: fatal origin, causal markers, blood loss, hypoxia, frozen snapshot and packet"
         }
       ]
     }

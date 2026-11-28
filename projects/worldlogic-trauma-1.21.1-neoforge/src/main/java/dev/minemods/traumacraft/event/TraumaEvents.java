@@ -72,8 +72,9 @@ public final class TraumaEvents {
         TreatmentManager.cancel(p);
         if(!WorldLogicBridge.injuryEnabled(p)) return;
         BodyState b=BodyStates.get(p);
+        boolean alreadyFatal=b.vitalDestroyed()||b.fatalBloodLoss();
         applyDamage(p,b,e.getSource(),amount);
-        DeathReports.hit(p,b,e.getSource());
+        DeathReports.hit(p,b,e.getSource(),alreadyFatal);
         // Anatomical damage is the only normal survival damage. Preserve engine-level kill/void.
         if(!VitalityBridge.engineFatalSource(e.getSource())) e.setNewDamage(b.vitalDestroyed()?Math.max(amount,p.getHealth()+p.getAbsorptionAmount()+1):0f);
         ModNetwork.sync(p);

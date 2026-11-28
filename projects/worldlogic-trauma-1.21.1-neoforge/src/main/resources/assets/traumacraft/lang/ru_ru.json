@@ -195,5 +195,9 @@
   "death.traumacraft.origin.void": "Пустота",
   "death.traumacraft.origin.command": "Команда / системная смерть",
   "death.traumacraft.origin.other": "Другой урон",
-  "death.traumacraft.origin.systemic": "Отказ функций организма"
+  "death.traumacraft.origin.systemic": "Отказ функций организма",
+  "death.traumacraft.origin.starvation": "Голод",
+  "death.traumacraft.origin.suffocation": "Удушье",
+  "death.traumacraft.origin.magic": "Магия / вредный эффект",
+  "death.traumacraft.origin.lightning": "Молния"
 }

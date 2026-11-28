@@ -195,5 +195,9 @@
   "death.traumacraft.origin.void": "Void",
   "death.traumacraft.origin.command": "Administrative / engine kill",
   "death.traumacraft.origin.other": "Other damage",
-  "death.traumacraft.origin.systemic": "Systemic collapse"
+  "death.traumacraft.origin.systemic": "Systemic collapse",
+  "death.traumacraft.origin.starvation": "Starvation",
+  "death.traumacraft.origin.suffocation": "Suffocation",
+  "death.traumacraft.origin.magic": "Magic / harmful effect",
+  "death.traumacraft.origin.lightning": "Lightning"
 }

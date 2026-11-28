@@ -6,7 +6,7 @@ import dev.minemods.traumacraft.network.SyncBodyStatePacket;
 public record DeathReport(Cause cause,Origin origin,String sourceId,int criticalRegions,int criticalOrgans,
                           int bleedingRegions,int bleedingOrgans,SyncBodyStatePacket body) {
     public enum Cause { DIRECT_TRAUMA, VITAL_DESTRUCTION, EXTERNAL_BLEEDING, INTERNAL_BLEEDING, BLOOD_LOSS, HYPOXIA, VANILLA }
-    public enum Origin { FALL, EXPLOSION, FIRE, PROJECTILE, ATTACK, FREEZE, DROWNING, VOID, COMMAND, OTHER, SYSTEMIC }
+    public enum Origin { FALL, EXPLOSION, FIRE, PROJECTILE, ATTACK, FREEZE, DROWNING, VOID, COMMAND, STARVATION, SUFFOCATION, MAGIC, LIGHTNING, OTHER, SYSTEMIC }
     public boolean critical(BodyPart p){return (criticalRegions&(1<<p.ordinal()))!=0;}
     public boolean critical(OrganState.Organ o){return (criticalOrgans&(1<<o.ordinal()))!=0;}
     public boolean bleeding(BodyPart p){return (bleedingRegions&(1<<p.ordinal()))!=0;}
