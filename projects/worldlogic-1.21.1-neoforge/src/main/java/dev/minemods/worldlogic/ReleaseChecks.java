@@ -63,6 +63,7 @@ public final class ReleaseChecks {
  public static void verifyWorld(net.minecraft.server.level.ServerLevel l){
   PhysicalMaterialChecks.verifyLoaded(l);
   ExcavationChecks.verify(l);
+  HealChecks.verify(l);
   HostileSpawnPolicy.verify(l);
   ExertionModifiers.verify(net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(l));
   CoreCreativeTab.verify(l);

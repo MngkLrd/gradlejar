@@ -19,7 +19,14 @@ public final class Survival {
  private static final Map<Player,Long> LAST_WORK=new WeakHashMap<>();
  private record RestSample(ServerLevel level,double x,double z,long time){}
  private static final Map<Player,RestSample> REST_SAMPLE=new WeakHashMap<>();
- static void clearExertionTracking(Player p){LAST_WORK.remove(p);REST_SAMPLE.remove(p);}
+ private record HeatSample(ServerLevel level,BlockPos pos,long time,boolean warm){}
+ private static final Map<Player,HeatSample> HEAT_SAMPLE=new WeakHashMap<>();
+ private static boolean nearHeat(Player p,ServerLevel l,long now){
+  BlockPos pos=p.blockPosition();var old=HEAT_SAMPLE.get(p);
+  if(old!=null&&old.level()==l&&old.pos().equals(pos)&&now>=old.time()&&now-old.time()<20)return old.warm();
+  boolean warm=AirAndFire.nearHeat(l,pos,2);HEAT_SAMPLE.put(p,new HeatSample(l,pos.immutable(),now,warm));return warm;
+ }
+ static void clearExertionTracking(Player p){LAST_WORK.remove(p);REST_SAMPLE.remove(p);HEAT_SAMPLE.remove(p);}
  static double recoveryRate(int food,double speed,boolean sneak,boolean warm){
   double rate=speed<.25?4.0:sneak?3.0:2.4;
   if(food<12)rate*=.30;
@@ -45,14 +52,14 @@ public final class Survival {
    var metabolic=speed<.25&&p instanceof net.minecraft.server.level.ServerPlayer server?PeerPhysiology.restRate(server):OptionalDouble.empty();
    double rate;
    if(metabolic.isPresent())rate=metabolic.getAsDouble();
-   else{boolean warm=speed<.25&&AirAndFire.nearHeat(l,p.blockPosition(),2);rate=recoveryRate(p.getFoodData().getFoodLevel(),speed,p.isShiftKeyDown(),warm);}
+   else{boolean warm=speed<.25&&nearHeat(p,l,now);rate=recoveryRate(p.getFoodData().getFoodLevel(),speed,p.isShiftKeyDown(),warm);}
    rest(p,recoveryAmount(rate,elapsed));
   }
   ExertionModifiers.apply(p);
  }
  static boolean active(Player p){return p.level() instanceof ServerLevel&&!p.isCreative()&&!p.isSpectator();}
  public static double fatigue(Player p){return Math.max(0,Math.min(100,p.getPersistentData().getDouble(FATIGUE)));}
- public static void rest(Player p,double amount){if(active(p)&&Rules.on("exertion"))p.getPersistentData().putDouble(FATIGUE,Math.max(0,fatigue(p)-amount));}
+ public static void rest(Player p,double amount){if(active(p)&&Rules.on("exertion")){double next=fatigue(p)-amount;p.getPersistentData().putDouble(FATIGUE,next<1e-7?0:next);}}
  public static void work(Player p,double amount){if(active(p)&&Rules.on("exertion")){LAST_WORK.put(p,p.level().getGameTime());p.getPersistentData().putDouble(FATIGUE,Math.min(100,fatigue(p)+amount*Rules.strength("movement")));}}
  /** Called only after ServerPlayerGameMode confirms the actual world block changed. */
  public static void completedMining(net.minecraft.server.level.ServerPlayer p,float hardness){

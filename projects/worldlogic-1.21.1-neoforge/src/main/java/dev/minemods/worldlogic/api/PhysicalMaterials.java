@@ -554,7 +554,7 @@ public final class PhysicalMaterials {
   return atState(level,pos,level.getBlockState(pos),supplied);
  }
  /** Caller-owned original state at an already loaded location, e.g. an excavation proxy. Does not mutate terrain. */
- public static Optional<Result> atState(ServerLevel level,BlockPos pos,BlockState b,State supplied){
+ static Optional<Result> atState(ServerLevel level,BlockPos pos,BlockState b,State supplied){
   Objects.requireNonNull(b);
   if(!level.getServer().isSameThread())throw new IllegalStateException("server thread required");
   if(level.isOutsideBuildHeight(pos)||!level.hasChunkAt(pos))return Optional.empty();
