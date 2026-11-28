@@ -52,7 +52,7 @@ public final class TreeChopper {
     static {
         for(String name:SPECIES){
             TWIGS.put(name,BLOCKS.register("twig_"+name,()->new TwigBlock(BlockBehaviour.Properties.of().strength(0).sound(SoundType.WOOD).noCollission().noOcclusion(),name)));
-            CUTS.put(name,BLOCKS.register("cut_"+name,()->new CutBlock(BlockBehaviour.Properties.of().strength(2).sound(SoundType.WOOD).noOcclusion())));
+            CUTS.put(name,BLOCKS.register("cut_"+name,()->new CutBlock(BlockBehaviour.Properties.of().strength(2).sound(SoundType.WOOD).noOcclusion().dynamicShape())));
             STUMPS.put(name,BLOCKS.register("stump_"+name,()->new StumpBlock(BlockBehaviour.Properties.of().strength(1.5f).sound(SoundType.WOOD).noOcclusion())));
             UPPERS.put(name,BLOCKS.register("fallen_upper_"+name,()->new Block(BlockBehaviour.Properties.of().strength(2).sound(SoundType.WOOD).noOcclusion().noCollission())));
             FALLEN.put(name,BLOCKS.register("fallen_"+name,()->new FallenLogBlock(BlockBehaviour.Properties.of().strength(2).sound(SoundType.WOOD).noOcclusion(),name)));
@@ -258,7 +258,6 @@ public final class TreeChopper {
         int proposed=Math.min(ChopEffort.COMPLETE,work[idx]+ChopEffort.workPerHit(speed,resistance,power,Math.max(4,equivalent),level.random.nextDouble(),tree.stream().filter(Piece::log).mapToInt(p->p.pos.getY()-pos.getY()).max().orElse(1)));
         work[idx]=FallBalance.counterWork(work,idx,guide,proposed);
         if(!FallBalance.validGuide(work,guide))guide=-1;
-        damaged=CutBlock.withWork(damaged,work);
         boolean severed=ChopEffort.severed(work);
         boolean allReady=severed&&readySupports(level,supports,pos,work)==supports.size();
         int wear=allReady?ChopEffort.fellingWear(upperLogs(tree)+extraCore,true):1;

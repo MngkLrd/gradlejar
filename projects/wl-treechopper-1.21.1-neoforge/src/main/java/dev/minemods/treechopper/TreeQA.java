@@ -134,7 +134,7 @@ final class TreeQA {
             var cut=snapshot.get();var state=l.getBlockState(p);
             boolean opposite=IntegerArgumentType.getInteger(c,"opposite")==1;
             if(cut.north()<=0||(opposite?cut.south()<=0:cut.south()!=0)||cut.west()!=0||cut.east()!=0
-                ||CutBlock.depth(state,Direction.NORTH)!=ChopEffort.depth(cut.north())||CutBlock.depth(state,Direction.SOUTH)!=ChopEffort.depth(cut.south()))return 0;
+                ||CutBlock.depth(l,p,Direction.NORTH)!=ChopEffort.depth(cut.north())||CutBlock.depth(l,p,Direction.SOUTH)!=ChopEffort.depth(cut.south()))return 0;
             c.getSource().sendSuccess(()->Component.literal("TreeChopper notch geometry PASS"),false);return 1;
           }))))
           .then(Commands.literal("qa_crosscut").executes(c->{
@@ -208,13 +208,36 @@ final class TreeQA {
             var box=new net.minecraft.world.phys.AABB(target).expandTowards(1,0,0);
             if(FallingTree.crushLeaves(l,fake,box)!=1||!l.getBlockState(target).isAir()||!l.getBlockState(target.east()).is(oak.getBlock()))return 0;
             if(ChopEffort.workPerHit(2,1,1,8,.5,16)>=ChopEffort.workPerHit(2,1,1,8,.5,4)||ChopEffort.depth(999)!=7)return 0;
-            if(CutGeometry.count()!=981)return 0;
+            var cutBlock=net.minecraft.core.registries.BuiltInRegistries.BLOCK.get(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(TreeChopper.ID,"cut_oak"));
+            if(cutBlock.getStateDefinition().getPossibleStates().size()!=1)return 0;
             for(int n=0;n<=8;n++)for(int s=0;s<=8;s++)for(int w=0;w<=8;w++)for(int e=0;e<=8;e++){
-                if(n+s+w+e>10)continue;
                 int[] d={n,s,w,e};
-                int[] work={125*n,125*s,125*w,125*e};
-                if(!java.util.Arrays.equals(d,CutGeometry.depths(CutGeometry.profile(work))))return 0;
+                int key=CutGeometry.key(new int[]{125*n,125*s,125*w,125*e});
+                for(int face=0;face<4;face++)if(CutGeometry.depth(key,face)!=d[face])return 0;
+                // Exercise representative profiles, including opposed cuts and fully severed but protected roots.
+                if((n+s+w+e)%5==0){
+                    var g=CutGeometry.geometry(key);
+                    if(g!=CutGeometry.geometry(key)||g.boxes().size()>5||g.shape().isEmpty())return 0;
+                }
             }
+            if(CutGeometry.cacheSize()>CutGeometry.CACHE_LIMIT)return 0;
+            BlockPos fixture=new BlockPos(1024,215,1017);
+            l.setBlock(fixture,cutBlock.defaultBlockState(),3);
+            if(!(l.getBlockEntity(fixture) instanceof CutProgress stored))return 0;
+            var state=l.getBlockState(fixture);
+            int[] work={510,130,0,0};
+            stored.write(work,0);
+            var expected=CutGeometry.geometry(CutGeometry.key(work));
+            if(state.getCollisionShape(l,fixture)!=expected.shape()||!state.equals(l.getBlockState(fixture)))return 0;
+            var nbt=stored.saveWithoutMetadata(l.registryAccess());
+            var clone=new CutProgress(fixture,state);
+            clone.loadAdditional(nbt,l.registryAccess());
+            if(!java.util.Arrays.equals(nbt.getIntArray("work"),work)||!java.util.Arrays.equals(clone.saveWithoutMetadata(l.registryAccess()).getIntArray("work"),work)
+                ||clone.getUpdateTag(l.registryAccess()).getInt("depthKey")!=CutGeometry.key(work))return 0;
+            var previous=stored.getUpdateTag(l.registryAccess()).getInt("depthKey");
+            stored.write(new int[]{760,130,0,0},0);
+            if(previous==stored.getUpdateTag(l.registryAccess()).getInt("depthKey")||state.getCollisionShape(l,fixture)==expected.shape())return 0;
+            l.removeBlock(fixture,false);
             c.getSource().sendSuccess(()->Component.literal("TreeChopper crown ownership PASS"),false);return 1;
           }))
           .then(Commands.literal("qa_leafless_cut").executes(c->{
@@ -261,7 +284,7 @@ final class TreeQA {
                 NeoForge.EVENT_BUS.post(new PlayerInteractEvent.LeftClickBlock(fake,p,Direction.NORTH,PlayerInteractEvent.LeftClickBlock.Action.START));
             }
             var before=l.getBlockState(p);int[] work=CutProgress.read(l,p,before);
-            if(!(before.getBlock() instanceof CutBlock)||CutBlock.depth(before,Direction.NORTH)<2||work[1]!=0||CutProgress.guide(l,p)!=-1){
+            if(!(before.getBlock() instanceof CutBlock)||CutBlock.depth(l,p,Direction.NORTH)<2||work[1]!=0||CutProgress.guide(l,p)!=-1){
                 c.getSource().sendFailure(Component.literal("TreeChopper initial directional notch FAILED"));return 0;
             }
             fake.setPos(p.getX()+.5,p.getY(),p.getZ()+2);
@@ -437,11 +460,12 @@ final class TreeQA {
             TreeChopper.networkStrike(fake,p);
             var first=l.getBlockState(p);
             if(!(first.getBlock() instanceof CutBlock)||first.equals(original)){c.getSource().sendFailure(Component.literal("TreeChopper network initial strike FAILED"));return 0;}
+            int[] firstWork=CutProgress.read(l,p,first);
             TreeChopper.networkStrike(fake,p);
-            if(!first.equals(l.getBlockState(p))){c.getSource().sendFailure(Component.literal("TreeChopper network cooldown FAILED"));return 0;}
+            if(!first.equals(l.getBlockState(p))||!java.util.Arrays.equals(firstWork,CutProgress.read(l,p,l.getBlockState(p)))){c.getSource().sendFailure(Component.literal("TreeChopper network cooldown FAILED"));return 0;}
             fake.setPos(p.getX()+.5,p.getY()-1,p.getZ()-20);
             TreeChopper.qaResetCooldown(fake);TreeChopper.networkStrike(fake,p);
-            if(!first.equals(l.getBlockState(p))){c.getSource().sendFailure(Component.literal("TreeChopper network range FAILED"));return 0;}
+            if(!first.equals(l.getBlockState(p))||!java.util.Arrays.equals(firstWork,CutProgress.read(l,p,l.getBlockState(p)))){c.getSource().sendFailure(Component.literal("TreeChopper network range FAILED"));return 0;}
             c.getSource().sendSuccess(()->Component.literal("TreeChopper network validation PASS"),false);return 1;
           })))
           .then(Commands.literal("qa_progress").then(Commands.argument("pos",BlockPosArgument.blockPos()).executes(c->{

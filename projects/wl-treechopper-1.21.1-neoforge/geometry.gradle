@@ -8,17 +8,14 @@ tasks.register('generateTreeGeometry') {
     inputs.file('geometry.gradle')
     doLast {
         def root=generated.get().asFile
+        // Drop obsolete generated multipart assets on incremental builds.
+        project.delete(root)
         def emit={String path,Object data -> def f=new File(root,path); f.parentFile.mkdirs(); f.text=JsonOutput.toJson(data) }
         def asset='assets/wl_treechopper/'
         def en=['message.wl_treechopper.axe_worn':'Not enough axe durability to fell the tree (need %s).']; def ru=['message.wl_treechopper.axe_worn':'Недостаточно прочности топора для валки дерева (нужно %s).']
         en.putAll(['message.wl_treechopper.landing_blocked':'Tree fall is obstructed. Clear the path or strike from another side.','message.wl_treechopper.find_notch':'Strike the visible notch.','message.wl_treechopper.notch_order':'Process the preceding notch first.']); ru.putAll(['message.wl_treechopper.landing_blocked':'Путь падения перекрыт. Освободи его или ударь с другой стороны.','message.wl_treechopper.find_notch':'Ударь по зазубрине на стволе.','message.wl_treechopper.notch_order':'Сначала обработай предыдущую зазубрину.']);
         en['message.wl_treechopper.supports']='Cut supports: %s/%s'; ru['message.wl_treechopper.supports']='Прорублено опор: %s/%s'
         en['message.wl_treechopper.directed_cut']='Directional notch and back cut'; ru['message.wl_treechopper.directed_cut']='Направляющий сруб и обратный пропил'
-        // Stable enumeration mirrors CutGeometry; no Cartesian explosion of independent states.
-        def profiles=[]
-        (0..8).each { n -> (0..8).each { south -> (0..8).each { w -> (0..8).each { e ->
-            if(n+south+w+e<=10)profiles << [n,south,w,e]
-        }}}}
         species.each { s ->
             def namespace=custom.contains(s)?'worldlogicterrain':'minecraft'
             def bark="${namespace}:block/${s}_log"
@@ -84,17 +81,8 @@ tasks.register('generateTreeGeometry') {
             emit(asset+"blockstates/${fallen}.json",[multipart:fallenMulti])
             en["block.wl_treechopper.${fallen}"]="Fallen ${s} timber"
             ru["block.wl_treechopper.${fallen}"]="Поваленный ствол (${s})"
-            def multi=[[apply:bottom],[apply:top]]
-            [[4,6,1],[6,10,0],[10,12,1]].eachWithIndex { band,i ->
-                (0..7).each { x -> (0..7).each { z ->
-                    def valid=[]
-                    profiles.eachWithIndex { d, p ->
-                        if(d[0]<=z+band[2]&&d[1]<=7-z+band[2]&&d[2]<=x+band[2]&&d[3]<=7-x+band[2])valid << p
-                    }
-                    if(!valid.isEmpty())multi << [when:[profile:valid.join('|')],apply:model(cut+"_${i}_${x}_${z}",x*2,band[0],z*2,x*2+2,band[1],z*2+2)]
-                }}
-            }
-            emit(asset+"blockstates/${cut}.json",[multipart:multi])
+            emit(asset+"models/block/${cut}.json",[loader:'wl_treechopper:dynamic_cut',textures:[particle:bark,bark:bark,wood:wood,end:end]])
+            emit(asset+"blockstates/${cut}.json",[variants:['':[model:"wl_treechopper:block/${cut}"]]])
             emit(asset+"blockstates/${stump}.json",[variants:['':bottom]])
             [cut,stump,fallen].each { id ->
                 def loot=[type:'minecraft:block',pools:[[rolls:1,entries:[[type:'minecraft:item',name:"${namespace}:${s}_log"]],conditions:[[condition:'minecraft:survives_explosion']]]]]

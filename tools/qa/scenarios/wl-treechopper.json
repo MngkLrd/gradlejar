@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "WorldLogic TreeChopper 0.8.0 server regression (NeoForge FakePlayer event backend)",
+  "name": "WorldLogic TreeChopper 0.8.1 server regression (NeoForge FakePlayer event backend)",
   "steps": [
     {
       "command": "forceload add 992 992 1055 1055",
@@ -638,7 +638,7 @@
       "wait": 3
     },
     {
-      "command": "setblock 1040 200 1028 wl_treechopper:cut_oak[profile=274]",
+      "command": "setblock 1040 200 1028 wl_treechopper:cut_oak{work:[I;125,0,0,0]}",
       "expect": "Changed the block|Successfully filled|Filled"
     },
     {
@@ -717,7 +717,7 @@
       "expect": "Changed the block|Successfully filled|Filled"
     },
     {
-      "command": "setblock 1048 200 1018 wl_treechopper:cut_oak[profile=916]",
+      "command": "setblock 1048 200 1018 wl_treechopper:cut_oak{work:[I;750,0,0,0]}",
       "expect": "Changed the block|Successfully filled|Filled"
     },
     {
@@ -738,7 +738,7 @@
       "expect": "Changed the block|Successfully filled|Filled"
     },
     {
-      "command": "setblock 1038 200 1018 wl_treechopper:cut_oak[profile=916]",
+      "command": "setblock 1038 200 1018 wl_treechopper:cut_oak{work:[I;750,0,0,0]}",
       "expect": "Changed the block|Successfully filled|Filled"
     },
     {
@@ -1010,7 +1010,7 @@
       "expect": "Changed the block|Successfully filled|Filled"
     },
     {
-      "command": "setblock 1010 200 1038 wl_treechopper:cut_oak[profile=916]",
+      "command": "setblock 1010 200 1038 wl_treechopper:cut_oak{work:[I;750,0,0,0]}",
       "expect": "Changed the block|Successfully filled|Filled"
     },
     {
@@ -1853,7 +1853,7 @@
     {
       "id": "network-strike-validation",
       "kind": "mechanic",
-      "subject": "Production packet handler path with actual player aim, cooldown and range rejection (FakePlayer not actual client packets)",
+      "subject": "Production packet handler path with actual player aim, cooldown and range rejection (FakePlayer not actual client packets); exact stored work unchanged on rejected network strikes",
       "checks": [
         {
           "backend": "server",
@@ -2383,7 +2383,7 @@
     {
       "id": "crown-ownership",
       "kind": "mechanic",
-      "subject": "Natural canopy ownership, natural vs persistent collision, foliage destruction preserves adjacent log, height and visual depth scaling",
+      "subject": "Natural canopy ownership, natural vs persistent collision, foliage destruction preserves adjacent log, height and visual depth scaling; single blockstate, all depth tuples, bounded collision cache, actual collision mutation, NBT roundtrip and update tag",
       "checks": [
         {
           "backend": "server",
