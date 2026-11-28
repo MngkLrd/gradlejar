@@ -13,6 +13,7 @@ Current main is canonical. Start with [AGENTS.md](../AGENTS.md), then read only 
 | Recipes | [Recipe QA](qa/RECIPE-QA.md) |
 | Any new/changed asset | [Common visual QA](art/VISUAL-QA.md), relevant [atlas](art/VANILLA-ART-ATLAS.md) rule |
 | Blocks, trees, vegetation | [Block art](art/BLOCK-ART.md) |
+| New/changed buildings, settlements, built mines and other human-built structures only (not natural features) | [Architecture and structure generation](art/STRUCTURE-QA.md) |
 | Items, tools, weapons and armor | [Item and armor art](art/ITEM-ARMOR-ART.md) |
 | Animals, living mobs and animation | [Mob art](art/MOB-ART.md) |
 | Interfaces and HUD | [Interface art](art/UI-ART.md) |
