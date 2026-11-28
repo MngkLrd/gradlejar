@@ -3108,6 +3108,80 @@
         "context_view": "Six by six icon-family comparison on inventory-like dark neutral cells; generated item model references the exact local PNG.",
         "context_type": "icon_family"
       }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/item/raw_portion.png": {
+      "sha256": "457ff7a59a299071ecb6ad15fa815681a5d4948a30ef64aa73c2c18c846e5e57",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/cod",
+          "minecraft": "1.21.1",
+          "sha256": "5a4cddbf3f573fb1d63b0d9cbc3c5166287a07ad8f4cf84ac44c83ce28cf5911"
+        }
+      ],
+      "comparison": "16x16 original angled fillet with skin edge, versus the target vanilla whole fish sprite. Shared serving silhouette deliberately distinguishes portions from intact species catches; raw/cooked palette indicates preparation.",
+      "findings": {
+        "silhouette": "Tapered angled slab with no eyes, fins or tail indicates a cut serving, not an intact fish.",
+        "cluster_structure": "Broad connected diagonal flesh clusters and a narrow darker edge represent cut meat and skin.",
+        "micro_contrast": "Localized pale upper band and darker boundary give contrast without scattered noise.",
+        "light_and_volume": "Raised central plane has pink and pale cream exposed flesh, grey green skin; underside turns into shadow.",
+        "material_continuity": "Flesh colors form related ramps; skin edge follows the same diagonal rather than detached marks.",
+        "edge_variation": "Narrow pointed end and broad rounded shoulder have stepped contour and transparent negative space.",
+        "variant_identity": "The raw state has pink and pale cream exposed flesh, grey green skin, different from the other preparation while preserving fillet outline.",
+        "vanilla_comparison": "Native 16x16 angled placement similar to minecraft:item/cod; deliberately removes intact fish anatomy.",
+        "functional_material_cues": "A cut face and attached skin strip distinguish edible serving from a whole catch."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Whole fish / fillet anatomy has no applicable bread/apple rule in pinned atlas; target-version fish item is a direct role comparator.",
+        "reference_source": "Version-pinned misode/mcmeta 1.21.1-assets PNG inspected and SHA-256 calculated; official client SHA-1 not independently checked.",
+        "applied_pattern": "Angled compact sprite, connected light clusters, skin edge and readable transparent silhouette.",
+        "reference_limit": "Vanilla comparator is intact fish rather than a cut serving; no silhouette copied.",
+        "native_view": "Actual original 16x16 and nearest-neighbor enlarged PNG inspected; no graphical game client.",
+        "context_view": "Raw and cooked use same serving silhouette with preparation-specific palette; separate species names and masses in tooltip.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/item/cooked_portion.png": {
+      "sha256": "581de88ba6217a660dbec49a740f5078825090bdf4385fc9ed3aea34bb990105",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/cooked_cod",
+          "minecraft": "1.21.1",
+          "sha256": "5c591167262e2b5bb05d84617be5db8adbceb246388e258c136ac7d46133a8cb"
+        }
+      ],
+      "comparison": "16x16 original angled fillet with skin edge, versus the target vanilla whole fish sprite. Shared serving silhouette deliberately distinguishes portions from intact species catches; raw/cooked palette indicates preparation.",
+      "findings": {
+        "silhouette": "Tapered angled slab with no eyes, fins or tail indicates a cut serving, not an intact fish.",
+        "cluster_structure": "Broad connected diagonal flesh clusters and a narrow darker edge represent cut meat and skin.",
+        "micro_contrast": "Localized pale upper band and darker boundary give contrast without scattered noise.",
+        "light_and_volume": "Raised central plane has golden warm exposed meat and browned skin; underside turns into shadow.",
+        "material_continuity": "Flesh colors form related ramps; skin edge follows the same diagonal rather than detached marks.",
+        "edge_variation": "Narrow pointed end and broad rounded shoulder have stepped contour and transparent negative space.",
+        "variant_identity": "The cooked state has golden warm exposed meat and browned skin, different from the other preparation while preserving fillet outline.",
+        "vanilla_comparison": "Native 16x16 angled placement similar to minecraft:item/cooked_cod; deliberately removes intact fish anatomy.",
+        "functional_material_cues": "A cut face and attached skin strip distinguish edible serving from a whole catch."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/cooked_cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Whole fish / fillet anatomy has no applicable bread/apple rule in pinned atlas; target-version fish item is a direct role comparator.",
+        "reference_source": "Version-pinned misode/mcmeta 1.21.1-assets PNG inspected and SHA-256 calculated; official client SHA-1 not independently checked.",
+        "applied_pattern": "Angled compact sprite, connected light clusters, skin edge and readable transparent silhouette.",
+        "reference_limit": "Vanilla comparator is intact fish rather than a cut serving; no silhouette copied.",
+        "native_view": "Actual original 16x16 and nearest-neighbor enlarged PNG inspected; no graphical game client.",
+        "context_view": "Raw and cooked use same serving silhouette with preparation-specific palette; separate species names and masses in tooltip.",
+        "context_type": "icon_family"
+      }
     }
   }
 }

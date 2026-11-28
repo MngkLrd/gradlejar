@@ -9,7 +9,33 @@
     "minecraft": "1.21.1",
     "loader": "neoforge"
   },
-  "provides": [],
+  "provides": [
+    {
+      "id": "worldlogic_aqua:food_portion",
+      "version": 1,
+      "revision": 0,
+      "domains": [
+        "aquatic_food_portion"
+      ],
+      "entrypoints": [
+        "dev.minemods.aquaculture.api.AquaApi"
+      ],
+      "documentation": "projects/worldlogic-aquaculture-1.21.1-neoforge/API.md",
+      "source_paths": [
+        "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/java/dev/minemods/aquaculture/api/AquaApi.java",
+        "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/java/dev/minemods/aquaculture/FishPortion.java",
+        "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/java/dev/minemods/aquaculture/FishPortions.java"
+      ],
+      "operations": [
+        {
+          "id": "food_portion",
+          "kind": "query",
+          "entrypoint": "dev.minemods.aquaculture.api.AquaApi",
+          "semantics": "Actual edible mass in grams per consumed item, species and preparation; empty for whole catch/invalid/missing data."
+        }
+      ]
+    }
+  ],
   "consumes": [
     {
       "id": "worldlogic:environment",
@@ -34,6 +60,22 @@
       "required": false,
       "status": "implemented",
       "fallback": "Optional versioned public injury call; one vanilla damage fallback."
+    },
+    {
+      "id": "worldlogic:capability_discovery",
+      "version": 1,
+      "min_revision": 0,
+      "required": true,
+      "status": "implemented",
+      "fallback": "Required Core 1.5.1; no duplicate nutrition or recipe execution."
+    },
+    {
+      "id": "worldlogic:field_processing",
+      "version": 1,
+      "min_revision": 0,
+      "required": true,
+      "status": "implemented",
+      "fallback": "Required Core 1.5.1; no duplicate nutrition or recipe execution."
     }
   ],
   "features": [
@@ -69,6 +111,25 @@
       ],
       "integration_review": "RC54 provider verified, retained on Core 1.5.1; authoritative measured specimen mass, no legacy relative scores.",
       "no_public_surface_reason": "Exposed via Core individual item provider."
+    },
+    {
+      "id": "fish_processing",
+      "source_paths": [
+        "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/java/dev/minemods/aquaculture/FishPortion.java",
+        "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/java/dev/minemods/aquaculture/FishPortions.java",
+        "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/java/dev/minemods/aquaculture/FishCooking.java",
+        "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/java/dev/minemods/aquaculture/RawFish.java",
+        "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/java/dev/minemods/aquaculture/api/AquaApi.java"
+      ],
+      "provides": [
+        "worldlogic_aqua:food_portion"
+      ],
+      "consumes": [
+        "worldlogic:capability_discovery",
+        "worldlogic:field_processing",
+        "worldlogic:material_properties"
+      ],
+      "integration_review": "Inspected Metabolism API v1 rev6 and actual FoodProfiles/finish path; ordinary FOOD completion only, peer nutrition profiles still pending #259. Core owns registry and physical result; Aqua owns real edible yield and preparation."
     }
   ],
   "tests": [
@@ -78,6 +139,17 @@
         "worldlogic:environment",
         "worldlogic:material_properties",
         "worldlogic:trauma_status"
+      ],
+      "ref": "tools/qa/scenarios/worldlogic-aquaculture.json",
+      "status": "implemented"
+    },
+    {
+      "id": "aqua.portion.contract",
+      "capabilities": [
+        "worldlogic_aqua:food_portion",
+        "worldlogic:capability_discovery",
+        "worldlogic:field_processing",
+        "worldlogic:material_properties"
       ],
       "ref": "tools/qa/scenarios/worldlogic-aquaculture.json",
       "status": "implemented"

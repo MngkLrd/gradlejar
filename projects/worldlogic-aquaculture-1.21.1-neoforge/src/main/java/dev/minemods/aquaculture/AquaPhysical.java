@@ -18,6 +18,10 @@ final class AquaPhysical {
  static void register(){
   for(Species s:Species.ALL)PhysicalMaterials.registerIndividualItemProvider(
    ResourceLocation.fromNamespaceAndPath(Aquaculture.ID,"raw_"+s.id()),AquaPhysical::individual);
+  for(Species s:Species.ALL)for(String prefix:List.of("raw_","cooked_"))PhysicalMaterials.registerIndividualItemProvider(ResourceLocation.fromNamespaceAndPath(Aquaculture.ID,prefix+s.id()+"_portion"),AquaPhysical::portion);
+ }
+ private static Optional<PhysicalMaterials.IndividualItem> portion(ItemStack stack){
+  return dev.minemods.aquaculture.api.AquaApi.foodPortion(stack).map(p->new PhysicalMaterials.IndividualItem(p.edibleMassGrams()/1000.0,p.preparation()==dev.minemods.aquaculture.api.AquaApi.Preparation.RAW?List.of(new PhysicalMaterials.Component(TISSUE,1)):List.of()));
  }
  private static Optional<PhysicalMaterials.IndividualItem> individual(ItemStack stack){
   var tag=stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();

@@ -2498,6 +2498,809 @@
           "name": "Core directed river: species flow preferences, actual swimming intention, undirected and dry controls"
         }
       ]
+    },
+    {
+      "id": "portion-raw_pike",
+      "kind": "item",
+      "subject": "aquaculture:raw_pike_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_pike",
+      "kind": "item",
+      "subject": "aquaculture:cooked_pike_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_perch",
+      "kind": "item",
+      "subject": "aquaculture:raw_perch_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_perch",
+      "kind": "item",
+      "subject": "aquaculture:cooked_perch_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_crucian_carp",
+      "kind": "item",
+      "subject": "aquaculture:raw_crucian_carp_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_crucian_carp",
+      "kind": "item",
+      "subject": "aquaculture:cooked_crucian_carp_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_carp",
+      "kind": "item",
+      "subject": "aquaculture:raw_carp_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_carp",
+      "kind": "item",
+      "subject": "aquaculture:cooked_carp_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_roach",
+      "kind": "item",
+      "subject": "aquaculture:raw_roach_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_roach",
+      "kind": "item",
+      "subject": "aquaculture:cooked_roach_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_bream",
+      "kind": "item",
+      "subject": "aquaculture:raw_bream_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_bream",
+      "kind": "item",
+      "subject": "aquaculture:cooked_bream_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_trout",
+      "kind": "item",
+      "subject": "aquaculture:raw_trout_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_trout",
+      "kind": "item",
+      "subject": "aquaculture:cooked_trout_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_grayling",
+      "kind": "item",
+      "subject": "aquaculture:raw_grayling_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_grayling",
+      "kind": "item",
+      "subject": "aquaculture:cooked_grayling_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_char",
+      "kind": "item",
+      "subject": "aquaculture:raw_char_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_char",
+      "kind": "item",
+      "subject": "aquaculture:cooked_char_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_taimen",
+      "kind": "item",
+      "subject": "aquaculture:raw_taimen_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_taimen",
+      "kind": "item",
+      "subject": "aquaculture:cooked_taimen_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_whitefish",
+      "kind": "item",
+      "subject": "aquaculture:raw_whitefish_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_whitefish",
+      "kind": "item",
+      "subject": "aquaculture:cooked_whitefish_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_burbot",
+      "kind": "item",
+      "subject": "aquaculture:raw_burbot_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_burbot",
+      "kind": "item",
+      "subject": "aquaculture:cooked_burbot_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_catfish",
+      "kind": "item",
+      "subject": "aquaculture:raw_catfish_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_catfish",
+      "kind": "item",
+      "subject": "aquaculture:cooked_catfish_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_tench",
+      "kind": "item",
+      "subject": "aquaculture:raw_tench_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_tench",
+      "kind": "item",
+      "subject": "aquaculture:cooked_tench_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_loach",
+      "kind": "item",
+      "subject": "aquaculture:raw_loach_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_loach",
+      "kind": "item",
+      "subject": "aquaculture:cooked_loach_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_rotan",
+      "kind": "item",
+      "subject": "aquaculture:raw_rotan_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_rotan",
+      "kind": "item",
+      "subject": "aquaculture:cooked_rotan_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_rudd",
+      "kind": "item",
+      "subject": "aquaculture:raw_rudd_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_rudd",
+      "kind": "item",
+      "subject": "aquaculture:cooked_rudd_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_bowfin",
+      "kind": "item",
+      "subject": "aquaculture:raw_bowfin_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_bowfin",
+      "kind": "item",
+      "subject": "aquaculture:cooked_bowfin_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_piranha",
+      "kind": "item",
+      "subject": "aquaculture:raw_piranha_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_piranha",
+      "kind": "item",
+      "subject": "aquaculture:cooked_piranha_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_arapaima",
+      "kind": "item",
+      "subject": "aquaculture:raw_arapaima_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_arapaima",
+      "kind": "item",
+      "subject": "aquaculture:cooked_arapaima_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_tilapia",
+      "kind": "item",
+      "subject": "aquaculture:raw_tilapia_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_tilapia",
+      "kind": "item",
+      "subject": "aquaculture:cooked_tilapia_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_pacu",
+      "kind": "item",
+      "subject": "aquaculture:raw_pacu_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_pacu",
+      "kind": "item",
+      "subject": "aquaculture:cooked_pacu_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_snakehead",
+      "kind": "item",
+      "subject": "aquaculture:raw_snakehead_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_snakehead",
+      "kind": "item",
+      "subject": "aquaculture:cooked_snakehead_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_electric_eel",
+      "kind": "item",
+      "subject": "aquaculture:raw_electric_eel_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_electric_eel",
+      "kind": "item",
+      "subject": "aquaculture:cooked_electric_eel_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_atlantic_cod",
+      "kind": "item",
+      "subject": "aquaculture:raw_atlantic_cod_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_atlantic_cod",
+      "kind": "item",
+      "subject": "aquaculture:cooked_atlantic_cod_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_herring",
+      "kind": "item",
+      "subject": "aquaculture:raw_herring_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_herring",
+      "kind": "item",
+      "subject": "aquaculture:cooked_herring_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_mackerel",
+      "kind": "item",
+      "subject": "aquaculture:raw_mackerel_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_mackerel",
+      "kind": "item",
+      "subject": "aquaculture:cooked_mackerel_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_halibut",
+      "kind": "item",
+      "subject": "aquaculture:raw_halibut_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_halibut",
+      "kind": "item",
+      "subject": "aquaculture:cooked_halibut_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_haddock",
+      "kind": "item",
+      "subject": "aquaculture:raw_haddock_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_haddock",
+      "kind": "item",
+      "subject": "aquaculture:cooked_haddock_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_flounder",
+      "kind": "item",
+      "subject": "aquaculture:raw_flounder_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_flounder",
+      "kind": "item",
+      "subject": "aquaculture:cooked_flounder_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_tuna",
+      "kind": "item",
+      "subject": "aquaculture:raw_tuna_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_tuna",
+      "kind": "item",
+      "subject": "aquaculture:cooked_tuna_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_barracuda",
+      "kind": "item",
+      "subject": "aquaculture:raw_barracuda_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_barracuda",
+      "kind": "item",
+      "subject": "aquaculture:cooked_barracuda_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_grouper",
+      "kind": "item",
+      "subject": "aquaculture:raw_grouper_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_grouper",
+      "kind": "item",
+      "subject": "aquaculture:cooked_grouper_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_snapper",
+      "kind": "item",
+      "subject": "aquaculture:raw_snapper_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_snapper",
+      "kind": "item",
+      "subject": "aquaculture:cooked_snapper_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_mahi_mahi",
+      "kind": "item",
+      "subject": "aquaculture:raw_mahi_mahi_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_mahi_mahi",
+      "kind": "item",
+      "subject": "aquaculture:cooked_mahi_mahi_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-raw_parrotfish",
+      "kind": "item",
+      "subject": "aquaculture:raw_parrotfish_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-cooked_parrotfish",
+      "kind": "item",
+      "subject": "aquaculture:cooked_parrotfish_portion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
+    },
+    {
+      "id": "portion-processing-api",
+      "kind": "mechanic",
+      "subject": "Mass-conserving portion processing and public edible serving contract",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue"
+        }
+      ]
     }
   ],
   "steps": [
@@ -2516,7 +3319,7 @@
     {
       "name": "Creative content: 36 catches, 44 typed spawn eggs, registered tab and vanilla natural spawn filtering with manual/custom controls",
       "command": "aquaculture content_selftest",
-      "expect": "AQUA_CONTENT_80_PASS",
+      "expect": "AQUA_CONTENT_152_PASS",
       "assertion": true
     },
     {
@@ -2536,6 +3339,12 @@
       "name": "Coastal diversity and actual bank fixture, persistent coastal origin and shark snout front/rear/flank contact",
       "command": "aquaculture coast_bite_selftest",
       "expect": "AQUA_COAST_BITE_PASS",
+      "assertion": true
+    },
+    {
+      "name": "All 36 species: edible yield, raw/cooked serving mass, actual furnace, Core physical and public API/processing catalogue",
+      "command": "aquaculture portion_selftest",
+      "expect": "AQUA_PORTION_36_PASS",
       "assertion": true
     },
     {

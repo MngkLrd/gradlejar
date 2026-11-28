@@ -39,6 +39,7 @@ public final class Aquaculture {
  public static final Supplier<EntityType<RoeClutch>> ROE=ENTITIES.register("roe_clutch",()->EntityType.Builder.<RoeClutch>of(RoeClutch::new,MobCategory.MISC).sized(.65f,.35f).clientTrackingRange(6).build(ID+":roe_clutch"));
  public static final Map<MarineSpecies,Supplier<EntityType<MarineAnimal>>> MARINE=new EnumMap<>(MarineSpecies.class);
  public static final Map<String,Supplier<Item>> RAW=new LinkedHashMap<>();
+ public static final Map<String,Supplier<Item>> RAW_PORTIONS=new LinkedHashMap<>(),COOKED_PORTIONS=new LinkedHashMap<>();
  static {
   for(MarineSpecies s:MarineSpecies.values()){
    MARINE.put(s,ENTITIES.register(s.id,()->EntityType.Builder.<MarineAnimal>of((type,level)->new MarineAnimal(type,level,s),MobCategory.WATER_CREATURE)
@@ -48,6 +49,8 @@ public final class Aquaculture {
    TYPES.put(s.id(),ENTITIES.register(s.id(),()->EntityType.Builder.<Cod>of(Fish::new,MobCategory.WATER_AMBIENT)
     .sized((float)Math.max(.22,s.width()*1.7),(float)Math.max(.18,s.height())).clientTrackingRange(6).build(ID+":"+s.id())));
    RAW.put(s.id(),ITEMS.register("raw_"+s.id(),()->new RawFish(new Item.Properties().stacksTo(1))));
+   RAW_PORTIONS.put(s.id(),ITEMS.register("raw_"+s.id()+"_portion",()->new FishPortion(s,dev.minemods.aquaculture.api.AquaApi.Preparation.RAW)));
+   COOKED_PORTIONS.put(s.id(),ITEMS.register("cooked_"+s.id()+"_portion",()->new FishPortion(s,dev.minemods.aquaculture.api.AquaApi.Preparation.COOKED)));
   }
  }
  public static final DeferredRegister<CreativeModeTab> TABS=DeferredRegister.create(Registries.CREATIVE_MODE_TAB,ID);
@@ -59,10 +62,10 @@ public final class Aquaculture {
  }
  public static final Supplier<CreativeModeTab> AQUA_TAB=TABS.register("aqua",()->CreativeModeTab.builder()
   .title(Component.translatable("itemGroup.aquaculture.aqua")).icon(()->new ItemStack(RAW.get("perch").get()))
-  .displayItems((parameters,output)->{RAW.values().forEach(item->output.accept(item.get()));EGGS.values().forEach(item->output.accept(item.get()));}).build());
+  .displayItems((parameters,output)->{RAW.values().forEach(item->output.accept(item.get()));EGGS.values().forEach(item->output.accept(item.get()));for(Species s:Species.ALL){output.accept(FishPortions.stack(s,dev.minemods.aquaculture.api.AquaApi.Preparation.RAW,100));output.accept(FishPortions.stack(s,dev.minemods.aquaculture.api.AquaApi.Preparation.COOKED,80));}}).build());
  public Aquaculture(IEventBus bus){
-  ENTITIES.register(bus);ITEMS.register(bus);TABS.register(bus);bus.addListener(this::attributes);
-  bus.addListener((net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent event)->event.enqueueWork(AquaPhysical::register));
+  ENTITIES.register(bus);ITEMS.register(bus);TABS.register(bus);FishCooking.SERIALIZERS.register(bus);bus.addListener(this::attributes);
+  bus.addListener((net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent event)->event.enqueueWork(()->{AquaPhysical.register();dev.minemods.aquaculture.api.AquaApi.register();dev.minemods.worldlogic.api.WorldLogicRecipes.registerProcessingProvider(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(MOD_ID,"fish_cutting"),FishPortions::processing);}));
   NeoForge.EVENT_BUS.addListener(AquaBreathing::breathe);NeoForge.EVENT_BUS.addListener(AquaBreathing::drown);NeoForge.EVENT_BUS.addListener(AquaSpawns::filter);NeoForge.EVENT_BUS.addListener(AquaSpawns::placement);NeoForge.EVENT_BUS.addListener(PopulationRuntime::tick);NeoForge.EVENT_BUS.addListener(PopulationRuntime::load);NeoForge.EVENT_BUS.addListener(PopulationRuntime::unload);NeoForge.EVENT_BUS.addListener(this::drops);NeoForge.EVENT_BUS.addListener(this::commands);
  }
  private void attributes(EntityAttributeCreationEvent e){
@@ -166,6 +169,10 @@ public final class Aquaculture {
  }
  private void commands(RegisterCommandsEvent e){
   e.getDispatcher().register(Commands.literal("aquaculture").requires(src->src.hasPermission(2))
+   .then(Commands.literal("portion_selftest").executes(c->{
+    try{PortionChecks.run(c.getSource().getLevel());}catch(RuntimeException|LinkageError failure){return qaFailure(c.getSource(),failure);}
+    c.getSource().sendSuccess(()->Component.literal("AQUA_PORTION_36_PASS"),false);return Command.SINGLE_SUCCESS;
+   }))
    .then(Commands.literal("river_selftest").executes(c->{
     try{RiverChecks.run(c.getSource().getLevel());}catch(RuntimeException|LinkageError failure){return qaFailure(c.getSource(),failure);}
     c.getSource().sendSuccess(()->Component.literal("AQUA_RIVER_CURRENT_PASS"),false);return Command.SINGLE_SUCCESS;
@@ -176,7 +183,7 @@ public final class Aquaculture {
    }))
    .then(Commands.literal("content_selftest").executes(c->{
     try{AquaContentChecks.run(c.getSource().getLevel());}catch(RuntimeException|LinkageError failure){return qaFailure(c.getSource(),failure);}
-    c.getSource().sendSuccess(()->Component.literal("AQUA_CONTENT_80_PASS"),false);return Command.SINGLE_SUCCESS;
+    c.getSource().sendSuccess(()->Component.literal("AQUA_CONTENT_152_PASS"),false);return Command.SINGLE_SUCCESS;
    }))
    .then(Commands.literal("physical_selftest").executes(c->{
     try{AquaPhysicalChecks.run(c.getSource().getLevel());}catch(RuntimeException|LinkageError failure){return qaFailure(c.getSource(),failure);}c.getSource().sendSuccess(()->Component.literal("AQUA_PHYSICAL_PASS"),false);return Command.SINGLE_SUCCESS;

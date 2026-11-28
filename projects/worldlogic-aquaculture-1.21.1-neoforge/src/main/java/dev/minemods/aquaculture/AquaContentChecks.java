@@ -12,7 +12,7 @@ import java.util.*;
 final class AquaContentChecks {
  private static void require(boolean value,String what){if(!value)throw new IllegalStateException(what);}
  static void run(ServerLevel l){
-  require(Aquaculture.RAW.size()==36&&Aquaculture.EGGS.size()==44&&Aquaculture.ITEMS.getEntries().size()==80,"registered items");
+  require(Aquaculture.RAW.size()==36&&Aquaculture.EGGS.size()==44&&Aquaculture.RAW_PORTIONS.size()==36&&Aquaculture.COOKED_PORTIONS.size()==36&&Aquaculture.ITEMS.getEntries().size()==152,"registered items");
   require(Aquaculture.AQUA_TAB.get()!=null,"creative tab");
   var hashes=new HashSet<String>();
   for(Species s:Species.ALL){
