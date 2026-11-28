@@ -15,6 +15,18 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 final class TreeQA {
     static void register(RegisterCommandsEvent e){
         e.getDispatcher().register(Commands.literal("wltreechopper").requires(s->s.hasPermission(2))
+          .then(Commands.literal("qa_buck").then(Commands.argument("pos",BlockPosArgument.blockPos()).then(Commands.argument("expected",IntegerArgumentType.integer(0,1)).executes(c->{
+            ServerLevel l=c.getSource().getLevel();BlockPos p=BlockPosArgument.getLoadedBlockPos(c,"pos");
+            var fake=FakePlayerFactory.getMinecraft(l);fake.setPos(p.getX()+.5,p.getY(),p.getZ()-1.5);
+            ItemStack axe=new ItemStack(Items.IRON_AXE);fake.setItemSlot(EquipmentSlot.MAINHAND,axe);
+            var before=l.getBlockState(p);TreeChopper.qaResetCooldown(fake);
+            NeoForge.EVENT_BUS.post(new PlayerInteractEvent.LeftClickBlock(fake,p,Direction.NORTH,PlayerInteractEvent.LeftClickBlock.Action.START));
+            boolean changed=!before.equals(l.getBlockState(p));
+            if(changed!=(IntegerArgumentType.getInteger(c,"expected")==1)||axe.getDamageValue()!=0){
+                c.getSource().sendFailure(Component.literal("TreeChopper bucking FAILED"));return 0;
+            }
+            c.getSource().sendSuccess(()->Component.literal("TreeChopper bucking PASS"),false);return 1;
+          }))))
           .then(Commands.literal("qa_effort").executes(c->{
             double full=ChopEffort.power(1,1,1), tired=ChopEffort.power(.1,1,1);
             double oneArm=ChopEffort.power(1,1,0), disabled=ChopEffort.power(1,0,1);

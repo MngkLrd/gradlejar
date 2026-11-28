@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "WorldLogic TreeChopper 0.5.6 server regression (NeoForge FakePlayer event backend)",
+  "name": "WorldLogic TreeChopper 0.5.8 server regression (NeoForge FakePlayer event backend)",
   "steps": [
     {
       "command": "forceload add 992 992 1055 1055",
@@ -94,10 +94,68 @@
       "name": "cleanup-oak"
     },
     {
+      "command": "execute if block 1000 200 1002 wl_treechopper:fallen_oak[axis=z,marker=true]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "fallen-first"
+    },
+    {
+      "command": "execute if block 1000 200 1003 wl_treechopper:fallen_oak[axis=z,marker=true]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "fallen-second"
+    },
+    {
+      "command": "execute if block 1000 200 1004 wl_treechopper:fallen_oak[axis=z,marker=true]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "fallen-third"
+    },
+    {
+      "command": "execute unless entity @e[type=minecraft:item,x=1000,y=200,z=1000,distance=..8,nbt={Item:{id:\"minecraft:oak_log\"}}]",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "no-instant-drops"
+    },
+    {
+      "command": "wltreechopper qa_buck 1000 200 1003 0",
+      "expect": "TreeChopper bucking PASS",
+      "assertion": true,
+      "name": "bucking-out-of-order"
+    },
+    {
+      "command": "fill 999 199 1001 1001 199 1005 minecraft:stone",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_buck 1000 200 1002 1",
+      "expect": "TreeChopper bucking PASS",
+      "assertion": true,
+      "name": "bucking-first"
+    },
+    {
+      "command": "wltreechopper qa_buck 1000 200 1003 1",
+      "expect": "TreeChopper bucking PASS",
+      "assertion": true,
+      "name": "bucking-second"
+    },
+    {
+      "command": "wltreechopper qa_buck 1000 200 1004 1",
+      "expect": "TreeChopper bucking PASS",
+      "assertion": true,
+      "name": "bucking-third"
+    },
+    {
       "command": "execute if entity @e[type=minecraft:item,x=1000,y=200,z=1000,distance=..8,nbt={Item:{id:\"minecraft:oak_log\"}}]",
       "expect": "Test passed",
       "assertion": true,
       "name": "drops"
+    },
+    {
+      "command": "execute if block 1000 200 1004 minecraft:air",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "bucking-cleanup"
     },
     {
       "command": "setblock 1009 199 1000 minecraft:dirt",
@@ -795,6 +853,55 @@
     },
     {
       "wait": 3
+    },
+    {
+      "command": "setblock 1020 199 1040 minecraft:dirt",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 1020 200 1040 1020 203 1040 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1020 204 1040 minecraft:oak_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1020 200 1038 minecraft:stone",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_hit 1020 200 1040 north 16",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "command": "execute if block 1020 200 1038 minecraft:stone",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "obstruction-preserved"
+    },
+    {
+      "command": "execute if block 1020 201 1040 minecraft:oak_log",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "blocked-tree-intact"
+    },
+    {
+      "command": "setblock 1020 200 1038 minecraft:air",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_hit 1020 200 1040 north 1",
+      "expect": "TreeChopper QA hit dispatched"
+    },
+    {
+      "command": "execute if block 1020 200 1040 wl_treechopper:stump_oak",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "cleared-fall"
+    },
+    {
+      "wait": 3
     }
   ],
   "coverage": [
@@ -867,7 +974,7 @@
     {
       "id": "drops",
       "kind": "mechanic",
-      "subject": "Log drops after animation",
+      "subject": "Actual log items obtained after ordered processing instead of instant felling drops",
       "checks": [
         {
           "backend": "server",
@@ -1554,6 +1661,138 @@
         {
           "backend": "server",
           "name": "size-hit-12"
+        }
+      ]
+    },
+    {
+      "id": "fallen-first",
+      "kind": "mechanic",
+      "subject": "First visible marker on persistent fallen trunk",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "fallen-first"
+        }
+      ]
+    },
+    {
+      "id": "fallen-second",
+      "kind": "mechanic",
+      "subject": "Second visible marker",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "fallen-second"
+        }
+      ]
+    },
+    {
+      "id": "fallen-third",
+      "kind": "mechanic",
+      "subject": "Third visible marker",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "fallen-third"
+        }
+      ]
+    },
+    {
+      "id": "no-instant-drops",
+      "kind": "mechanic",
+      "subject": "Felling alone yields no loose log items",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "no-instant-drops"
+        }
+      ]
+    },
+    {
+      "id": "bucking-out-of-order",
+      "kind": "mechanic",
+      "subject": "Second marker refuses processing while first remains",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "bucking-out-of-order"
+        }
+      ]
+    },
+    {
+      "id": "bucking-first",
+      "kind": "mechanic",
+      "subject": "First notch processes its section without double durability",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "bucking-first"
+        }
+      ]
+    },
+    {
+      "id": "bucking-second",
+      "kind": "mechanic",
+      "subject": "Second notch processes its section",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "bucking-second"
+        }
+      ]
+    },
+    {
+      "id": "bucking-third",
+      "kind": "mechanic",
+      "subject": "Third notch processes its section",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "bucking-third"
+        }
+      ]
+    },
+    {
+      "id": "bucking-cleanup",
+      "kind": "mechanic",
+      "subject": "Processed trunk is removed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "bucking-cleanup"
+        }
+      ]
+    },
+    {
+      "id": "obstruction-preserved",
+      "kind": "mechanic",
+      "subject": "Blocked landing never overwrites stone",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "obstruction-preserved"
+        }
+      ]
+    },
+    {
+      "id": "blocked-tree-intact",
+      "kind": "mechanic",
+      "subject": "Tree stays standing if destination obstructed",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "blocked-tree-intact"
+        }
+      ]
+    },
+    {
+      "id": "cleared-fall",
+      "kind": "mechanic",
+      "subject": "Clearing obstruction allows retry and felling",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "cleared-fall"
         }
       ]
     }

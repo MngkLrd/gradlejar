@@ -44,6 +44,7 @@ public final class TreeChopper {
     private static final Map<String,DeferredBlock<CutBlock>> CUTS=new LinkedHashMap<>();
     private static final Map<String,DeferredBlock<StumpBlock>> STUMPS=new LinkedHashMap<>();
     private static final Map<String,DeferredBlock<Block>> UPPERS=new LinkedHashMap<>();
+    private static final Map<String,DeferredBlock<FallenLogBlock>> FALLEN=new LinkedHashMap<>();
     private static final String COOLDOWN="wl_treechopper:last_hit", FALL="wl_treechopper_fall";
     private static final int FALL_TICKS=36;
     static {
@@ -51,10 +52,15 @@ public final class TreeChopper {
             CUTS.put(name,BLOCKS.register("cut_"+name,()->new CutBlock(BlockBehaviour.Properties.of().strength(2).sound(SoundType.WOOD).noOcclusion())));
             STUMPS.put(name,BLOCKS.register("stump_"+name,()->new StumpBlock(BlockBehaviour.Properties.of().strength(1.5f).sound(SoundType.WOOD).noOcclusion())));
             UPPERS.put(name,BLOCKS.register("fallen_upper_"+name,()->new Block(BlockBehaviour.Properties.of().strength(2).sound(SoundType.WOOD).noOcclusion().noCollission())));
+            FALLEN.put(name,BLOCKS.register("fallen_"+name,()->new FallenLogBlock(BlockBehaviour.Properties.of().strength(2).sound(SoundType.WOOD).noOcclusion(),name)));
         }
     }
     private static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES=DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE,ID);
     static final Supplier<BlockEntityType<CutProgress>> PROGRESS=BLOCK_ENTITIES.register("cut_progress",()->BlockEntityType.Builder.of(CutProgress::new,CUTS.values().stream().map(DeferredBlock::get).toArray(Block[]::new)).build(null));
+    static final Supplier<BlockEntityType<FallenProgress>> FALLEN_PROGRESS=BLOCK_ENTITIES.register("fallen_progress",()->BlockEntityType.Builder.of(FallenProgress::new,FALLEN.values().stream().map(DeferredBlock::get).toArray(Block[]::new)).build(null));
+    static BlockState fallenState(String species,Direction.Axis axis,boolean marker){
+        return FALLEN.get(species).get().defaultBlockState().setValue(BlockStateProperties.AXIS,axis).setValue(FallenLogBlock.MARKER,marker);
+    }
     public TreeChopper(IEventBus modBus){
         BLOCKS.register(modBus);
         BLOCK_ENTITIES.register(modBus);
@@ -78,6 +84,7 @@ public final class TreeChopper {
     static boolean choppingTarget(Player player,BlockPos pos){
         if(player.isCreative()||player.isSpectator()||!(player.getMainHandItem().getItem() instanceof AxeItem)||!player.level().hasChunkAt(pos))return false;
         BlockState state=player.level().getBlockState(pos);
+        if(state.getBlock() instanceof FallenLogBlock)return true;
         String s=species(state);
         return s!=null&&(state.getBlock() instanceof CutBlock||!scan(player.level(),pos,s).isEmpty());
     }
@@ -99,15 +106,17 @@ public final class TreeChopper {
         if(actual instanceof BlockHitResult block&&actual.getType()==HitResult.Type.BLOCK&&block.getBlockPos().equals(pos))side=block.getDirection();
         NeoForge.EVENT_BUS.post(new PlayerInteractEvent.LeftClickBlock(player,pos,side,PlayerInteractEvent.LeftClickBlock.Action.START));
     }
-    private static boolean allowed(ServerLevel level,ServerPlayer player,BlockPos pos,BlockState state){
+    static boolean allowed(ServerLevel level,ServerPlayer player,BlockPos pos,BlockState state){
         if(!level.mayInteract(player,pos))return false;
         PROTECTION_CHECK.set(true);
         try{return !NeoForge.EVENT_BUS.post(new BlockEvent.BreakEvent(level,pos,state,player)).isCanceled();}
         finally{PROTECTION_CHECK.remove();}
     }
     private static void guardBreak(BlockEvent.BreakEvent event){
-        if(PROTECTION_CHECK.get() || !(event.getPlayer().getMainHandItem().getItem() instanceof AxeItem) || event.getPlayer().isCreative() || event.getPlayer().isSpectator() || !(event.getLevel() instanceof ServerLevel level))return;
+        if(PROTECTION_CHECK.get() || event.getPlayer().isCreative() || event.getPlayer().isSpectator() || !(event.getLevel() instanceof ServerLevel level))return;
         BlockState state=event.getState();
+        if(state.getBlock() instanceof FallenLogBlock){event.setCanceled(true);return;}
+        if(!(event.getPlayer().getMainHandItem().getItem() instanceof AxeItem))return;
         String s=species(state);
         if(s!=null && (state.getBlock() instanceof CutBlock || !scan(level,event.getPos(),s).isEmpty()))event.setCanceled(true);
     }
@@ -121,6 +130,22 @@ public final class TreeChopper {
         if(!(event.getEntity() instanceof ServerPlayer player) || !(event.getLevel() instanceof ServerLevel level) || player.isCreative() || player.isSpectator())return;
         BlockPos pos=event.getPos();
         BlockState old=level.getBlockState(pos);
+        if(old.getBlock() instanceof FallenLogBlock){
+            event.setCanceled(true);
+            if(event.getAction()==PlayerInteractEvent.LeftClickBlock.Action.START&&player.mayBuild()&&player.getMainHandItem().getItem() instanceof AxeItem){
+                double power=WorldLogicIntegration.effort(player).power();
+                long now=level.getGameTime(); CompoundTag data=player.getPersistentData();
+                if(power>0&&(!data.contains(COOLDOWN)||now<data.getLong(COOLDOWN)||now-data.getLong(COOLDOWN)>=ChopEffort.cooldown(power))){
+                    if(FallenTimber.process(level,player,pos)){
+                        data.putLong(COOLDOWN,now);
+                        ((ChopSwing)player).wl$markSwing();
+                        if(!(player instanceof FakePlayer))PacketDistributor.sendToPlayersTrackingEntityAndSelf(player,new ChopNetwork.Swing(player.getId()));
+                        player.swing(InteractionHand.MAIN_HAND,true);
+                    }
+                }
+            }
+            return;
+        }
         String s=species(old);
         if(s==null)return;
         boolean cut=old.getBlock() instanceof CutBlock;
@@ -148,7 +173,7 @@ public final class TreeChopper {
         int[] work=CutProgress.read(level,pos,damaged);
         if(cut&&ChopEffort.severed(work)){
             int wear=ChopEffort.fellingWear(upperLogs(tree),false);
-            if(canPay(player,axe,wear)&&fall(level,player,pos,s,old,tree,side))axe.hurtAndBreak(wear,player,EquipmentSlot.MAINHAND);
+            if(canPay(player,axe,wear)&&fall(level,player,pos,s,old,tree,side,true))axe.hurtAndBreak(wear,player,EquipmentSlot.MAINHAND);
             return;
         }
         float speed=Math.max(axe.getDestroySpeed(original(s)),((AxeItem)axe.getItem()).getTier().getSpeed());
@@ -168,7 +193,7 @@ public final class TreeChopper {
         if(!severed&&!(player instanceof FakePlayer))player.displayClientMessage(Component.translatable("message.wl_treechopper.cut_progress",work[idx]/10),true);
         level.playSound(null,pos,SoundEvents.WOOD_HIT,SoundSource.BLOCKS,1f,.8f+level.random.nextFloat()*.25f);
         level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK,original(s)),pos.getX()+.5+side.getStepX()*.47,pos.getY()+.5,pos.getZ()+.5+side.getStepZ()*.47,8,.12,.12,.12,.08);
-        boolean felled=severed&&fall(level,player,pos,s,damaged,tree,side);
+        boolean felled=severed&&fall(level,player,pos,s,damaged,tree,side,false);
         // Every real strike costs one point; every additional harvested log costs one
         // more, only after successful felling. Vanilla damage processing handles enchantments.
         axe.hurtAndBreak(felled?wear:1,player,EquipmentSlot.MAINHAND);
@@ -242,9 +267,35 @@ public final class TreeChopper {
         for(Direction d:SIDES){int n=CutBlock.depth(s,d);if(n>max){best=d;max=n;}}
         return best;
     }
-    private static boolean fall(ServerLevel l,ServerPlayer player,BlockPos base,String species,BlockState cut,List<Piece> tree,Direction latest){
+    private static boolean fall(ServerLevel l,ServerPlayer player,BlockPos base,String species,BlockState cut,List<Piece> tree,Direction latest,boolean retry){
         if(tree.stream().anyMatch(p->!l.getBlockState(p.pos).equals(p.state)||!allowed(l,player,p.pos,p.state)))return false;
-        Direction direction=fallDirection(cut,latest);
+        Direction direction=retry?latest:fallDirection(cut,latest);
+        Set<BlockPos> source=new HashSet<>();
+        source.add(base);for(Piece p:tree)source.add(p.pos);
+        ListTag plan=new ListTag();
+        Set<BlockPos> occupied=new HashSet<>();
+        for(Piece p:tree)if(p.log){
+            BlockPos end=landingPosition(base,p.pos,direction,1f);
+            if(end.equals(base)||!occupied.add(end)||!FallenTimber.clear(l,end,source)||!l.mayInteract(player,end)){
+                player.displayClientMessage(Component.translatable("message.wl_treechopper.landing_blocked"),true);return false;
+            }
+            // Sample the log center through the sweep, conservatively rejecting solid obstacles.
+            for(int step=1;step<8;step++){
+                BlockPos through=landingPosition(base,p.pos,direction,step/8f);
+                if(!FallenTimber.clear(l,through,source)){
+                    player.displayClientMessage(Component.translatable("message.wl_treechopper.landing_blocked"),true);return false;
+                }
+            }
+            Direction.Axis originalAxis=p.state.getValue(BlockStateProperties.AXIS);
+            Vector3f axis=rotation(direction,(float)(Math.PI*.5)).transform(new Vector3f(originalAxis==Direction.Axis.X?1:0,originalAxis==Direction.Axis.Y?1:0,originalAxis==Direction.Axis.Z?1:0));
+            Direction.Axis endAxis=Math.abs(axis.x)>.5?Direction.Axis.X:Math.abs(axis.y)>.5?Direction.Axis.Y:Direction.Axis.Z;
+            CompoundTag entry=new CompoundTag();entry.putLong("pos",end.asLong());entry.putString("axis",endAxis.getName());
+            plan.add(entry);
+        }
+        plan.sort(Comparator.comparingInt(t->{
+            BlockPos pos=BlockPos.of(((CompoundTag)t).getLong("pos"));
+            return (pos.getX()-base.getX())*direction.getStepX()+(pos.getZ()-base.getZ())*direction.getStepZ();
+        }));
         List<Piece> pieces=new ArrayList<>(tree);
         // Preserve the complete upper 12px of the cut block. The lower 4px stays in the world.
         // This display has no item yield; the actual stump accounts for the original log.
@@ -270,6 +321,8 @@ public final class TreeChopper {
             CompoundTag fall=new CompoundTag();
             fall.putInt("x",piece.pos.getX()-base.getX());fall.putInt("y",piece.pos.getY()-base.getY());fall.putInt("z",piece.pos.getZ()-base.getZ());
             fall.putBoolean("leaf",leaf);
+            fall.putBoolean("planned",true);
+            if(cap){fall.put("landing",plan.copy());fall.putUUID("group",UUID.randomUUID());}
             fall.putBoolean("hinge",true);fall.putBoolean("cap",cap);fall.putBoolean("wholeUpper",true);
             fall.putString("direction",direction.getName());fall.putBoolean("log",piece.log);fall.putString("species",species);fall.putInt("age",0);
             d.getPersistentData().put(FALL,fall);
@@ -282,6 +335,11 @@ public final class TreeChopper {
         for(Piece p:tree)l.updateNeighborsAt(p.pos,Blocks.AIR);
         l.playSound(null,base,SoundEvents.WOOD_BREAK,SoundSource.BLOCKS,1.3f,.62f);
         return true;
+    }
+    private static BlockPos landingPosition(BlockPos base,BlockPos piece,Direction dir,float progress){
+        Vector3f off=fallOffset(piece.getX()-base.getX(),piece.getY()-base.getY(),piece.getZ()-base.getZ(),dir,progress,false,true,true);
+        off.add(rotation(dir,(float)(Math.PI*.5*progress*progress)).transform(new Vector3f(.5f,.5f,.5f)));
+        return BlockPos.containing(base.getX()+.5+.5*dir.getStepX()+off.x,base.getY()+.25+off.y,base.getZ()+.5+.5*dir.getStepZ()+off.z);
     }
     private static ListTag floats(float... v){
         ListTag list=new ListTag();for(float x:v)list.add(FloatTag.valueOf(x));return list;
@@ -353,6 +411,10 @@ public final class TreeChopper {
             d.discard();return;
         }
         if(age>=FALL_TICKS+3){
+            if(f.getBoolean("planned")){
+                if(cap&&!FallenTimber.land(l,d.blockPosition(),f))return;
+                d.discard();return;
+            }
             if(f.getBoolean("log")&&CUTS.containsKey(f.getString("species"))){
                 Vector3f off=fallOffset(x,y,z,dir,1,false,hinge,wholeUpper).add(rotation(dir,(float)(Math.PI*.5)).transform(new Vector3f(.5f,.5f,.5f)));
                 BlockPos end=BlockPos.containing(d.getX()+off.x,d.getY()+off.y+.4,d.getZ()+off.z);
