@@ -8,3 +8,5 @@ Gameplay reserve: one natural ore block contains nine units; small 1, medium 4, 
 Real voxel notches retain six independent depths in one chunk-persisted block entity per touched block. Original source-specific proxy block has no item or loot, with model and collision generated from one 16px voxel solid. Bounded geometry, shape and per-material baked caches; no ticking rock entities or chunk-wide scanning. Core ore patches use existing mineral sprite; no copied PNGs. Core's original protruding ore model and orientation variants are not exactly preserved in chipped geometry. Graphical evidence pending.
 
 Evidence: source draft, actual Build Hub and same-commit compatibility pack must be run, exact Core candidate required. FakePlayer server QA path tests real validation, break, item yield and durability; no claim of network or graphical execution. Persistence reload, cross-mod protections, recipe execution and exact Core effort arbitration still need runtime evidence. See #264.
+
+Manifest capability `worldlogic:rock_fracture` maps to the typed runtime key `worldlogicexcavation:fracture` (provider namespace required by Core 1.5.0). Consumers use `ExcavationApi.KEY`.

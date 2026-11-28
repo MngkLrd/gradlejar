@@ -10,7 +10,7 @@
   },
   "provides": [
     {
-      "id": "worldlogicexcavation:fracture",
+      "id": "worldlogic:rock_fracture",
       "version": 1,
       "revision": 0,
       "domains": [
@@ -39,7 +39,8 @@
           "entrypoint": "dev.minemods.excavation.ExcavationApi",
           "semantics": "Server-authoritative aimed discrete strike with tool, reach, cooldown and permission validation."
         }
-      ]
+      ],
+      "runtime_id": "worldlogicexcavation:fracture"
     }
   ],
   "consumes": [
@@ -70,7 +71,7 @@
         "projects/worldlogic-excavation-1.21.1-neoforge/src/main/java/dev/minemods/excavation/FractureMath.java"
       ],
       "provides": [
-        "worldlogicexcavation:fracture"
+        "worldlogic:rock_fracture"
       ],
       "consumes": [
         "worldlogic:excavation",
@@ -87,7 +88,7 @@
         "projects/worldlogic-excavation-1.21.1-neoforge/src/main/java/dev/minemods/excavation/ChipModel.java"
       ],
       "provides": [
-        "worldlogicexcavation:fracture"
+        "worldlogic:rock_fracture"
       ],
       "consumes": [],
       "integration_review": "Store only damaged blocks; chunk-baked geometry, bounded caches, no per-tick entities."
@@ -101,7 +102,7 @@
         "projects/worldlogic-excavation-1.21.1-neoforge/assets.gradle"
       ],
       "provides": [
-        "worldlogicexcavation:fracture"
+        "worldlogic:rock_fracture"
       ],
       "consumes": [
         "worldlogic:material_properties"
@@ -113,7 +114,7 @@
     {
       "id": "excavation.strike_and_reserve",
       "capabilities": [
-        "worldlogicexcavation:fracture",
+        "worldlogic:rock_fracture",
         "worldlogic:excavation"
       ],
       "ref": "tools/qa/scenarios/worldlogic-excavation.json",
@@ -122,11 +123,12 @@
     {
       "id": "excavation.contact_and_geometry",
       "capabilities": [
-        "worldlogicexcavation:fracture",
+        "worldlogic:rock_fracture",
         "worldlogic:material_properties"
       ],
       "ref": "tools/qa/scenarios/worldlogic-excavation.json",
       "status": "implemented"
     }
-  ]
+  ],
+  "parent_module": "worldlogic"
 }
