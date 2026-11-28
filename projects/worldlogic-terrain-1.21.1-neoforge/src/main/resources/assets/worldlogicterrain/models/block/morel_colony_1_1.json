@@ -1,0 +1,97 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "plant": "worldlogicterrain:block/morel_young",
+    "particle": "#plant"
+  },
+  "elements": [
+    {
+      "from": [
+        6,
+        0,
+        8
+      ],
+      "to": [
+        10,
+        8,
+        8
+      ],
+      "rotation": {
+        "origin": [
+          8,
+          0,
+          8
+        ],
+        "axis": "y",
+        "angle": 45,
+        "rescale": false
+      },
+      "shade": false,
+      "faces": {
+        "north": {
+          "uv": [
+            5,
+            8,
+            9,
+            16
+          ],
+          "texture": "#plant"
+        },
+        "south": {
+          "uv": [
+            5,
+            8,
+            9,
+            16
+          ],
+          "texture": "#plant"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        0,
+        8
+      ],
+      "to": [
+        10,
+        8,
+        8
+      ],
+      "rotation": {
+        "origin": [
+          8,
+          0,
+          8
+        ],
+        "axis": "y",
+        "angle": -45,
+        "rescale": false
+      },
+      "shade": false,
+      "faces": {
+        "north": {
+          "uv": [
+            5,
+            8,
+            9,
+            16
+          ],
+          "texture": "#plant"
+        },
+        "south": {
+          "uv": [
+            5,
+            8,
+            9,
+            16
+          ],
+          "texture": "#plant"
+        }
+      }
+    }
+  ]
+}

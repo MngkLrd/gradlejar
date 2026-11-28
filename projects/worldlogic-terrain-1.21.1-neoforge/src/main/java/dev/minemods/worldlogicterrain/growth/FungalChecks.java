@@ -76,7 +76,7 @@ public final class FungalChecks {
                 var cold=new SeasonalGrowth.Input("SUMMER",s.minTemp-2,.75,1,8,false);
                 require(FungalEcology.rate(s,s.optimalTemp,.75,8)>.99&&FungalEcology.rate(s,s.optimalTemp,0,8)==0
                     &&FungalEcology.rate(s,s.maxTemp+1,.75,8)==0,"Fungal climate response "+s.id);
-                var ages=new BitSet();
+                var ages=new BitSet();var counts=new BitSet();
                 for(int seed=1;seed<=16;seed++){
                     reset(l,center,floor);
                     l.setBlock(center.east(),Blocks.STONE.defaultBlockState(),Block.UPDATE_ALL);
@@ -85,13 +85,13 @@ public final class FungalChecks {
                     for(int dx=-3;dx<=3;dx++)for(int dz=-3;dz<=3;dz++){
                         var q=center.offset(dx,0,dz);var state=l.getBlockState(q);
                         if(state.is(s.block())){
-                            actual++;ages.set(state.getValue(FungalColonyBlock.AGE));
+                            actual++;ages.set(state.getValue(FungalColonyBlock.AGE));counts.set(state.getValue(FungalColonyBlock.COUNT));
                             require(Math.abs(dx)<=2&&Math.abs(dz)<=2&&state.canSurvive(l,q),"Fungal placement escaped habitat "+s.id);
                         }
                     }
                     require(n==actual&&n>=2&&n<=4&&l.getBlockState(center.east()).is(Blocks.STONE),"Natural colony cluster "+s.id+" count="+n);
                 }
-                require(ages.cardinality()==3,"Missing generated maturity stage "+s.id);
+                require(ages.cardinality()==3&&counts.cardinality()==4,"Missing generated maturity/count "+s.id);
                 reset(l,center,bad);
                 require(FungalFeature.populate(l,RandomSource.create(12),center,0,0,s,(x,z)->new BlockPos(x,center.getY(),z))==0,"Invalid generated substrate "+s.id);
                 reset(l,center,floor);
@@ -111,17 +111,34 @@ public final class FungalChecks {
                     require(snap.species()==s&&snap.age()==age&&snap.substrateValid()&&view.progress()==age*50&&view.season().equals("all"),"Fungal API/HUD "+s.id);
                     if(age==1)require(Block.getDrops(current,l,center,null,player,ItemStack.EMPTY).isEmpty(),"Immature loot "+s.id);
                 }
+                // Stack the same collected item onto the live block, including mature groups.
+                var groupHit=new BlockHitResult(Vec3.atCenterOf(center),Direction.UP,center,false);
+                player.setItemInHand(InteractionHand.MAIN_HAND,new ItemStack(s.item(),4));
+                for(int count=2;count<=4;count++){
+                    require(s.item().useOn(new UseOnContext(player,InteractionHand.MAIN_HAND,groupHit)).consumesAction(),"Stack placement "+s.id);
+                    var group=l.getBlockState(center);
+                    require(group.getValue(FungalColonyBlock.COUNT)==count&&group.getValue(FungalColonyBlock.AGE)==2,"Stack count/age "+s.id);
+                    require(FungalEcology.snapshot(l,center).orElseThrow().count()==count,"API count "+s.id);
+                }
+                require(player.getMainHandItem().getCount()==(player.getAbilities().instabuild?4:1),"Stack consumption "+s.id);
+                require(!l.getBlockState(center).canBeReplaced(new net.minecraft.world.item.context.BlockPlaceContext(new UseOnContext(player,InteractionHand.MAIN_HAND,groupHit))),"Stack exceeded cap "+s.id);
                 var ripe=l.getBlockState(center);
+                for(int count=1;count<=4;count++){
+                    var stage=ripe.setValue(FungalColonyBlock.COUNT,count);
+                    require(Block.getDrops(stage,l,center,null,player,ItemStack.EMPTY).stream().mapToInt(ItemStack::getCount).sum()==count,"Counted mature loot "+s.id);
+                    require(Block.getDrops(stage.setValue(FungalColonyBlock.AGE,1),l,center,null,player,ItemStack.EMPTY).isEmpty(),"Immature counted loot "+s.id);
+                }
                 var drops=Block.getDrops(ripe,l,center,null,player,ItemStack.EMPTY);
-                require(drops.size()==1&&drops.getFirst().is(s.item())&&drops.getFirst().getCount()==1,"Mature break loot "+s.id);
+                require(drops.size()==1&&drops.getFirst().is(s.item())&&drops.getFirst().getCount()==4,"Mature break loot "+s.id);
                 var clicked=new BlockHitResult(Vec3.atCenterOf(center),Direction.UP,center,false);
                 var b=(FungalColonyBlock)s.block();
-                require(b.useWithoutItem(ripe,l,center,player,clicked).consumesAction()&&l.getBlockState(center).equals(young),"Harvest removed mycelium "+s.id);
+                require(b.useWithoutItem(ripe,l,center,player,clicked).consumesAction()&&l.getBlockState(center).equals(young.setValue(FungalColonyBlock.COUNT,4)),"Harvest removed mycelium "+s.id);
                 require(!b.useWithoutItem(ripe,l,center,player,clicked).consumesAction(),"Repeated harvest "+s.id);
                 var yielded=l.getEntitiesOfClass(ItemEntity.class,box,e->!initial.contains(e.getUUID())&&e.getItem().is(s.item()));
-                require(yielded.size()==1&&yielded.getFirst().getItem().getCount()==1,"Harvest yield "+s.id);
+                require(yielded.size()==1&&yielded.getFirst().getItem().getCount()==4,"Harvest yield "+s.id);
                 yielded.forEach(ItemEntity::discard);
                 require(FungalEcology.advance(l,center,ideal,RandomSource.create(6))&&FungalEcology.advance(l,center,ideal,RandomSource.create(7)),"Regrowth after harvest "+s.id);
+                require(l.getBlockState(center).getValue(FungalColonyBlock.COUNT)==4,"Regrowth lost group size "+s.id);
                 var target=center.east();
                 require(!FungalEcology.colonize(l,center,target,dry,RandomSource.create(8)),"Dry spread "+s.id);
                 l.setBlock(target,Blocks.STONE.defaultBlockState(),Block.UPDATE_ALL);

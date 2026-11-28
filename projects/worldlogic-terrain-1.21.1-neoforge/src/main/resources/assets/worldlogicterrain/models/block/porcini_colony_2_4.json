@@ -1,0 +1,355 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "plant": "worldlogicterrain:block/porcini",
+    "particle": "#plant"
+  },
+  "elements": [
+    {
+      "from": [
+        1.1,
+        0,
+        4
+      ],
+      "to": [
+        6.9,
+        6.38,
+        4
+      ],
+      "rotation": {
+        "origin": [
+          4,
+          0,
+          4
+        ],
+        "axis": "y",
+        "angle": 45,
+        "rescale": false
+      },
+      "shade": false,
+      "faces": {
+        "north": {
+          "uv": [
+            1,
+            5,
+            11,
+            16
+          ],
+          "texture": "#plant"
+        },
+        "south": {
+          "uv": [
+            1,
+            5,
+            11,
+            16
+          ],
+          "texture": "#plant"
+        }
+      }
+    },
+    {
+      "from": [
+        1.1,
+        0,
+        4
+      ],
+      "to": [
+        6.9,
+        6.38,
+        4
+      ],
+      "rotation": {
+        "origin": [
+          4,
+          0,
+          4
+        ],
+        "axis": "y",
+        "angle": -45,
+        "rescale": false
+      },
+      "shade": false,
+      "faces": {
+        "north": {
+          "uv": [
+            1,
+            5,
+            11,
+            16
+          ],
+          "texture": "#plant"
+        },
+        "south": {
+          "uv": [
+            1,
+            5,
+            11,
+            16
+          ],
+          "texture": "#plant"
+        }
+      }
+    },
+    {
+      "from": [
+        9.25,
+        0,
+        4
+      ],
+      "to": [
+        14.75,
+        6.05,
+        4
+      ],
+      "rotation": {
+        "origin": [
+          12,
+          0,
+          4
+        ],
+        "axis": "y",
+        "angle": 45,
+        "rescale": false
+      },
+      "shade": false,
+      "faces": {
+        "north": {
+          "uv": [
+            1,
+            5,
+            11,
+            16
+          ],
+          "texture": "#plant"
+        },
+        "south": {
+          "uv": [
+            1,
+            5,
+            11,
+            16
+          ],
+          "texture": "#plant"
+        }
+      }
+    },
+    {
+      "from": [
+        9.25,
+        0,
+        4
+      ],
+      "to": [
+        14.75,
+        6.05,
+        4
+      ],
+      "rotation": {
+        "origin": [
+          12,
+          0,
+          4
+        ],
+        "axis": "y",
+        "angle": -45,
+        "rescale": false
+      },
+      "shade": false,
+      "faces": {
+        "north": {
+          "uv": [
+            1,
+            5,
+            11,
+            16
+          ],
+          "texture": "#plant"
+        },
+        "south": {
+          "uv": [
+            1,
+            5,
+            11,
+            16
+          ],
+          "texture": "#plant"
+        }
+      }
+    },
+    {
+      "from": [
+        1.4,
+        0,
+        12
+      ],
+      "to": [
+        6.6,
+        5.72,
+        12
+      ],
+      "rotation": {
+        "origin": [
+          4,
+          0,
+          12
+        ],
+        "axis": "y",
+        "angle": 45,
+        "rescale": false
+      },
+      "shade": false,
+      "faces": {
+        "north": {
+          "uv": [
+            1,
+            5,
+            11,
+            16
+          ],
+          "texture": "#plant"
+        },
+        "south": {
+          "uv": [
+            1,
+            5,
+            11,
+            16
+          ],
+          "texture": "#plant"
+        }
+      }
+    },
+    {
+      "from": [
+        1.4,
+        0,
+        12
+      ],
+      "to": [
+        6.6,
+        5.72,
+        12
+      ],
+      "rotation": {
+        "origin": [
+          4,
+          0,
+          12
+        ],
+        "axis": "y",
+        "angle": -45,
+        "rescale": false
+      },
+      "shade": false,
+      "faces": {
+        "north": {
+          "uv": [
+            1,
+            5,
+            11,
+            16
+          ],
+          "texture": "#plant"
+        },
+        "south": {
+          "uv": [
+            1,
+            5,
+            11,
+            16
+          ],
+          "texture": "#plant"
+        }
+      }
+    },
+    {
+      "from": [
+        8.95,
+        0,
+        12
+      ],
+      "to": [
+        15.05,
+        6.71,
+        12
+      ],
+      "rotation": {
+        "origin": [
+          12,
+          0,
+          12
+        ],
+        "axis": "y",
+        "angle": 45,
+        "rescale": false
+      },
+      "shade": false,
+      "faces": {
+        "north": {
+          "uv": [
+            1,
+            5,
+            11,
+            16
+          ],
+          "texture": "#plant"
+        },
+        "south": {
+          "uv": [
+            1,
+            5,
+            11,
+            16
+          ],
+          "texture": "#plant"
+        }
+      }
+    },
+    {
+      "from": [
+        8.95,
+        0,
+        12
+      ],
+      "to": [
+        15.05,
+        6.71,
+        12
+      ],
+      "rotation": {
+        "origin": [
+          12,
+          0,
+          12
+        ],
+        "axis": "y",
+        "angle": -45,
+        "rescale": false
+      },
+      "shade": false,
+      "faces": {
+        "north": {
+          "uv": [
+            1,
+            5,
+            11,
+            16
+          ],
+          "texture": "#plant"
+        },
+        "south": {
+          "uv": [
+            1,
+            5,
+            11,
+            16
+          ],
+          "texture": "#plant"
+        }
+      }
+    }
+  ]
+}

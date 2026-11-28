@@ -1,0 +1,97 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "plant": "worldlogicterrain:block/oyster_mushroom",
+    "particle": "#plant"
+  },
+  "elements": [
+    {
+      "from": [
+        4.5,
+        0,
+        8
+      ],
+      "to": [
+        11.5,
+        7,
+        8
+      ],
+      "rotation": {
+        "origin": [
+          8,
+          0,
+          8
+        ],
+        "axis": "y",
+        "angle": 45,
+        "rescale": false
+      },
+      "shade": false,
+      "faces": {
+        "north": {
+          "uv": [
+            1,
+            6,
+            8,
+            13
+          ],
+          "texture": "#plant"
+        },
+        "south": {
+          "uv": [
+            1,
+            6,
+            8,
+            13
+          ],
+          "texture": "#plant"
+        }
+      }
+    },
+    {
+      "from": [
+        4.5,
+        0,
+        8
+      ],
+      "to": [
+        11.5,
+        7,
+        8
+      ],
+      "rotation": {
+        "origin": [
+          8,
+          0,
+          8
+        ],
+        "axis": "y",
+        "angle": -45,
+        "rescale": false
+      },
+      "shade": false,
+      "faces": {
+        "north": {
+          "uv": [
+            1,
+            6,
+            8,
+            13
+          ],
+          "texture": "#plant"
+        },
+        "south": {
+          "uv": [
+            1,
+            6,
+            8,
+            13
+          ],
+          "texture": "#plant"
+        }
+      }
+    }
+  ]
+}

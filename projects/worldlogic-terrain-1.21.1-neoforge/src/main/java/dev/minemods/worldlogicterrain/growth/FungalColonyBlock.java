@@ -5,6 +5,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -22,14 +25,29 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 /** Age 0 is the visible living mycelium, not an empty or harvested block. */
 public final class FungalColonyBlock extends Block {
-    public static final IntegerProperty AGE=IntegerProperty.create("age",0,2);
+    public static final IntegerProperty AGE=IntegerProperty.create("age",0,2), COUNT=IntegerProperty.create("count",1,4);
     private final FungalEcology.Species species;
     public FungalColonyBlock(FungalEcology.Species species,Properties properties){
         super(properties);this.species=species;
-        registerDefaultState(stateDefinition.any().setValue(AGE,0));
+        registerDefaultState(stateDefinition.any().setValue(AGE,0).setValue(COUNT,1));
     }
     public FungalEcology.Species species(){return species;}
-    @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block,BlockState> builder){builder.add(AGE);}
+    @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block,BlockState> builder){builder.add(AGE,COUNT);}
+    @Override protected boolean canBeReplaced(BlockState s,BlockPlaceContext context){
+        return !context.isSecondaryUseActive()&&context.getItemInHand().is(species.item())&&s.getValue(COUNT)<4
+            ||super.canBeReplaced(s,context);
+    }
+    @Override public BlockState getStateForPlacement(BlockPlaceContext context){
+        var current=context.getLevel().getBlockState(context.getClickedPos());
+        if(current.is(this)&&current.getValue(COUNT)<4&&current.canSurvive(context.getLevel(),context.getClickedPos()))
+            return current.setValue(COUNT,current.getValue(COUNT)+1);
+        return super.getStateForPlacement(context);
+    }
+    @Override protected ItemInteractionResult useItemOn(ItemStack stack,BlockState s,Level level,BlockPos pos,Player p,InteractionHand hand,BlockHitResult hit){
+        // Let the same BlockItem place another mushroom instead of harvesting a ripe colony first.
+        if(stack.is(species.item()))return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+        return super.useItemOn(stack,s,level,pos,p,hand,hit);
+    }
     @Override protected boolean canSurvive(BlockState s,LevelReader l,BlockPos p){
         return species.supports(l.getBlockState(p.below()))&&l.getFluidState(p).isEmpty();
     }
@@ -47,7 +65,7 @@ public final class FungalColonyBlock extends Block {
         var actual=l.getBlockState(pos);
         if(!actual.is(this)||actual.getValue(AGE)!=2||!actual.canSurvive(l,pos)||p.isSpectator()||!p.mayBuild())return InteractionResult.PASS;
         if(!l.setBlock(pos,actual.setValue(AGE,0),Block.UPDATE_ALL))return InteractionResult.PASS;
-        Block.popResource(l,pos,new ItemStack(species.item()));
+        Block.popResource(l,pos,new ItemStack(species.item(),actual.getValue(COUNT)));
         return InteractionResult.CONSUME;
     }
     @Override public void randomTick(BlockState s,ServerLevel l,BlockPos pos,RandomSource random){FungalEcology.tick(l,pos,random);}

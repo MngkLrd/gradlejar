@@ -1,53 +1,206 @@
 {
   "variants": {
-    "age=0": [
+    "age=0,count=1": [
       {
-        "model": "worldlogicterrain:block/chanterelle_colony_0"
+        "model": "worldlogicterrain:block/chanterelle_colony_0_1"
       },
       {
-        "model": "worldlogicterrain:block/chanterelle_colony_0",
+        "model": "worldlogicterrain:block/chanterelle_colony_0_1",
         "y": 90
       },
       {
-        "model": "worldlogicterrain:block/chanterelle_colony_0",
+        "model": "worldlogicterrain:block/chanterelle_colony_0_1",
         "y": 180
       },
       {
-        "model": "worldlogicterrain:block/chanterelle_colony_0",
+        "model": "worldlogicterrain:block/chanterelle_colony_0_1",
         "y": 270
       }
     ],
-    "age=1": [
+    "age=0,count=2": [
       {
-        "model": "worldlogicterrain:block/chanterelle_colony_1"
+        "model": "worldlogicterrain:block/chanterelle_colony_0_2"
       },
       {
-        "model": "worldlogicterrain:block/chanterelle_colony_1",
+        "model": "worldlogicterrain:block/chanterelle_colony_0_2",
         "y": 90
       },
       {
-        "model": "worldlogicterrain:block/chanterelle_colony_1",
+        "model": "worldlogicterrain:block/chanterelle_colony_0_2",
         "y": 180
       },
       {
-        "model": "worldlogicterrain:block/chanterelle_colony_1",
+        "model": "worldlogicterrain:block/chanterelle_colony_0_2",
         "y": 270
       }
     ],
-    "age=2": [
+    "age=0,count=3": [
       {
-        "model": "worldlogicterrain:block/chanterelle_colony_2"
+        "model": "worldlogicterrain:block/chanterelle_colony_0_3"
       },
       {
-        "model": "worldlogicterrain:block/chanterelle_colony_2",
+        "model": "worldlogicterrain:block/chanterelle_colony_0_3",
         "y": 90
       },
       {
-        "model": "worldlogicterrain:block/chanterelle_colony_2",
+        "model": "worldlogicterrain:block/chanterelle_colony_0_3",
         "y": 180
       },
       {
-        "model": "worldlogicterrain:block/chanterelle_colony_2",
+        "model": "worldlogicterrain:block/chanterelle_colony_0_3",
+        "y": 270
+      }
+    ],
+    "age=0,count=4": [
+      {
+        "model": "worldlogicterrain:block/chanterelle_colony_0_4"
+      },
+      {
+        "model": "worldlogicterrain:block/chanterelle_colony_0_4",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/chanterelle_colony_0_4",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/chanterelle_colony_0_4",
+        "y": 270
+      }
+    ],
+    "age=1,count=1": [
+      {
+        "model": "worldlogicterrain:block/chanterelle_colony_1_1"
+      },
+      {
+        "model": "worldlogicterrain:block/chanterelle_colony_1_1",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/chanterelle_colony_1_1",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/chanterelle_colony_1_1",
+        "y": 270
+      }
+    ],
+    "age=1,count=2": [
+      {
+        "model": "worldlogicterrain:block/chanterelle_colony_1_2"
+      },
+      {
+        "model": "worldlogicterrain:block/chanterelle_colony_1_2",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/chanterelle_colony_1_2",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/chanterelle_colony_1_2",
+        "y": 270
+      }
+    ],
+    "age=1,count=3": [
+      {
+        "model": "worldlogicterrain:block/chanterelle_colony_1_3"
+      },
+      {
+        "model": "worldlogicterrain:block/chanterelle_colony_1_3",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/chanterelle_colony_1_3",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/chanterelle_colony_1_3",
+        "y": 270
+      }
+    ],
+    "age=1,count=4": [
+      {
+        "model": "worldlogicterrain:block/chanterelle_colony_1_4"
+      },
+      {
+        "model": "worldlogicterrain:block/chanterelle_colony_1_4",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/chanterelle_colony_1_4",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/chanterelle_colony_1_4",
+        "y": 270
+      }
+    ],
+    "age=2,count=1": [
+      {
+        "model": "worldlogicterrain:block/chanterelle_colony_2_1"
+      },
+      {
+        "model": "worldlogicterrain:block/chanterelle_colony_2_1",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/chanterelle_colony_2_1",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/chanterelle_colony_2_1",
+        "y": 270
+      }
+    ],
+    "age=2,count=2": [
+      {
+        "model": "worldlogicterrain:block/chanterelle_colony_2_2"
+      },
+      {
+        "model": "worldlogicterrain:block/chanterelle_colony_2_2",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/chanterelle_colony_2_2",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/chanterelle_colony_2_2",
+        "y": 270
+      }
+    ],
+    "age=2,count=3": [
+      {
+        "model": "worldlogicterrain:block/chanterelle_colony_2_3"
+      },
+      {
+        "model": "worldlogicterrain:block/chanterelle_colony_2_3",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/chanterelle_colony_2_3",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/chanterelle_colony_2_3",
+        "y": 270
+      }
+    ],
+    "age=2,count=4": [
+      {
+        "model": "worldlogicterrain:block/chanterelle_colony_2_4"
+      },
+      {
+        "model": "worldlogicterrain:block/chanterelle_colony_2_4",
+        "y": 90
+      },
+      {
+        "model": "worldlogicterrain:block/chanterelle_colony_2_4",
+        "y": 180
+      },
+      {
+        "model": "worldlogicterrain:block/chanterelle_colony_2_4",
         "y": 270
       }
     ]

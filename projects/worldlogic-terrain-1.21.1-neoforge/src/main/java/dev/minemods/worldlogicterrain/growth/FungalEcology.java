@@ -1,6 +1,7 @@
 package dev.minemods.worldlogicterrain.growth;
 
 import java.util.Optional;
+import dev.minemods.worldlogicterrain.soil.SoilExhaustion;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -17,7 +18,7 @@ import net.minecraft.world.level.block.state.BlockState;
  * The persistent colony is the block itself, not a second per-chunk simulation.
  * Public queries are read-only; state transitions are owned by the colony block. */
 public final class FungalEcology {
-    public static final int API_VERSION=1,API_REVISION=0;
+    public static final int API_VERSION=1,API_REVISION=1;
     public static final int LOCAL_CAP=5;
     public enum Species {
         PORCINI("porcini","cool_woodland",false,4,14,30,.35,5),
@@ -43,7 +44,10 @@ public final class FungalEcology {
         public static Optional<Species> byId(String id){for(var s:values())if(s.id.equals(id))return Optional.of(s);return Optional.empty();}
     }
     public record Snapshot(Species species,int age,boolean substrateValid,double temperatureC,double moisture,
-                           double growthRate,String status){
+                           double growthRate,String status,int count){
+        public Snapshot(Species species,int age,boolean substrateValid,double temperatureC,double moisture,double growthRate,String status){
+            this(species,age,substrateValid,temperatureC,moisture,growthRate,status,1);
+        }
         public boolean mature(){return age==2;}
     }
     private FungalEcology(){}
@@ -70,7 +74,7 @@ public final class FungalEcology {
         boolean valid=state.canSurvive(l,pos);
         double r=valid?rate(b.species(),e.temperature(),localMoisture(e),e.light()):0;
         return new Snapshot(b.species(),age,valid,e.temperature(),localMoisture(e),r,
-            !valid?"dormant":age==2?"mature":status(b.species(),e,r));
+            !valid?"dormant":age==2?"mature":status(b.species(),e,r),state.getValue(FungalColonyBlock.COUNT));
     }
     public static Optional<Snapshot> snapshot(ServerLevel l,BlockPos pos){
         if(!l.getServer().isSameThread())throw new IllegalStateException("server thread required");
@@ -96,7 +100,7 @@ public final class FungalEcology {
         var state=l.getBlockState(source);
         if(!(state.getBlock() instanceof FungalColonyBlock b)||state.getValue(FungalColonyBlock.AGE)!=2||!state.canSurvive(l,source))return false;
         if(!l.getBlockState(target).isAir()||!l.getFluidState(target).isEmpty())return false;
-        var young=state.setValue(FungalColonyBlock.AGE,0);
+        var young=state.setValue(FungalColonyBlock.AGE,0).setValue(FungalColonyBlock.COUNT,1);
         if(!young.canSurvive(l,target)||random.nextDouble()>=rate(b.species(),e.temperature(),localMoisture(e),e.light()))return false;
         int count=0;
         for(int dx=-2;dx<=2;dx++)for(int dz=-2;dz<=2;dz++){

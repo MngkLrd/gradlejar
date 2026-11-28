@@ -13,7 +13,7 @@
     {
       "id": "worldlogic:fungal_ecology",
       "version": 1,
-      "revision": 0,
+      "revision": 1,
       "domains": [
         "fungal_ecology"
       ],

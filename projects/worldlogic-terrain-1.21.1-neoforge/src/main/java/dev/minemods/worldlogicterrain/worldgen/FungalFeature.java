@@ -71,7 +71,7 @@ public final class FungalFeature extends Feature<FungalFeature.Config> {
             var p=site.apply(x,z);
             if(p==null||Math.abs(p.getY()-center.getY())>1||!acceptable(l,p,s))continue;
             int roll=r.nextInt(100),age=roll<20?0:roll<55?1:2;
-            if(l.setBlock(p,s.block().defaultBlockState().setValue(FungalColonyBlock.AGE,age),Block.UPDATE_CLIENTS))count++;
+            if(l.setBlock(p,s.block().defaultBlockState().setValue(FungalColonyBlock.AGE,age).setValue(FungalColonyBlock.COUNT,1+r.nextInt(4)),Block.UPDATE_CLIENTS))count++;
         }
         return count;
     }
