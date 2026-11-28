@@ -5,7 +5,7 @@ java.toolchain.languageVersion=JavaLanguageVersion.of(21)
 neoForge { version=project.neo_version; runs { client { client() }; server { server(); programArgument '--nogui' } }; mods { worldlogicexcavation { sourceSet(sourceSets.main) } } }
 dependencies { compileOnly 'dev.minemods.worldlogic:worldlogic-neoforge-mc1.21.1:1.5.0'; runtimeOnly 'dev.minemods.worldlogic:worldlogic-neoforge-mc1.21.1:1.5.0' }
 tasks.withType(JavaCompile).configureEach { options.encoding='UTF-8'; options.release=21 }
-tasks.named('jar') { archiveFileName='worldlogic_excavation_0.1.0_1.21.1_neoforge.jar' }
+tasks.named('jar') { archiveFileName='worldlogicexcavation-neoforge-mc1.21.1-0.1.0.jar' }
 apply from: 'assets.gradle'
 tasks.register('fractureMathCheck', JavaExec) { dependsOn tasks.named('testClasses'); classpath=sourceSets.test.runtimeClasspath; mainClass='dev.minemods.excavation.FractureMathCheck' }
 tasks.named('check') { dependsOn tasks.named('fractureMathCheck') }

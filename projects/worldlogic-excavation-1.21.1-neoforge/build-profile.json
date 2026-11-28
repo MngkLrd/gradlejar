@@ -5,7 +5,7 @@
   "loader": "neoforge",
   "java": "21",
   "gradle": "9.2.1",
-  "jar_glob": "worldlogic_excavation_0.1.0_1.21.1_neoforge.jar",
+  "jar_glob": "worldlogicexcavation-neoforge-mc1.21.1-0.1.0.jar",
   "minimum_loader_version": "21.1.262",
   "compile_loader_version": "21.1.262",
   "qa": {
@@ -16,7 +16,7 @@
       "neoforge-mc1.21.1"
     ],
     "watch_paths": [
-      "projects/worldlogic-1.21.1-neoforge/**",
+      "projects/worldlogic-1.21.1-neoforge",
       "tools/qa/scenarios/worldlogic-excavation.json"
     ]
   },
