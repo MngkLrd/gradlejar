@@ -7254,6 +7254,483 @@
         "custom_reason": "Specific collected aquatic specimen is not represented by the catalogued equipment, food or utility tools; this aquatic comparator is closer in function.",
         "reference_source": "Version-pinned InventivetalentDev/minecraft-assets Java 1.21.1 mirror; actual PNG inspected, SHA-256 computed from its bytes; uncatalogued reference not independently verified against official client archive."
       }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/porcini_young.png": {
+      "sha256": "330750796452990434558e0762eb4ca90931f4f57d8a7ff4a0d5f5df99161e5f",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/brown_mushroom",
+          "minecraft": "1.21.1",
+          "sha256": "a7e9990f39be45a2f09c0e4b690ee04cf72930e924a3abf5e615153b8d1af931"
+        }
+      ],
+      "comparison": "Inspected the actual vanilla 16px comparator and original sprite in the nearest-neighbor family sheet: wide umber cap with a broad cream stalk; short juvenile cap rooted at the bottom, smaller than the mature cluster.",
+      "findings": {
+        "silhouette": "wide umber cap with a broad cream stalk; short juvenile cap rooted at the bottom, smaller than the mature cluster",
+        "cluster_structure": "upper cap has two adjacent honey-brown highlights and a dark underside",
+        "micro_contrast": "Local cap and stem palette changes are contiguous rather than scattered noise.",
+        "light_and_volume": "Highlights on upper left of the cap and darker turning underside establish volume.",
+        "material_continuity": "A restrained warm or neutral fungal ramp continues through the cap and stem.",
+        "edge_variation": "Stepped cap contours and deliberately transparent background preserve clean pixel edges.",
+        "variant_identity": "short juvenile cap rooted at the bottom, smaller than the mature cluster; small secondary cap is offset to the right",
+        "vanilla_comparison": "Vanilla brown mushroom uses a compact cap and slender stem; this sprite uses its own distinct fungal form and native pixel scale.",
+        "functional_material_cues": "Rooted base and the stage-dependent cap silhouette communicate the living fungal colony."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/brown_mushroom",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16 pixel scale with contiguous cap shapes and intentional transparency.",
+        "reference_limit": "No pixels copied; cap and stem proportions are original for the species.",
+        "native_view": "Inspected the 16 by 16 source sprites with nearest-neighbor enlargement.",
+        "context_view": "Reviewed adjacent young, mature, collected and dormant forms against a muted green background and actual vanilla comparators; graphical client not run.",
+        "context_type": "placed_cutout",
+        "custom_reason": "The atlas has no specific fungal silhouette or mycelial cutout rule.",
+        "reference_source": "misode/mcmeta 1.21.1-assets block/brown_mushroom.png actual PNG retrieved through GitHub and decoded; SHA-256 verified."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/porcini.png": {
+      "sha256": "8d40481eb926125075bb098754860cd3634c7b53e948792c1ad7cd910c79cf92",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/brown_mushroom",
+          "minecraft": "1.21.1",
+          "sha256": "a7e9990f39be45a2f09c0e4b690ee04cf72930e924a3abf5e615153b8d1af931"
+        }
+      ],
+      "comparison": "Inspected the actual vanilla 16px comparator and original sprite in the nearest-neighbor family sheet: wide umber cap with a broad cream stalk; small secondary cap is offset to the right.",
+      "findings": {
+        "silhouette": "wide umber cap with a broad cream stalk; small secondary cap is offset to the right",
+        "cluster_structure": "upper cap has two adjacent honey-brown highlights and a dark underside",
+        "micro_contrast": "Local cap and stem palette changes are contiguous rather than scattered noise.",
+        "light_and_volume": "Highlights on upper left of the cap and darker turning underside establish volume.",
+        "material_continuity": "A restrained warm or neutral fungal ramp continues through the cap and stem.",
+        "edge_variation": "Stepped cap contours and deliberately transparent background preserve clean pixel edges.",
+        "variant_identity": "small secondary cap is offset to the right; small secondary cap is offset to the right",
+        "vanilla_comparison": "Vanilla brown mushroom uses a compact cap and slender stem; this sprite uses its own distinct fungal form and native pixel scale.",
+        "functional_material_cues": "Rooted base and the stage-dependent cap silhouette communicate the living fungal colony."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/brown_mushroom",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16 pixel scale with contiguous cap shapes and intentional transparency.",
+        "reference_limit": "No pixels copied; cap and stem proportions are original for the species.",
+        "native_view": "Inspected the 16 by 16 source sprites with nearest-neighbor enlargement.",
+        "context_view": "Reviewed adjacent young, mature, collected and dormant forms against a muted green background and actual vanilla comparators; graphical client not run.",
+        "context_type": "placed_cutout",
+        "custom_reason": "The atlas has no specific fungal silhouette or mycelial cutout rule.",
+        "reference_source": "misode/mcmeta 1.21.1-assets block/brown_mushroom.png actual PNG retrieved through GitHub and decoded; SHA-256 verified."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/porcini.png": {
+      "sha256": "5743af0dc5d47263422a301f4f469e85d9e3fbd0dcf3d3c1cc12a748f8ba1d1d",
+      "verdict": "PASS",
+      "material_profile": "consumable",
+      "references": [
+        {
+          "id": "minecraft:item/apple",
+          "minecraft": "1.21.1",
+          "sha256": "9b1aef1aaa41229dbe2bc97657b8650527b14cc20a6236e823f1682c4d44c5a2"
+        }
+      ],
+      "comparison": "Inspected the actual vanilla 16px comparator and original sprite in the nearest-neighbor family sheet: wide umber cap with a broad cream stalk; single collected body lifted off ground with clear transparent margin.",
+      "findings": {
+        "silhouette": "wide umber cap with a broad cream stalk; single collected body lifted off ground with clear transparent margin",
+        "cluster_structure": "upper cap has two adjacent honey-brown highlights and a dark underside",
+        "micro_contrast": "Local cap and stem palette changes are contiguous rather than scattered noise.",
+        "light_and_volume": "Highlights on upper left of the cap and darker turning underside establish volume.",
+        "material_continuity": "A restrained warm or neutral fungal ramp continues through the cap and stem.",
+        "edge_variation": "Stepped cap contours and deliberately transparent background preserve clean pixel edges.",
+        "variant_identity": "single collected body lifted off ground with clear transparent margin; small secondary cap is offset to the right",
+        "vanilla_comparison": "Vanilla brown mushroom uses a compact cap and slender stem; this sprite uses its own distinct fungal form and native pixel scale.",
+        "edible_or_liquid_material": "Matte fleshy cap is distinguished from the pale fibrous stalk.",
+        "container_or_food_shape": "A single collected mushroom shape is centered with empty surrounding pixels."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "consumable_icon",
+        "reference": "minecraft:item/apple",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16 pixel scale with contiguous cap shapes and intentional transparency.",
+        "reference_limit": "No pixels copied; cap and stem proportions are original for the species.",
+        "native_view": "Inspected the 16 by 16 source sprites with nearest-neighbor enlargement.",
+        "context_view": "Reviewed adjacent young, mature, collected and dormant forms against a muted green background and actual vanilla comparators; graphical client not run.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/chanterelle_young.png": {
+      "sha256": "528da80e0f8ac6f29600b37dea57a7928cc8fe0fe1dd751a081e7cdcdf164807",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/brown_mushroom",
+          "minecraft": "1.21.1",
+          "sha256": "a7e9990f39be45a2f09c0e4b690ee04cf72930e924a3abf5e615153b8d1af931"
+        }
+      ],
+      "comparison": "Inspected the actual vanilla 16px comparator and original sprite in the nearest-neighbor family sheet: forked golden funnel with a narrow tapered stalk; short juvenile cap rooted at the bottom, smaller than the mature cluster.",
+      "findings": {
+        "silhouette": "forked golden funnel with a narrow tapered stalk; short juvenile cap rooted at the bottom, smaller than the mature cluster",
+        "cluster_structure": "two raised yellow rim lobes join a wider orange funnel",
+        "micro_contrast": "Local cap and stem palette changes are contiguous rather than scattered noise.",
+        "light_and_volume": "Highlights on upper left of the cap and darker turning underside establish volume.",
+        "material_continuity": "A restrained warm or neutral fungal ramp continues through the cap and stem.",
+        "edge_variation": "Stepped cap contours and deliberately transparent background preserve clean pixel edges.",
+        "variant_identity": "short juvenile cap rooted at the bottom, smaller than the mature cluster; the open rim and thin stem contrast with porcini",
+        "vanilla_comparison": "Vanilla brown mushroom uses a compact cap and slender stem; this sprite uses its own distinct fungal form and native pixel scale.",
+        "functional_material_cues": "Rooted base and the stage-dependent cap silhouette communicate the living fungal colony."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/brown_mushroom",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16 pixel scale with contiguous cap shapes and intentional transparency.",
+        "reference_limit": "No pixels copied; cap and stem proportions are original for the species.",
+        "native_view": "Inspected the 16 by 16 source sprites with nearest-neighbor enlargement.",
+        "context_view": "Reviewed adjacent young, mature, collected and dormant forms against a muted green background and actual vanilla comparators; graphical client not run.",
+        "context_type": "placed_cutout",
+        "custom_reason": "The atlas has no specific fungal silhouette or mycelial cutout rule.",
+        "reference_source": "misode/mcmeta 1.21.1-assets block/brown_mushroom.png actual PNG retrieved through GitHub and decoded; SHA-256 verified."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/chanterelle.png": {
+      "sha256": "f233c646335559fbf7cb5c49906a454905953ef04b47fa324eb48a4c37c9e056",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/brown_mushroom",
+          "minecraft": "1.21.1",
+          "sha256": "a7e9990f39be45a2f09c0e4b690ee04cf72930e924a3abf5e615153b8d1af931"
+        }
+      ],
+      "comparison": "Inspected the actual vanilla 16px comparator and original sprite in the nearest-neighbor family sheet: forked golden funnel with a narrow tapered stalk; the open rim and thin stem contrast with porcini.",
+      "findings": {
+        "silhouette": "forked golden funnel with a narrow tapered stalk; the open rim and thin stem contrast with porcini",
+        "cluster_structure": "two raised yellow rim lobes join a wider orange funnel",
+        "micro_contrast": "Local cap and stem palette changes are contiguous rather than scattered noise.",
+        "light_and_volume": "Highlights on upper left of the cap and darker turning underside establish volume.",
+        "material_continuity": "A restrained warm or neutral fungal ramp continues through the cap and stem.",
+        "edge_variation": "Stepped cap contours and deliberately transparent background preserve clean pixel edges.",
+        "variant_identity": "the open rim and thin stem contrast with porcini; the open rim and thin stem contrast with porcini",
+        "vanilla_comparison": "Vanilla brown mushroom uses a compact cap and slender stem; this sprite uses its own distinct fungal form and native pixel scale.",
+        "functional_material_cues": "Rooted base and the stage-dependent cap silhouette communicate the living fungal colony."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/brown_mushroom",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16 pixel scale with contiguous cap shapes and intentional transparency.",
+        "reference_limit": "No pixels copied; cap and stem proportions are original for the species.",
+        "native_view": "Inspected the 16 by 16 source sprites with nearest-neighbor enlargement.",
+        "context_view": "Reviewed adjacent young, mature, collected and dormant forms against a muted green background and actual vanilla comparators; graphical client not run.",
+        "context_type": "placed_cutout",
+        "custom_reason": "The atlas has no specific fungal silhouette or mycelial cutout rule.",
+        "reference_source": "misode/mcmeta 1.21.1-assets block/brown_mushroom.png actual PNG retrieved through GitHub and decoded; SHA-256 verified."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/chanterelle.png": {
+      "sha256": "ef015ed492961f981c81d28b5b89b5564a1c8601acbb88c42cc7c5620d5eef33",
+      "verdict": "PASS",
+      "material_profile": "consumable",
+      "references": [
+        {
+          "id": "minecraft:item/apple",
+          "minecraft": "1.21.1",
+          "sha256": "9b1aef1aaa41229dbe2bc97657b8650527b14cc20a6236e823f1682c4d44c5a2"
+        }
+      ],
+      "comparison": "Inspected the actual vanilla 16px comparator and original sprite in the nearest-neighbor family sheet: forked golden funnel with a narrow tapered stalk; single collected body lifted off ground with clear transparent margin.",
+      "findings": {
+        "silhouette": "forked golden funnel with a narrow tapered stalk; single collected body lifted off ground with clear transparent margin",
+        "cluster_structure": "two raised yellow rim lobes join a wider orange funnel",
+        "micro_contrast": "Local cap and stem palette changes are contiguous rather than scattered noise.",
+        "light_and_volume": "Highlights on upper left of the cap and darker turning underside establish volume.",
+        "material_continuity": "A restrained warm or neutral fungal ramp continues through the cap and stem.",
+        "edge_variation": "Stepped cap contours and deliberately transparent background preserve clean pixel edges.",
+        "variant_identity": "single collected body lifted off ground with clear transparent margin; the open rim and thin stem contrast with porcini",
+        "vanilla_comparison": "Vanilla brown mushroom uses a compact cap and slender stem; this sprite uses its own distinct fungal form and native pixel scale.",
+        "edible_or_liquid_material": "Matte fleshy cap is distinguished from the pale fibrous stalk.",
+        "container_or_food_shape": "A single collected mushroom shape is centered with empty surrounding pixels."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "consumable_icon",
+        "reference": "minecraft:item/apple",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16 pixel scale with contiguous cap shapes and intentional transparency.",
+        "reference_limit": "No pixels copied; cap and stem proportions are original for the species.",
+        "native_view": "Inspected the 16 by 16 source sprites with nearest-neighbor enlargement.",
+        "context_view": "Reviewed adjacent young, mature, collected and dormant forms against a muted green background and actual vanilla comparators; graphical client not run.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/morel_young.png": {
+      "sha256": "3b3a74125568a370152740775dafb64d8ef7fc8ee9cae369270cf226b8761576",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/brown_mushroom",
+          "minecraft": "1.21.1",
+          "sha256": "a7e9990f39be45a2f09c0e4b690ee04cf72930e924a3abf5e615153b8d1af931"
+        }
+      ],
+      "comparison": "Inspected the actual vanilla 16px comparator and original sprite in the nearest-neighbor family sheet: upright narrow ochre honeycomb cap and cream stem; short juvenile cap rooted at the bottom, smaller than the mature cluster.",
+      "findings": {
+        "silhouette": "upright narrow ochre honeycomb cap and cream stem; short juvenile cap rooted at the bottom, smaller than the mature cluster",
+        "cluster_structure": "dark two-pixel pits alternate with connected ochre cap ridges",
+        "micro_contrast": "Local cap and stem palette changes are contiguous rather than scattered noise.",
+        "light_and_volume": "Highlights on upper left of the cap and darker turning underside establish volume.",
+        "material_continuity": "A restrained warm or neutral fungal ramp continues through the cap and stem.",
+        "edge_variation": "Stepped cap contours and deliberately transparent background preserve clean pixel edges.",
+        "variant_identity": "short juvenile cap rooted at the bottom, smaller than the mature cluster; elongated cap identifies the species even in grayscale",
+        "vanilla_comparison": "Vanilla brown mushroom uses a compact cap and slender stem; this sprite uses its own distinct fungal form and native pixel scale.",
+        "functional_material_cues": "Rooted base and the stage-dependent cap silhouette communicate the living fungal colony."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/brown_mushroom",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16 pixel scale with contiguous cap shapes and intentional transparency.",
+        "reference_limit": "No pixels copied; cap and stem proportions are original for the species.",
+        "native_view": "Inspected the 16 by 16 source sprites with nearest-neighbor enlargement.",
+        "context_view": "Reviewed adjacent young, mature, collected and dormant forms against a muted green background and actual vanilla comparators; graphical client not run.",
+        "context_type": "placed_cutout",
+        "custom_reason": "The atlas has no specific fungal silhouette or mycelial cutout rule.",
+        "reference_source": "misode/mcmeta 1.21.1-assets block/brown_mushroom.png actual PNG retrieved through GitHub and decoded; SHA-256 verified."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/morel.png": {
+      "sha256": "24e49cd6e5c8b1d4840a9263cfd800e50272741ae81d0121fc085dbb297d1c82",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/brown_mushroom",
+          "minecraft": "1.21.1",
+          "sha256": "a7e9990f39be45a2f09c0e4b690ee04cf72930e924a3abf5e615153b8d1af931"
+        }
+      ],
+      "comparison": "Inspected the actual vanilla 16px comparator and original sprite in the nearest-neighbor family sheet: upright narrow ochre honeycomb cap and cream stem; elongated cap identifies the species even in grayscale.",
+      "findings": {
+        "silhouette": "upright narrow ochre honeycomb cap and cream stem; elongated cap identifies the species even in grayscale",
+        "cluster_structure": "dark two-pixel pits alternate with connected ochre cap ridges",
+        "micro_contrast": "Local cap and stem palette changes are contiguous rather than scattered noise.",
+        "light_and_volume": "Highlights on upper left of the cap and darker turning underside establish volume.",
+        "material_continuity": "A restrained warm or neutral fungal ramp continues through the cap and stem.",
+        "edge_variation": "Stepped cap contours and deliberately transparent background preserve clean pixel edges.",
+        "variant_identity": "elongated cap identifies the species even in grayscale; elongated cap identifies the species even in grayscale",
+        "vanilla_comparison": "Vanilla brown mushroom uses a compact cap and slender stem; this sprite uses its own distinct fungal form and native pixel scale.",
+        "functional_material_cues": "Rooted base and the stage-dependent cap silhouette communicate the living fungal colony."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/brown_mushroom",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16 pixel scale with contiguous cap shapes and intentional transparency.",
+        "reference_limit": "No pixels copied; cap and stem proportions are original for the species.",
+        "native_view": "Inspected the 16 by 16 source sprites with nearest-neighbor enlargement.",
+        "context_view": "Reviewed adjacent young, mature, collected and dormant forms against a muted green background and actual vanilla comparators; graphical client not run.",
+        "context_type": "placed_cutout",
+        "custom_reason": "The atlas has no specific fungal silhouette or mycelial cutout rule.",
+        "reference_source": "misode/mcmeta 1.21.1-assets block/brown_mushroom.png actual PNG retrieved through GitHub and decoded; SHA-256 verified."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/morel.png": {
+      "sha256": "5401ad0a55618eb7b34c210682e2b6c6c528310884b5950c3f9ad9033a78d855",
+      "verdict": "PASS",
+      "material_profile": "consumable",
+      "references": [
+        {
+          "id": "minecraft:item/apple",
+          "minecraft": "1.21.1",
+          "sha256": "9b1aef1aaa41229dbe2bc97657b8650527b14cc20a6236e823f1682c4d44c5a2"
+        }
+      ],
+      "comparison": "Inspected the actual vanilla 16px comparator and original sprite in the nearest-neighbor family sheet: upright narrow ochre honeycomb cap and cream stem; single collected body lifted off ground with clear transparent margin.",
+      "findings": {
+        "silhouette": "upright narrow ochre honeycomb cap and cream stem; single collected body lifted off ground with clear transparent margin",
+        "cluster_structure": "dark two-pixel pits alternate with connected ochre cap ridges",
+        "micro_contrast": "Local cap and stem palette changes are contiguous rather than scattered noise.",
+        "light_and_volume": "Highlights on upper left of the cap and darker turning underside establish volume.",
+        "material_continuity": "A restrained warm or neutral fungal ramp continues through the cap and stem.",
+        "edge_variation": "Stepped cap contours and deliberately transparent background preserve clean pixel edges.",
+        "variant_identity": "single collected body lifted off ground with clear transparent margin; elongated cap identifies the species even in grayscale",
+        "vanilla_comparison": "Vanilla brown mushroom uses a compact cap and slender stem; this sprite uses its own distinct fungal form and native pixel scale.",
+        "edible_or_liquid_material": "Matte fleshy cap is distinguished from the pale fibrous stalk.",
+        "container_or_food_shape": "A single collected mushroom shape is centered with empty surrounding pixels."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "consumable_icon",
+        "reference": "minecraft:item/apple",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16 pixel scale with contiguous cap shapes and intentional transparency.",
+        "reference_limit": "No pixels copied; cap and stem proportions are original for the species.",
+        "native_view": "Inspected the 16 by 16 source sprites with nearest-neighbor enlargement.",
+        "context_view": "Reviewed adjacent young, mature, collected and dormant forms against a muted green background and actual vanilla comparators; graphical client not run.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/oyster_mushroom_young.png": {
+      "sha256": "e2cdb432e50573d53e5eae48665a366867528dd18b53dccb1dbd33420e418422",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/brown_mushroom",
+          "minecraft": "1.21.1",
+          "sha256": "a7e9990f39be45a2f09c0e4b690ee04cf72930e924a3abf5e615153b8d1af931"
+        }
+      ],
+      "comparison": "Inspected the actual vanilla 16px comparator and original sprite in the nearest-neighbor family sheet: two asymmetric grey-beige shelf caps; short juvenile cap rooted at the bottom, smaller than the mature cluster.",
+      "findings": {
+        "silhouette": "two asymmetric grey-beige shelf caps; short juvenile cap rooted at the bottom, smaller than the mature cluster",
+        "cluster_structure": "pale cap edges and cream gills separate from mauve shaded undersides",
+        "micro_contrast": "Local cap and stem palette changes are contiguous rather than scattered noise.",
+        "light_and_volume": "Highlights on upper left of the cap and darker turning underside establish volume.",
+        "material_continuity": "A restrained warm or neutral fungal ramp continues through the cap and stem.",
+        "edge_variation": "Stepped cap contours and deliberately transparent background preserve clean pixel edges.",
+        "variant_identity": "short juvenile cap rooted at the bottom, smaller than the mature cluster; offset overlapping fans imply growth from wood",
+        "vanilla_comparison": "Vanilla brown mushroom uses a compact cap and slender stem; this sprite uses its own distinct fungal form and native pixel scale.",
+        "functional_material_cues": "Rooted base and the stage-dependent cap silhouette communicate the living fungal colony."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/brown_mushroom",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16 pixel scale with contiguous cap shapes and intentional transparency.",
+        "reference_limit": "No pixels copied; cap and stem proportions are original for the species.",
+        "native_view": "Inspected the 16 by 16 source sprites with nearest-neighbor enlargement.",
+        "context_view": "Reviewed adjacent young, mature, collected and dormant forms against a muted green background and actual vanilla comparators; graphical client not run.",
+        "context_type": "placed_cutout",
+        "custom_reason": "The atlas has no specific fungal silhouette or mycelial cutout rule.",
+        "reference_source": "misode/mcmeta 1.21.1-assets block/brown_mushroom.png actual PNG retrieved through GitHub and decoded; SHA-256 verified."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/oyster_mushroom.png": {
+      "sha256": "f3b2b6081f64c8ee51b7f90dd5e59eee8a3f16efd7894c8ad35fb59a7e6b692a",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/brown_mushroom",
+          "minecraft": "1.21.1",
+          "sha256": "a7e9990f39be45a2f09c0e4b690ee04cf72930e924a3abf5e615153b8d1af931"
+        }
+      ],
+      "comparison": "Inspected the actual vanilla 16px comparator and original sprite in the nearest-neighbor family sheet: two asymmetric grey-beige shelf caps; offset overlapping fans imply growth from wood.",
+      "findings": {
+        "silhouette": "two asymmetric grey-beige shelf caps; offset overlapping fans imply growth from wood",
+        "cluster_structure": "pale cap edges and cream gills separate from mauve shaded undersides",
+        "micro_contrast": "Local cap and stem palette changes are contiguous rather than scattered noise.",
+        "light_and_volume": "Highlights on upper left of the cap and darker turning underside establish volume.",
+        "material_continuity": "A restrained warm or neutral fungal ramp continues through the cap and stem.",
+        "edge_variation": "Stepped cap contours and deliberately transparent background preserve clean pixel edges.",
+        "variant_identity": "offset overlapping fans imply growth from wood; offset overlapping fans imply growth from wood",
+        "vanilla_comparison": "Vanilla brown mushroom uses a compact cap and slender stem; this sprite uses its own distinct fungal form and native pixel scale.",
+        "functional_material_cues": "Rooted base and the stage-dependent cap silhouette communicate the living fungal colony."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/brown_mushroom",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16 pixel scale with contiguous cap shapes and intentional transparency.",
+        "reference_limit": "No pixels copied; cap and stem proportions are original for the species.",
+        "native_view": "Inspected the 16 by 16 source sprites with nearest-neighbor enlargement.",
+        "context_view": "Reviewed adjacent young, mature, collected and dormant forms against a muted green background and actual vanilla comparators; graphical client not run.",
+        "context_type": "placed_cutout",
+        "custom_reason": "The atlas has no specific fungal silhouette or mycelial cutout rule.",
+        "reference_source": "misode/mcmeta 1.21.1-assets block/brown_mushroom.png actual PNG retrieved through GitHub and decoded; SHA-256 verified."
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/item/oyster_mushroom.png": {
+      "sha256": "4f9b863adc6404a9bf97a0181a3067bf0b24b67d59fd6a95b5ea32091a8d7bd3",
+      "verdict": "PASS",
+      "material_profile": "consumable",
+      "references": [
+        {
+          "id": "minecraft:item/apple",
+          "minecraft": "1.21.1",
+          "sha256": "9b1aef1aaa41229dbe2bc97657b8650527b14cc20a6236e823f1682c4d44c5a2"
+        }
+      ],
+      "comparison": "Inspected the actual vanilla 16px comparator and original sprite in the nearest-neighbor family sheet: two asymmetric grey-beige shelf caps; single collected body lifted off ground with clear transparent margin.",
+      "findings": {
+        "silhouette": "two asymmetric grey-beige shelf caps; single collected body lifted off ground with clear transparent margin",
+        "cluster_structure": "pale cap edges and cream gills separate from mauve shaded undersides",
+        "micro_contrast": "Local cap and stem palette changes are contiguous rather than scattered noise.",
+        "light_and_volume": "Highlights on upper left of the cap and darker turning underside establish volume.",
+        "material_continuity": "A restrained warm or neutral fungal ramp continues through the cap and stem.",
+        "edge_variation": "Stepped cap contours and deliberately transparent background preserve clean pixel edges.",
+        "variant_identity": "single collected body lifted off ground with clear transparent margin; offset overlapping fans imply growth from wood",
+        "vanilla_comparison": "Vanilla brown mushroom uses a compact cap and slender stem; this sprite uses its own distinct fungal form and native pixel scale.",
+        "edible_or_liquid_material": "Matte fleshy cap is distinguished from the pale fibrous stalk.",
+        "container_or_food_shape": "A single collected mushroom shape is centered with empty surrounding pixels."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "consumable_icon",
+        "reference": "minecraft:item/apple",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16 pixel scale with contiguous cap shapes and intentional transparency.",
+        "reference_limit": "No pixels copied; cap and stem proportions are original for the species.",
+        "native_view": "Inspected the 16 by 16 source sprites with nearest-neighbor enlargement.",
+        "context_view": "Reviewed adjacent young, mature, collected and dormant forms against a muted green background and actual vanilla comparators; graphical client not run.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-terrain-1.21.1-neoforge/src/main/resources/assets/worldlogicterrain/textures/block/fungal_mycelium.png": {
+      "sha256": "a4ac6e6ba3c4e3cf6ca46695a2225fa4e61e781a855758bbdea90af416b5a6ed",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:block/brown_mushroom",
+          "minecraft": "1.21.1",
+          "sha256": "a7e9990f39be45a2f09c0e4b690ee04cf72930e924a3abf5e615153b8d1af931"
+        }
+      ],
+      "comparison": "Inspected the actual vanilla 16px comparator and original sprite in the nearest-neighbor family sheet: low irregular ivory hyphal branches at the substrate; shallow filament silhouette contrasts with upright fruit bodies.",
+      "findings": {
+        "silhouette": "low irregular ivory hyphal branches at the substrate; shallow filament silhouette contrasts with upright fruit bodies",
+        "cluster_structure": "two separated branching clusters meet the ground at y15",
+        "micro_contrast": "Local cap and stem palette changes are contiguous rather than scattered noise.",
+        "light_and_volume": "Highlights on upper left of the cap and darker turning underside establish volume.",
+        "material_continuity": "A restrained warm or neutral fungal ramp continues through the cap and stem.",
+        "edge_variation": "Stepped cap contours and deliberately transparent background preserve clean pixel edges.",
+        "variant_identity": "shallow filament silhouette contrasts with upright fruit bodies; shallow filament silhouette contrasts with upright fruit bodies",
+        "vanilla_comparison": "Vanilla brown mushroom uses a compact cap and slender stem; this sprite uses its own distinct fungal form and native pixel scale.",
+        "functional_material_cues": "Rooted base and the stage-dependent cap silhouette communicate the living fungal colony."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:block/brown_mushroom",
+        "reference_minecraft": "1.21.1",
+        "applied_pattern": "Native 16 pixel scale with contiguous cap shapes and intentional transparency.",
+        "reference_limit": "No pixels copied; cap and stem proportions are original for the species.",
+        "native_view": "Inspected the 16 by 16 source sprites with nearest-neighbor enlargement.",
+        "context_view": "Reviewed adjacent young, mature, collected and dormant forms against a muted green background and actual vanilla comparators; graphical client not run.",
+        "context_type": "placed_cutout",
+        "custom_reason": "The atlas has no specific fungal silhouette or mycelial cutout rule.",
+        "reference_source": "misode/mcmeta 1.21.1-assets block/brown_mushroom.png actual PNG retrieved through GitHub and decoded; SHA-256 verified."
+      }
     }
   },
   "review_status": "1.2.5 RC1: 118 previously reviewed textures unchanged; seven new original fruit item PNGs individually reviewed in native/enlarged icon family and static hanging-model context. Art Review Lock, Build Hub, natural generation and graphical client verification pending.",
