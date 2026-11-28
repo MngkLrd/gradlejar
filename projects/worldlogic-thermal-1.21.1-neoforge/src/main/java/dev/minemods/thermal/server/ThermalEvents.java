@@ -54,7 +54,7 @@ public final class ThermalEvents {
         }else n.remove("room");
         var ph=sample.physiology();
         var phTag=new CompoundTag();phTag.putBoolean("metabolism",ph.metabolism());phTag.putBoolean("hydration",ph.hydration());phTag.putBoolean("trauma",ph.trauma());
-        phTag.putDouble("energy",ph.energy());phTag.putDouble("diet",ph.dietQuality());phTag.putDouble("water",ph.waterPercent());phTag.putDouble("salts",ph.electrolyteIndex());phTag.putDouble("blood",ph.bloodFraction());
+        phTag.putDouble("energy",ph.energy());phTag.putDouble("diet",ph.dietQuality());phTag.putDouble("water",ph.waterPercent());phTag.putDouble("salts",ph.electrolyteIndex());phTag.putDouble("blood",ph.bloodFraction());phTag.putDouble("perfusion",ph.perfusion());
         phTag.putDouble("nutrition",e.nutrition());phTag.putDouble("cooling",e.hydration());phTag.putLong("tick",p.serverLevel().getGameTime());phTag.putString("dimension",p.serverLevel().dimension().location().toString());n.put("physiology",phTag);
         n.putLong("sampleTick",p.serverLevel().getGameTime());n.putString("sampleDimension",p.serverLevel().dimension().location().toString());
         n.putDouble("body",state.bodyC()); n.putDouble("air",e.airC()); n.putDouble("felt",state.feelsLikeC());

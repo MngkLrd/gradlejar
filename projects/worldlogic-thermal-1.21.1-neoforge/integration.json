@@ -148,7 +148,7 @@
         "worldlogic:metabolism_physiology",
         "worldlogic:trauma_status"
       ],
-      "integration_review": "Thermal owns body and peripheral exposure; Core supplies world conditions, fatigue and material data, optional sibling snapshots retain their owners. No independent shared resource budget. Core #267 adminRestore is public revision 4; no foreign cure."
+      "integration_review": "Thermal owns body and peripheral exposure; Core supplies world conditions, fatigue and material data, optional sibling snapshots retain their owners. No independent shared resource budget. Core #267 adminRestore is public revision 4; no foreign cure. Trauma #239 uses public physiology perfusion as authoritative heat-distribution input, replacing blood proxy when available."
     },
     {
       "id": "room_climate",

@@ -21,6 +21,10 @@ final class IntegrationChecks {
   var bleeding=new PhysiologyInputs(false,false,true,1,1,100,50,.4);
   require(model(-10,bleeding).targetC()<model(-10,absent).targetC()&&model(40,bleeding).targetC()>model(40,absent).targetC(),"blood fraction affects thermal stress");
   require(model(22,bleeding).targetC()==37,"blood loss alone does not invent thermal illness");
+  var perfused=new PhysiologyInputs(false,false,true,1,1,100,50,.4,.65);
+  require(perfused.bloodFraction()==.4&&perfused.circulation()==.65&&model(-10,perfused).targetC()>model(-10,bleeding).targetC(),"actual perfusion replaces blood proxy without multiplying both");
+  require(new PhysiologyInputs(false,false,true,1,1,100,50,.4,Double.NaN).circulation()==.4,"old provider fallback remains");
+  require(new PhysiologyInputs(false,false,false,1,1,100,50,.4,.2).circulation()==1,"missing provider neutral");
   var invalid=new PhysiologyInputs(true,true,true,Double.NaN,2,-1,Double.NaN,Double.POSITIVE_INFINITY);
   require(invalid.energy()==1&&invalid.dietQuality()==1&&invalid.waterPercent()==0&&invalid.electrolyteIndex()==50&&invalid.bloodFraction()==1,"finite bounded values");
   var sample=EnvironmentSampler.sample(p,0).orElseThrow();

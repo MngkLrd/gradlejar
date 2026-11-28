@@ -16,7 +16,8 @@ final class AddonBridge {
  private static final Reader HYDRATION=hydrationReader();
  private static final Reader METABOLISM=reader("metabolism","dev.minemods.metabolism.api.MetabolismApi","physiology","Physiology","availableEnergy","dietQuality",false);
  private static final Reader BLOOD=reader("worldlogic_trauma","dev.minemods.traumacraft.api.TraumaApi","status","Status","bloodMl","maximumBloodMl",true);
- private static boolean warnedMetabolism,warnedBlood;
+ private static final Reader PERFUSION=reader("worldlogic_trauma","dev.minemods.traumacraft.api.TraumaApi","physiology","Physiology","perfusion",null,true);
+ private static boolean warnedMetabolism,warnedBlood,warnedPerfusion;
  private static Reader reader(String mod,String type,String method,String record,String first,String second,boolean optional){
   if(!ModList.get().isLoaded(mod))return null;
   try{
@@ -40,15 +41,17 @@ final class AddonBridge {
  }
  static PhysiologyInputs physiology(ServerPlayer p){
   if(!p.isAlive()||p.isCreative()||p.isSpectator())return PhysiologyInputs.absent();
-  double[] water=null,energy=null,blood=null;
+  double[] water=null,energy=null,blood=null,perfusion=null;
   try{water=read(HYDRATION,p);}catch(ReflectiveOperationException|LinkageError|RuntimeException ex){if(!warnedHydration){LOG.warn("Hydration physiology read failed",ex);warnedHydration=true;}}
   try{energy=read(METABOLISM,p);}catch(ReflectiveOperationException|LinkageError|RuntimeException ex){if(!warnedMetabolism){LOG.warn("Metabolism physiology read failed",ex);warnedMetabolism=true;}}
   try{blood=read(BLOOD,p);}catch(ReflectiveOperationException|LinkageError|RuntimeException ex){if(!warnedBlood){LOG.warn("Trauma blood read failed",ex);warnedBlood=true;}}
+  try{perfusion=read(PERFUSION,p);}catch(ReflectiveOperationException|LinkageError|RuntimeException ex){if(!warnedPerfusion){LOG.warn("Trauma perfusion read failed",ex);warnedPerfusion=true;}}
+  if(perfusion!=null&&(perfusion[0]<0||perfusion[0]>1))perfusion=null;
   if(water!=null&&(water[0]<0||water[0]>100||water[1]<0||water[1]>100))water=null;
   if(energy!=null&&(energy[0]<0||energy[0]>1||energy[1]<0||energy[1]>1))energy=null;
   if(blood!=null&&(blood[1]<=0||blood[0]<0||blood[0]>blood[1]))blood=null;
-  return new PhysiologyInputs(energy!=null,water!=null,blood!=null,energy==null?1:energy[0],energy==null?1:energy[1],
-   water==null?100:water[0],water==null?50:water[1],blood==null?1:blood[0]/blood[1]);
+  return new PhysiologyInputs(energy!=null,water!=null,blood!=null||perfusion!=null,energy==null?1:energy[0],energy==null?1:energy[1],
+   water==null?100:water[0],water==null?50:water[1],blood==null?1:blood[0]/blood[1],perfusion==null?Double.NaN:perfusion[0]);
  }
  private static final Method WEATHER=method("dev.minemods.worldlogic.api.WorldLogicApi","localWeather",ServerLevel.class,BlockPos.class);
  private static boolean warnedTrauma,warnedHydration,warnedWeather;
