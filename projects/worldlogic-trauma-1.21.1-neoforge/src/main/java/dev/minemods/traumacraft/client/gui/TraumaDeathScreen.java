@@ -174,6 +174,7 @@ public final class TraumaDeathScreen extends Screen {
                 tip.add(Component.translatable("death.traumacraft.material."+m.kind().name().toLowerCase(Locale.ROOT),m.objectId()));
                 tip.add(Component.translatable("death.traumacraft.material_values",String.format(Locale.ROOT,"%.3f",m.massKg()),String.format(Locale.ROOT,"%.6f",m.volumeM3()),String.format(Locale.ROOT,"%.1f",m.densityKgM3())));
                 tip.add(Component.translatable("death.traumacraft.material_nominal",m.evidence()));
+                m.surface().ifPresent(s->tip.add(Component.translatable("death.traumacraft.surface_response",s.materialId(),String.format(Locale.ROOT,"%.3f",s.stoppingDistanceM()))));
             });
             tip.add(Component.translatable("screen.traumacraft.blood_volume",Math.round(report.body().bloodMl())+"/5000 ml"));
             tip.add(Component.translatable("screen.traumacraft.oxygen",Math.round(report.body().clinical().oxygen()*100)+"%"));

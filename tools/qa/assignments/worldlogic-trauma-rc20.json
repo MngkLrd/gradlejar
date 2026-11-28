@@ -1039,5 +1039,20 @@
     "server": "traumaqa deathreport includes MaterialChecks. Existing pinned RC22 tests only fallback; positive provider branch needs approved Core 1.2.0 artifact.",
     "combined": "NOT_RUN: Core RC53 Build Hub 46101620818 failed seeded biome coverage 57/58; do not pin unqualified artifact.",
     "remaining": "Material nominal density/modulus do not establish impact cushioning or effective mass. Request Core contact-response contract; no new encumbrance, movement or armor behavior."
+  },
+  "version_0_8_10": {
+    "version": "0.8.10",
+    "scope": "PhysicalMaterials revision 2: read-only surface response in fatal landing report, explicit-input energy and item contact through TraumaApi revision 6; existing injury formula remains because no authoritative observed impact speed/effective mass/contact geometry. No physical reference table or carry penalties.",
+    "dependency": {
+      "version": "1.2.1",
+      "run": 46103365227,
+      "artifact": 15246915092,
+      "sha256": "33d2ce25db884ba8f3044d672f5970430de968c863b83372ed188774572cfb56",
+      "status": "Core QA FAIL 57/58 seeded biomes; diagnostic only"
+    },
+    "server": "traumaqa deathreport checks actual provider (required for version 1.2.1), known/unknown surface response, explicit energy/item contact, archive codecs; existing regressions retained",
+    "compatibility": "Older providers reflection fallback; separate old-provider runtime on this version not yet executed",
+    "client": "NOT_RUN: actual report tooltip and full modded client",
+    "release": "Not stable while Core gate fails. No guessed collision inputs."
   }
 }

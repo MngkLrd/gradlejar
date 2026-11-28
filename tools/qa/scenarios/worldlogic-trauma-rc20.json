@@ -961,6 +961,20 @@
           "name": "TR-DEATH-REPORT: fatal origin, causal markers, blood loss, hypoxia, frozen snapshot and packet"
         }
       ]
+    },
+    {
+      "id": "tr-core-contact-rev2",
+      "kind": "mechanic",
+      "subject": "Core 1.2.1 surface response on actual supported stone/wool, unknown air/fluid/unloaded, exact SI energy and selected item component, invalid inputs, report codec and historical archive compatibility",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-DEATH-REPORT: fatal origin, causal markers, blood loss, hypoxia, frozen snapshot and packet"
+        }
+      ]
     }
   ]
 }

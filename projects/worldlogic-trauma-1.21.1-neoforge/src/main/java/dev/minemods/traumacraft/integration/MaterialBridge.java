@@ -54,7 +54,7 @@ public final class MaterialBridge {
         if(state.isAir()||state.getCollisionShape(level,pos).isEmpty())return Optional.empty();
         try{
             Optional<?> result=(Optional<?>)a.placed.invoke(null,level,pos);
-            return result.isEmpty()?Optional.empty():a.read(ImpactMaterial.Kind.LANDING_SURFACE,BuiltInRegistries.BLOCK.getKey(state.getBlock()).toString(),result.get());
+            return result.isEmpty()?Optional.empty():a.read(ImpactMaterial.Kind.LANDING_SURFACE,BuiltInRegistries.BLOCK.getKey(state.getBlock()).toString(),result.get()).map(m->m.withSurface(ContactPhysics.surface(level,pos)));
         }catch(ReflectiveOperationException|LinkageError|RuntimeException ex){return Optional.empty();}
     }
     public static Optional<ImpactMaterial> contact(ServerPlayer victim,DamageSource source){

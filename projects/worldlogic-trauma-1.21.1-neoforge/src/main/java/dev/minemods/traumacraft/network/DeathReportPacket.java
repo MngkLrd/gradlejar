@@ -15,6 +15,7 @@ public record DeathReportPacket(DeathReport report,boolean archived) implements 
         SyncBodyStatePacket.STREAM_CODEC.encode(buf,r.body());
         buf.writeVarInt(r.history().size());for(var e:r.history()){buf.writeVarInt(e.ageSeconds());buf.writeEnum(e.kind());buf.writeEnum(e.origin());buf.writeVarInt(e.regions());buf.writeVarInt(e.organs());buf.writeFloat(e.hpLoss());buf.writeFloat(e.bloodLoss());buf.writeVarInt(e.shock());}
         buf.writeBoolean(r.material().isPresent());if(r.material().isPresent()){var m=r.material().get();buf.writeEnum(m.kind());buf.writeUtf(m.objectId(),128);buf.writeUtf(m.evidence(),32);buf.writeDouble(m.massKg());buf.writeDouble(m.volumeM3());buf.writeDouble(m.densityKgM3());}
+        if(r.material().isPresent()){var surface=r.material().get().surface();buf.writeBoolean(surface.isPresent());if(surface.isPresent()){var s=surface.get();buf.writeUtf(s.materialId(),128);buf.writeUtf(s.evidence(),32);buf.writeDouble(s.stoppingDistanceM());buf.writeDouble(s.moistureKgKg());}}
     },buf->{
         boolean archived=buf.readBoolean();
         var report=new DeathReport(buf.readEnum(DeathReport.Cause.class),buf.readEnum(DeathReport.Origin.class),buf.readUtf(128),buf.readVarInt()&127,buf.readVarInt()&511,buf.readVarInt()&127,buf.readVarInt()&511,SyncBodyStatePacket.STREAM_CODEC.decode(buf));
@@ -28,6 +29,8 @@ public record DeathReportPacket(DeathReport report,boolean archived) implements 
         }
         // Existing 0.8.8 saved reports have no trailing material field.
         if(buf.isReadable()&&buf.readBoolean()){var material=new dev.minemods.traumacraft.health.ImpactMaterial(buf.readEnum(dev.minemods.traumacraft.health.ImpactMaterial.Kind.class),buf.readUtf(128),buf.readUtf(32),buf.readDouble(),buf.readDouble(),buf.readDouble());report=report.withMaterial(java.util.Optional.of(material));}
+        // Revision 14 archives ended after the original material fields.
+        if(report.material().isPresent()&&buf.isReadable()&&buf.readBoolean()){var s=new dev.minemods.traumacraft.integration.ContactPhysics.Surface(buf.readUtf(128),buf.readUtf(32),buf.readDouble(),buf.readDouble());report=report.withMaterial(java.util.Optional.of(report.material().get().withSurface(java.util.Optional.of(s))));}
         return new DeathReportPacket(report.withHistory(entries),archived);
     });
     @Override public Type<? extends CustomPacketPayload> type(){return TYPE;}

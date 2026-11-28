@@ -219,5 +219,6 @@
   "death.traumacraft.material.landing_surface": "Landing surface: %s",
   "death.traumacraft.material.held_item": "Held item at impact: %s",
   "death.traumacraft.material_values": "%s kg | %s m³ | %s kg/m³",
-  "death.traumacraft.material_nominal": "Core nominal object properties (%s), not impact mass"
+  "death.traumacraft.material_nominal": "Core nominal object properties (%s), not impact mass",
+  "death.traumacraft.surface_response": "Material: %s | estimated stopping distance: %s m"
 }

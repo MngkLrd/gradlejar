@@ -13,7 +13,7 @@ import java.util.EnumSet;
 /** Public server-thread API. Immutable snapshots; no internal NBT or mutable state exposed. */
 public final class TraumaApi {
     public static final int API_VERSION=1;
-    public static final int API_REVISION=5;
+    public static final int API_REVISION=6;
     public enum Zone { HEAD,CHEST,ABDOMEN,LEFT_ARM,RIGHT_ARM,LEFT_LEG,RIGHT_LEG }
     public enum Injury { CONTUSION,CUT,PUNCTURE,LACERATION,BURN,FROSTBITE }
     public record Region(Zone zone,float health,float maximum,float function,int bleeding,boolean fractured,boolean stabilized,Set<Injury> injuries){
@@ -35,6 +35,19 @@ public final class TraumaApi {
         var b=BodyStates.get(p);var o=b.organs();var list=new ArrayList<OrganStatus>();
         for(var organ:OrganState.Organ.values())list.add(new OrganStatus(organ.name().toLowerCase(java.util.Locale.ROOT),organ.region==BodyPart.STOMACH?Zone.ABDOMEN:Zone.valueOf(organ.region.name()),o.integrity(organ),o.bleeding(organ)));
         return Optional.of(new Physiology(o.oxygen(),o.ventilation(),o.perfusion(b.bloodFraction()),o.delivery(b.bloodFraction()),o.oxygenDebt(),o.renalFunction(),o.digestiveFunction(),o.internalLossPerSecond(),o.repairFactor(b.bloodFraction()),o.shockLoad(),o.unconscious(),o.circulationSupport(),list));
+    }
+    /** Contact estimates from Core only. Explicit inputs are SI; no injury, movement or inventory mutation. */
+    public record SurfaceResponse(String materialId,String evidence,double stoppingDistanceM,double moistureKgKg){}
+    public record ItemImpact(String materialId,double componentMassKg,double contactAreaM2,double kineticEnergyJ){}
+    public static Optional<SurfaceResponse> surfaceResponse(net.minecraft.server.level.ServerLevel level,net.minecraft.core.BlockPos pos){
+        return dev.minemods.traumacraft.integration.ContactPhysics.surface(level,pos).map(s->new SurfaceResponse(s.materialId(),s.evidence(),s.stoppingDistanceM(),s.moistureKgKg()));
+    }
+    public static java.util.OptionalDouble impactEnergyJ(double effectiveMovingMassKg,double normalSpeedMps){
+        return dev.minemods.traumacraft.integration.ContactPhysics.impactEnergyJ(effectiveMovingMassKg,normalSpeedMps);
+    }
+    /** The caller must identify the actual contacting constituent and supply measured contact area and motion. */
+    public static Optional<ItemImpact> itemImpact(net.minecraft.world.item.ItemStack stack,int componentIndex,double contactAreaM2,double effectiveMovingMassKg,double normalSpeedMps){
+        return dev.minemods.traumacraft.integration.ContactPhysics.itemContact(stack,componentIndex,contactAreaM2,effectiveMovingMassKg,normalSpeedMps).map(i->new ItemImpact(i.materialId(),i.componentMassKg(),i.contactAreaM2(),i.kineticEnergyJ()));
     }
     private TraumaApi(){}
     private static boolean usable(ServerPlayer p){

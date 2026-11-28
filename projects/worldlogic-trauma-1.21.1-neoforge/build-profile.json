@@ -1,11 +1,11 @@
 {
   "slug": "worldlogic_trauma",
-  "version": "0.8.9",
+  "version": "0.8.10",
   "minecraft": "1.21.1",
   "loader": "neoforge",
   "java": "21",
   "gradle": "9.2.1",
-  "jar_glob": "worldlogic_trauma-neoforge-mc1.21.1-0.8.9.jar",
+  "jar_glob": "worldlogic_trauma-neoforge-mc1.21.1-0.8.10.jar",
   "minimum_loader_version": "21.1.80",
   "compile_loader_version": "21.1.262",
   "qa": {
@@ -17,13 +17,20 @@
     ],
     "watch_paths": [
       "tools/qa/scenarios/worldlogic-trauma-rc20.json",
-      "tools/qa/assignments/worldlogic-trauma-rc20.json"
+      "tools/qa/assignments/worldlogic-trauma-rc20.json",
+      "tools/qa/actions_dependency.py"
     ],
     "dependencies": [
       {
-        "name": "worldlogic-neoforge-mc1.21.1-1.0.0-rc22.jar",
-        "url": "https://github.com/MngkLrd/gradlejar/releases/download/ci-worldlogic-mc1.21.1-neoforge-1.0.0-rc22-1246-1/worldlogic-neoforge-mc1.21.1-1.0.0-rc22.jar",
-        "sha256": "1c0d23ca034cd17f783e4d1abbf01f1eda8783ac0ba3b48cf6afdc1291d21dc8"
+        "name": "worldlogic-neoforge-mc1.21.1-1.2.1.jar",
+        "url": "https://api.github.com/repos/MngkLrd/gradlejar/actions/artifacts/15246915092/zip",
+        "sha256": "33d2ce25db884ba8f3044d672f5970430de968c863b83372ed188774572cfb56",
+        "actions_artifact": {
+          "id": 15246915092,
+          "run_id": 46103365227,
+          "head_sha": "5c6a56da6019ee23ba1941fee9e9a9a1438491e2",
+          "name": "qa-candidate-NOT-RELEASE-0-1"
+        }
       }
     ]
   }
