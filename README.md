@@ -8,6 +8,8 @@ Shared Gradle build infrastructure for real Minecraft mods. The bootstrap projec
 
 **Naming and versions:** [Mandatory mod naming standard](docs/MOD-NAMING.md). Use three numeric product version components and the standardized player-facing JAR name; do not confuse it with the older internal Build Hub filename.
 
+**External reference mods:** [MOD-ADAPTATION.md](docs/MOD-ADAPTATION.md) defines mandatory source analysis, independent design adaptation, licensing and behavioral verification.
+
 ## Build
 Open [Build Hub Actions](https://github.com/MngkLrd/gradlejar/actions/workflows/build.yml) → **Minecraft Mod Build Hub** → **Run workflow**. Enter a project directory, `.` for FieldKit, or `@slug` to run every enrolled QA port of a mod. Main pushes build affected projects across the complete commit range. Pull requests do not publish.
 
