@@ -215,5 +215,9 @@
   "death.traumacraft.event.external_bleed": "External bleeding",
   "death.traumacraft.event.shock": "Shock changed",
   "death.traumacraft.event.unconscious": "Lost consciousness",
-  "death.traumacraft.event.waking": "Regained consciousness"
+  "death.traumacraft.event.waking": "Regained consciousness",
+  "death.traumacraft.material.landing_surface": "Landing surface: %s",
+  "death.traumacraft.material.held_item": "Held item at impact: %s",
+  "death.traumacraft.material_values": "%s kg | %s m³ | %s kg/m³",
+  "death.traumacraft.material_nominal": "Core nominal object properties (%s), not impact mass"
 }

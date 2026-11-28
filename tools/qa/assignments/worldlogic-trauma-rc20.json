@@ -1032,5 +1032,12 @@
     "static_gui": "checkHudStatusLayout: history rows and both buttons across 30 layouts",
     "client": "NOT_RUN: actual death transition, history pages, archive open, keyboard and GUI scale; custom protocol unsupported by bot",
     "remaining": "Timeline is recent observations, not complete damage history; events outside window and previous login omitted, not a reconstruction; archival clone/relog and actual GUI need live validation."
+  },
+  "version_0_8_9": {
+    "version": "0.8.9",
+    "scope": "Read-only PhysicalMaterials consumer, no local physical registry, no weight or impact formula changes. Nominal contact observations for direct fatal fall/melee reports, no projectile weapon inference. Protocol 14; 0.8.8 archives retained.",
+    "server": "traumaqa deathreport includes MaterialChecks. Existing pinned RC22 tests only fallback; positive provider branch needs approved Core 1.2.0 artifact.",
+    "combined": "NOT_RUN: Core RC53 Build Hub 46101620818 failed seeded biome coverage 57/58; do not pin unqualified artifact.",
+    "remaining": "Material nominal density/modulus do not establish impact cushioning or effective mass. Request Core contact-response contract; no new encumbrance, movement or armor behavior."
   }
 }

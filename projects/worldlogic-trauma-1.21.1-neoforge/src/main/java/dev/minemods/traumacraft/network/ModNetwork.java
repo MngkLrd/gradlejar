@@ -11,7 +11,7 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 public final class ModNetwork {
     private ModNetwork(){}
     public static void register(RegisterPayloadHandlersEvent event){
-        var registrar=event.registrar("13");
+        var registrar=event.registrar("14");
         registrar.playToClient(DeathReportPacket.TYPE,DeathReportPacket.CODEC,(m,c)->{
             if(FMLEnvironment.dist==Dist.CLIENT)dev.minemods.traumacraft.client.ClientDeathReport.accept(m);
         });

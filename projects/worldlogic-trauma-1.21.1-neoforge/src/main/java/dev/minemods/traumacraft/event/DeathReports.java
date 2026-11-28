@@ -14,7 +14,7 @@ import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 /** Server thread only. Pending context is consumed by the actual death event, never by a merely lethal-looking hit. */
 public final class DeathReports {
     private DeathReports(){}
-    private record Context(Cause cause,Origin origin,String sourceId,boolean collapse){}
+    private record Context(Cause cause,Origin origin,String sourceId,boolean collapse,java.util.Optional<ImpactMaterial> material){}
     private static final WeakHashMap<ServerPlayer,Context> PENDING=new WeakHashMap<>();
     private static final String ARCHIVE="traumacraft_last_death_v1";
     private static final WeakHashMap<ServerPlayer,TraumaHistory> HISTORY=new WeakHashMap<>();
@@ -59,19 +59,19 @@ public final class DeathReports {
         if(VitalityBridge.engineFatalSource(source)){clear(p);return;}
         if(alreadyFatal){collapse(p,b,null);return;}
         clear(p);
-        if(b.vitalDestroyed())PENDING.put(p,new Context(Cause.DIRECT_TRAUMA,origin(source),sourceId(source),false));
+        if(b.vitalDestroyed())PENDING.put(p,new Context(Cause.DIRECT_TRAUMA,origin(source),sourceId(source),false,dev.minemods.traumacraft.integration.MaterialBridge.contact(p,source)));
     }
     public static void collapse(ServerPlayer p,BodyState b,Cause phase){
-        if(phase==null&&PENDING.containsKey(p)){var old=PENDING.get(p);PENDING.put(p,new Context(old.cause(),old.origin(),old.sourceId(),true));return;}
+        if(phase==null&&PENDING.containsKey(p)){var old=PENDING.get(p);PENDING.put(p,new Context(old.cause(),old.origin(),old.sourceId(),true,old.material()));return;}
         Cause cause=phase;
         if(cause==null)cause=b.fatalBloodLoss()?Cause.BLOOD_LOSS:Cause.VITAL_DESTRUCTION;
         Origin origin=cause==Cause.HYPOXIA&&p.getAirSupply()<=0?Origin.DROWNING:Origin.SYSTEMIC;
-        PENDING.put(p,new Context(cause,origin,"",true));
+        PENDING.put(p,new Context(cause,origin,"",true,java.util.Optional.empty()));
     }
     public static DeathReport consume(ServerPlayer p,BodyState b,DamageSource source){
         var context=PENDING.remove(p);
         if(context==null||(!b.vitalDestroyed()&&!b.fatalBloodLoss())||(!context.collapse()&&(VitalityBridge.engineFatalSource(source)||!context.sourceId().equals(sourceId(source)))))return DeathReport.capture(b,Cause.VANILLA,origin(source),sourceId(source));
-        return DeathReport.capture(b,context.cause(),context.origin(),context.sourceId());
+        return DeathReport.capture(b,context.cause(),context.origin(),context.sourceId()).withMaterial(context.material());
     }
     public static void onDeath(LivingDeathEvent e){
         if(e.isCanceled()||!(e.getEntity() instanceof ServerPlayer p)||p.isCreative()||p.isSpectator())return;

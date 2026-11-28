@@ -947,6 +947,20 @@
           "name": "TR-DEATH-REPORT: fatal origin, causal markers, blood loss, hypoxia, frozen snapshot and packet"
         }
       ]
+    },
+    {
+      "id": "tr-core-material-contact",
+      "kind": "mechanic",
+      "subject": "Core physical registry revision guard, SI contact observation, unknown/invalid/empty fallback, actual single-item and loaded surface query when provider available, death packet and old archive compatibility",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-DEATH-REPORT: fatal origin, causal markers, blood loss, hypoxia, frozen snapshot and packet"
+        }
+      ]
     }
   ]
 }

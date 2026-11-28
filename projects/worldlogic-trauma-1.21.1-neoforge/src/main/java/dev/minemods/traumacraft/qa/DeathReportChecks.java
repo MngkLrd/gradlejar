@@ -70,6 +70,7 @@ public final class DeathReportChecks {
             p.getPersistentData().putByteArray("traumacraft_last_death_v1",new byte[]{1,2});
             require(DeathReports.last(p).isEmpty(),"corrupt archive safely ignored");
             p.getPersistentData().remove("traumacraft_last_death_v1");
+            MaterialChecks.verify(p,b);
             b.reset();
             var event=new net.neoforged.neoforge.event.entity.living.LivingDamageEvent.Pre(p,new net.neoforged.neoforge.common.damagesource.DamageContainer(kill,100f));
             net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(event);

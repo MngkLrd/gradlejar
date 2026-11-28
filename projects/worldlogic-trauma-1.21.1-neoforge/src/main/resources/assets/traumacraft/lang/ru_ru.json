@@ -215,5 +215,9 @@
   "death.traumacraft.event.external_bleed": "Наружное кровотечение",
   "death.traumacraft.event.shock": "Изменение шока",
   "death.traumacraft.event.unconscious": "Потеря сознания",
-  "death.traumacraft.event.waking": "Возвращение сознания"
+  "death.traumacraft.event.waking": "Возвращение сознания",
+  "death.traumacraft.material.landing_surface": "Поверхность падения: %s",
+  "death.traumacraft.material.held_item": "Предмет в руке при ударе: %s",
+  "death.traumacraft.material_values": "%s кг | %s м³ | %s кг/м³",
+  "death.traumacraft.material_nominal": "Номинальные свойства объекта Core (%s), не масса удара"
 }

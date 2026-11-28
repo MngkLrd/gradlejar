@@ -170,6 +170,11 @@ public final class TraumaDeathScreen extends Screen {
             tip.add(cause(report.cause()));tip.add(origin(report.origin()));
             var names=criticalNames();if(!names.getString().isEmpty())tip.add(names);
             if(!report.sourceId().isEmpty())tip.add(Component.literal(report.sourceId()));
+            report.material().ifPresent(m->{
+                tip.add(Component.translatable("death.traumacraft.material."+m.kind().name().toLowerCase(Locale.ROOT),m.objectId()));
+                tip.add(Component.translatable("death.traumacraft.material_values",String.format(Locale.ROOT,"%.3f",m.massKg()),String.format(Locale.ROOT,"%.6f",m.volumeM3()),String.format(Locale.ROOT,"%.1f",m.densityKgM3())));
+                tip.add(Component.translatable("death.traumacraft.material_nominal",m.evidence()));
+            });
             tip.add(Component.translatable("screen.traumacraft.blood_volume",Math.round(report.body().bloodMl())+"/5000 ml"));
             tip.add(Component.translatable("screen.traumacraft.oxygen",Math.round(report.body().clinical().oxygen()*100)+"%"));
             tip.add(Component.translatable("screen.traumacraft.perfusion",Math.round(report.body().clinical().perfusion()*100)+"%"));

@@ -14,6 +14,7 @@ public record DeathReportPacket(DeathReport report,boolean archived) implements 
         buf.writeVarInt(r.criticalRegions());buf.writeVarInt(r.criticalOrgans());buf.writeVarInt(r.bleedingRegions());buf.writeVarInt(r.bleedingOrgans());
         SyncBodyStatePacket.STREAM_CODEC.encode(buf,r.body());
         buf.writeVarInt(r.history().size());for(var e:r.history()){buf.writeVarInt(e.ageSeconds());buf.writeEnum(e.kind());buf.writeEnum(e.origin());buf.writeVarInt(e.regions());buf.writeVarInt(e.organs());buf.writeFloat(e.hpLoss());buf.writeFloat(e.bloodLoss());buf.writeVarInt(e.shock());}
+        buf.writeBoolean(r.material().isPresent());if(r.material().isPresent()){var m=r.material().get();buf.writeEnum(m.kind());buf.writeUtf(m.objectId(),128);buf.writeUtf(m.evidence(),32);buf.writeDouble(m.massKg());buf.writeDouble(m.volumeM3());buf.writeDouble(m.densityKgM3());}
     },buf->{
         boolean archived=buf.readBoolean();
         var report=new DeathReport(buf.readEnum(DeathReport.Cause.class),buf.readEnum(DeathReport.Origin.class),buf.readUtf(128),buf.readVarInt()&127,buf.readVarInt()&511,buf.readVarInt()&127,buf.readVarInt()&511,SyncBodyStatePacket.STREAM_CODEC.decode(buf));
@@ -25,6 +26,8 @@ public record DeathReportPacket(DeathReport report,boolean archived) implements 
             if(age<0||age>120||!Float.isFinite(hp)||hp<0||hp>440||!Float.isFinite(blood)||blood<0||blood>5000||shock<0||shock>3)throw new IllegalArgumentException("Invalid death history entry");
             entries.add(new dev.minemods.traumacraft.health.TraumaHistory.Entry(age,kind,origin,regions,organs,hp,blood,shock));
         }
+        // Existing 0.8.8 saved reports have no trailing material field.
+        if(buf.isReadable()&&buf.readBoolean()){var material=new dev.minemods.traumacraft.health.ImpactMaterial(buf.readEnum(dev.minemods.traumacraft.health.ImpactMaterial.Kind.class),buf.readUtf(128),buf.readUtf(32),buf.readDouble(),buf.readDouble(),buf.readDouble());report=report.withMaterial(java.util.Optional.of(material));}
         return new DeathReportPacket(report.withHistory(entries),archived);
     });
     @Override public Type<? extends CustomPacketPayload> type(){return TYPE;}
