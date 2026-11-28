@@ -21,6 +21,7 @@ public final class WorldLogic {
   Rules.load();
   dev.minemods.worldlogic.api.WorldLogicCapabilities.register(dev.minemods.worldlogic.api.WorldLogicRecipes.CAPABILITY,0,"worldlogic",dev.minemods.worldlogic.api.WorldLogicRecipes::processing);
   dev.minemods.worldlogic.api.WorldLogicCapabilities.register(dev.minemods.worldlogic.api.WorldLogicDashboards.CAPABILITY,0,"worldlogic",dev.minemods.worldlogic.api.WorldLogicDashboards::snapshots);
+  dev.minemods.worldlogic.api.WorldLogicExcavation.register();
   modBus.addListener(RuleSync::init);
   modBus.addListener(MarineEcology::registerSpawns);
   var bus=NeoForge.EVENT_BUS;
@@ -30,6 +31,7 @@ public final class WorldLogic {
   bus.addListener(MarinePlants::chunkLoaded);
   bus.addListener(NativeWaterTicks::load);
   bus.addListener(NativeWaterTicks::tick);
+  bus.addListener(RiverCurrent::aquatic);
   bus.addListener(MarinePlants::serverTick);
   bus.addListener(RuleSync::login);
   bus.addListener(GuideItem::login);

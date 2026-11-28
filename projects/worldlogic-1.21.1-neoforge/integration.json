@@ -50,7 +50,7 @@
     {
       "id": "worldlogic:environment",
       "version": 1,
-      "revision": 16,
+      "revision": 17,
       "domains": [
         "environment"
       ],
@@ -63,7 +63,8 @@
         "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/GeoDensity.java",
         "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/SeasonRuntime.java",
         "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/HydrologyRuntime.java",
-        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/WaterClassification.java"
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/WaterClassification.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/RiverCurrent.java"
       ],
       "operations": [
         {
@@ -83,6 +84,12 @@
           "kind": "query",
           "entrypoint": "dev.minemods.worldlogic.api.WorldLogicApi",
           "semantics": "Read deterministic worldgen habitat without chunk loads."
+        },
+        {
+          "id": "river_current",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogic.api.WorldLogicApi",
+          "semantics": "Read same prescribed local river velocity in m/s used by authoritative Core advection; no chunk loads."
         }
       ]
     },
@@ -292,6 +299,35 @@
           "semantics": "Read active tree descent grip."
         }
       ]
+    },
+    {
+      "id": "worldlogic:excavation",
+      "version": 1,
+      "revision": 0,
+      "domains": [
+        "excavation"
+      ],
+      "entrypoints": [
+        "dev.minemods.worldlogic.api.WorldLogicExcavation"
+      ],
+      "documentation": "projects/worldlogic-1.21.1-neoforge/API.md",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/WorldLogicExcavation.java"
+      ],
+      "operations": [
+        {
+          "id": "inspect",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogic.api.WorldLogicExcavation",
+          "semantics": "Read actual loaded rock, ore or soil block material constituents and tool eligibility."
+        },
+        {
+          "id": "strike",
+          "kind": "query",
+          "entrypoint": "dev.minemods.worldlogic.api.WorldLogicExcavation",
+          "semantics": "Compute incident impact energy and contact energy per area using existing PhysicalMaterials without mutating block or item."
+        }
+      ]
     }
   ],
   "consumes": [],
@@ -499,6 +535,29 @@
       "consumes": [],
       "integration_review": "Independent seeded real mineral families after original eight ore and pocket placements; Core material API and normal registries are authoritative. No production chains. Existing terrain and fluids untouched.",
       "no_public_surface_reason": "Worldgen internal placement; physical data exposed by existing material API and registry."
+    },
+    {
+      "id": "directed_river_advection",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/RiverCurrent.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/EnvironmentPhysics.java"
+      ],
+      "provides": [
+        "worldlogic:environment"
+      ],
+      "consumes": [],
+      "integration_review": "Aqua Fish extends Cod; native WaterAnimal advection applies without linkage. Habitat choice and swimming behavior belong to Aqua."
+    },
+    {
+      "id": "excavation_foundations",
+      "source_paths": [
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/WorldLogicExcavation.java"
+      ],
+      "provides": [
+        "worldlogic:excavation"
+      ],
+      "consumes": [],
+      "integration_review": "Uses authoritative PhysicalMaterials and existing block/tool registries; upcoming excavation addon owns actual progressive geometry, strike lifecycle, block mutation, drops and permissions."
     }
   ],
   "tests": [
@@ -570,6 +629,22 @@
       "id": "worldlogic.tree_descent.contract",
       "capabilities": [
         "worldlogic:tree_descent"
+      ],
+      "ref": "tools/qa/scenarios/worldlogic-neoforge.json",
+      "status": "implemented"
+    },
+    {
+      "id": "worldlogic.river_current.contract",
+      "capabilities": [
+        "worldlogic:environment"
+      ],
+      "ref": "tools/qa/scenarios/worldlogic-neoforge.json",
+      "status": "implemented"
+    },
+    {
+      "id": "worldlogic.excavation.contract",
+      "capabilities": [
+        "worldlogic:excavation"
       ],
       "ref": "tools/qa/scenarios/worldlogic-neoforge.json",
       "status": "implemented"

@@ -11,6 +11,7 @@ public final class ReleaseChecks {
  public static void run(){
   PhysicalMaterialChecks.verify();
   TreeDescent.verify();
+  RiverCurrent.verify();
   check(Rules.keys().size()>=115,"rule count");
   check(EnvironmentPhysics.crampedFactor(2,true)<EnvironmentPhysics.crampedFactor(2,false),"cramped mining geometry");
   check(EnvironmentPhysics.swingFactor(2)<EnvironmentPhysics.swingFactor(0),"weapon clearance");
@@ -61,6 +62,7 @@ public final class ReleaseChecks {
  }
  public static void verifyWorld(net.minecraft.server.level.ServerLevel l){
   PhysicalMaterialChecks.verifyLoaded(l);
+  ExcavationChecks.verify(l);
   HostileSpawnPolicy.verify(l);
   ExertionModifiers.verify(net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(l));
   CoreCreativeTab.verify(l);
