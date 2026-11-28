@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "worldlogic:arctic_wetland",
+    "worldlogic:boreal_peatland",
+    "worldlogic:mangrove_coast",
+    "worldlogic:temperate_marsh",
+    "worldlogic:tropical_floodplain"
+  ]
+}

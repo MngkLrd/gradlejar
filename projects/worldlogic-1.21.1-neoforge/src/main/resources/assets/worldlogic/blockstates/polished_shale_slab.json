@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "worldlogic:block/polished_shale_slab"
+    },
+    "type=top": {
+      "model": "worldlogic:block/polished_shale_slab_top"
+    },
+    "type=double": {
+      "model": "worldlogic:block/polished_shale"
+    }
+  }
+}

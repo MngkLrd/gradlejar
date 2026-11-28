@@ -1,0 +1,205 @@
+{
+  "schema": 1,
+  "id": "weather",
+  "order": 15,
+  "requires": "worldlogic",
+  "title": {
+    "ru": "Погода и климат",
+    "en": "Weather and climate"
+  },
+  "source": "WorldLogic RC34",
+  "pages": [
+    {
+      "id": "weather",
+      "title": {
+        "ru": "Погода и атмосфера",
+        "en": "Weather and atmosphere"
+      },
+      "models": [
+        "minecraft:spyglass",
+        "minecraft:lightning_rod",
+        "minecraft:snow_block"
+      ],
+      "body": {
+        "ru": [
+          "Погода зависит от местного климата, давления и переноса воздушных масс. В разных областях могут идти разные осадки: дождь, снег, ливень, метель, гроза, туман, муссон, пыльная буря или ясная погода.",
+          "Под открытым небом ветер и осадки сильнее влияют на ощущаемую среду. Укрытие уменьшает воздействие. Для температуры тела нужен Temperature.",
+          "Сезоны реализованы как климатическая модель; гроза не гарантирует новые физические молнии."
+        ],
+        "en": [
+          "Local weather depends on climate, pressure and moving air fields. Regions may have clear weather, rain, snow, downpour, blizzard, thunderstorm, fog, monsoon or dust storm.",
+          "Exposure increases the effects of wind and precipitation; shelter helps. Temperature handles body heat.",
+          "Seasons and full atmospheric dynamics are not complete; storms do not guarantee custom physical lightning."
+        ]
+      }
+    },
+    {
+      "id": "clear",
+      "title": {
+        "ru": "Ясная погода и солнце",
+        "en": "Clear weather and sun"
+      },
+      "models": [
+        "minecraft:sunflower"
+      ],
+      "body": {
+        "ru": [
+          "На открытом месте прямое солнце повышает тепловую нагрузку. В тени она уменьшается."
+        ],
+        "en": [
+          "Direct sunlight increases heat exposure; shade reduces it."
+        ]
+      }
+    },
+    {
+      "id": "rain",
+      "title": {
+        "ru": "Дождь и ливень",
+        "en": "Rain and downpour"
+      },
+      "models": [
+        "minecraft:water_bucket"
+      ],
+      "body": {
+        "ru": [
+          "Осадки пополняют почвенную влагу, смачивают тело и создают условия для дождесборника."
+        ],
+        "en": [
+          "Precipitation replenishes soil water, wets exposed bodies and supplies rain collectors."
+        ]
+      }
+    },
+    {
+      "id": "snow",
+      "title": {
+        "ru": "Снег и метель",
+        "en": "Snow and blizzard"
+      },
+      "models": [
+        "minecraft:snow_block"
+      ],
+      "body": {
+        "ru": [
+          "Снег накапливается в модели гидрологии и тает при потеплении. Холод и ветер усиливают охлаждение."
+        ],
+        "en": [
+          "Snow accumulates in hydrology and melts as conditions warm. Cold and wind increase cooling."
+        ]
+      }
+    },
+    {
+      "id": "fog",
+      "title": {
+        "ru": "Туман",
+        "en": "Fog"
+      },
+      "models": [
+        "minecraft:glass"
+      ],
+      "body": {
+        "ru": [
+          "Локальный тип погоды, ограничивающий видимость; проверяй маршрут и укрытие."
+        ],
+        "en": [
+          "Local weather type affecting visibility; check your route and shelter."
+        ]
+      }
+    },
+    {
+      "id": "dust",
+      "title": {
+        "ru": "Пыльная буря",
+        "en": "Dust storm"
+      },
+      "models": [
+        "minecraft:sand"
+      ],
+      "body": {
+        "ru": [
+          "Сухая местная погода с пылью. Ядро учитывает природную пыль отдельно от загрязнения горением."
+        ],
+        "en": [
+          "Dry local weather with dust; Core distinguishes natural dust from combustion pollution."
+        ]
+      }
+    },
+    {
+      "id": "monsoon",
+      "title": {
+        "ru": "Муссон",
+        "en": "Monsoon"
+      },
+      "models": [
+        "minecraft:water_bucket"
+      ],
+      "body": {
+        "ru": [
+          "Местный режим интенсивных осадков. Открытая местность подвержена намоканию."
+        ],
+        "en": [
+          "Local intense precipitation regime; exposed players become wet."
+        ]
+      }
+    },
+    {
+      "id": "thunder",
+      "title": {
+        "ru": "Гроза",
+        "en": "Thunderstorm"
+      },
+      "models": [
+        "minecraft:lightning_rod"
+      ],
+      "body": {
+        "ru": [
+          "Грозовой режим локальной погоды; полноценная генерация новых молний не гарантируется."
+        ],
+        "en": [
+          "Local thunderstorm weather; additional physical lightning generation is not guaranteed."
+        ]
+      }
+    },
+    {
+      "id": "climate",
+      "title": {
+        "ru": "Широта, высота, ветер",
+        "en": "Latitude, altitude and wind"
+      },
+      "models": [
+        "minecraft:compass"
+      ],
+      "body": {
+        "ru": [
+          "Климат зависит от широтных поясов, высоты, океанической влаги и горных барьеров. Местная погода изменяется поверх этой основы. Времена года рассчитываются календарём ядра."
+        ],
+        "en": [
+          "Climate depends on latitude bands, altitude, ocean moisture and mountain barriers. Local weather varies over this baseline. Core owns the seasonal calendar."
+        ]
+      }
+    },
+    {
+      "id": "seasons",
+      "title": {
+        "ru": "Времена года и календарь",
+        "en": "Seasons and calendar"
+      },
+      "models": [
+        "minecraft:snow_block",
+        "minecraft:sunflower",
+        "minecraft:clock"
+      ],
+      "body": {
+        "ru": [
+          "Весна, лето, осень, зима: по умолчанию 24 игровых дня на сезон. Время года зависит от местного климатического пояса. Сезонная температура меняется плавно, сильнее вдали от экватора, слабее в океане.",
+          "Зимой при холодной погоде и осадках на открытой поверхности накапливаются слои снега; при потеплении они постепенно тают. Не все холодные регионы оттаивают, а в тёплых областях снег не гарантирован.",
+          "Открой вкладку Сезоны в аналитике. Оператор: /worldlogic season length 24 меняет длительность сезона; /worldlogic season set winter устанавливает местную зиму. Календарь учитывает прошедшие тики, не перемотку /time или сон."
+        ],
+        "en": [
+          "Spring, summer, autumn and winter default to 24 elapsed game days each. Local seasonal climate varies continuously; amplitude is stronger away from equatorial bands, weaker at sea.",
+          "Cold precipitation accumulates exposed snow layers; warm conditions gradually melt them. Not all cold areas thaw, and warm areas need not receive snow.",
+          "Open Seasons in Analytics. Operators: /worldlogic season length 24 changes duration; /worldlogic season set winter sets local winter. The clock follows elapsed ticks, not /time or sleep skips."
+        ]
+      }
+    }
+  ]
+}

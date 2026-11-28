@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge RC22 production core/API regression",
+  "name": "World Logic NeoForge 1.1.0 development / RC52 rocks and farmland",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -17,6 +17,12 @@
       "name": "Core calculations and furnace mixin",
       "command": "worldlogic selftest",
       "expect": "WORLDLOGIC_CORE_TESTS_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Guide chapter resources, actual item IDs, absent addon filtering and external chapter schema",
+      "command": "worldlogic qa guide",
+      "expect": "WORLDLOGIC_GUIDE_PASSED",
       "assertion": true
     },
     {
@@ -129,6 +135,812 @@
     {
       "command": "weather clear 2400",
       "expect": "clear"
+    },
+    {
+      "name": "Extended preset registry, geological provinces, ore bodies and synthetic chunk carving",
+      "command": "worldlogic qa geology",
+      "expect": "WORLDLOGIC_GEOLOGY_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "All eight mineral types replace actual rock while preserving cave air and bedrock",
+      "command": "worldlogic qa ore_bodies",
+      "expect": "WORLDLOGIC_ORE_BODIES_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Unified custom biome registry and exact RC22 base-height regression seed a",
+      "command": "worldlogic qa unified_a",
+      "expect": "WORLDLOGIC_UNIFIED_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Unified custom biome registry and exact RC22 base-height regression seed b",
+      "command": "worldlogic qa unified_b",
+      "expect": "WORLDLOGIC_UNIFIED_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Regional ore body size limits, frequent shallow pockets and ordinary chunk abundance",
+      "command": "worldlogic qa ore_balance",
+      "expect": "WORLDLOGIC_ORE_BALANCE_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Karst shaft, connected gallery and flooded chamber across synthetic chunks",
+      "command": "worldlogic qa karst",
+      "expect": "WORLDLOGIC_KARST_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Worker-safe deterministic habitat API, soil controls and ten refined climate biome fixtures",
+      "command": "worldlogic qa worldgen_ecology",
+      "expect": "WORLDLOGIC_WORLDGEN_ECOLOGY_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Local weather nine types, spatial and temporal variation, exposure, temperature and client packet contract",
+      "command": "worldlogic qa local_weather",
+      "expect": "WORLDLOGIC_LOCAL_WEATHER_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Season clock persistence, climate amplitudes, opposite phase, rainfall phase and actual snow-layer changes",
+      "command": "worldlogic qa seasons",
+      "expect": "WORLDLOGIC_SEASONS_PASSED",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks",
+      "command": "worldlogic qa hydrology",
+      "expect": "WORLDLOGIC_HYDROLOGY_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Detailed water origins, game drinkability, legacy mapping and actual covered/exposed water fixtures",
+      "command": "worldlogic qa water_profile",
+      "expect": "WORLDLOGIC_WATER_PROFILE_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality",
+      "command": "worldlogic qa native_water",
+      "expect": "WORLDLOGIC_NATIVE_WATER_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Environment analytics combustion/dust separation, soil deposition, action counters and persistent bounded history",
+      "command": "worldlogic qa analytics",
+      "expect": "WORLDLOGIC_ANALYTICS_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Worldgen water prediction, vegetation water withdrawal and root retention, salt accounting, recovery and persistence",
+      "command": "worldlogic qa plant_ecology",
+      "expect": "WORLDLOGIC_PLANT_ECOLOGY_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Marine sediment, polar icebergs and actual native seawater spawn predicates",
+      "command": "worldlogic qa marine",
+      "expect": "WORLDLOGIC_MARINE_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Initialize actual seeded underground fixture",
+      "command": "worldlogic qa underground_start",
+      "expect": "WORLDLOGIC_UNDERGROUND_STARTED",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Generate underground fixture row 1/16",
+      "command": "worldlogic qa underground_columns 0",
+      "expect": "WORLDLOGIC_UNDERGROUND_COLUMNS=16$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Generate underground fixture row 2/16",
+      "command": "worldlogic qa underground_columns 1",
+      "expect": "WORLDLOGIC_UNDERGROUND_COLUMNS=32$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Generate underground fixture row 3/16",
+      "command": "worldlogic qa underground_columns 2",
+      "expect": "WORLDLOGIC_UNDERGROUND_COLUMNS=48$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Generate underground fixture row 4/16",
+      "command": "worldlogic qa underground_columns 3",
+      "expect": "WORLDLOGIC_UNDERGROUND_COLUMNS=64$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Generate underground fixture row 5/16",
+      "command": "worldlogic qa underground_columns 4",
+      "expect": "WORLDLOGIC_UNDERGROUND_COLUMNS=80$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Generate underground fixture row 6/16",
+      "command": "worldlogic qa underground_columns 5",
+      "expect": "WORLDLOGIC_UNDERGROUND_COLUMNS=96$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Generate underground fixture row 7/16",
+      "command": "worldlogic qa underground_columns 6",
+      "expect": "WORLDLOGIC_UNDERGROUND_COLUMNS=112$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Generate underground fixture row 8/16",
+      "command": "worldlogic qa underground_columns 7",
+      "expect": "WORLDLOGIC_UNDERGROUND_COLUMNS=128$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Generate underground fixture row 9/16",
+      "command": "worldlogic qa underground_columns 8",
+      "expect": "WORLDLOGIC_UNDERGROUND_COLUMNS=144$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Generate underground fixture row 10/16",
+      "command": "worldlogic qa underground_columns 9",
+      "expect": "WORLDLOGIC_UNDERGROUND_COLUMNS=160$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Generate underground fixture row 11/16",
+      "command": "worldlogic qa underground_columns 10",
+      "expect": "WORLDLOGIC_UNDERGROUND_COLUMNS=176$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Generate underground fixture row 12/16",
+      "command": "worldlogic qa underground_columns 11",
+      "expect": "WORLDLOGIC_UNDERGROUND_COLUMNS=192$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Generate underground fixture row 13/16",
+      "command": "worldlogic qa underground_columns 12",
+      "expect": "WORLDLOGIC_UNDERGROUND_COLUMNS=208$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Generate underground fixture row 14/16",
+      "command": "worldlogic qa underground_columns 13",
+      "expect": "WORLDLOGIC_UNDERGROUND_COLUMNS=224$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Generate underground fixture row 15/16",
+      "command": "worldlogic qa underground_columns 14",
+      "expect": "WORLDLOGIC_UNDERGROUND_COLUMNS=240$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Generate underground fixture row 16/16",
+      "command": "worldlogic qa underground_columns 15",
+      "expect": "WORLDLOGIC_UNDERGROUND_COLUMNS=256$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Actual seeded noise columns preserve cave air through geology and fluid conversion; underground structure biome tags",
+      "command": "worldlogic qa underground_regression",
+      "expect": "WORLDLOGIC_UNDERGROUND_REGRESSION_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Actual seeded structure start and invalid-biome control: mineshaft",
+      "command": "worldlogic qa structure_mineshaft",
+      "expect": "WORLDLOGIC_STRUCTURE_START_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Actual seeded structure start and invalid-biome control: trial_chambers",
+      "command": "worldlogic qa structure_trial_chambers",
+      "expect": "WORLDLOGIC_STRUCTURE_START_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Actual seeded structure start and invalid-biome control: ancient_city",
+      "command": "worldlogic qa structure_ancient_city",
+      "expect": "WORLDLOGIC_STRUCTURE_START_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 1 row 1/10",
+      "command": "worldlogic qa biome_survey_row 0 0 0",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=29$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 1 row 2/10",
+      "command": "worldlogic qa biome_survey_row 0 0 1",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=58$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 1 row 3/10",
+      "command": "worldlogic qa biome_survey_row 0 0 2",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=87$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 1 row 4/10",
+      "command": "worldlogic qa biome_survey_row 0 0 3",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=116$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 1 row 5/10",
+      "command": "worldlogic qa biome_survey_row 0 0 4",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=145$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 1 row 6/10",
+      "command": "worldlogic qa biome_survey_row 0 0 5",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=174$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 1 row 7/10",
+      "command": "worldlogic qa biome_survey_row 0 0 6",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=203$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 1 row 8/10",
+      "command": "worldlogic qa biome_survey_row 0 0 7",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=232$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 1 row 9/10",
+      "command": "worldlogic qa biome_survey_row 0 0 8",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=261$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 1",
+      "command": "worldlogic qa biome_survey_row 0 0 9",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=290$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 2 row 1/10",
+      "command": "worldlogic qa biome_survey_row 0 1 0",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=319$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 2 row 2/10",
+      "command": "worldlogic qa biome_survey_row 0 1 1",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=348$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 2 row 3/10",
+      "command": "worldlogic qa biome_survey_row 0 1 2",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=377$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 2 row 4/10",
+      "command": "worldlogic qa biome_survey_row 0 1 3",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=406$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 2 row 5/10",
+      "command": "worldlogic qa biome_survey_row 0 1 4",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=435$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 2 row 6/10",
+      "command": "worldlogic qa biome_survey_row 0 1 5",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=464$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 2 row 7/10",
+      "command": "worldlogic qa biome_survey_row 0 1 6",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=493$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 2 row 8/10",
+      "command": "worldlogic qa biome_survey_row 0 1 7",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=522$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 2 row 9/10",
+      "command": "worldlogic qa biome_survey_row 0 1 8",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=551$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 2",
+      "command": "worldlogic qa biome_survey_row 0 1 9",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=580$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 3 row 1/10",
+      "command": "worldlogic qa biome_survey_row 0 2 0",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=609$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 3 row 2/10",
+      "command": "worldlogic qa biome_survey_row 0 2 1",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=638$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 3 row 3/10",
+      "command": "worldlogic qa biome_survey_row 0 2 2",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=667$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 3 row 4/10",
+      "command": "worldlogic qa biome_survey_row 0 2 3",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=696$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 3 row 5/10",
+      "command": "worldlogic qa biome_survey_row 0 2 4",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=725$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 3 row 6/10",
+      "command": "worldlogic qa biome_survey_row 0 2 5",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=754$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 3 row 7/10",
+      "command": "worldlogic qa biome_survey_row 0 2 6",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=783$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 3 row 8/10",
+      "command": "worldlogic qa biome_survey_row 0 2 7",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=812$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 3 row 9/10",
+      "command": "worldlogic qa biome_survey_row 0 2 8",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=841$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 3",
+      "command": "worldlogic qa biome_survey_row 0 2 9",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=870$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 4 row 1/10",
+      "command": "worldlogic qa biome_survey_row 0 3 0",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=899$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 4 row 2/10",
+      "command": "worldlogic qa biome_survey_row 0 3 1",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=928$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 4 row 3/10",
+      "command": "worldlogic qa biome_survey_row 0 3 2",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=957$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 4 row 4/10",
+      "command": "worldlogic qa biome_survey_row 0 3 3",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=986$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 4 row 5/10",
+      "command": "worldlogic qa biome_survey_row 0 3 4",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1015$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 4 row 6/10",
+      "command": "worldlogic qa biome_survey_row 0 3 5",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1044$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 4 row 7/10",
+      "command": "worldlogic qa biome_survey_row 0 3 6",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1073$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 4 row 8/10",
+      "command": "worldlogic qa biome_survey_row 0 3 7",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1102$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 4 row 9/10",
+      "command": "worldlogic qa biome_survey_row 0 3 8",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1131$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 1 part 4",
+      "command": "worldlogic qa biome_survey_row 0 3 9",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1160$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 1 row 1/10",
+      "command": "worldlogic qa biome_survey_row 1 0 0",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1189$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 1 row 2/10",
+      "command": "worldlogic qa biome_survey_row 1 0 1",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1218$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 1 row 3/10",
+      "command": "worldlogic qa biome_survey_row 1 0 2",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1247$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 1 row 4/10",
+      "command": "worldlogic qa biome_survey_row 1 0 3",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1276$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 1 row 5/10",
+      "command": "worldlogic qa biome_survey_row 1 0 4",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1305$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 1 row 6/10",
+      "command": "worldlogic qa biome_survey_row 1 0 5",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1334$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 1 row 7/10",
+      "command": "worldlogic qa biome_survey_row 1 0 6",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1363$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 1 row 8/10",
+      "command": "worldlogic qa biome_survey_row 1 0 7",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1392$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 1 row 9/10",
+      "command": "worldlogic qa biome_survey_row 1 0 8",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1421$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 1",
+      "command": "worldlogic qa biome_survey_row 1 0 9",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1450$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 2 row 1/10",
+      "command": "worldlogic qa biome_survey_row 1 1 0",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1479$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 2 row 2/10",
+      "command": "worldlogic qa biome_survey_row 1 1 1",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1508$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 2 row 3/10",
+      "command": "worldlogic qa biome_survey_row 1 1 2",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1537$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 2 row 4/10",
+      "command": "worldlogic qa biome_survey_row 1 1 3",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1566$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 2 row 5/10",
+      "command": "worldlogic qa biome_survey_row 1 1 4",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1595$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 2 row 6/10",
+      "command": "worldlogic qa biome_survey_row 1 1 5",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1624$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 2 row 7/10",
+      "command": "worldlogic qa biome_survey_row 1 1 6",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1653$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 2 row 8/10",
+      "command": "worldlogic qa biome_survey_row 1 1 7",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1682$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 2 row 9/10",
+      "command": "worldlogic qa biome_survey_row 1 1 8",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1711$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 2",
+      "command": "worldlogic qa biome_survey_row 1 1 9",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1740$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 3 row 1/10",
+      "command": "worldlogic qa biome_survey_row 1 2 0",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1769$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 3 row 2/10",
+      "command": "worldlogic qa biome_survey_row 1 2 1",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1798$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 3 row 3/10",
+      "command": "worldlogic qa biome_survey_row 1 2 2",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1827$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 3 row 4/10",
+      "command": "worldlogic qa biome_survey_row 1 2 3",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1856$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 3 row 5/10",
+      "command": "worldlogic qa biome_survey_row 1 2 4",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1885$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 3 row 6/10",
+      "command": "worldlogic qa biome_survey_row 1 2 5",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1914$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 3 row 7/10",
+      "command": "worldlogic qa biome_survey_row 1 2 6",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1943$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 3 row 8/10",
+      "command": "worldlogic qa biome_survey_row 1 2 7",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=1972$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 3 row 9/10",
+      "command": "worldlogic qa biome_survey_row 1 2 8",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=2001$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 3",
+      "command": "worldlogic qa biome_survey_row 1 2 9",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=2030$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 4 row 1/10",
+      "command": "worldlogic qa biome_survey_row 1 3 0",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=2059$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 4 row 2/10",
+      "command": "worldlogic qa biome_survey_row 1 3 1",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=2088$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 4 row 3/10",
+      "command": "worldlogic qa biome_survey_row 1 3 2",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=2117$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 4 row 4/10",
+      "command": "worldlogic qa biome_survey_row 1 3 3",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=2146$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 4 row 5/10",
+      "command": "worldlogic qa biome_survey_row 1 3 4",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=2175$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 4 row 6/10",
+      "command": "worldlogic qa biome_survey_row 1 3 5",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=2204$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 4 row 7/10",
+      "command": "worldlogic qa biome_survey_row 1 3 6",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=2233$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 4 row 8/10",
+      "command": "worldlogic qa biome_survey_row 1 3 7",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=2262$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 4 row 9/10",
+      "command": "worldlogic qa biome_survey_row 1 3 8",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=2291$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "Seeded biome reachability survey 2 part 4",
+      "command": "worldlogic qa biome_survey_row 1 3 9",
+      "expect": "WORLDLOGIC_BIOME_SURVEY_POINTS=2320$",
+      "reject": "FAIL:",
+      "assertion": true
+    },
+    {
+      "name": "All 58 biomes reached in seeded generation survey",
+      "command": "worldlogic qa biome_coverage",
+      "expect": "WORLDLOGIC_BIOME_COVERAGE_PASSED",
+      "assertion": true
+    },
+    {
+      "name": "Actual seeded structure start and invalid-biome control: stronghold",
+      "command": "worldlogic qa structure_stronghold",
+      "expect": "WORLDLOGIC_STRUCTURE_START_PASSED",
+      "assertion": true
     }
   ],
   "coverage": [
@@ -276,6 +1088,764 @@
         {
           "backend": "server",
           "name": "Conservative air heat and vapor transport, interpolation and persistence"
+        }
+      ]
+    },
+    {
+      "id": "extended-geology",
+      "kind": "mechanic",
+      "subject": "Extended preset registry, geological provinces, ore bodies and synthetic chunk carving",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Extended preset registry, geological provinces, ore bodies and synthetic chunk carving"
+        }
+      ]
+    },
+    {
+      "id": "ore-bodies-eight-types",
+      "kind": "mechanic",
+      "subject": "All eight mineral types replace actual rock while preserving cave air and bedrock",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All eight mineral types replace actual rock while preserving cave air and bedrock"
+        }
+      ]
+    },
+    {
+      "id": "unified-terrain-a",
+      "kind": "mechanic",
+      "subject": "Unified custom biome registry and exact RC22 base-height regression seed a",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Unified custom biome registry and exact RC22 base-height regression seed a"
+        }
+      ]
+    },
+    {
+      "id": "unified-terrain-b",
+      "kind": "mechanic",
+      "subject": "Unified custom biome registry and exact RC22 base-height regression seed b",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Unified custom biome registry and exact RC22 base-height regression seed b"
+        }
+      ]
+    },
+    {
+      "id": "ore-distribution-balance",
+      "kind": "mechanic",
+      "subject": "Regional ore body size limits, frequent shallow pockets and ordinary chunk abundance",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Regional ore body size limits, frequent shallow pockets and ordinary chunk abundance"
+        }
+      ]
+    },
+    {
+      "id": "karst-shaft-lake",
+      "kind": "mechanic",
+      "subject": "Karst shaft, connected gallery and flooded chamber across synthetic chunks",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Karst shaft, connected gallery and flooded chamber across synthetic chunks"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-ecology-api",
+      "kind": "mechanic",
+      "subject": "Worker-safe deterministic habitat API, soil controls and ten refined climate biome fixtures",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Worker-safe deterministic habitat API, soil controls and ten refined climate biome fixtures"
+        }
+      ]
+    },
+    {
+      "id": "local-weather-runtime-model",
+      "kind": "mechanic",
+      "subject": "Local weather nine types, spatial and temporal variation, exposure, temperature and client packet contract",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Local weather nine types, spatial and temporal variation, exposure, temperature and client packet contract"
+        }
+      ]
+    },
+    {
+      "id": "hydrology-soil-cycle",
+      "kind": "mechanic",
+      "subject": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
+        }
+      ]
+    },
+    {
+      "id": "soil-humus",
+      "kind": "block",
+      "subject": "worldlogic:humus classification, item, tags and placement",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
+        }
+      ]
+    },
+    {
+      "id": "soil-loam",
+      "kind": "block",
+      "subject": "worldlogic:loam classification, item, tags and placement",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
+        }
+      ]
+    },
+    {
+      "id": "soil-peat",
+      "kind": "block",
+      "subject": "worldlogic:peat classification, item, tags and placement",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
+        }
+      ]
+    },
+    {
+      "id": "soil-alluvial_silt",
+      "kind": "block",
+      "subject": "worldlogic:alluvial_silt classification, item, tags and placement",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
+        }
+      ]
+    },
+    {
+      "id": "soil-frozen_soil",
+      "kind": "block",
+      "subject": "worldlogic:frozen_soil classification, item, tags and placement",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
+        }
+      ]
+    },
+    {
+      "id": "water-profile-classification",
+      "kind": "mechanic",
+      "subject": "Detailed water origins, game drinkability, legacy mapping and actual covered/exposed water fixtures",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Detailed water origins, game drinkability, legacy mapping and actual covered/exposed water fixtures"
+        }
+      ]
+    },
+    {
+      "id": "native-water-conversion",
+      "kind": "mechanic",
+      "subject": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
+        }
+      ]
+    },
+    {
+      "id": "native-water-sea_water",
+      "kind": "item",
+      "subject": "worldlogic:sea_water and bucket identity, source/flow and pickup",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
+        }
+      ]
+    },
+    {
+      "id": "native-water-river_water",
+      "kind": "item",
+      "subject": "worldlogic:river_water and bucket identity, source/flow and pickup",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
+        }
+      ]
+    },
+    {
+      "id": "native-water-lake_water",
+      "kind": "item",
+      "subject": "worldlogic:lake_water and bucket identity, source/flow and pickup",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
+        }
+      ]
+    },
+    {
+      "id": "native-water-spring_water",
+      "kind": "item",
+      "subject": "worldlogic:spring_water and bucket identity, source/flow and pickup",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
+        }
+      ]
+    },
+    {
+      "id": "native-water-groundwater",
+      "kind": "item",
+      "subject": "worldlogic:groundwater and bucket identity, source/flow and pickup",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
+        }
+      ]
+    },
+    {
+      "id": "native-water-wetland_water",
+      "kind": "item",
+      "subject": "worldlogic:wetland_water and bucket identity, source/flow and pickup",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
+        }
+      ]
+    },
+    {
+      "id": "native-water-pond_water",
+      "kind": "item",
+      "subject": "worldlogic:pond_water and bucket identity, source/flow and pickup",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
+        }
+      ]
+    },
+    {
+      "id": "native-water-brackish_water",
+      "kind": "item",
+      "subject": "worldlogic:brackish_water and bucket identity, source/flow and pickup",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
+        }
+      ]
+    },
+    {
+      "id": "environment-analytics",
+      "kind": "mechanic",
+      "subject": "Environment analytics combustion/dust separation, soil deposition, action counters and persistent bounded history",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Environment analytics combustion/dust separation, soil deposition, action counters and persistent bounded history"
+        }
+      ]
+    },
+    {
+      "id": "worldgen-water-prediction",
+      "kind": "mechanic",
+      "subject": "worldgen-water-prediction",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Worldgen water prediction, vegetation water withdrawal and root retention, salt accounting, recovery and persistence"
+        }
+      ]
+    },
+    {
+      "id": "plant-water-withdrawal",
+      "kind": "mechanic",
+      "subject": "plant-water-withdrawal",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Worldgen water prediction, vegetation water withdrawal and root retention, salt accounting, recovery and persistence"
+        }
+      ]
+    },
+    {
+      "id": "plant-root-retention",
+      "kind": "mechanic",
+      "subject": "plant-root-retention",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Worldgen water prediction, vegetation water withdrawal and root retention, salt accounting, recovery and persistence"
+        }
+      ]
+    },
+    {
+      "id": "soil-salinity",
+      "kind": "mechanic",
+      "subject": "soil-salinity",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Worldgen water prediction, vegetation water withdrawal and root retention, salt accounting, recovery and persistence"
+        }
+      ]
+    },
+    {
+      "id": "forest-recovery",
+      "kind": "mechanic",
+      "subject": "forest-recovery",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Worldgen water prediction, vegetation water withdrawal and root retention, salt accounting, recovery and persistence"
+        }
+      ]
+    },
+    {
+      "id": "underground-generation-regression",
+      "kind": "mechanic",
+      "subject": "Actual seeded noise columns preserve cave air through geology and fluid conversion; underground structure biome tags",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Actual seeded noise columns preserve cave air through geology and fluid conversion; underground structure biome tags"
+        }
+      ]
+    },
+    {
+      "id": "restored-mineshaft-eligibility",
+      "kind": "mechanic",
+      "subject": "restored-mineshaft-eligibility",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Actual seeded noise columns preserve cave air through geology and fluid conversion; underground structure biome tags"
+        }
+      ]
+    },
+    {
+      "id": "restored-trial-chamber-eligibility",
+      "kind": "mechanic",
+      "subject": "restored-trial-chamber-eligibility",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Actual seeded noise columns preserve cave air through geology and fluid conversion; underground structure biome tags"
+        }
+      ]
+    },
+    {
+      "id": "restored-ancient-city-eligibility",
+      "kind": "mechanic",
+      "subject": "restored-ancient-city-eligibility",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Actual seeded noise columns preserve cave air through geology and fluid conversion; underground structure biome tags"
+        }
+      ]
+    },
+    {
+      "id": "restored-geode-feature",
+      "kind": "mechanic",
+      "subject": "restored-geode-feature",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Actual seeded noise columns preserve cave air through geology and fluid conversion; underground structure biome tags"
+        }
+      ]
+    },
+    {
+      "id": "restored-monster-room-feature",
+      "kind": "mechanic",
+      "subject": "restored-monster-room-feature",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Actual seeded noise columns preserve cave air through geology and fluid conversion; underground structure biome tags"
+        }
+      ]
+    },
+    {
+      "id": "restored-deep-monster-room-feature",
+      "kind": "mechanic",
+      "subject": "restored-deep-monster-room-feature",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Actual seeded noise columns preserve cave air through geology and fluid conversion; underground structure biome tags"
+        }
+      ]
+    },
+    {
+      "id": "all-biomes-seeded-reachability",
+      "kind": "mechanic",
+      "subject": "Every active biome reached; retired registry IDs retained; real base-height and land/water classification regression",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Seeded biome reachability survey 1 part 1"
+        },
+        {
+          "backend": "server",
+          "name": "Seeded biome reachability survey 1 part 2"
+        },
+        {
+          "backend": "server",
+          "name": "Seeded biome reachability survey 1 part 3"
+        },
+        {
+          "backend": "server",
+          "name": "Seeded biome reachability survey 1 part 4"
+        },
+        {
+          "backend": "server",
+          "name": "Seeded biome reachability survey 2 part 1"
+        },
+        {
+          "backend": "server",
+          "name": "Seeded biome reachability survey 2 part 2"
+        },
+        {
+          "backend": "server",
+          "name": "Seeded biome reachability survey 2 part 3"
+        },
+        {
+          "backend": "server",
+          "name": "Seeded biome reachability survey 2 part 4"
+        },
+        {
+          "backend": "server",
+          "name": "All 58 biomes reached in seeded generation survey"
+        }
+      ]
+    },
+    {
+      "id": "seeded-start-mineshaft",
+      "kind": "mechanic",
+      "subject": "Seeded mineshaft placement, actual generated start pieces and negative biome control",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Actual seeded structure start and invalid-biome control: mineshaft"
+        }
+      ]
+    },
+    {
+      "id": "seeded-start-trial_chambers",
+      "kind": "mechanic",
+      "subject": "Seeded trial_chambers placement, actual generated start pieces and negative biome control",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Actual seeded structure start and invalid-biome control: trial_chambers"
+        }
+      ]
+    },
+    {
+      "id": "seeded-start-ancient_city",
+      "kind": "mechanic",
+      "subject": "Seeded ancient_city placement, actual generated start pieces and negative biome control",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Actual seeded structure start and invalid-biome control: ancient_city"
+        }
+      ]
+    },
+    {
+      "id": "seeded-start-stronghold",
+      "kind": "mechanic",
+      "subject": "Seeded stronghold placement, actual generated start pieces and negative biome control",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Actual seeded structure start and invalid-biome control: stronghold"
+        }
+      ]
+    },
+    {
+      "id": "marine-ecology",
+      "kind": "mechanic",
+      "subject": "Marine sediment, polar icebergs and actual native seawater spawn predicates",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Marine sediment, polar icebergs and actual native seawater spawn predicates"
+        }
+      ]
+    },
+    {
+      "id": "guide-data",
+      "kind": "mechanic",
+      "subject": "Guide chapter resources, actual item IDs, absent addon filtering and external chapter schema",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Guide chapter resources, actual item IDs, absent addon filtering and external chapter schema"
+        }
+      ]
+    },
+    {
+      "id": "rc33-headwater-runoff-width",
+      "kind": "mechanic",
+      "subject": "Small-stream threshold, dry and submerged negative controls, runoff-scaled width, unchanged established major-channel widths; real generated channels additionally checked by product natural-world QA",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
+        }
+      ]
+    },
+    {
+      "id": "rc33-tab-layout-policy",
+      "kind": "other",
+      "subject": "Shared tab gutter, deterministic ordering, page boundaries and small-screen layout arithmetic (not graphical interaction)",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Guide chapter resources, actual item IDs, absent addon filtering and external chapter schema"
+        }
+      ]
+    },
+    {
+      "id": "rc33-guide-encyclopedia-index",
+      "kind": "other",
+      "subject": "Bilingual index search, full result count, unknown search, individual medical articles and six icon references; GUI and synchronized recipe display require client evidence",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Guide chapter resources, actual item IDs, absent addon filtering and external chapter schema"
+        }
+      ]
+    },
+    {
+      "id": "rc33-guide-catalog-completeness",
+      "kind": "other",
+      "subject": "All ten bundled reference sections visible without addons, installed-only behavior preserved, biome atlas 58 active entries placed last",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Guide chapter resources, actual item IDs, absent addon filtering and external chapter schema"
+        }
+      ]
+    },
+    {
+      "id": "native-sea-aquatic-plants",
+      "kind": "block",
+      "subject": "Four native marine plant states, retained age/half, original freshwater state, kelp growth, seagrass bonemeal, native fluid identity; natural-world QA additionally asserts all sampled marine plants use native water",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Marine sediment, polar icebergs and actual native seawater spawn predicates"
+        }
+      ]
+    },
+    {
+      "id": "rc34-season-calendar",
+      "kind": "mechanic",
+      "subject": "Persistent configurable season clock, seamless length changes, periodic local climate, rain/snow and actual snow layer fixture; geographic runtime/client separately unverified",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Season clock persistence, climate amplitudes, opposite phase, rainfall phase and actual snow-layer changes"
+        }
+      ]
+    },
+    {
+      "id": "rc35-book-spread-layout",
+      "kind": "other",
+      "subject": "Book geometry, continuation-page offsets and small-window fallback; graphical blur and interaction require client evidence",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Guide chapter resources, actual item IDs, absent addon filtering and external chapter schema"
+        }
+      ]
+    },
+    {
+      "id": "rc37-native-water-motion",
+      "kind": "mechanic",
+      "subject": "Actual downward spread and server entity contact, depth and eyes for all eight native fluid types; dry negative control. Real player swimming client not verified.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
+        }
+      ]
+    },
+    {
+      "id": "rc37-patchouli-resources",
+      "kind": "other",
+      "subject": "Packaged bilingual Patchouli entries and lossless text migration; optional Patchouli runtime/client not tested by Core-only server",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Guide chapter resources, actual item IDs, absent addon filtering and external chapter schema"
+        }
+      ]
+    },
+    {
+      "id": "rc38-regional-drainage",
+      "kind": "mechanic",
+      "subject": "Deterministic ocean-rooted graph, converging paths, monotonic grade, negative inland and actual terrain veto, centerline geometry and bounded sampling; natural full chunk evidence separate",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
+        }
+      ]
+    },
+    {
+      "id": "rc39-river-current-palette",
+      "kind": "mechanic",
+      "subject": "Sixteen directional source states and actual fluid flow vectors, neutral default, palette roundtrip; graphical and save/reload evidence pending",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Eight native fluids, actual bucket pickup, NeoForge fluid capability, chunk replacement and soil water quality"
+        }
+      ]
+    },
+    {
+      "id": "rc39-valley-partitions",
+      "kind": "mechanic",
+      "subject": "Exact indexed candidate lookup against exhaustive scan and monotonic blended profile endpoints",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
+        }
+      ]
+    },
+    {
+      "id": "rc40-regional-biome-climate",
+      "kind": "mechanic",
+      "subject": "Bounded continuous regional climate and deterministic anchors; extreme dry/wet edge policy, exclusion of marine/underground/relief classes. Actual final-world adjacency verification deferred to RC45.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Unified custom biome registry and exact RC22 base-height regression seed a"
+        }
+      ]
+    },
+    {
+      "id": "rc41-landscape-blend",
+      "kind": "mechanic",
+      "subject": "Continuous foothill/ridge weighting, bounded local shaping and coastal, summit, water and open-cavity guards; real ProtoChunk column fixture; final-world and client proof deferred",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Unified custom biome registry and exact RC22 base-height regression seed a"
+        }
+      ]
+    },
+    {
+      "id": "rc44-multiregion-drainage",
+      "kind": "mechanic",
+      "subject": "Bounded macro-basin, routes cross former regional boundaries, shared downstream graph and unchanged natural river gates",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
+        }
+      ]
+    },
+    {
+      "id": "rc45-natural-basins",
+      "kind": "mechanic",
+      "subject": "Closed-rim validation at individual blocks, flat/open negative control, wetland profile and actual chunk lake fill; natural frequency and outlet connection pending",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
+        }
+      ]
+    },
+    {
+      "id": "rc46-relief-profiles",
+      "kind": "mechanic",
+      "subject": "Directional multiscale valley/plateau and ridge support, normalized profile weights, local height limits and real natural column tests; RC22 base-height gate retained",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Unified custom biome registry and exact RC22 base-height regression seed a"
+        }
+      ]
+    },
+    {
+      "id": "rc47-erosion-microrelief",
+      "kind": "mechanic",
+      "subject": "Slope, moisture and concavity response, continuous bounded microrelief and actual scree/silt placement with water negative control",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Unified custom biome registry and exact RC22 base-height regression seed a"
+        }
+      ]
+    },
+    {
+      "id": "rc48-coastal-reef",
+      "kind": "mechanic",
+      "subject": "Warm/cold, fringe/barrier/lagoon selection, bounded submerged framework and five actual living coral blocks in native seawater; natural frequency and client rendering separate",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Marine sediment, polar icebergs and actual native seawater spawn predicates"
+        }
+      ]
+    },
+    {
+      "id": "rc49-biome-coherence",
+      "kind": "mechanic",
+      "subject": "Bounded regional climate, extreme-preserving interpolation and compatible neighbourhood transition policy; independent natural final-quart adjacency and fragmentation audit",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Unified custom biome registry and exact RC22 base-height regression seed a"
+        }
+      ]
+    },
+    {
+      "id": "rc51-natural-ground",
+      "kind": "mechanic",
+      "subject": "Seven actual registered block/items, mineable tags, loot, falling sand/ash, three soil horizons and soil API, regional material controls, actual basalt/tuff uplift and volcanic crater geometry; natural frequency and client evidence separate",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
+        }
+      ]
+    },
+    {
+      "id": "rc52-rock-soil",
+      "kind": "mechanic",
+      "subject": "Seven real soil-specific hoe actions and blocked controls, moisture and crop survival, parent soil restoration and loot, 60 stone family blocks and 85 real stonecutting recipe matches/output counts, double slabs, hardness, full-depth geological strata and preservation controls",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
         }
       ]
     }
