@@ -64,7 +64,7 @@ public final class StructuresApi {
     case COAST->Optional.of(t<0?Family.COLD:Family.COAST);
     case WETLAND,RIVERBANK->Optional.of(t<0?Family.COLD:Family.WETLAND);
     case COLD_FOREST->Optional.of(Family.BOREAL);
-    default->Optional.of(t<0?Family.COLD:t<8&&h.zone()==dev.minemods.worldlogic.api.WorldLogicApi.Zone.TEMPERATE_FOREST?Family.BOREAL:
+    default->Optional.of(t<3?Family.COLD:t<8&&h.zone()==dev.minemods.worldlogic.api.WorldLogicApi.Zone.TEMPERATE_FOREST?Family.BOREAL:
      (t>=12&&h.dryness()>=0.58&&h.moisture()<=0.45)?Family.ARID:t>=20&&h.moisture()>=0.52?Family.TROPICAL:Family.TEMPERATE);
    };
   }

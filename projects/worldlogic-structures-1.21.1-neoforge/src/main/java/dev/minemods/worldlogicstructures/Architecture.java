@@ -17,7 +17,8 @@ final class Architecture {
   var key=ResourceLocation.fromNamespaceAndPath("worldlogic",id);
   return BuiltInRegistries.BLOCK.containsKey(key)?BuiltInRegistries.BLOCK.get(key):fallback;
  }
- static Palette palette(Family f){
+ static Palette palette(Family f){return palette(f,false);}
+ static Palette palette(Family f,boolean warm){
   Block slate=core("slate_bricks",Blocks.STONE_BRICKS),gneiss=core("gneiss_bricks",Blocks.STONE_BRICKS),lime=core("limestone_bricks",Blocks.STONE_BRICKS);
   return switch(f){
    case COLD->new Palette(slate,slate,Blocks.SPRUCE_PLANKS,Blocks.SPRUCE_LOG,Blocks.SPRUCE_PLANKS,Blocks.SPRUCE_STAIRS,Blocks.SPRUCE_SLAB,Blocks.COBBLESTONE);
@@ -25,9 +26,9 @@ final class Architecture {
    case TEMPERATE->new Palette(lime,lime,Blocks.WHITE_TERRACOTTA,Blocks.STRIPPED_OAK_LOG,Blocks.OAK_PLANKS,Blocks.BRICK_STAIRS,Blocks.BRICK_SLAB,Blocks.MOSSY_COBBLESTONE);
    case ARID->new Palette(Blocks.SANDSTONE,Blocks.CUT_SANDSTONE,Blocks.PACKED_MUD,Blocks.STRIPPED_ACACIA_LOG,Blocks.SMOOTH_SANDSTONE,Blocks.SANDSTONE_STAIRS,Blocks.SANDSTONE_SLAB,Blocks.SANDSTONE);
    case TROPICAL->new Palette(lime,lime,Blocks.JUNGLE_PLANKS,Blocks.STRIPPED_JUNGLE_LOG,Blocks.JUNGLE_PLANKS,Blocks.JUNGLE_STAIRS,Blocks.JUNGLE_SLAB,Blocks.MOSSY_COBBLESTONE);
-   case WETLAND->new Palette(lime,lime,Blocks.MANGROVE_PLANKS,Blocks.MANGROVE_LOG,Blocks.MANGROVE_PLANKS,Blocks.MANGROVE_STAIRS,Blocks.MANGROVE_SLAB,Blocks.MOSSY_COBBLESTONE);
+   case WETLAND->warm?new Palette(lime,lime,Blocks.MANGROVE_PLANKS,Blocks.MANGROVE_LOG,Blocks.MANGROVE_PLANKS,Blocks.MANGROVE_STAIRS,Blocks.MANGROVE_SLAB,Blocks.MOSSY_COBBLESTONE):new Palette(lime,lime,Blocks.SPRUCE_PLANKS,Blocks.OAK_LOG,Blocks.OAK_PLANKS,Blocks.SPRUCE_STAIRS,Blocks.SPRUCE_SLAB,Blocks.MOSSY_COBBLESTONE);
    case ALPINE->new Palette(gneiss,gneiss,gneiss,Blocks.STRIPPED_SPRUCE_LOG,Blocks.SPRUCE_PLANKS,Blocks.SPRUCE_STAIRS,Blocks.SPRUCE_SLAB,Blocks.COBBLESTONE);
-   case COAST->new Palette(lime,lime,Blocks.OAK_PLANKS,Blocks.STRIPPED_SPRUCE_LOG,Blocks.SPRUCE_PLANKS,Blocks.SPRUCE_STAIRS,Blocks.SPRUCE_SLAB,Blocks.MOSSY_COBBLESTONE);
+   case COAST->warm?new Palette(lime,lime,Blocks.JUNGLE_PLANKS,Blocks.STRIPPED_JUNGLE_LOG,Blocks.JUNGLE_PLANKS,Blocks.JUNGLE_STAIRS,Blocks.JUNGLE_SLAB,Blocks.MOSSY_COBBLESTONE):new Palette(lime,lime,Blocks.OAK_PLANKS,Blocks.STRIPPED_SPRUCE_LOG,Blocks.SPRUCE_PLANKS,Blocks.SPRUCE_STAIRS,Blocks.SPRUCE_SLAB,Blocks.MOSSY_COBBLESTONE);
   };
  }
  static BlockPos transform(int x,int y,int z,Rotation r){
@@ -52,8 +53,9 @@ final class Architecture {
   if(state.hasProperty(BlockStateProperties.AXIS))state=state.setValue(BlockStateProperties.AXIS,axis);
   a.state(x,y,z,state);
  }
- static Plan build(Design d,long seed){
-  Palette p=palette(d.family());Plan a=new Plan();
+ static Plan build(Design d,long seed){return build(d,seed,false);}
+ static Plan build(Design d,long seed,boolean warm){
+  Palette p=palette(d.family(),warm);Plan a=new Plan();
   int w=d.halfWidth(),l=d.halfDepth(),h=d.wallHeight();
   boolean left=(seed&1)==0;
   if(d.kind()==Kind.PLATFORM){
@@ -87,11 +89,14 @@ final class Architecture {
     boolean collapse=(left?x<0:x>0)&&z>0;
     int height=collapse?1:Math.max(1,h-(Math.abs(x+z)%3==0?1:0));
     if(x==0&&z==l)continue;
-    for(int y=1;y<=height;y++)a.block(x,y,z,y==1?p.wear():p.masonry());
+    for(int y=1;y<=height;y++){
+     Block material=y==1?p.wear():d.id().equals("barn_remains")?(corner(x,z,w,l)?p.frame():p.wall()):d.id().equals("courtyard_remains")?p.wall():p.masonry();
+     a.block(x,y,z,material);
+    }
    }
    int debris=left?-w+1:w-1;
+   for(int dz=l-2;dz<=l-1;dz++){a.block(debris,0,dz,p.foundation());a.footing(debris,0,dz);}
    a.block(debris,1,l-1,p.wear());a.block(debris,1,l-2,p.masonry());
-   a.block(-debris,1,-l+1,Blocks.CRAFTING_TABLE);
    approach(a,p,d);
    return a;
   }
@@ -152,12 +157,16 @@ final class Architecture {
   if(d.roof()==Roof.SHED){
    for(int x=-w-1;x<=w+1;x++)for(int z=-l-1;z<=l+1;z++){
     int y=h+1+(x+w+1)/2;
-    if(!(z==-l&&x==w))a.block(x,y,z,p.slab());
+    if(!(z==-l&&x==w)){
+     if((x+w+1)%2==1)stair(a,p,x,y,z,Direction.EAST);
+     else a.block(x,y,z,p.floor());
+    }
     if(Math.abs(z)==l&&Math.abs(x)<=w)for(int k=h+1;k<y;k++)a.block(x,k,z,p.wall());
     if(x==w&&Math.abs(z)<=l)for(int k=h+1;k<y;k++)a.block(x,k,z,p.wall());
    }
    return;
   }
+  for(int z=-l;z<=l;z++){beam(a,p,-w,h+1,z,Direction.Axis.Z);beam(a,p,w,h+1,z,Direction.Axis.Z);}
   for(int x=-w-1;x<=w+1;x++){
    int y=h+1+w+1-Math.abs(x);
    for(int z=-l-1;z<=l+1;z++){

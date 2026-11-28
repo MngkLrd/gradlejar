@@ -39,29 +39,33 @@ public final class RegionalStructure extends Structure {
   var designs=StructuresApi.CATALOGUE.designs(family);
   int start=c.random().nextInt(designs.size()),turn=c.random().nextInt(4);
   long seed=c.random().nextLong();
+  boolean warm=habitat.temperatureCelsius()>=20;
+  Map<Long,Column> columns=new HashMap<>();
   // One template and a bounded second choice; rotate to find a viable approach.
   for(int n=0;n<Math.min(2,designs.size());n++){
    Design d=designs.get((start+n)%designs.size());
    for(int j=0;j<4;j++){
     Rotation rotation=Rotation.values()[(turn+j)%4];
-    var floor=site(c,x,z,d,rotation);
+    var floor=site(c,x,z,d,rotation,columns);
     if(floor.isEmpty())continue;
     int fy=floor.getAsInt();
-    return Optional.of(new GenerationStub(new BlockPos(x,fy,z),b->b.addPiece(new ArchitecturePiece(d,x,fy,z,rotation,seed))));
+    return Optional.of(new GenerationStub(new BlockPos(x,fy,z),b->b.addPiece(new ArchitecturePiece(d,x,fy,z,rotation,seed,warm))));
    }
   }
   return Optional.empty();
  }
- static OptionalInt site(GenerationContext c,int x,int z,Design d,Rotation rotation){
+ private record Column(int bottom,int top){}
+ static OptionalInt site(GenerationContext c,int x,int z,Design d,Rotation rotation,Map<Long,Column> columns){
   int w=d.halfWidth(),l=d.halfDepth(),max=Integer.MIN_VALUE,min=Integer.MAX_VALUE;
   boolean shallow=false;
   // Check the whole building, eaves and access envelope; never flatten terrain.
-  int front=l+Math.max(2,d.raised()+1);
+  int front=l+d.raised()+2;
   for(int a=-w-1;a<=w+1;a++)for(int b=-l-1;b<=front;b++){
    if(b>l+1&&Math.abs(a)>1)continue;
    BlockPos offset=Architecture.transform(a,0,b,rotation);
    int wx=x+offset.getX(),wz=z+offset.getZ();
-   int bottom=height(c,wx,wz,Heightmap.Types.OCEAN_FLOOR_WG),top=height(c,wx,wz,Heightmap.Types.WORLD_SURFACE_WG);
+   var column=columns.computeIfAbsent((((long)wx)<<32)^(wz&0xffffffffL),k->new Column(height(c,wx,wz,Heightmap.Types.OCEAN_FLOOR_WG),height(c,wx,wz,Heightmap.Types.WORLD_SURFACE_WG)));
+   int bottom=column.bottom(),top=column.top();
    boolean access=b>=l+1&&Math.abs(a)<=1;
    int water=top-bottom;
    if(water>0){

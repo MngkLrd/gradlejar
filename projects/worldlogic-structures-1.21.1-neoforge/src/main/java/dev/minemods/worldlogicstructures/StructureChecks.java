@@ -34,8 +34,8 @@ final class StructureChecks {
    require(!api.designs(family).isEmpty(),"family "+family);
    require(level.registryAccess().registryOrThrow(Registries.STRUCTURE).containsKey(family.locateId()),"native registry "+family);
   }
-  for(var d:api.designs())for(long seed:new long[]{0L,1L}){
-   var p=Architecture.build(d,seed);var again=Architecture.build(d,seed);
+  for(var d:api.designs())for(boolean warm:new boolean[]{false,true})for(long seed:new long[]{0L,1L}){
+   var p=Architecture.build(d,seed,warm);var again=Architecture.build(d,seed,warm);
    require(!p.cells.isEmpty()&&!p.footings.isEmpty()&&p.cells.equals(again.cells)&&p.footings.equals(again.footings),d.id()+" deterministic");
    require(p.cells.values().stream().noneMatch(s->s.is(Blocks.CHEST)||s.is(Blocks.TRAPPED_CHEST)||s.is(Blocks.BARREL)),d.id()+" no containers");
    if(d.kind()==Kind.HOUSE||d.kind()==Kind.TOWER){
@@ -45,6 +45,10 @@ final class StructureChecks {
    if(d.kind()==Kind.TOWER)for(int y=1;y<=d.wallHeight();y++){
     require(p.cells.get(new BlockPos(0,y,-d.halfDepth()+1)).is(Blocks.LADDER),d.id()+" ladder");
     require(!p.cells.get(new BlockPos(0,y,-d.halfDepth())).isAir(),d.id()+" ladder backing");
+   }
+   for(var footing:p.footings)require(p.cells.containsKey(footing),d.id()+" footing root");
+   if(d.kind()==Kind.RUIN)for(var cell:p.cells.entrySet())if(cell.getKey().getY()>0){
+    var support=p.cells.get(cell.getKey().below());require(support!=null&&!support.isAir(),d.id()+" supported ruin");
    }
    for(Rotation rot:Rotation.values())for(var c:p.cells.keySet()){
     var q=Architecture.transform(c.getX(),c.getY(),c.getZ(),rot);

@@ -26,7 +26,11 @@ public final class StructuresMod {
   NeoForge.EVENT_BUS.addListener(this::commands);
  }
  private void commands(RegisterCommandsEvent event){
-  event.getDispatcher().register(Commands.literal("worldlogic_structures").requires(s->s.hasPermission(2))
+  var dispatcher=event.getDispatcher();
+  var search=Commands.literal("structure_find").executes(c->dispatcher.execute("locate structure #worldlogic_structures:abandoned",c.getSource()));
+  for(var family:StructuresApi.Family.values())search.then(Commands.literal(family.getSerializedName()).executes(c->dispatcher.execute("locate structure "+family.locateId(),c.getSource())));
+  dispatcher.register(Commands.literal("worldlogic").requires(s->s.hasPermission(2)).then(search));
+  dispatcher.register(Commands.literal("worldlogic_structures").requires(s->s.hasPermission(2))
    .then(Commands.literal("selftest").executes(c->{
     try{StructureChecks.run(c.getSource().getLevel());c.getSource().sendSuccess(()->Component.literal("STRUCTURES_CHECKS_PASSED designs=27 families=8"),false);return 1;}
     catch(RuntimeException e){c.getSource().sendFailure(Component.literal("STRUCTURES_CHECKS_FAILED "+e.getMessage()));return 0;}

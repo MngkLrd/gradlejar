@@ -19,24 +19,25 @@ final class ArchitecturePiece extends StructurePiece {
  private final int x,y,z;
  private final Rotation rotation;
  private final long seed;
- ArchitecturePiece(Design d,int x,int y,int z,Rotation rotation,long seed){
+ private final boolean warm;
+ ArchitecturePiece(Design d,int x,int y,int z,Rotation rotation,long seed,boolean warm){
   super(StructuresMod.ARCHITECTURE.get(),0,new BoundingBox(x-8,y-7,z-8,x+8,y+Architecture.maxHeight(d)+1,z+8));
-  this.designId=d.id();this.x=x;this.y=y;this.z=z;this.rotation=rotation;this.seed=seed;
+  this.designId=d.id();this.x=x;this.y=y;this.z=z;this.rotation=rotation;this.seed=seed;this.warm=warm;
  }
  ArchitecturePiece(CompoundTag tag){
   super(StructuresMod.ARCHITECTURE.get(),tag);
   designId=tag.getString("Design");x=tag.getInt("X");y=tag.getInt("Y");z=tag.getInt("Z");
-  rotation=Rotation.values()[Math.floorMod(tag.getInt("Rotation"),4)];seed=tag.getLong("Seed");
+  rotation=Rotation.values()[Math.floorMod(tag.getInt("Rotation"),4)];seed=tag.getLong("Seed");warm=tag.getBoolean("Warm");
  }
  @Override protected void addAdditionalSaveData(StructurePieceSerializationContext c,CompoundTag tag){
-  tag.putString("Design",designId);tag.putInt("X",x);tag.putInt("Y",y);tag.putInt("Z",z);tag.putInt("Rotation",rotation.ordinal());tag.putLong("Seed",seed);
+  tag.putString("Design",designId);tag.putInt("X",x);tag.putInt("Y",y);tag.putInt("Z",z);tag.putInt("Rotation",rotation.ordinal());tag.putLong("Seed",seed);tag.putBoolean("Warm",warm);
  }
  private BlockPos global(BlockPos local){return Architecture.transform(local.getX(),local.getY(),local.getZ(),rotation).offset(x,y,z);}
  @Override public void postProcess(WorldGenLevel level,StructureManager manager,ChunkGenerator generator,RandomSource random,BoundingBox clip,ChunkPos chunk,BlockPos pivot){
   var d=StructuresApi.CATALOGUE.designs().stream().filter(v->v.id().equals(designId)).findFirst().orElse(null);
   if(d==null)return;
-  var plan=Architecture.build(d,seed);
-  var palette=Architecture.palette(d.family());
+  var plan=Architecture.build(d,seed,warm);
+  var palette=Architecture.palette(d.family(),warm);
   for(var footing:plan.footings){
    BlockPos at=global(footing);
    for(int depth=1;depth<=7;depth++){
