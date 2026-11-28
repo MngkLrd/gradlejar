@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge 1.3.1 development / RC55 native UI hotfix",
+  "name": "World Logic NeoForge 1.3.2 development / RC55 natural spawn and exertion",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -2037,6 +2037,28 @@
         {
           "backend": "server",
           "name": "Exertion API, shared jump fatigue, bounds and stamina icons scale"
+        }
+      ]
+    },
+    {
+      "id": "rc55-daylight-spawn-policy",
+      "kind": "mechanic",
+      "subject": "Real spawn-placement event veto in Overworld daytime; night vanilla default, passive, command and spawner controls",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Live support and falling debris, material tags and saved data"
+        }
+      ]
+    },
+    {
+      "id": "rc55-exertion-attributes",
+      "kind": "mechanic",
+      "subject": "Actual attack/mining attributes, proportional fatigue, no mining-fatigue potion mutation and cleanup",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Live support and falling debris, material tags and saved data"
         }
       ]
     }

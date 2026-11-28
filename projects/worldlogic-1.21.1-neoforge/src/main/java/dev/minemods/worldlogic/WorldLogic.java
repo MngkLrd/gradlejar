@@ -23,6 +23,8 @@ public final class WorldLogic {
   modBus.addListener(MarineEcology::registerSpawns);
   var bus=NeoForge.EVENT_BUS;
   bus.addListener(AdminCommands::register);
+  bus.addListener(net.neoforged.bus.api.EventPriority.LOWEST,HostileSpawnPolicy::placement);
+  bus.addListener(net.neoforged.bus.api.EventPriority.LOWEST,HostileSpawnPolicy::position);
   bus.addListener(MarinePlants::chunkLoaded);
   bus.addListener(NativeWaterTicks::load);
   bus.addListener(NativeWaterTicks::tick);

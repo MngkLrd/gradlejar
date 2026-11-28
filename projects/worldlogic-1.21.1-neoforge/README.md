@@ -160,3 +160,6 @@ RC55 also registers a WorldLogic: Core creative tab backed by all enabled items 
 
 ## 1.3.1 / RC55 native interface hotfix
 Owner screenshots identified a regression: generic metrics replaced full native views. Core now prioritizes native screen factories, includes optional compatibility adapters for inspected Temperature and Trauma versions, preserves anatomy input and history, removes duplicate inventory entry points where shared navigation fits, and uses distinct semantic pixel icons plus gray inventory-style panels for Core-only analytics and fallback stats. No new texture assets or simulated client evidence. Narrow-window anatomy uses legacy panel/back control. Physical API revision 2 and network protocol 11 unchanged. Client screenshots and actual input verification still required.
+
+## 1.3.2 / RC55
+Natural Overworld monsters spawn only at night, including under dense canopy. Daytime underground natural monster spawning is also blocked by design; spawners, commands, other dimensions and existing mobs remain unchanged. Core exertion no longer applies mining fatigue: movement retains the existing shared penalty; attack and mining speed now use progressive transient attributes. No change to stamina calculation or other potion sources. New API revision 17; physical API revision 2, protocol 11.

@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public final class WorldLogicApi {
  public static final int API_VERSION=1;
  /** RC22 adds a regional weather preview; existing v1 signatures and live environment semantics unchanged. */
- public static final int API_REVISION=16;
+ public static final int API_REVISION=17;
  private WorldLogicApi(){}
  /** Thermal and moisture indices are modeled values, not biome selection temperature or relative humidity.
   * Wind is prevailing horizontal direction (not a measured wind speed). Latitude is absolute 0..90.
@@ -289,6 +289,14 @@ public final class WorldLogicApi {
   serverThread(level);
   if(dev.minemods.worldlogic.LocalWeatherRuntime.active(level)||!Rules.on("modeled_weather")||level!=level.getServer().overworld()||level.isOutsideBuildHeight(pos)||!level.hasChunkAt(pos))return Optional.empty();
   return dev.minemods.worldlogic.WeatherGridState.sample(level,pos);
+ }
+ /** Exertion-only factors; other physical and injury effects remain independently authoritative. */
+ public static dev.minemods.worldlogic.ExertionModifiers.Factors exertionFactors(ServerPlayer player){
+  serverThread(player.serverLevel());return dev.minemods.worldlogic.ExertionModifiers.current(player);
+ }
+ /** Additional Core veto only; true does NOT force vanilla or addon spawn checks to succeed. */
+ public static boolean permitsNaturalHostileSpawn(ServerLevel level,net.minecraft.world.entity.EntityType<?> type,net.minecraft.world.entity.MobSpawnType reason){
+  serverThread(level);return dev.minemods.worldlogic.HostileSpawnPolicy.permits(level,type,reason);
  }
  public static Fatigue fatigue(ServerPlayer player){
   serverThread(player.serverLevel());
