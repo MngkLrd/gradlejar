@@ -9,6 +9,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.common.NeoForge;
@@ -18,6 +20,7 @@ public final class ClientEvents {
         modBus.addListener(ClientEvents::registerScreens);
         modBus.addListener(ClientEvents::registerLayers);
         NeoForge.EVENT_BUS.addListener(ClientEvents::opening);
+        NeoForge.EVENT_BUS.addListener(ClientEvents::hideVanillaHealth);
         NeoForge.EVENT_BUS.addListener(ClientEvents::logout);
         NeoForge.EVENT_BUS.addListener(ClientClimbState::input);
         NeoForge.EVENT_BUS.addListener(ClientClimbState::tick);
@@ -29,6 +32,11 @@ public final class ClientEvents {
         e.registerAboveAll(ResourceLocation.fromNamespaceAndPath(TraumaCraft.MOD_ID,"thermal_screen_effects"),ThermalScreenEffects::render);
         e.registerAboveAll(ResourceLocation.fromNamespaceAndPath(TraumaCraft.MOD_ID,"injury_screen_effects"),TraumaticScreenEffects::render);
         e.registerAboveAll(ResourceLocation.fromNamespaceAndPath(TraumaCraft.MOD_ID,"trauma_hud"),TraumaHud::render);
+    }
+    private static void hideVanillaHealth(RenderGuiLayerEvent.Pre e){
+        var p=Minecraft.getInstance().player;
+        if(p!=null&&HudStatusLayout.replacesVanillaHealth(ClientBodyState.hasReceived(),p.isAlive(),p.isCreative(),p.isSpectator())
+                &&e.getName().equals(VanillaGuiLayers.PLAYER_HEALTH)) e.setCanceled(true);
     }
     private static void opening(ScreenEvent.Opening e){
         if(e.getNewScreen()!=null && e.getNewScreen().getClass()==InventoryScreen.class){

@@ -753,6 +753,34 @@
           "name": "TR-PUBLICAPI: immutable seven-region snapshot, external injury, invalid input and creative guards"
         }
       ]
+    },
+    {
+      "id": "tr-fall-overflow",
+      "kind": "mechanic",
+      "subject": "One or both destroyed legs; same-impact exhaustion, conservative spillover, repeated and extreme falls fatal",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-DAMAGE: fall damage, unaffected head, creative exclusion"
+        }
+      ]
+    },
+    {
+      "id": "tr-anatomy-health-owner",
+      "kind": "mechanic",
+      "subject": "Registered damage event suppresses independent nonlethal vanilla damage, backing HP maintained, vital destruction and void remain lethal, creative unchanged",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-OWNERSHIP: registered damage event and Trauma API remain active with Core legacy injuries disabled"
+        }
+      ]
     }
   ]
 }

@@ -983,5 +983,14 @@
     "combined": "NOT_RUN: Metabolism provider and integrated interface not in standalone QA dependencies",
     "client": "NOT_RUN",
     "remaining": "liquid remedies and wound irrigation remain outside this revision"
+  },
+  "version_0_7_1": {
+    "version": "0.7.1",
+    "version_mapping": "Next patch after unpublished 0.7.0-rc4 development candidate; numeric-only naming, no historical versions renamed.",
+    "scope": "Trauma owns anatomy; vanilla backing health maintained and player heart layer hidden once synchronized; healthy anatomy HUD visible; fall overflow 60% abdomen/40% chest, leftover transfers to trunk/head; physical limb overflow; lethal native/void handling; bleed no second HP drain",
+    "server": "traumaqa damage and ownership: one/both black legs, same-hit overflow, repeated/extreme falls, normal initial damage, creative, registered nonlethal damage, backing recovery, lethal impact/void",
+    "client": "NOT_RUN: actual heart layer visibility, healthy HUD layout, impact feedback; server component fixture is not client interaction",
+    "combined": "NOT_RUN: latest Core and other add-ons not in pinned standalone runtime",
+    "remaining": "Verify full pack death/respawn, vanilla effect interactions and armor/absorption with actual network player."
   }
 }

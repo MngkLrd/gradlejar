@@ -10,8 +10,9 @@ public final class HudStatusLayout {
         return (bleeding?BLEEDING:0)|(fracture?FRACTURE:0)
             |(concussionTicks>0?CONCUSSION:0)|(painkillerTicks>0?PAINKILLER:0);
     }
-    public static boolean visible(boolean anyInjury, int mask) {
-        return anyInjury || (mask&63)!=0;
+    /** Always show synchronized survival anatomy, including a healthy body. */
+    public static boolean replacesVanillaHealth(boolean received,boolean alive,boolean creative,boolean spectator){
+        return received&&alive&&!creative&&!spectator;
     }
     public static int withThermal(int mask,dev.minemods.traumacraft.integration.ThermalCondition condition){
         return (mask&15)|(condition.cold()?COLD:condition.hot()?HEAT:0);

@@ -66,24 +66,26 @@ public final class TraumaEvents {
     public static void onDamage(LivingDamageEvent.Pre e) {
         if(INTERNAL.get() || !(e.getEntity() instanceof ServerPlayer p) || !WorldLogicBridge.active(p)) return;
         float amount=e.getNewDamage();
-        if(amount<=0) return;
+        if(!(amount>0)||!Float.isFinite(amount)) return;
         ClimbManager.cancel(p);
         TreatmentManager.cancel(p);
         if(!WorldLogicBridge.injuryEnabled(p)) return;
         BodyState b=BodyStates.get(p);
         applyDamage(p,b,e.getSource(),amount);
-        // Keep vanilla hearts authoritative: only a destroyed vital zone may force lethal damage.
-        if(b.vitalDestroyed()) e.setNewDamage(Math.max(amount,p.getHealth()+p.getAbsorptionAmount()+1));
+        // Anatomical damage is the only normal survival damage. Preserve engine-level kill/void.
+        if(!VitalityBridge.engineFatalSource(e.getSource())) e.setNewDamage(b.vitalDestroyed()?Math.max(amount,p.getHealth()+p.getAbsorptionAmount()+1):0f);
         ModNetwork.sync(p);
     }
     public static void applyDamage(ServerPlayer p,BodyState b,DamageSource source,float amount) {
         if(!WorldLogicBridge.active(p) || !(amount>0) || !Float.isFinite(amount)) return;
         if(source.is(DamageTypeTags.IS_FALL)) {
-            float points=amount*4f;
+            float points=Math.min(amount,440f)*4f;
+            float overflow=0,threshold=17f*MetabolismBridge.read(p).fracture();
             for(BodyPart leg:new BodyPart[]{BodyPart.LEFT_LEG,BodyPart.RIGHT_LEG}){
-                b.wound(leg,points,WoundKind.CONTUSION);
-                if(points>=17f*MetabolismBridge.read(p).fracture()) b.setFractured(leg,true);
+                overflow+=woundOverflow(b,leg,points,WoundKind.CONTUSION);
+                if(points>=threshold) b.setFractured(leg,true);
             }
+            transferImpact(b,overflow,WoundKind.CONTUSION);
             return;
         }
         if(source.is(DamageTypeTags.IS_EXPLOSION)) {
@@ -100,7 +102,7 @@ public final class TraumaEvents {
         boolean projectile=source.is(DamageTypeTags.IS_PROJECTILE);
         boolean physical=!fire && (source.getEntity()!=null || projectile);
         BodyPart part=physical?HitLocation.locate(p,source):BodyPart.CHEST;
-        float points=amount*(projectile?4f:3f);
+        float points=Math.min(amount,440f)*(projectile?4f:3f);
         // LivingDamageEvent.Pre already reflects armor/resistance. Do not apply armor again.
         WoundKind wound=null;
         if(fire)wound=WoundKind.BURN;
@@ -110,7 +112,10 @@ public final class TraumaEvents {
             wound=tool instanceof net.minecraft.world.item.SwordItem?WoundKind.CUT:
                 tool instanceof net.minecraft.world.item.AxeItem?WoundKind.LACERATION:WoundKind.CONTUSION;
         }
-        if(wound!=null)b.wound(part,points,wound);else b.damage(part,points);
+        if(wound!=null){
+            float overflow=woundOverflow(b,part,points,wound);
+            if(physical&&part!=BodyPart.HEAD&&part!=BodyPart.CHEST)transferImpact(b,overflow,WoundKind.CONTUSION);
+        }else b.damage(part,points);
         if(physical && part==BodyPart.HEAD && points>=12 && p.getRandom().nextFloat()<.45f) b.addConcussion(600);
         if(physical && points>=12) {
             float roll=p.getRandom().nextFloat();
@@ -119,6 +124,23 @@ public final class TraumaEvents {
             else if(roll<(open?.80f:.15f))b.setBleeding(part,1);
         }
     }
+    /** Spend local HP first, then pass the unabsorbed mechanical impact to the trunk. */
+    private static float woundOverflow(BodyState b,BodyPart part,float points,WoundKind kind){
+        if(!Float.isFinite(points)||points<=0)return 0;
+        float capacity=b.health(part);
+        b.wound(part,points,kind);
+        return Math.max(0,points-capacity);
+    }
+    private static void transferImpact(BodyState b,float overflow,WoundKind kind){
+        if(!(overflow>0))return;
+        // Abdomen and chest take 60/40 of the first transmitted impact.
+        // Any unabsorbed part continues through the torso; exhausted limbs cannot swallow damage.
+        float remaining=woundOverflow(b,BodyPart.STOMACH,overflow*.6f,kind)
+                       +woundOverflow(b,BodyPart.CHEST,overflow*.4f,kind);
+        remaining=woundOverflow(b,BodyPart.STOMACH,remaining,kind);
+        remaining=woundOverflow(b,BodyPart.CHEST,remaining,kind);
+        woundOverflow(b,BodyPart.HEAD,remaining,kind);
+    }
     public static void onPlayerTick(EntityTickEvent.Post e) {
         if(!(e.getEntity() instanceof ServerPlayer p)) return;
         FunctionEvents.update(p);
@@ -126,6 +148,7 @@ public final class TraumaEvents {
         if(!WorldLogicBridge.active(p)){TreatmentManager.tick(p);if(p.tickCount%40==0)ModNetwork.syncGait(p);return;}
         BodyState b=BodyStates.get(p);
         if(b.vitalDestroyed()||b.fatalBloodLoss()){fatalCollapse(p);return;}
+        VitalityBridge.maintainBackingHealth(p);
         TreatmentManager.tick(p);
         if(p.tickCount%20!=0) return;
         b.tickMedicalEffects();
@@ -144,9 +167,8 @@ public final class TraumaEvents {
         }
         MetabolismBridge.record(p,Math.max(0,totalHp(b)-before));
         if(p.tickCount%40==0 && b.hasBleeding()) {
-            float blood=b.bleedStep();
+            b.bleedStep();
             if(b.vitalDestroyed()||b.fatalBloodLoss()){fatalCollapse(p);return;}
-            if(blood>0 && p.getHealth()>1f) p.setHealth(Math.max(1f,p.getHealth()-blood*.20f));
         }
         if(BodyStates.flush(p) || p.tickCount%40==0) ModNetwork.sync(p);
     }

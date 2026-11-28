@@ -8,8 +8,8 @@ public final class HudStatusLayoutCheck {
         for(int mask=0;mask<16;mask++){
             int actual=HudStatusLayout.mask((mask&1)!=0,(mask&2)!=0,(mask&4)!=0?1:0,(mask&8)!=0?1:0);
             require(actual==mask,"mask "+mask);
-            require(HudStatusLayout.visible(false,actual)==(mask!=0),"healthy visibility "+mask);
-            require(HudStatusLayout.visible(true,actual),"injury visibility "+mask);
+            require(HudStatusLayout.replacesVanillaHealth(true,true,false,false),"healthy and injured survival visibility "+mask);
+            require(!HudStatusLayout.replacesVanillaHealth(false,true,false,false)&&!HudStatusLayout.replacesVanillaHealth(true,false,false,false)&&!HudStatusLayout.replacesVanillaHealth(true,true,true,false)&&!HudStatusLayout.replacesVanillaHealth(true,true,false,true),"fallback, death, creative and spectator");
             int next=0;
             for(int i=0;i<4;i++){
                 int row=HudStatusLayout.row(actual,i);
@@ -55,7 +55,7 @@ public final class HudStatusLayoutCheck {
                 int mask=HudStatusLayout.withThermal(base,condition);
                 require((mask&15)==base,"medical status preservation");
                 require(Integer.bitCount(mask)==Integer.bitCount(base)+(condition.stressed()?1:0),"one actual thermal glyph");
-                require(HudStatusLayout.visible(false,mask)==(mask!=0),"thermal HUD visibility");
+                require(HudStatusLayout.replacesVanillaHealth(true,true,false,false),"thermal HUD visibility");
                 int cols=HudStatusLayout.hudColumns(mask),rows=(Integer.bitCount(mask)+cols-1)/cols;
                 if(rows>0)require(HudStatusLayout.ICON_SIZE+(rows-1)*HudStatusLayout.STEP<=AnatomyLayout.HEIGHT,"thermal glyph bounds");
                 for(int w:new int[]{320,330,400,480,640,960}){
