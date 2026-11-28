@@ -56,6 +56,12 @@ final class TreeQA {
             }
             c.getSource().sendSuccess(()->Component.literal("TreeChopper inclined bucking PASS"),false);return 1;
           })))))
+          .then(Commands.literal("qa_support").then(Commands.argument("pos",BlockPosArgument.blockPos()).executes(c->{
+            ServerLevel l=c.getSource().getLevel();BlockPos p=BlockPosArgument.getLoadedBlockPos(c,"pos");
+            var list=l.getEntitiesOfClass(net.minecraft.world.entity.Display.BlockDisplay.class,new net.minecraft.world.phys.AABB(p).inflate(2),d->d.getTags().contains(FallingTree.REST));
+            if(list.size()!=1||!FallingTree.qaSupported(l,list.get(0).getPersistentData().getCompound(TreeChopper.FALL)))return 0;
+            c.getSource().sendSuccess(()->Component.literal("TreeChopper timber supported PASS"),false);return 1;
+          })))
           .then(Commands.literal("qa_timber_collision").then(Commands.argument("pos",BlockPosArgument.blockPos()).executes(c->{
             ServerLevel l=c.getSource().getLevel();BlockPos p=BlockPosArgument.getLoadedBlockPos(c,"pos");
             var list=l.getEntitiesOfClass(TimberCollider.class,new net.minecraft.world.phys.AABB(p).inflate(8),t->t.isAlive());

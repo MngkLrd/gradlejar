@@ -28,6 +28,9 @@ public final class TimberCollider extends Interaction {
     }
     @Override public void onSyncedDataUpdated(EntityDataAccessor<?> key){super.onSyncedDataUpdated(key);if(key.equals(DEPTH))setBoundingBox(makeBoundingBox());}
     void setBox(AABB box){
+        AABB current=getBoundingBox();
+        if(Math.abs(current.minX-box.minX)<.00001&&Math.abs(current.minY-box.minY)<.00001&&Math.abs(current.minZ-box.minZ)<.00001
+            &&Math.abs(current.maxX-box.maxX)<.00001&&Math.abs(current.maxY-box.maxY)<.00001&&Math.abs(current.maxZ-box.maxZ)<.00001)return;
         CompoundTag config=new CompoundTag();config.putFloat("width",(float)box.getXsize());config.putFloat("height",(float)box.getYsize());config.putBoolean("response",false);
         readAdditionalSaveData(config);getEntityData().set(DEPTH,(float)box.getZsize());
         setPos(box.getCenter().x,box.minY,box.getCenter().z);setBoundingBox(makeBoundingBox());

@@ -53,13 +53,14 @@ final class FallingTree {
         }
         return true;
     }
-    private static boolean clearAt(ServerLevel l,CompoundTag f,float progress){
+    private static boolean clearAt(ServerLevel l,CompoundTag f,float progress){return clearAt(l,f,progress,0,false);}
+    private static boolean clearAt(ServerLevel l,CompoundTag f,float progress,double deltaY,boolean includeRoots){
         Set<BlockPos> roots=new HashSet<>();
-        for(long cell:f.getLongArray("roots"))roots.add(BlockPos.of(cell));
+        if(!includeRoots)for(long cell:f.getLongArray("roots"))roots.add(BlockPos.of(cell));
         ListTag list=members(f);
         for(int i=0;i<list.size();i++){
             CompoundTag m=list.getCompound(i);
-            if(m.getBoolean("log")&&!m.getBoolean("removed")&&!TreeChopper.sweepClear(l,base(f),BlockPos.of(m.getLong("source")),direction(f),progress,roots,offset(f,m)))return false;
+            if(m.getBoolean("log")&&!m.getBoolean("removed")&&!TreeChopper.sweepClear(l,base(f),BlockPos.of(m.getLong("source")),direction(f),progress,roots,offset(f,m)+deltaY))return false;
         }
         return true;
     }
@@ -83,19 +84,50 @@ final class FallingTree {
         CompoundTag copy=f.copy();copy.put("landing",adjusted);return copy;
     }
     private static boolean canLower(ServerLevel l,CompoundTag f,List<CompoundTag> group,double amount){
+        List<net.minecraft.world.phys.AABB> otherBoxes=new ArrayList<>();
+        if(mask(f)!=0){
+            Set<Long> own=new HashSet<>();for(CompoundTag m:group)own.add(m.getLong("source"));
+            for(int i=0;i<members(f).size();i++){
+                CompoundTag m=members(f).getCompound(i);
+                if(m.getBoolean("log")&&!m.getBoolean("removed")&&!own.contains(m.getLong("source")))
+                    otherBoxes.add(TreeChopper.timberBounds(base(f),BlockPos.of(m.getLong("source")),direction(f),f.getFloat("progress"),false,offset(f,m)).deflate(.001));
+            }
+        }
         for(CompoundTag m:group){
             if(!TreeChopper.sweepClear(l,base(f),BlockPos.of(m.getLong("source")),direction(f),f.getFloat("progress"),Set.of(),offset(f,m)-amount))return false;
-            if(mask(f)!=0){
+            if(!otherBoxes.isEmpty()){
                 var candidate=TreeChopper.timberBounds(base(f),BlockPos.of(m.getLong("source")),direction(f),f.getFloat("progress"),false,offset(f,m)-amount).deflate(.001);
-                for(int i=0;i<members(f).size();i++){
-                    CompoundTag other=members(f).getCompound(i);
-                    if(!other.getBoolean("log")||other.getBoolean("removed")||group.contains(other))continue;
-                    var otherBox=TreeChopper.timberBounds(base(f),BlockPos.of(other.getLong("source")),direction(f),f.getFloat("progress"),false,offset(f,other)).deflate(.001);
-                    if(candidate.intersects(otherBox))return false;
-                }
+                for(var box:otherBoxes)if(candidate.intersects(box))return false;
             }
         }
         return !group.isEmpty();
+    }
+    private static double centroidHeight(CompoundTag f,float progress){
+        double sum=0;int count=0;
+        for(int i=0;i<members(f).size();i++){
+            CompoundTag m=members(f).getCompound(i);
+            if(m.getBoolean("log")&&!m.getBoolean("removed")){
+                sum+=TreeChopper.timberBounds(base(f),BlockPos.of(m.getLong("source")),direction(f),progress,false,offset(f,m)).getCenter().y;count++;
+            }
+        }
+        return count==0?Double.NaN:sum/count;
+    }
+    /** Once wood is supported, it may rotate about the contact instead of its original stump.
+     * Permit only the minimum upward displacement that allows continued rotation while
+     * lowering the equal-volume log centroid. No free energy or direction reversal. */
+    private static double rotationLift(ServerLevel l,CompoundTag f,float from,float to){
+        if(clearAt(l,f,to))return 0;
+        if(from<.35f)return Double.NaN;
+        List<CompoundTag> whole=new ArrayList<>();components(f).forEach(whole::addAll);
+        if(canLower(l,f,whole,.005))return Double.NaN; // no actual support yet
+        double budget=centroidHeight(f,from)-centroidHeight(f,to);
+        if(!Double.isFinite(budget)||budget<=.001)return Double.NaN;
+        double max=Math.min(.5,budget-.001);
+        for(double up=.015625;up<=max+.0001;up+=.015625){
+            if(!clearAt(l,f,from,up,true))break; // cannot lift through an overhead obstacle
+            if(clearAt(l,f,to,up,true))return up;
+        }
+        return Double.NaN;
     }
     private static List<List<CompoundTag>> components(CompoundTag f){
         List<List<CompoundTag>> groups=new ArrayList<>();Map<BlockPos,CompoundTag> unseen=new HashMap<>();
@@ -153,8 +185,8 @@ final class FallingTree {
     private static void colliders(ServerLevel l,Display.BlockDisplay master,CompoundTag f){
         for(int i=0;i<members(f).size();i++){
             CompoundTag m=members(f).getCompound(i);
-            if(m.getBoolean("removed")||!m.getBoolean("log")){removeCollider(l,m);continue;}
-            var box=TreeChopper.timberBounds(base(f),BlockPos.of(m.getLong("source")),direction(f),f.getFloat("progress"),false,offset(f,m));
+            if(m.getBoolean("removed")||(!m.getBoolean("log")&&!m.getBoolean("cap"))){removeCollider(l,m);continue;}
+            var box=TreeChopper.timberBounds(base(f),BlockPos.of(m.getLong("source")),direction(f),f.getFloat("progress"),m.getBoolean("cap"),offset(f,m));
             if(!l.hasChunkAt(BlockPos.containing(box.getCenter())))continue;
             TimberCollider collider=m.hasUUID("collider")&&l.getEntity(m.getUUID("collider")) instanceof TimberCollider t?t:null;
             if(collider==null){
@@ -238,7 +270,10 @@ final class FallingTree {
             float goal=Math.min(1f,old+1f/36f);
             for(int i=1;i<=4;i++){
                 float candidate=old+(goal-old)*i/4;
-                if(!clearAt(l,f,candidate))break;
+                f.putFloat("progress",next);
+                double lift=rotationLift(l,f,next,candidate);
+                if(!Double.isFinite(lift))break;
+                if(lift>0)f.putDouble("dropY",f.getDouble("dropY")+lift);
                 next=candidate;
             }
         }
@@ -259,6 +294,14 @@ final class FallingTree {
             markers(l,master,f);
         }
         master.getPersistentData().put(TreeChopper.FALL,f);
+    }
+    static boolean qaSupported(ServerLevel l,CompoundTag f){
+        if(!allPresent(l,f))return false;
+        List<List<CompoundTag>> groups=components(f);
+        if(groups.isEmpty())return false;
+        if(mask(f)==0){List<CompoundTag> whole=new ArrayList<>();groups.forEach(whole::addAll);groups=List.of(whole);}
+        for(List<CompoundTag> group:groups)if(canLower(l,f,group,.005))return false;
+        return true;
     }
     static void attack(AttackEntityEvent event){
         if(!(event.getTarget() instanceof Interaction marker)||!marker.getPersistentData().contains(MARKER))return;

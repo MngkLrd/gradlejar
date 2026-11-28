@@ -867,7 +867,7 @@
       "expect": "Changed the block|Successfully filled|Filled"
     },
     {
-      "command": "setblock 1020 200 1038 minecraft:stone",
+      "command": "fill 1020 200 1038 1020 205 1038 minecraft:stone",
       "expect": "Changed the block|Successfully filled|Filled"
     },
     {
@@ -896,7 +896,7 @@
       "assertion": true
     },
     {
-      "command": "setblock 1020 200 1038 minecraft:air",
+      "command": "fill 1020 200 1038 1020 205 1038 minecraft:air",
       "expect": "Changed the block|Successfully filled|Filled"
     },
     {
@@ -978,7 +978,7 @@
       "expect": "Changed the block|Successfully filled|Filled"
     },
     {
-      "command": "setblock 1026 200 1036 minecraft:stone",
+      "command": "fill 1026 200 1036 1026 205 1036 minecraft:stone",
       "expect": "Changed the block|Successfully filled|Filled"
     },
     {
@@ -987,6 +987,12 @@
     },
     {
       "wait": 3
+    },
+    {
+      "command": "wltreechopper qa_support 1026 200 1038",
+      "expect": "TreeChopper timber supported PASS",
+      "assertion": true,
+      "name": "inclined-physical-support"
     },
     {
       "command": "wltreechopper qa_timber_collision 1026 200 1038",
@@ -2360,6 +2366,17 @@
         {
           "backend": "server",
           "name": "gravity-support-preserved"
+        }
+      ]
+    },
+    {
+      "id": "inclined-physical-support",
+      "kind": "mechanic",
+      "subject": "Resting tilted tree cannot descend another 5 mm into world geometry",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "inclined-physical-support"
         }
       ]
     }
