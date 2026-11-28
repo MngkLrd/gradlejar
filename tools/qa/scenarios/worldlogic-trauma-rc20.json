@@ -843,6 +843,48 @@
           "name": "TR-ORGANS: integrity, internal bleeding, oxygen, perfusion, recovery, persistence and API"
         }
       ]
+    },
+    {
+      "id": "tr-organ-localization",
+      "kind": "mechanic",
+      "subject": "All nine localized organs selected by deterministic local coordinates, same external damage once, other organs spared; invalid and limb hits excluded",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-ORGANS: integrity, internal bleeding, oxygen, perfusion, recovery, persistence and API"
+        }
+      ]
+    },
+    {
+      "id": "tr-organ-consciousness",
+      "kind": "mechanic",
+      "subject": "Delayed unconsciousness and recovery hysteresis, systemic action restriction, persistent shock, actual clinical packet codec roundtrip",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-ORGANS: integrity, internal bleeding, oxygen, perfusion, recovery, persistence and API"
+        }
+      ]
+    },
+    {
+      "id": "tr-organ-provider-support",
+      "kind": "mechanic",
+      "subject": "Bounded hydration/electrolyte and thermal/nutrition coefficients, invalid fallback, no extra blood deduction, API snapshot",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-ORGANS: integrity, internal bleeding, oxygen, perfusion, recovery, persistence and API"
+        }
+      ]
     }
   ]
 }

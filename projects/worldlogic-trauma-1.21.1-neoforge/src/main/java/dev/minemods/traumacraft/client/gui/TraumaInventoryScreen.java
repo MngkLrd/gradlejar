@@ -101,7 +101,7 @@ public final class TraumaInventoryScreen extends InventoryScreen {
         metric(g,"oxygen",percent(ClientBodyState.oxygen()),mid,fy,r-mid-8,ClientBodyState.oxygen()<.7f);
         metric(g,"perfusion",percent(ClientBodyState.perfusion()),x+8,fy+10,mid-x-15,ClientBodyState.perfusion()<.6f);
         metric(g,"internal_loss",String.format(Locale.ROOT,"%.1f ml/s",ClientBodyState.internalLoss()),mid,fy+10,r-mid-8,ClientBodyState.internalLoss()>0);
-        metric(g,"shock",ClientBodyState.shock()+"/3",x+8,fy+20,mid-x-15,ClientBodyState.shock()>0);
+        metric(g,"shock",ClientBodyState.shock()+"/3 | "+Math.round(ClientBodyState.pain())+"/100",x+8,fy+20,mid-x-15,ClientBodyState.shock()>0);
         metric(g,"repair",percent(ClientBodyState.repair()),mid,fy+20,r-mid-8,ClientBodyState.repair()<.6f);
         if(ClientTreatmentState.active())bar(g,x+8,b-6,r-8,ClientTreatmentState.fraction());
         else label(g,ClientBodyState.unconscious()?t("unconscious"):t("dashboard_help"),x+8,b-10,l.width()-16,0xFF555555);
@@ -110,12 +110,25 @@ public final class TraumaInventoryScreen extends InventoryScreen {
             tip.add(organName(selectedOrgan));tip.add(Component.translatable("screen.traumacraft.integrity",percent(ClientBodyState.organ(selectedOrgan))));
             tip.add(Component.translatable("screen.traumacraft.organ_loss",String.format(Locale.ROOT,"%.2f",ClientBodyState.internal(selectedOrgan))));
             tip.add(Component.translatable("screen.traumacraft.organ_region",BodyVisual.name(selectedOrgan.region)));
+            if(selectedOrgan==OrganState.Organ.LEFT_KIDNEY||selectedOrgan==OrganState.Organ.RIGHT_KIDNEY)tip.add(Component.translatable("screen.traumacraft.function",Math.round(ClientBodyState.renal()*100)));
+            if(selectedOrgan==OrganState.Organ.STOMACH||selectedOrgan==OrganState.Organ.INTESTINES)tip.add(Component.translatable("screen.traumacraft.function",Math.round(ClientBodyState.digestive()*100)));
         }else if(selected!=null){
             tip.add(BodyVisual.name(selected));tip.add(Component.literal(Math.round(ClientBodyState.hp(selected))+" / "+selected.maximum+" HP"));tip.add(BodyVisual.condition(selected));
+            if(selected==BodyPart.STOMACH&&ClientBodyState.illnessKind()!=dev.minemods.traumacraft.disease.DiseaseModel.Kind.NONE){
+                tip.add(Component.translatable("illness.traumacraft.status",Component.translatable("illness.traumacraft.kind."+ClientBodyState.illnessKind().name().toLowerCase(Locale.ROOT)),Component.translatable("illness.traumacraft.stage."+ClientBodyState.illnessStage().name().toLowerCase(Locale.ROOT))));
+                tip.add(Component.translatable(ClientBodyState.illnessTreated()?"illness.traumacraft.support_active":"illness.traumacraft.support_hint"));
+            }
+            if(selected.isLeg()||selected==BodyPart.LEFT_ARM||selected==BodyPart.RIGHT_ARM)tip.add(Component.translatable("screen.traumacraft.function",Math.round(100*dev.minemods.traumacraft.health.PhysicalFunction.limb(ClientBodyState.fraction(selected),ClientBodyState.fractured(selected),ClientBodyState.stabilized(selected)))));
+            if(selected==BodyPart.HEAD&&ClientBodyState.concussionTicks()>0)tip.add(Component.translatable("condition.traumacraft.concussion"));
             for(var kind:dev.minemods.traumacraft.health.WoundKind.values())if((ClientBodyState.wounds(selected)&kind.bit)!=0)tip.add(Component.translatable("wound.traumacraft."+kind.name().toLowerCase(Locale.ROOT)));
             if(ClientBodyState.bleeding(selected)>0)tip.add(Component.translatable("condition.traumacraft."+(ClientBodyState.bleeding(selected)==2?"heavy_bleed":"bleeding")));
             if(ClientBodyState.fractured(selected))tip.add(Component.translatable("condition.traumacraft."+(ClientBodyState.stabilized(selected)?"splinted":"fracture")));
             if(menu.getCarried().getItem() instanceof MedicalItem)tip.add(t("click_to_treat"));
+        }
+        if(tip.isEmpty()&&my>=fy&&my<fy+30){
+            tip.add(Component.translatable("screen.traumacraft.function",Math.round(ClientBodyState.delivery()*100)));
+            tip.add(Component.translatable("screen.traumacraft.physiology",Math.round(ClientBodyState.bloodMl()/50),Math.round(ClientBodyState.pain()),ClientBodyState.shock()));
+            if(ClientBodyState.thermal().stressed())tip.add(Component.translatable("thermal.traumacraft."+ClientBodyState.thermal().name().toLowerCase(Locale.ROOT)));
         }
         if(!tip.isEmpty()&&menu.getCarried().isEmpty())g.renderComponentTooltip(font,tip,mx,my);
         var carried=menu.getCarried();

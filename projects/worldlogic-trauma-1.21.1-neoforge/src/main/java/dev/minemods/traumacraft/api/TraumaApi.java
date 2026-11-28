@@ -26,6 +26,8 @@ public final class TraumaApi {
     public record Physiology(float oxygenFraction,float ventilation,float perfusion,float oxygenDelivery,float oxygenDebtSeconds,
         float renalFunction,float digestiveFunction,float internalBleedingMlPerSecond,float repairFactor,float shockLoad,boolean unconscious,float circulationSupport,List<OrganStatus> organs){
         public Physiology{organs=List.copyOf(organs);}
+        public Physiology(float oxygenFraction,float ventilation,float perfusion,float oxygenDelivery,float oxygenDebtSeconds,float renalFunction,float digestiveFunction,float internalBleedingMlPerSecond,float repairFactor,List<OrganStatus> organs){this(oxygenFraction,ventilation,perfusion,oxygenDelivery,oxygenDebtSeconds,renalFunction,digestiveFunction,internalBleedingMlPerSecond,repairFactor,0,false,1,organs);}
+        public float hepaticFunction(){return organs.stream().filter(o->o.id().equals("liver")).findFirst().map(OrganStatus::integrity).orElse(1f);}
     }
     /** Read-only function and integrity; fractions 0..1. No ownership of Hydration or Metabolism. */
     public static Optional<Physiology> physiology(ServerPlayer p){

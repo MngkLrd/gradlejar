@@ -1000,5 +1000,14 @@
     "client": "NOT_RUN: no organ UI yet; actual network player survival/drowning and treatment not supported by existing protocol bot",
     "integration": "NOT_RUN: other providers absent in pinned standalone runtime; no foreign state writes",
     "remaining": "Side-specific organ hit geometry, GUI, breathing exertion and specialized treatment not implemented. Game-scale parameters require balance. No new diseases."
+  },
+  "version_0_8_5": {
+    "version": "0.8.5",
+    "scope": "Owner combined 0.8.2–0.8.5, skipped pulse and respiratory rate; 0.8.6 balance deferred. Local organ target from vanilla hit geometry, shock hysteresis and unconsciousness, read-only clinical provider coefficients, expanded exclusive anatomy/organ view on same inventory menu, protocol 11, API revision 5.",
+    "server": "traumaqa organs: all nine organ targets, isolated injury, persisted shock and unconsciousness, actual packet codec, delayed waking, action guards, provider factors and no extra blood loss; prior regressions retained",
+    "static_gui": "checkHudStatusLayout: responsive dashboard bounds, rows and separate body/organ columns across 30 sizes",
+    "client": "NOT_RUN: actual graphical render, hidden slot mouse/keyboard/cursor interaction, unconscious view and live motion; bot does not support custom GUI/protocol",
+    "integration": "NOT_RUN: standalone dependency is Core RC22; public inputs tested with deterministic coefficients; reverse metabolism/hydration effects require their owner consuming TraumaApi.physiology",
+    "remaining": "No pulse/respiratory rate, no separate organ entity hitboxes or prone animation; final balance deferred to 0.8.6. No new diseases."
   }
 }
