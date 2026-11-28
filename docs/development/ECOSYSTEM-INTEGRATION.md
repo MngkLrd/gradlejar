@@ -1,6 +1,10 @@
 # Ecosystem integration standard (v1)
 
-Applies under [AGENTS.md](../../AGENTS.md) to explicitly designated multi-mod ecosystems. WorldLogic is the first mandatory ecosystem. A future ecosystem opts in by its own stable ecosystem ID and project instructions; mere presence in GradleJAR, a similar name, shared tooling or an ordinary third-party compatibility feature does not enroll a standalone mod. Standalone mods do not need an API, integration manifest, registry or ecosystem QA unless their own requirements justify it. Existing ecosystem projects adopt this standard on their next relevant development change; do not mass-migrate unrelated products or ports.
+Applies under [AGENTS.md](../../AGENTS.md) to multi-mod ecosystems automatically identified from owner intent and established project identity. WorldLogic is the first mandatory ecosystem. A request for an addon of our own global mod automatically enrolls the parent and addon; no separate opt-in is needed. Mere presence in GradleJAR, a similar name, shared tooling or ordinary compatibility does not enroll a standalone mod. Standalone mods do not need an API, integration manifest, registry or ecosystem QA unless their own requirements justify it. Existing ecosystem projects adopt this standard on their next relevant development change; do not mass-migrate unrelated products or ports.
+
+## 0. Automatic classification
+
+Before feature code, resolve the project's ecosystem from its existing integration manifest, established project documentation and the owner's task. If the owner describes a first-party addon of our global mod, reuse the parent's ecosystem ID or initialize a stable ID for the parent and its first-party addon. Persist the actual relationship in project-local integration.json (optional parent_module field). No separate request for an API, integration or enrollment is needed. Existing enrolled projects retain their stable ID. A standalone compatibility mod, optional dependency, naming prefix or shared repository alone is insufficient; do not enroll by fuzzy name matching. The developer interprets natural-language intent; CI reads the durable declaration and checks membership/target consistency, not arbitrary chat text. An unmerged parent is coordinated through its actual PR rather than invented in main.
 
 ## 1. Integration-first development
 
