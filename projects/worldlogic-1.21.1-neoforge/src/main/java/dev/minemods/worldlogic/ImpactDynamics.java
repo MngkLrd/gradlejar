@@ -113,5 +113,6 @@ public final class ImpactDynamics {
   // Landing vibration reaches existing unstable gravel machinery. Fragile blocks get visible vibration only.
   Structure.landingVibration(l,ground,entity);
  }
- public static void logout(PlayerEvent.PlayerLoggedOutEvent e){Player p=e.getEntity();HITS.remove(p);CHAIN.remove(p);GRABS.remove(p);GRABBED.remove(p);ROLLS.remove(p);}
+ static void adminRestore(Player p){HITS.remove(p);CHAIN.remove(p);GRABS.remove(p);GRABBED.remove(p);ROLLS.remove(p);}
+ public static void logout(PlayerEvent.PlayerLoggedOutEvent e){adminRestore(e.getEntity());}
 }
