@@ -1,6 +1,6 @@
 # MineMods QA v2: contributor guide
 
-For enrolled ecosystems, use the [integration standard](../development/ECOSYSTEM-INTEGRATION.md) and its static catalogue. Build Hub's existing plan reports declared affected consumers in advisory mode; it does not expand builds, validate real JAR linkage or run integration scenarios automatically. All existing QA gates and target scope remain unchanged.
+For enrolled ecosystems, use the [integration standard](../development/ECOSYSTEM-INTEGRATION.md) and its static catalogue. Build Hub's existing plan reports declared affected consumers in advisory mode; it does not expand builds, validate real JAR linkage or run integration scenarios automatically. The scoped API-first declaration check validates selected enrolled projects before Gradle; it is not runtime verification. All existing QA gates and target scope remain unchanged.
 
 **Development scope:** Follow [AGENTS.md — Development scope](../../AGENTS.md#development-scope--product-first-ports-at-the-end). Routine product iterations use the established Minecraft/loader pair only. The eleven-target matrix is for explicitly requested porting or release work, not an automatic requirement for every update. Preserve existing cohort and evidence-invalidation rules.
 

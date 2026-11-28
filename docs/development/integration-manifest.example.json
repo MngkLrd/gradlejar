@@ -1,7 +1,9 @@
 {
-  "schema": 1,
+  "schema": 2,
   "ecosystem": "example",
   "module": "example_provider",
+  "role": "core",
+  "core_module": "example_provider",
   "target": {
     "minecraft": "1.21.1",
     "loader": "neoforge"
@@ -17,18 +19,32 @@
       "entrypoints": [
         "example.api.MaterialProperties"
       ],
-      "documentation": "projects/example-provider/API.md"
+      "documentation": "projects/example-provider/API.md",
+      "source_paths": [
+        "projects/example-provider/src/main/java/example/api/MaterialProperties.java"
+      ],
+      "operations": [
+        {
+          "id": "lookup",
+          "kind": "query",
+          "entrypoint": "example.api.MaterialProperties",
+          "semantics": "Return immutable material properties with explicitly documented units and unknown values."
+        }
+      ]
     }
   ],
-  "consumes": [
+  "consumes": [],
+  "features": [
     {
-      "id": "example:environment",
-      "version": 1,
-      "min_revision": 0,
-      "required": false,
-      "status": "planned",
-      "fallback": "Use documented independent behavior without claiming environmental accuracy.",
-      "issue": "https://github.com/OWNER/REPOSITORY/issues/123"
+      "id": "material_properties",
+      "source_paths": [
+        "projects/example-provider/src/main/java/example/api/MaterialProperties.java"
+      ],
+      "provides": [
+        "example:material_properties"
+      ],
+      "consumes": [],
+      "integration_review": "Review actual peer material consumers, consolidate physical data access in this owner."
     }
   ],
   "tests": [
@@ -38,7 +54,7 @@
         "example:material_properties"
       ],
       "ref": "tools/qa/scenarios/example-provider.json",
-      "status": "planned"
+      "status": "implemented"
     }
   ]
 }

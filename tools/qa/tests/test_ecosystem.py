@@ -92,7 +92,7 @@ class EcosystemTests(unittest.TestCase):
     def test_reject_malformed_manifest_and_example(self):
         from tools.qa.ecosystem import ROOT
         example=json.loads((ROOT/"docs/development/integration-manifest.example.json").read_text())
-        validate("example",example,T)
+        validate("example",example,{**T,"ecosystem_membership":{k:example[k] for k in ("ecosystem","module","role","core_module")}})
         for bad in ("./API.md","../API.md","a//API.md","/API.md","a\\API.md"):
             p=provide();p["documentation"]=bad
             with self.assertRaises(ValueError):validate("projects/core",mod("core",[p]),T)
@@ -124,3 +124,56 @@ class EcosystemTests(unittest.TestCase):
             self.assertTrue(report["previous_graph_available"])
             self.assertTrue(any(x["kind"]=="missing" and x["severity"]=="error" for x in report["diagnostics"]))
             self.assertIsNone(build_preview(root,["projects/standalone"]))
+
+    def v2(self, name="core", core="core", path="projects/core", requires=False):
+        cap=f"test:{name}_feature"
+        p=provide(cap,domain=name)
+        p.update(documentation=path+"/API.md",source_paths=[path+"/src/API.java"],
+                 operations=[dict(id="read",kind="query",entrypoint="example.Wood",semantics="Return immutable state in documented units.")])
+        uses=[consume("test:core_feature",required=True)] if requires else []
+        m=mod(name,[p],uses,parent=core if name!=core else None)
+        m.update(schema=2,role="core" if name==core else "addon",core_module=core,
+                 features=[dict(id="feature",source_paths=[path+"/src/API.java"],provides=[cap],
+                                consumes=[c["id"] for c in uses],integration_review="Reviewed actual peer API and ownership decisions.")],
+                 tests=[dict(id="contract",capabilities=[cap]+[c["id"] for c in uses],ref=path+"/tests.json",status="implemented")])
+        profile={**T,"ecosystem_membership":{k:m[k] for k in ("ecosystem","module","role","core_module")}}
+        return m,profile
+
+    def test_api_first_roles_and_contracts(self):
+        core,cp=self.v2()
+        addon,ap=self.v2("addon",path="projects/addon",requires=True)
+        validate("projects/core",core,cp);validate("projects/addon",addon,ap)
+        r=catalogue({"projects/core":core,"projects/addon":addon})
+        self.assertEqual(r["diagnostics"],[])
+        self.assertEqual([x["project"] for x in r["first_party_cores"]],["projects/core"])
+        self.assertIn("parent_not_in_checkout",{x["kind"] for x in catalogue({"projects/addon":addon})["diagnostics"]})
+        legacy=mod("core")
+        self.assertIn("parent_not_promoted_to_core",{x["kind"] for x in catalogue({"projects/core":legacy,"projects/addon":addon})["diagnostics"]})
+        other,op=self.v2("second",core="second",path="projects/second")
+        self.assertIn("multiple_cores",{x["kind"] for x in catalogue({"projects/core":core,"projects/second":other})["diagnostics"]})
+        for mutate in (lambda m:m["provides"].clear(),lambda m:m["provides"][0]["operations"].clear(),
+                       lambda m:m["features"][0]["provides"].clear(),lambda m:m["tests"].clear(),
+                       lambda m:m.update(role="addon"),lambda m:m.update(schema=1)):
+            import copy
+            changed=copy.deepcopy(core);mutate(changed)
+            with self.assertRaises(ValueError):validate("projects/core",changed,cp)
+
+    def test_scoped_api_first_gate(self):
+        from tools.qa.ecosystem import check_project
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);path="projects/core";d=root/path;d.mkdir(parents=True)
+            m,p=self.v2()
+            (d/"build-profile.json").write_text(json.dumps(p))
+            with self.assertRaisesRegex(ValueError,"missing integration.json"):check_project(root,path)
+            (d/"integration.json").write_text(json.dumps(m))
+            (d/"API.md").write_text("API");(d/"tests.json").write_text("{}")
+            with self.assertRaisesRegex(ValueError,"missing API/feature source"):check_project(root,path)
+            (d/"src").mkdir();(d/"src/API.java").write_text("fixture")
+            self.assertEqual(check_project(root,path)["status"],"STATIC_EVIDENCE_VALIDATED")
+            self.assertEqual(check_project(root,path)["integration_qa"],"NOT_RUN")
+            other=root/"projects/thirdparty";other.mkdir()
+            (other/"build-profile.json").write_text(json.dumps(T))
+            self.assertEqual(check_project(root,"projects/thirdparty")["status"],"NOT_ENROLLED")
+            (d/"integration.json").write_text("invalid json")
+            self.assertEqual(check_project(root,"projects/thirdparty")["status"],"NOT_ENROLLED")
+            with self.assertRaises(ValueError):check_project(root,"projects/..")
