@@ -58,7 +58,7 @@ jobs:
           p.write_text(json.dumps(o,indent=2))
           PY
           status=0
-          python3 -m tools.qa.gate "$PROJECT" --jar "$PROJECT/build/libs/worldlogic_thermal-neoforge-mc1.21.1-0.12.1.jar" --report thermal-exact-report.json --work thermal-exact-work || status=$?
+          python3 -m tools.qa.gate "$PROJECT" --jar "$PROJECT/build/libs/worldlogic_thermal-neoforge-mc1.21.1-0.12.2.jar" --report thermal-exact-report.json --work thermal-exact-work || status=$?
           python3 - <<'PY'
           import json,pathlib,os
           p=pathlib.Path("thermal-exact-report.json")
@@ -87,7 +87,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: thermal-0.12.1-core151-NOT-RELEASE
-          path: projects/worldlogic-thermal-1.21.1-neoforge/build/libs/worldlogic_thermal-neoforge-mc1.21.1-0.12.1.jar
+          name: thermal-0.12.2-core151-NOT-RELEASE
+          path: projects/worldlogic-thermal-1.21.1-neoforge/build/libs/worldlogic_thermal-neoforge-mc1.21.1-0.12.2.jar
           if-no-files-found: warn
           retention-days: 7

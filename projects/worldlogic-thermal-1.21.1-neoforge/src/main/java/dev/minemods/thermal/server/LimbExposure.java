@@ -22,12 +22,24 @@ final class LimbExposure {
  static void update(ServerPlayer p,CompoundTag n,ThermalModel.Exposure e,ThermalModel.State state){
   double arms=protection(p.getItemBySlot(EquipmentSlot.CHEST));
   double legs=(protection(p.getItemBySlot(EquipmentSlot.LEGS))+protection(p.getItemBySlot(EquipmentSlot.FEET)))*.5;
+  boolean migrate=n.getInt("frostModelRevision")<Adaptation.FROST_MODEL_REVISION;
+  // No freezing injury in above-freezing air or liquid solely from a wind/evaporation
+  // penalty. Nonfreezing cold injury and systemic hypothermia remain separate mechanics.
+  double medium=e.submerged()?e.waterC():e.airC()+e.roomDelta();
+  double local=medium>=0?Math.max(0,state.feelsLikeC()):state.feelsLikeC();
   for(int i=0;i<LIMBS.length;i++){
    String key="frost_"+LIMBS[i];
-   double dose=Adaptation.frostDose(n.getDouble(key),state.feelsLikeC(),i<2?arms:legs,e.wetness());
-   // Distinct peripheral tissue damage, not a second application of the systemic damage event.
-   if(dose>=120){dose=AddonBridge.frostbite(p,LIMBS[i],1.5f)?60:120;}
+   double protection=i<2?arms:legs;
+   double previous=n.getDouble(key);
+   if(migrate)previous=Adaptation.migrateFrostDose(previous);
+   double dose=Adaptation.frostDose(previous,local,protection,e.wetness());
+   // Existing Trauma owns tissue damage. No repeat at half the original exposure.
+   // If unavailable, keep bounded pending exposure and never report while warming.
+   if(dose>=Adaptation.FROST_THRESHOLD&&Adaptation.frostRate(Adaptation.frostEquivalent(local,protection,e.wetness()))>0){
+    if(AddonBridge.frostbite(p,LIMBS[i],1.5f))dose=0;
+   }
    n.putDouble(key,dose);
   }
+  n.putInt("frostModelRevision",Adaptation.FROST_MODEL_REVISION);
  }
 }

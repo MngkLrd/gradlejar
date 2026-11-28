@@ -27,14 +27,40 @@ final class ClimateEvolutionChecks {
   require(updated.getDouble("adaptCold")>.49&&updated.getDouble("adaptHeat")>.39,"live update retains acclimation");
  }
  static void frostbite(ServerLevel l,ServerPlayer p){
+  int[] temperatures={-5,-10,-15,-20,-28,-40,-55};
+  int[] first={1200,600,300,180,120,75,45};
+  for(int i=0;i<temperatures.length;i++){
+   double dose=0;
+   for(int t=1;t<first[i];t++){
+    dose=Adaptation.frostDose(dose,temperatures[i],0,0);
+    require(dose<Adaptation.FROST_THRESHOLD,"no premature injury at "+temperatures[i]+" after "+t+"s");
+   }
+   require(Adaptation.frostDose(dose,temperatures[i],0,0)==Adaptation.FROST_THRESHOLD,"exact first exposure at "+temperatures[i]);
+  }
   double naked=0,clothed=0,wet=0;
   for(int i=0;i<90;i++){naked=Adaptation.frostDose(naked,-15,0,0);clothed=Adaptation.frostDose(clothed,-15,1,0);wet=Adaptation.frostDose(wet,-15,1,1);}
-  require(naked>=120&&clothed==0&&wet>clothed,"local insulation and wetness affect frost dose");
+  require(naked>0&&naked<Adaptation.FROST_THRESHOLD&&clothed==0&&wet>clothed&&wet<naked,"local insulation and wetness affect frost dose");
   require(Adaptation.frostDose(naked,20,0,0)<naked,"warming reduces exposure before tissue injury");
+  require(Adaptation.frostRate(-3)==0&&Adaptation.frostRate(-100)==Adaptation.frostRate(-55),"safe threshold and severe cold bound");
   var n=new net.minecraft.nbt.CompoundTag();
   var e=exp(-30,0,0,1,1);var s=ThermalModel.tick(ThermalModel.initial(),e,1);
+  n.putDouble("frost_LEFT_ARM",120);
   LimbExposure.update(p,n,e,s);
+  require(n.getInt("frostModelRevision")==Adaptation.FROST_MODEL_REVISION&&n.getDouble("frost_LEFT_ARM")<=33,"legacy exposure discounted once");
+  double migrated=n.getDouble("frost_LEFT_ARM");
+  LimbExposure.update(p,n,e,s);
+  require(n.getDouble("frost_LEFT_ARM")>=migrated,"legacy migration not repeated");
   for(String limb:LimbExposure.LIMBS)require(n.contains("frost_"+limb),"separate limb accumulation "+limb);
+  var thaw=new ThermalModel.Exposure(1,0,1,1,0,0,false,1,0,0,0);
+  var chilled=ThermalModel.tick(ThermalModel.initial(),thaw,1);
+  require(chilled.feelsLikeC()<0,"above-freezing wet windy negative apparent temperature fixture");
+  for(String limb:LimbExposure.LIMBS)n.putDouble("frost_"+limb,Adaptation.FROST_THRESHOLD);
+  LimbExposure.update(p,n,thaw,chilled);
+  for(String limb:LimbExposure.LIMBS)require(n.getDouble("frost_"+limb)<Adaptation.FROST_THRESHOLD,"nonfreezing medium cannot trigger frostbite");
+  var water=new ThermalModel.Exposure(-30,0,1,1,0,0,true,1,0,0,0);
+  var immersed=ThermalModel.tick(ThermalModel.initial(),water,1);
+  LimbExposure.update(p,n,water,immersed);
+  for(String limb:LimbExposure.LIMBS)require(n.getDouble("frost_"+limb)<Adaptation.FROST_THRESHOLD,"liquid above freezing does not generate freezing injury");
  }
  static void nutrition(ServerLevel l,ServerPlayer p){
   require(Adaptation.nutrition(20,5)==1&&Adaptation.nutrition(0,0)==0,"nutrition bounds");

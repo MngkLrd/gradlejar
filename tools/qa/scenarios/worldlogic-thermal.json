@@ -148,7 +148,7 @@
       "assertion": true
     },
     {
-      "name": "Four separate limb exposures, local insulation and wetness",
+      "name": "Local frostbite timing across seven cold bands, clothing, wetness, recovery and migration",
       "command": "thermal qa frostbite",
       "expect": "THERMAL_QA_frostbite_PASS",
       "assertion": true
@@ -497,7 +497,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "Four separate limb exposures, local insulation and wetness"
+          "name": "Local frostbite timing across seven cold bands, clothing, wetness, recovery and migration"
         }
       ]
     },
