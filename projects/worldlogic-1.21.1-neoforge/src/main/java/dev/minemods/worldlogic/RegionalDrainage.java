@@ -8,8 +8,8 @@ import java.util.function.DoubleBinaryOperator;
  * Region boundaries are conservative: no speculative exits to another tile.
  */
 final class RegionalDrainage{
- static final int SIZE=1536,STEP=64,N=SIZE/STEP;
- private static final int SEA=63,MAX_SOURCES=6,MAX_TRIALS=28,MAX_HEIGHT_SAMPLES=320;
+ static final int SUBREGION=1536,SIZE=SUBREGION*3,STEP=96,N=SIZE/STEP;
+ private static final int SEA=63,MAX_SOURCES=14,MAX_TRIALS=64,MAX_HEIGHT_SAMPLES=720;
  private static final double INF=Double.POSITIVE_INFINITY;
  record Node(int x,int z,double height){}
  record Hit(double distance,double fraction,double stage,double radius,double depth,double bank,double dx,double dz,double slope,int tributaries){}
@@ -61,7 +61,7 @@ final class RegionalDrainage{
   long n=((long)x<<32)^(z&0xffffffffL);n=(n^(n>>>30))*0xbf58476d1ce4e5b9L;n=(n^(n>>>27))*0x94d049bb133111ebL;return n^(n>>>31);
  }
  private static double unit(long h){return (h>>>11)*0x1.0p-53;}
- private static double bend(Node a,Node b){return (unit(hash(a.x^b.z,a.z^b.x))-.5)*18;}
+ private static double bend(Node a,Node b){return (unit(hash(a.x^b.z,a.z^b.x))-.5)*24;}
  private static double clamp(double x,double a,double b){return Math.max(a,Math.min(b,x));}
  private static double radius(int branches){return Math.min(13,3.8+3.1*Math.sqrt(branches));}
  private static double depth(int branches){return Math.min(8,3.5+1.6*Math.sqrt(branches));}
@@ -100,8 +100,11 @@ final class RegionalDrainage{
    }
   }
   var candidates=new ArrayList<Integer>();
-  for(int i=0;i<nodes.length;i++)if(hops[i]>=4&&hops[i]<=22&&nodes[i].height>=SEA+6)candidates.add(i);
-  candidates.sort(Comparator.comparingDouble((Integer i)->-(hops[i]*45+Math.min(90,nodes[i].height-SEA)*1.6+unit(hash(nodes[i].x,nodes[i].z))*55)).thenComparingInt(i->i));
+  for(int i=0;i<nodes.length;i++)if(hops[i]>=3&&hops[i]<=32&&nodes[i].height>=SEA+5)candidates.add(i);
+  // Start with shorter viable coastal catchments instead of exhausting the
+  // physical-sampling budget on the longest mountain-to-coast proposals.
+  // Subsequent sources favour tributaries that already meet a valid trunk.
+  candidates.sort(Comparator.comparingDouble((Integer i)->Math.abs(hops[i]-6)*30+Math.max(0,nodes[i].height-110)*.7+unit(hash(nodes[i].x,nodes[i].z))*75).thenComparingInt(i->i));
   Map<Long,Double> heights=new HashMap<>();
   DoubleBinaryOperator measured=(x,z)->{
    int xx=(int)Math.round(x),zz=(int)Math.round(z);long key=((long)xx<<32)^(zz&0xffffffffL);
@@ -111,7 +114,16 @@ final class RegionalDrainage{
   };
   var sources=new ArrayList<Integer>();var mouths=new HashSet<Integer>();
   int trials=0;
-  for(int source:candidates){
+  while(!candidates.isEmpty()){
+   int choice=0;double best=Double.POSITIVE_INFINITY;
+   for(int i=0;i<candidates.size();i++){
+    int candidate=candidates.get(i),n=candidate,steps=0;
+    while(n>=0&&flow[n]==0&&steps<=32){n=parent[n];steps++;}
+    boolean joins=n>=0&&flow[n]>0&&parent[n]>=0;
+    double score=Math.abs(hops[candidate]-7)*1.7+steps*.65+(joins?-30:0)+unit(hash(nodes[candidate].x,nodes[candidate].z))*4;
+    if(score<best){best=score;choice=i;}
+   }
+   int source=candidates.remove(choice);
    if(sources.size()>=MAX_SOURCES||trials>=MAX_TRIALS||heights.size()>=MAX_HEIGHT_SAMPLES)break;
    var node=nodes[source];
    if(sources.stream().anyMatch(i->Math.hypot(nodes[i].x-node.x,nodes[i].z-node.z)<192))continue;
@@ -132,12 +144,12 @@ final class RegionalDrainage{
     if(flow[u]>0){previous=stage[u];continue;}
     double actualFrom=measured.applyAsDouble(from.x,from.z);
     double length=Math.hypot(from.x-to.x,from.z-to.z);
-    double start=clamp(actualFrom-2,previous,previous+length*.23);
-    if(!Double.isFinite(actualFrom)||actualFrom<start-1||actualFrom-start>15){valid=false;break;}
+    double start=clamp(actualFrom-3,previous,previous+length*.18);
+    if(!Double.isFinite(actualFrom)||actualFrom<start-2||actualFrom-start>13){valid=false;break;}
     var edge=new Edge(from,to,start,previous,1,radius(1),depth(1),bank(1),bend(from,to));
     for(double f:new double[]{.25,.5,.75}){
      double h=measured.applyAsDouble(edge.x(f),edge.z(f)),water=start+(previous-start)*f;
-     if(!Double.isFinite(h)||h<water-1.5&&!(v==mouth&&h<=SEA-1&&water<=SEA+1)||h-water>15){valid=false;break;}
+     if(!Double.isFinite(h)||h<water-2&&!(v==mouth&&h<=SEA-1&&water<=SEA+1)||h-water>13){valid=false;break;}
     }
     if(!valid)break;
     proposed.put(u,start);previous=start;
@@ -159,7 +171,7 @@ final class RegionalDrainage{
   return new Network(edges,sources.size(),mouths.size(),heights.size());
  }
  static void verify(){
-  // A 1536-block region with a coastal strip, sloping inland catchment,
+  // A multi-region basin with a coastal strip, sloping inland catchment,
   // and a slight valley. Same inputs must yield the exact same network.
   DoubleBinaryOperator coast=(x,z)->x<180?48:62+(x-180)*.055+3*Math.sin(z*.004);
   var a=build(0,0,coast,coast);var b=build(0,0,coast,coast);
@@ -173,7 +185,12 @@ final class RegionalDrainage{
   require(build(0,0,(x,z)->100,(x,z)->100).edges.isEmpty(),"no unverified inland outlet");
   require(build(0,0,coast,(x,z)->200).edges.isEmpty(),"actual terrain veto");
   require(a.samples<=MAX_HEIGHT_SAMPLES,"bounded physical samples");
-  for(int x=-32;x<=SIZE+32;x+=13)for(int z=-32;z<=SIZE+32;z+=17)require(Objects.equals(a.nearest(x,z),Network.nearestFrom(a.edges,x,z)),"partition exactness");
+  for(int x=-32;x<=SIZE+32;x+=31)for(int z=-32;z<=SIZE+32;z+=37)require(Objects.equals(a.nearest(x,z),Network.nearestFrom(a.edges,x,z)),"partition exactness");
+  // A long coastal gradient spanning the old 1536-block boundary, with
+  // no isolated ocean patch within the upstream subregion.
+  DoubleBinaryOperator longCoast=(x,z)->x<1360?56:64+(x-1360)*.023;
+  var longNet=build(0,0,longCoast,longCoast);
+  require(longNet.edges.stream().anyMatch(e->Math.floorDiv(e.from.x,SUBREGION)!=Math.floorDiv(e.to.x,SUBREGION)),"routes cross old regional boundaries");
   var edge=a.edges.getFirst();var hit=edge.hit(edge.x(.5),edge.z(.5));
   require(hit.distance<.05&&hit.fraction>.4&&hit.fraction<.6,"centerline projection");
  }

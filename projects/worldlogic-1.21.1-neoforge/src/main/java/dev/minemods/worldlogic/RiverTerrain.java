@@ -37,7 +37,7 @@ public final class RiverTerrain {
   if(!NaturalWaterGeneration.enabled(gen))return;
   int x0=c.getPos().getMinBlockX(),z0=c.getPos().getMinBlockZ(),sea=gen.getSeaLevel();
   var net=regionalNetwork(gen,state,access,x0,z0);
-  if(net.edges().stream().noneMatch(e->e.near(x0+7.5,z0+7.5,12)))return;
+  if(net.candidates(x0+7.5,z0+7.5).stream().noneMatch(e->e.near(x0+7.5,z0+7.5,12))&&net.edges().stream().noneMatch(e->e.near(x0+7.5,z0+7.5,12)))return;
   var p=new BlockPos.MutableBlockPos();var water=NaturalFluids.get(WaterKind.RIVER).block.get().defaultBlockState();
   int[] floors=new int[256];for(int x=0;x<16;x++)for(int z=0;z<16;z++)floors[x*16+z]=c.getHeight(Heightmap.Types.OCEAN_FLOOR_WG,x,z);
   for(int x=0;x<16;x++)for(int z=0;z<16;z++){
@@ -45,17 +45,22 @@ public final class RiverTerrain {
    if(h<sea-1||!natural(c.getBlockState(p.set(wx,h,wz))))continue;
    var hit=net.nearest(wx,wz);if(hit==null)continue;
    int stage=(int)Math.floor(hit.stage()),bed;
-   if(stage<sea-1||h-stage>19||stage-h>2)continue;
+   if(stage<sea-1||h-stage>15||stage-h>2)continue;
    var section=RiverProfiles.sample(hit,h);boolean wet=section.wet();
    bed=wet?(int)Math.floor(section.bed()):(int)Math.round(section.bed());
-   if(bed<=c.getMinBuildHeight()+5||h-bed>26)continue;
+   if(bed<=c.getMinBuildHeight()+5||h-bed>23)continue;
    // Do not fill open caves or replace structures. Small low bank corrections
    // use natural sediment, never walls of floating source blocks.
    boolean valid=true;for(int y=Math.min(h,bed);y<=h;y++)if(!natural(c.getBlockState(p.set(wx,y,wz)))){valid=false;break;}
    if(!valid)continue;
+   // Validate all non-rock cells that could be filled above the original floor.
+   for(int y=h+1;y<=Math.max(bed,wet?stage:h);y++){
+    var s=c.getBlockState(p.set(wx,y,wz));if(!s.isAir()&&s.getFluidState().isEmpty()){valid=false;break;}
+   }
+   if(!valid)continue;
    var top=c.getBlockState(p.set(wx,h,wz));
    if(wet){
-    if(bed<h)c.setBlockState(p.set(wx,bed,wz),Blocks.GRAVEL.defaultBlockState(),false);
+    if(bed<h)c.setBlockState(p.set(wx,bed,wz),GeologyGeneration.rock(c.getBlockState(p.set(wx,bed-1,wz)))?Blocks.GRAVEL.defaultBlockState():Blocks.STONE.defaultBlockState(),false);
     else if(bed>h)for(int y=h+1;y<=bed;y++)c.setBlockState(p.set(wx,y,wz),Blocks.GRAVEL.defaultBlockState(),false);
     var directed=water.setValue(DirectedRiverBlock.CURRENT,DirectedRiverBlock.encode(hit.dx(),hit.dz()));
     for(int y=bed+1;y<=stage;y++){c.setBlockState(p.set(wx,y,wz),directed,false);if(y==stage)c.markPosForPostprocessing(p);}
@@ -84,7 +89,7 @@ public final class RiverTerrain {
   var candidates=new ArrayList<>(net.edges());candidates.sort(Comparator.comparingDouble(e->Math.hypot(e.x(.5)-origin.getX(),e.z(.5)-origin.getZ())));
   for(var e:candidates){
    if(headwater?e.tributaries()!=1:e.tributaries()<2)continue;
-   if(e.start()<gen.getSeaLevel()+5||e.end()<gen.getSeaLevel()+3)continue;
+   if(e.start()<gen.getSeaLevel()+3||e.end()<gen.getSeaLevel()+2)continue;
    return "RIVER_PROBE x="+(int)Math.round(e.x(.5))+" z="+(int)Math.round(e.z(.5))+" discharge="+(headwater?8.0:12.0*e.tributaries())+" outlet=ocean sources="+net.sources()+" mouths="+net.mouths()+" edges="+net.edges().size();
   }
   return "RIVER_PROBE no_candidate sources="+net.sources()+" mouths="+net.mouths()+" edges="+net.edges().size();

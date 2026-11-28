@@ -10,3 +10,6 @@ No Light/Hardcore gameplay profiles. All implemented Core rules active at balanc
 
 ## OWNER DIRECTION: RC40–RC44 source-only development
 Owner explicitly requested no JAR compilation before RC45. Keep intermediate source commits on branches without PRs or dispatch, retain all existing release gates and scenarios. Execute cumulative compilation, required server and natural-world QA at RC45; do not describe intermediate source as verified or release-ready. Preserve RC22 base geography; limited local foothill/valley shaping is allowed separately, no changing macro density or vertical world dimensions.
+
+## OWNER DIRECTION: LANDSCAPE FIRST (RC44–47)
+Resume landscape development from RC41. Preserve RC42–43 experiments on separate branches; no new ore types, prospecting or surface ore indicators in the landscape line. Keep RC22 macro geography and world bounds. RC44 source-only; cumulative build/QA permitted from RC45 onward. Do not equate modeled drainage or synthetic tests with actual generated channel continuity.

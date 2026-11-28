@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge RC41 source milestone / RC45 deferred QA",
+  "name": "World Logic NeoForge RC44 multi-region drainage",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -1758,6 +1758,17 @@
         {
           "backend": "server",
           "name": "Unified custom biome registry and exact RC22 base-height regression seed a"
+        }
+      ]
+    },
+    {
+      "id": "rc44-multiregion-drainage",
+      "kind": "mechanic",
+      "subject": "Bounded macro-basin, routes cross former regional boundaries, shared downstream graph and unchanged natural river gates",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
         }
       ]
     }

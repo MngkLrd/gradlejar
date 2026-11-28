@@ -159,3 +159,5 @@ RC39 `RiverTerrain.current` reads persisted source-block direction (neutral for 
 RC40: Realistic biome classification uses separate bounded regional climate fields; WorldLogicApi regionalClimate, actual environmental climate, RC22 base-height fields and legacy presets keep their original meaning. Existing biome IDs unchanged. Biome lookup remains a modeled candidate rather than a guarantee of generated terrain.
 
 RC41: base-height queries still return the immutable RC22-derived noise surface; final generated World Logic terrain may contain bounded local foothill/shoulder changes and separate river/cave shaping. Consumers needing actual surface should use the generated world heightmap, not assume a modeled height is the final terrain. Public API signatures unchanged.
+
+RC44: internal drainage planning domain enlarged; WaterKind and all addon APIs unchanged. Regional graph is still a bounded approximation, not a global continent-wide watershed guarantee.
