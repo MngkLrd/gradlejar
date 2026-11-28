@@ -2,6 +2,12 @@ package dev.minemods.metabolism;
 public final class ModelChecks {
  private static void require(boolean value,String what){if(!value)throw new AssertionError(what);}
  public static void main(String[] args){run();}
+ public static void verifyCore(net.minecraft.server.MinecraftServer server){
+  var p=new net.minecraft.server.level.ServerPlayer(server,server.overworld(),new com.mojang.authlib.GameProfile(java.util.UUID.randomUUID(),"MetabolismCoreQA"),net.minecraft.server.level.ClientInformation.createDefault());
+  var fatigue=dev.minemods.worldlogic.api.WorldLogicApi.fatigue(p);
+  require(Double.isFinite(fatigue.fatiguePercent())&&fatigue.fatiguePercent()>=0&&fatigue.fatiguePercent()<=100,"actual Core fatigue API");
+  dev.minemods.worldlogic.api.WorldLogicApi.addExertion(p,0);
+ }
  public static void run(){
   var rest=new MetabolicModel.State();var active=new MetabolicModel.State();
   MetabolicModel.tick(rest,0);MetabolicModel.tick(active,1);require(active.fast<rest.fast,"activity costs more");

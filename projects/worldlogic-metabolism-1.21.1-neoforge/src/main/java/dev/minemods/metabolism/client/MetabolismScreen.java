@@ -1,7 +1,6 @@
 package dev.minemods.metabolism.client;
 import dev.minemods.metabolism.MetabolicModel;
 import dev.minemods.metabolism.MetabolismSync;
-import dev.minemods.worldlogic.api.client.WorldLogicTabs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -23,7 +22,7 @@ public final class MetabolismScreen extends Screen{
  private static String number(float x){return String.format(Locale.ROOT,"%.0f",x);}
  private static String hours(float x){return String.format(Locale.ROOT,"%.1f h",x);}
  private static String factor(float x){return String.format(Locale.ROOT,"%.2f×",x);}
- private int usable(){return WorldLogicTabs.contentWidth(width);}
+ private int usable(){return ClientSetup.contentWidth(width);}
  @Override protected void init(){
   int w=Math.max(15,(usable()-16)/TABS.length);
   for(int i=0;i<TABS.length;i++){final int k=i;var button=Button.builder(Component.literal(font.plainSubstrByWidth(tr("tab."+TABS[i]).getString(),Math.max(1,w-10))),b->{tab=k;page=0;}).bounds(8+i*w,27,w-2,20).build();button.setTooltip(Tooltip.create(tr("tab."+TABS[i])));addRenderableWidget(button);}

@@ -74,6 +74,6 @@ public final class Metabolism {
  });}
  private static String fmt(double n){return String.format(Locale.ROOT,"%.1f",n);}
  private static void commands(RegisterCommandsEvent e){
-  e.getDispatcher().register(Commands.literal("metabolism").then(Commands.literal("status").executes(c->{var p=c.getSource().getPlayerOrException();c.getSource().sendSuccess(()->Component.literal(status(p)),false);return 1;}).then(Commands.argument("player",EntityArgument.player()).requires(s->s.hasPermission(2)).executes(c->{var p=EntityArgument.getPlayer(c,"player");c.getSource().sendSuccess(()->Component.literal(status(p)),false);return 1;}))).then(Commands.literal("selftest").requires(s->s.hasPermission(2)).executes(c->{ModelChecks.run();c.getSource().sendSuccess(()->Component.literal("METABOLISM_MODEL_CHECKS_PASSED"),false);return 1;})));
+  e.getDispatcher().register(Commands.literal("metabolism").then(Commands.literal("status").executes(c->{var p=c.getSource().getPlayerOrException();c.getSource().sendSuccess(()->Component.literal(status(p)),false);return 1;}).then(Commands.argument("player",EntityArgument.player()).requires(s->s.hasPermission(2)).executes(c->{var p=EntityArgument.getPlayer(c,"player");c.getSource().sendSuccess(()->Component.literal(status(p)),false);return 1;}))).then(Commands.literal("selftest").requires(s->s.hasPermission(2)).executes(c->{ModelChecks.run();ModelChecks.verifyCore(c.getSource().getServer());c.getSource().sendSuccess(()->Component.literal("METABOLISM_MODEL_CHECKS_PASSED"),false);return 1;})));
  }
 }

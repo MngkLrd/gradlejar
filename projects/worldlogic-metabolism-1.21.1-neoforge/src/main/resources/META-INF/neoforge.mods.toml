@@ -3,7 +3,7 @@ loaderVersion="[1,)"
 license="All Rights Reserved"
 [[mods]]
 modId="metabolism"
-version="0.8.0"
+version="0.8.1"
 displayName="WorldLogic: Metabolism"
 description="Nutrition, digestion and energy metabolism for WorldLogic."
 [[dependencies.metabolism]]
@@ -21,7 +21,7 @@ side="BOTH"
 [[dependencies.metabolism]]
 modId="worldlogic"
 type="required"
-versionRange="[1.0.0-rc33,)"
+versionRange="[1.0.0-rc22,)"
 ordering="AFTER"
 side="BOTH"
 [[dependencies.metabolism]]

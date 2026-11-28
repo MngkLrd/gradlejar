@@ -1,11 +1,11 @@
 {
   "slug": "metabolism",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "minecraft": "1.21.1",
   "loader": "neoforge",
   "java": "21",
   "gradle": "9.2.1",
-  "jar_glob": "metabolism-neoforge-mc1.21.1-0.8.0.jar",
+  "jar_glob": "metabolism-neoforge-mc1.21.1-0.8.1.jar",
   "minimum_loader_version": "21.1.80",
   "compile_loader_version": "21.1.262",
   "qa": {
@@ -18,6 +18,13 @@
     "watch_paths": [
       "tools/qa/scenarios/worldlogic-metabolism.json",
       "projects/worldlogic-1.21.1-neoforge/"
+    ],
+    "dependencies": [
+      {
+        "name": "worldlogic-neoforge-mc1.21.1-1.0.0-rc22.jar",
+        "url": "https://github.com/MngkLrd/gradlejar/releases/download/ci-worldlogic-mc1.21.1-neoforge-1.0.0-rc22-1246-1/worldlogic-neoforge-mc1.21.1-1.0.0-rc22.jar",
+        "sha256": "1c0d23ca034cd17f783e4d1abbf01f1eda8783ac0ba3b48cf6afdc1291d21dc8"
+      }
     ]
   }
 }

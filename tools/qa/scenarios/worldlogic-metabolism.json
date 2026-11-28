@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "Metabolism 0.8.0 model regression",
+  "name": "Metabolism 0.8.1 model regression with published Core dependency",
   "coverage": [
     {
       "id": "nutrition-model",
@@ -116,6 +116,17 @@
       "id": "history-persistence",
       "kind": "mechanic",
       "subject": "history-persistence",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "core-dependency-runtime",
+      "kind": "mechanic",
+      "subject": "Actual Core fatigue and exertion API on installed dependency",
       "checks": [
         {
           "backend": "server",
