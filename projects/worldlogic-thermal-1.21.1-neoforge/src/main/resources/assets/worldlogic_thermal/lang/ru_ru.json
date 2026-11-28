@@ -233,5 +233,7 @@
   "block.worldlogic_thermal.clay_insulation": "Глиняная обмазка",
   "block.worldlogic_thermal.clay_insulation.info": "Необожжённая глиняная обмазка. Наносится снаружи, не горит.",
   "block.worldlogic_thermal.straw_insulation": "Соломенная обшивка",
-  "block.worldlogic_thermal.straw_insulation.info": "Закрепите снаружи стены. Удерживает тепло, но легко горит."
+  "block.worldlogic_thermal.straw_insulation.info": "Закрепите снаружи стены. Удерживает тепло, но легко горит.",
+  "block.worldlogic_thermal.leaf_canopy": "Лиственный навес",
+  "block.worldlogic_thermal.leaf_canopy.info": "Четыре порции листвы. Укрывает от солнца и части дождя, горюч. Не считается закрытой комнатой."
 }

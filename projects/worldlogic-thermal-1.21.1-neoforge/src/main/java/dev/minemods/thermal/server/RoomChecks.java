@@ -146,6 +146,14 @@ final class RoomChecks {
      require(occupied.air()>unoccupied.air()+3&&occupied.air()<0,"occupied compact snow shelter warms but is not magically comfortable");
      require(occupied.air()>exposed.air()+2&&occupied.air()>iceRoom.air(),"snow and wind protection materially improve early survival");
     }
+    case "leaf_canopy" -> {
+     BlockPos canopy=CENTER.above(3),below=canopy.below();
+     old.put(canopy,l.getBlockState(canopy));l.setBlock(canopy,ThermalContent.LEAF_CANOPY.get().defaultBlockState(),3);
+     require(VentBlock.shades(l,below)&&VentBlock.leafCover(l,below),"actual leaf canopy gives cover");
+     require(l.getBlockState(canopy).isFlammable(l,canopy,Direction.UP),"leaf canopy burns");
+     l.setBlock(canopy,Blocks.AIR.defaultBlockState(),3);
+     require(!VentBlock.leafCover(l,below),"leaf cover gone after removal");
+    }
     case "room_ventilation" -> {
      door(l,false);l.setBlock(WINDOW,Blocks.GLASS_PANE.defaultBlockState(),2);heater(l,true);
      var closed=run(l,10,50,.7,now,60);

@@ -233,5 +233,7 @@
   "block.worldlogic_thermal.clay_insulation": "Clay wall plaster",
   "block.worldlogic_thermal.clay_insulation.info": "Unfired clay plaster. Apply outside a wall. Nonflammable.",
   "block.worldlogic_thermal.straw_insulation": "Straw wall cladding",
-  "block.worldlogic_thermal.straw_insulation.info": "Attach outside a wall. Retains heat but burns readily."
+  "block.worldlogic_thermal.straw_insulation.info": "Attach outside a wall. Retains heat but burns readily.",
+  "block.worldlogic_thermal.leaf_canopy": "Leaf canopy",
+  "block.worldlogic_thermal.leaf_canopy.info": "Four portions of leaves. Shade and partial rain cover; flammable, not an enclosed room."
 }

@@ -44,6 +44,7 @@ public final class EnvironmentSampler {
         if(!Double.isFinite(air)) return Optional.empty();
         boolean sheltered = env.covered();
         boolean rain = env.rainingAt()&&!sheltered;
+        boolean leafCover=VentBlock.leafCover(level,pos);
 
         double outdoorHumidity=atmosphere.map(WorldLogicApi.Atmosphere::relativeHumidityPercent).orElse(100.0);
         double outdoorWind=atmosphere.map(a->clamp(a.outdoorWindSpeedMps()/12,0,1)).orElse(0.0);
@@ -68,12 +69,13 @@ public final class EnvironmentSampler {
         var a=atmosphere.orElse(null);
         double previous=Double.isFinite(skin)?clamp(skin,0,1):0;
         skin=skinWetness(previous,submerged,rain&&!roomReading.indoor(),radiant);
-        if(rain&&!roomReading.indoor()&&!submerged)skin=clamp(previous+(skin-previous)*(1-clamp(rainShield,0,.92)),0,1);
+        if(rain&&!roomReading.indoor()&&!submerged)skin=clamp(previous+(skin-previous)*(1-clamp(rainShield,0,.92))*(leafCover?.30:1),0,1);
         if((!rain||roomReading.indoor())&&!submerged&&a!=null)skin=previous+(skin-previous)*WeatherReading.dryingFactor(localHumidity);
         double wind=a!=null?WeatherReading.normalizedWind(a.outdoorWindSpeedMps(),sheltered):sheltered?.06:env.globalThunder()?.85:rain?.55:.22;
         if(!sheltered&&regionalWeather.isPresent())wind=Math.max(wind,WeatherReading.normalizedWind(regionalWeather.get().gust()*.65,false));
         if(roomReading.indoor())wind=Math.max(.06,roomReading.ventilation()*outdoorWind+.02);
         wind*=1-clamp(windShield,0,.8);
+        if(leafCover&&!roomReading.indoor())wind*=.75;
         double shade=VentBlock.shades(level,pos)?1:clamp(sunShield,0,.95);
         double solar=env.solarExposure()*(1-shade);
         double shadeCooling=submerged?0:Math.max(0,air-24)*shade*env.solarExposure()*.25;

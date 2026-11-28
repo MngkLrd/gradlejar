@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "tag": "worldlogic_thermal:canopy_leaves"
+    },
+    {
+      "tag": "worldlogic_thermal:canopy_leaves"
+    },
+    {
+      "tag": "worldlogic_thermal:canopy_leaves"
+    },
+    {
+      "tag": "worldlogic_thermal:canopy_leaves"
+    }
+  ],
+  "result": {
+    "id": "worldlogic_thermal:leaf_canopy",
+    "count": 2
+  }
+}

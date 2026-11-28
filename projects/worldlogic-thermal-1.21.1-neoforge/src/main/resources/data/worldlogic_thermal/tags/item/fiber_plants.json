@@ -38,6 +38,38 @@
     {
       "id": "worldlogicterrain:low_fern",
       "required": false
+    },
+    {
+      "id": "worldlogicterrain:cattail",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:wild_nettle",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:stinging_nettle",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:wild_agave",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:wild_fireweed",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:woodland_vine",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:climbing_ivy",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:wild_lemongrass",
+      "required": false
     }
   ]
 }

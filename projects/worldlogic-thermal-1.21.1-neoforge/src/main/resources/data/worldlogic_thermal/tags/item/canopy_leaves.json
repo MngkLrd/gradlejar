@@ -1,0 +1,74 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:leaves",
+    {
+      "id": "worldlogicterrain:fallen_leaves",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:forest_litter",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:needle_litter",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:damp_leaf_litter",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:alder_leaves",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:baobab_leaves",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:beech_leaves",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:cedar_leaves",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:date_palm_leaves",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:ebony_leaves",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:fir_leaves",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:larch_leaves",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:mahogany_leaves",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:maple_leaves",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:palm_leaves",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:pine_leaves",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:willow_leaves",
+      "required": false
+    }
+  ]
+}

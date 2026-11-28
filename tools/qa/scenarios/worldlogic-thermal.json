@@ -242,6 +242,12 @@
       "command": "thermal qa snow_shelter",
       "expect": "THERMAL_QA_snow_shelter_PASS",
       "assertion": true
+    },
+    {
+      "name": "Leaf canopy cover and combustion",
+      "command": "thermal qa leaf_canopy",
+      "expect": "THERMAL_QA_leaf_canopy_PASS",
+      "assertion": true
     }
   ],
   "coverage": [
@@ -638,6 +644,17 @@
         {
           "backend": "server",
           "name": "Snow shelter geometry, snow versus ice conduction and bounded occupant warmth"
+        }
+      ]
+    },
+    {
+      "id": "leaf-canopy",
+      "kind": "block",
+      "subject": "Leaf canopy cover and combustion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Leaf canopy cover and combustion"
         }
       ]
     }

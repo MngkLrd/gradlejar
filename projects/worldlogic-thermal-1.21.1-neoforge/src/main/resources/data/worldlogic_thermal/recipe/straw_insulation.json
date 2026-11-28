@@ -3,13 +3,13 @@
   "category": "building",
   "ingredients": [
     {
-      "item": "minecraft:wheat"
+      "tag": "worldlogic_thermal:straw_sources"
     },
     {
-      "item": "minecraft:wheat"
+      "tag": "worldlogic_thermal:straw_sources"
     },
     {
-      "item": "minecraft:wheat"
+      "tag": "worldlogic_thermal:straw_sources"
     }
   ],
   "result": {

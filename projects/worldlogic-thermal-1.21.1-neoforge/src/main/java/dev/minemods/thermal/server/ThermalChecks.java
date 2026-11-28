@@ -165,7 +165,7 @@ final class ThermalChecks {
                     var registry=net.minecraft.core.registries.BuiltInRegistries.ITEM;
                     var expected=registry.keySet().stream().filter(k->k.getNamespace().equals("worldlogic_thermal")).collect(java.util.stream.Collectors.toSet());
                     var listed=items.stream().map(registry::getKey).collect(java.util.stream.Collectors.toSet());
-                    require(items.size()==listed.size()&&listed.equals(expected)&&items.size()==51,"all fifty-one registered items listed exactly once");
+                    require(items.size()==listed.size()&&listed.equals(expected)&&items.size()==52,"all fifty-two registered items listed exactly once");
                 }
                 case "portable" -> ExpansionChecks.portable(l,p);
                 case "advanced_clothes" -> ExpansionChecks.clothes(l,p);
@@ -175,7 +175,7 @@ final class ThermalChecks {
                 case "frostbite" -> ClimateEvolutionChecks.frostbite(l,p);
                 case "nutrition" -> ClimateEvolutionChecks.nutrition(l,p);
                 case "room_inertia" -> ClimateEvolutionChecks.room(l,p);
-                case "room_ventilation","room_humidity","room_persistence","room_cache","wall_insulation","insulation_fire","snow_shelter" -> RoomChecks.verify(l,p,name);
+                case "room_ventilation","room_humidity","room_persistence","room_cache","wall_insulation","insulation_fire","snow_shelter","leaf_canopy" -> RoomChecks.verify(l,p,name);
                 case "village_climate" -> ClimateEvolutionChecks.settlement(l,p);
                 case "integration" -> IntegrationChecks.verify(l,p);
                 case "water_exposure","room_response","hud_signals" -> StabilityChecks.verify(l,p,name);

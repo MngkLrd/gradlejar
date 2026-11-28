@@ -56,7 +56,7 @@ public final class RoomHeat {
    BlockPos q=p.above(y);if(!loaded(l,q))return false;
    BlockState s=l.getBlockState(q);
    if(s.getBlock() instanceof TrapDoorBlock&&!s.getValue(BlockStateProperties.OPEN))return true;
-   if(s.is(ThermalContent.CANOPY.get())||portal(s))continue;
+   if(VentBlock.canopy(s)||portal(s))continue;
    if(s.isFaceSturdy(l,q,Direction.DOWN)||s.isFaceSturdy(l,q,Direction.UP))return true;
   }
   return false;
