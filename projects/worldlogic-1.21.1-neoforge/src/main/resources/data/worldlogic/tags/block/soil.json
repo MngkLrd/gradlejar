@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "worldlogic:humus",
+    "worldlogic:loam",
+    "worldlogic:peat",
+    "worldlogic:alluvial_silt",
+    "worldlogic:frozen_soil"
+  ]
+}
