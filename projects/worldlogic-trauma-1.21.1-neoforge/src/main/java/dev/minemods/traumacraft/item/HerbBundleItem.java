@@ -9,6 +9,7 @@ public final class HerbBundleItem extends Item {
     @Override public void appendHoverText(ItemStack s,TooltipContext c,List<Component> lines,TooltipFlag flag){
         super.appendHoverText(s,c,lines,flag);
         lines.add(Component.translatable("message.traumacraft.herbs_progress",HerbMask.progress(HerbWorkpieceEntity.fromItem(s))));
+        dev.minemods.traumacraft.content.HerbSpecies.tooltip(s,lines);
         lines.add(Component.translatable("tooltip.traumacraft.herbs_help"));
     }
 }

@@ -11,7 +11,9 @@ import java.util.Optional;
 /** Approximate impact locations inside the vanilla player hitbox. */
 public final class HitLocation {
     private HitLocation() {}
-    public static BodyPart locate(Player victim, DamageSource source) {
+    public record Impact(BodyPart region,double lateral,double height,boolean rear){}
+    public static BodyPart locate(Player victim,DamageSource source){return impact(victim,source).region();}
+    public static Impact impact(Player victim, DamageSource source) {
         Entity direct = source.getDirectEntity();
         AABB box = victim.getBoundingBox();
         Vec3 hit;
@@ -27,7 +29,11 @@ public final class HitLocation {
         } else {
             hit = box.getCenter();
         }
-        return classify(victim, hit);
+        double h=Math.max(0,Math.min(1,(hit.y-box.minY)/Math.max(.01,box.getYsize())));
+        double side=Math.max(-1,Math.min(1,lateral(victim,hit)/Math.max(.01,box.getXsize()/2)));
+        Vec3 origin=source.getSourcePosition();var facing=victim.getLookAngle();
+        boolean rear=origin!=null&&(origin.x-victim.getX())*facing.x+(origin.z-victim.getZ())*facing.z<0;
+        return new Impact(classify(victim,hit),side,h,rear);
     }
     static BodyPart classify(Player victim, Vec3 hit) {
         AABB box = victim.getBoundingBox();

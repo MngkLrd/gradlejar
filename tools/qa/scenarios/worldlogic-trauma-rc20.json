@@ -121,6 +121,24 @@
       "expect": "TRAUMAQA waterillness PASS",
       "assertion": true,
       "name": "TR-WATER-ILLNESS: dose, incubation, symptoms, treatment, recovery, persistence, illness-only loss"
+    },
+    {
+      "command": "traumaqa organs",
+      "expect": "TRAUMAQA organs PASS",
+      "assertion": true,
+      "name": "TR-ORGANS: integrity, internal bleeding, oxygen, perfusion, recovery, persistence and API"
+    },
+    {
+      "command": "traumaqa deathreport",
+      "expect": "TRAUMAQA deathreport PASS",
+      "assertion": true,
+      "name": "TR-DEATH-REPORT: fatal origin, causal markers, blood loss, hypoxia, frozen snapshot and packet"
+    },
+    {
+      "command": "traumaqa adminrestore",
+      "expect": "TRAUMAQA adminrestore PASS",
+      "assertion": true,
+      "name": "TR-ADMIN-RESTORE: anatomical and clinical reset, persistence, invalid input and repeat"
     }
   ],
   "coverage": [
@@ -653,6 +671,342 @@
         {
           "backend": "server",
           "name": "TR-WATER-ILLNESS: dose, incubation, symptoms, treatment, recovery, persistence, illness-only loss"
+        }
+      ]
+    },
+    {
+      "id": "tr-botanical-identity",
+      "kind": "mechanic",
+      "subject": "All seven botanical identities survive grinding, pickup, save/load, resume; reject unknown and wrong preparation",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-PRIMITIVE: herb workpiece placement, cell processing, partial resume, drop, canonical treatment roles"
+        }
+      ]
+    },
+    {
+      "id": "tr-botanical-drying",
+      "kind": "mechanic",
+      "subject": "Bounded drying, pause and retained state through grinding",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-PRIMITIVE: herb workpiece placement, cell processing, partial resume, drop, canonical treatment roles"
+        }
+      ]
+    },
+    {
+      "id": "tr-primitive-recipes",
+      "kind": "mechanic",
+      "subject": "Actual server crafting recipes for rag, pressure bandage and splint; reject incorrect ingredient and legacy conversion",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-PRIMITIVE: herb workpiece placement, cell processing, partial resume, drop, canonical treatment roles"
+        }
+      ]
+    },
+    {
+      "id": "tr-washed-log",
+      "kind": "mechanic",
+      "subject": "Only stripped log; clean whole bottle consumed once and returned empty; empty marker persistence and no drop",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-PRIMITIVE: herb workpiece placement, cell processing, partial resume, drop, canonical treatment roles"
+        }
+      ]
+    },
+    {
+      "id": "tr-dry-log-batch",
+      "kind": "mechanic",
+      "subject": "Unwashed rejection; one batch per wash; dry progress pauses; dried bundle pickup and transfer to grinder; identity persisted",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-PRIMITIVE: herb workpiece placement, cell processing, partial resume, drop, canonical treatment roles"
+        }
+      ]
+    },
+    {
+      "id": "tr-drying-water-quality",
+      "kind": "mechanic",
+      "subject": "Clean fresh profile accepted; salt, polluted, unknown, incorrect volume and empty bottle rejected",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-PRIMITIVE: herb workpiece placement, cell processing, partial resume, drop, canonical treatment roles"
+        }
+      ]
+    },
+    {
+      "id": "tr-metabolism-passive-rate",
+      "kind": "mechanic",
+      "subject": "Optional Metabolism absent fallback and public observed recovery rate: insufficient samples, rolling HP/min, expiry and reset",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-PUBLICAPI: immutable seven-region snapshot, external injury, invalid input and creative guards"
+        }
+      ]
+    },
+    {
+      "id": "tr-fall-overflow",
+      "kind": "mechanic",
+      "subject": "One or both destroyed legs; same-impact exhaustion, conservative spillover, repeated and extreme falls fatal",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-DAMAGE: fall damage, unaffected head, creative exclusion"
+        }
+      ]
+    },
+    {
+      "id": "tr-anatomy-health-owner",
+      "kind": "mechanic",
+      "subject": "Registered damage event suppresses independent nonlethal vanilla damage, backing HP maintained, vital destruction and void remain lethal, creative unchanged",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-OWNERSHIP: registered damage event and Trauma API remain active with Core legacy injuries disabled"
+        }
+      ]
+    },
+    {
+      "id": "tr-organ-integrity",
+      "kind": "mechanic",
+      "subject": "Nine organ identities, threshold and region injury, protected minor impacts, no limb/burn duplication, abdomen and chest functions",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-ORGANS: integrity, internal bleeding, oxygen, perfusion, recovery, persistence and API"
+        }
+      ]
+    },
+    {
+      "id": "tr-organ-circulation",
+      "kind": "mechanic",
+      "subject": "Internal blood loss in existing pool, no recovery during leak, stabilization and slow recovery, function penalties",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-ORGANS: integrity, internal bleeding, oxygen, perfusion, recovery, persistence and API"
+        }
+      ]
+    },
+    {
+      "id": "tr-organ-oxygen",
+      "kind": "mechanic",
+      "subject": "Drowning without chest duplication, air depletion, hypoxic brain damage, breathing recovery, perfusion and fatal collapse",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-ORGANS: integrity, internal bleeding, oxygen, perfusion, recovery, persistence and API"
+        }
+      ]
+    },
+    {
+      "id": "tr-organ-persistence",
+      "kind": "mechanic",
+      "subject": "Organ NBT migration, immutable public API snapshot, reset",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-ORGANS: integrity, internal bleeding, oxygen, perfusion, recovery, persistence and API"
+        }
+      ]
+    },
+    {
+      "id": "tr-organ-localization",
+      "kind": "mechanic",
+      "subject": "All nine localized organs selected by deterministic local coordinates, same external damage once, other organs spared; invalid and limb hits excluded",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-ORGANS: integrity, internal bleeding, oxygen, perfusion, recovery, persistence and API"
+        }
+      ]
+    },
+    {
+      "id": "tr-organ-consciousness",
+      "kind": "mechanic",
+      "subject": "Delayed unconsciousness and recovery hysteresis, systemic action restriction, persistent shock, actual clinical packet codec roundtrip",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-ORGANS: integrity, internal bleeding, oxygen, perfusion, recovery, persistence and API"
+        }
+      ]
+    },
+    {
+      "id": "tr-organ-provider-support",
+      "kind": "mechanic",
+      "subject": "Bounded hydration/electrolyte and thermal/nutrition coefficients, invalid fallback, no extra blood deduction, API snapshot",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-ORGANS: integrity, internal bleeding, oxygen, perfusion, recovery, persistence and API"
+        }
+      ]
+    },
+    {
+      "id": "tr-death-cause",
+      "kind": "mechanic",
+      "subject": "Direct fall and vital destruction, external/internal bleeding, hypoxic brain failure, native command and stale-context exclusion",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-DEATH-REPORT: fatal origin, causal markers, blood loss, hypoxia, frozen snapshot and packet"
+        }
+      ]
+    },
+    {
+      "id": "tr-death-snapshot",
+      "kind": "mechanic",
+      "subject": "Fatal anatomical marks distinct from destroyed limbs and active bleeding; immutable-from-live-body snapshot survives reset; actual codec roundtrip",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-DEATH-REPORT: fatal origin, causal markers, blood loss, hypoxia, frozen snapshot and packet"
+        }
+      ]
+    },
+    {
+      "id": "tr-physiology-balance",
+      "kind": "mechanic",
+      "subject": "Partial contralateral lung compensation, hypoxic injury stops once oxygen delivery restored, unconscious tissue recovery guard and graded organ healing",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-ORGANS: integrity, internal bleeding, oxygen, perfusion, recovery, persistence and API"
+        }
+      ]
+    },
+    {
+      "id": "tr-death-history",
+      "kind": "mechanic",
+      "subject": "Observed actual HP deltas, no zero-damage event, bounded recent history, age expiry, encoded persistent last death archive survives reset and malformed archive ignored",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-DEATH-REPORT: fatal origin, causal markers, blood loss, hypoxia, frozen snapshot and packet"
+        }
+      ]
+    },
+    {
+      "id": "tr-core-material-contact",
+      "kind": "mechanic",
+      "subject": "Core physical registry revision guard, SI contact observation, unknown/invalid/empty fallback, actual single-item and loaded surface query when provider available, death packet and old archive compatibility",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-DEATH-REPORT: fatal origin, causal markers, blood loss, hypoxia, frozen snapshot and packet"
+        }
+      ]
+    },
+    {
+      "id": "tr-core-contact-rev2",
+      "kind": "mechanic",
+      "subject": "Core 1.2.1 surface response on actual supported stone/wool, unknown air/fluid/unloaded, exact SI energy and selected item component, invalid inputs, report codec and historical archive compatibility",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-DEATH-REPORT: fatal origin, causal markers, blood loss, hypoxia, frozen snapshot and packet"
+        }
+      ]
+    },
+    {
+      "id": "tr-terminal-brain",
+      "kind": "mechanic",
+      "subject": "Seven subthreshold mechanical head hits destroy head and brain, fatal marks agree; brain activity zero for death snapshots and old archives without rewriting tissue integrity or falsely marking blood loss/native death as brain injury",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-DEATH-REPORT: fatal origin, causal markers, blood loss, hypoxia, frozen snapshot and packet"
+        }
+      ]
+    },
+    {
+      "id": "tr-admin-restore",
+      "kind": "mechanic",
+      "subject": "TR-ADMIN-RESTORE: anatomical and clinical reset, persistence, invalid input and repeat",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-ADMIN-RESTORE: anatomical and clinical reset, persistence, invalid input and repeat"
         }
       ]
     }

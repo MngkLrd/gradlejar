@@ -1,0 +1,13 @@
+{
+  "name": "Травяной компресс",
+  "category": "worldlogic:trauma",
+  "icon": "traumacraft:herbal_poultice",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "traumacraft:herbal_poultice",
+      "link_recipe": true,
+      "text": "Используйте по назначению в интерфейсе анатомии. Доступные рецепты смотрите через JEI."
+    }
+  ]
+}

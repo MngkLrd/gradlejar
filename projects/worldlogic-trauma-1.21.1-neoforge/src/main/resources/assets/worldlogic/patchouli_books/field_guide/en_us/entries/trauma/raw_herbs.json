@@ -1,0 +1,13 @@
+{
+  "name": "Medicinal herbs",
+  "category": "worldlogic:trauma",
+  "icon": "traumacraft:raw_herbs",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "traumacraft:raw_herbs",
+      "link_recipe": true,
+      "text": "Wash the top of a stripped log with 250 mB of clean fresh water. Place a whole herb portion; allow 180 seconds under open sky without rain. Cover or rain pauses progress. Collect one dried portion; it can then be crushed."
+    }
+  ]
+}

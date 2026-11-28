@@ -957,5 +957,133 @@
     "combined": "traumaqa hydrationpack; actual provider classes on detached ServerPlayer; intake callback and reverse loss, read-only physiology, one Hydration model deduction",
     "client": "NOT_RUN: actual graphical client and modded network drinking/treatment unsupported by protocol bot",
     "protocol": 10
+  },
+  "primitive_rc2": {
+    "version": "0.7.0-rc2",
+    "scope": "typed botanical grinding and dry state, chamomile closed-bruise preparation, alternate primitive recipes",
+    "server": "traumaqa primitive",
+    "client": "NOT_RUN: typed workpiece and tooltip visual check",
+    "actual_player": "NOT_RUN: existing bot does not support modded inventory IDs",
+    "terrarian": "NOT_RUN: actual addon not in pinned standalone runtime; optional source tags for proposed species require confirmation",
+    "remaining": "wound washing and decoctions need public exact-volume water withdrawal; drying rack and climate-aware drying not implemented; other species therapeutic effects pending"
+  },
+  "primitive_rc3": {
+    "version": "0.7.0-rc3",
+    "scope": "washed stripped log drying station, one full clean water bottle, persisted marker, separated grinding and drying, rain pauses",
+    "server": "traumaqa primitive",
+    "client": "NOT_RUN: visual renderer, right/left actual network interaction",
+    "hydration": "NOT_RUN: optional public bottleWater adapter; standalone fallback and pure profile predicates tested, vessel withdrawal unavailable",
+    "terrarian": "NOT_RUN: optional stripped custom IDs not confirmed; vanilla stripped logs supported",
+    "remaining": "liquid remedies and wound irrigation, climate-driven drying not implemented"
+  },
+  "primitive_rc4": {
+    "version": "0.7.0-rc4",
+    "scope": "Canonical Trauma revision; all RC3 functionality and optional Metabolism clinical integration, public Trauma API revision 3",
+    "standalone": "traumaqa publicapi: neutral fallback, observed passive HP/min rolling window, sample reset; existing disease and recovery regression",
+    "combined": "NOT_RUN: Metabolism provider and integrated interface not in standalone QA dependencies",
+    "client": "NOT_RUN",
+    "remaining": "liquid remedies and wound irrigation remain outside this revision"
+  },
+  "version_0_7_1": {
+    "version": "0.7.1",
+    "version_mapping": "Next patch after unpublished 0.7.0-rc4 development candidate; numeric-only naming, no historical versions renamed.",
+    "scope": "Trauma owns anatomy; vanilla backing health maintained and player heart layer hidden once synchronized; healthy anatomy HUD visible; fall overflow 60% abdomen/40% chest, leftover transfers to trunk/head; physical limb overflow; lethal native/void handling; bleed no second HP drain",
+    "server": "traumaqa damage and ownership: one/both black legs, same-hit overflow, repeated/extreme falls, normal initial damage, creative, registered nonlethal damage, backing recovery, lethal impact/void",
+    "client": "NOT_RUN: actual heart layer visibility, healthy HUD layout, impact feedback; server component fixture is not client interaction",
+    "combined": "NOT_RUN: latest Core and other add-ons not in pinned standalone runtime",
+    "remaining": "Verify full pack death/respawn, vanilla effect interactions and armor/absorption with actual network player."
+  },
+  "version_0_8_0": {
+    "version": "0.8.0",
+    "scope": "Internal physiology: 9 organs; organ integrity independent of structural HP; regional mechanical impact, internal blood loss, ventilation, oxygen delivery, hypoxic brain injury, functional/recovery constraints, trauma-kit stabilization; read-only API revision 4",
+    "server": "traumaqa organs; deterministic real server component fixture; existing registered damage/ownership checks retained",
+    "client": "NOT_RUN: no organ UI yet; actual network player survival/drowning and treatment not supported by existing protocol bot",
+    "integration": "NOT_RUN: other providers absent in pinned standalone runtime; no foreign state writes",
+    "remaining": "Side-specific organ hit geometry, GUI, breathing exertion and specialized treatment not implemented. Game-scale parameters require balance. No new diseases."
+  },
+  "version_0_8_5": {
+    "version": "0.8.5",
+    "scope": "Owner combined 0.8.2–0.8.5, skipped pulse and respiratory rate; 0.8.6 balance deferred. Local organ target from vanilla hit geometry, shock hysteresis and unconsciousness, read-only clinical provider coefficients, expanded exclusive anatomy/organ view on same inventory menu, protocol 11, API revision 5.",
+    "server": "traumaqa organs: all nine organ targets, isolated injury, persisted shock and unconsciousness, actual packet codec, delayed waking, action guards, provider factors and no extra blood loss; prior regressions retained",
+    "static_gui": "checkHudStatusLayout: responsive dashboard bounds, rows and separate body/organ columns across 30 sizes",
+    "client": "NOT_RUN: actual graphical render, hidden slot mouse/keyboard/cursor interaction, unconscious view and live motion; bot does not support custom GUI/protocol",
+    "integration": "NOT_RUN: standalone dependency is Core RC22; public inputs tested with deterministic coefficients; reverse metabolism/hydration effects require their owner consuming TraumaApi.physiology",
+    "remaining": "No pulse/respiratory rate, no separate organ entity hitboxes or prone animation; final balance deferred to 0.8.6. No new diseases."
+  },
+  "version_0_8_6": {
+    "version": "0.8.6",
+    "scope": "Owner-prioritized post-mortem report, independent of living diagnosis and medical treatment; no balance changes (deferred). Actual LivingDeathEvent captures final state, explicit lethal phase and source, distinct fatal and bleed flags, snapshot protocol 12, vanilla screen preserved, localized report.",
+    "server": "traumaqa deathreport deterministic server fixture: fall, external/internal blood loss, hypoxic brain death, native kill and stale context, reset, actual codec; actual network death ordering NOT_RUN",
+    "static_gui": "checkHudStatusLayout: 30 report layouts and native fallback bounds",
+    "client": "NOT_RUN: real vanilla death screen transition, report hover, respawn/hardcore, instant respawn gamerule and live network ordering; custom protocol unsupported by bot",
+    "remaining": "No full damage history, unknown native source uses original death message; no arbitrary fatal organ inference. No changes to organs/treatments/damage balance."
+  },
+  "version_0_8_7": {
+    "version": "0.8.7",
+    "scope": "Correct 0.8.6 compilation; distinguish terminal phase; prevent residual hypoxic damage with restored delivery; paired lung compensation; slower severe organ repair; no passive tissue/bone repair while unconscious.",
+    "server": "traumaqa organs, deathreport; existing regression retained",
+    "client": "NOT_RUN",
+    "balance": "Initial game-scale calibration; no real client playtest or full pack tuning."
+  },
+  "version_0_8_8": {
+    "version": "0.8.8",
+    "scope": "Recent medical event timeline (last 12 entries within 120 game seconds), actual deltas, shock and consciousness transitions, persisted last death archive accessible with /traumadeath, protocol 13, page navigation and native death controls preserved.",
+    "server": "traumaqa deathreport: history delta, age, bound, no zero-hit, archive roundtrip/reset/corruption; previous tests retained",
+    "static_gui": "checkHudStatusLayout: history rows and both buttons across 30 layouts",
+    "client": "NOT_RUN: actual death transition, history pages, archive open, keyboard and GUI scale; custom protocol unsupported by bot",
+    "remaining": "Timeline is recent observations, not complete damage history; events outside window and previous login omitted, not a reconstruction; archival clone/relog and actual GUI need live validation."
+  },
+  "version_0_8_9": {
+    "version": "0.8.9",
+    "scope": "Read-only PhysicalMaterials consumer, no local physical registry, no weight or impact formula changes. Nominal contact observations for direct fatal fall/melee reports, no projectile weapon inference. Protocol 14; 0.8.8 archives retained.",
+    "server": "traumaqa deathreport includes MaterialChecks. Existing pinned RC22 tests only fallback; positive provider branch needs approved Core 1.2.0 artifact.",
+    "combined": "NOT_RUN: Core RC53 Build Hub 46101620818 failed seeded biome coverage 57/58; do not pin unqualified artifact.",
+    "remaining": "Material nominal density/modulus do not establish impact cushioning or effective mass. Request Core contact-response contract; no new encumbrance, movement or armor behavior."
+  },
+  "version_0_8_10": {
+    "version": "0.8.10",
+    "scope": "PhysicalMaterials revision 2: read-only surface response in fatal landing report, explicit-input energy and item contact through TraumaApi revision 6; existing injury formula remains because no authoritative observed impact speed/effective mass/contact geometry. No physical reference table or carry penalties.",
+    "dependency": {
+      "version": "1.2.1",
+      "run": 46103365227,
+      "artifact": 15246915092,
+      "sha256": "33d2ce25db884ba8f3044d672f5970430de968c863b83372ed188774572cfb56",
+      "status": "Core QA FAIL 57/58 seeded biomes; diagnostic only"
+    },
+    "server": "traumaqa deathreport checks actual provider (required for version 1.2.1), known/unknown surface response, explicit energy/item contact, archive codecs; existing regressions retained",
+    "compatibility": "Older providers reflection fallback; separate old-provider runtime on this version not yet executed",
+    "client": "NOT_RUN: actual report tooltip and full modded client",
+    "release": "Not stable while Core gate fails. No guessed collision inputs."
+  },
+  "version_0_8_11": {
+    "version": "0.8.11",
+    "scope": "Fix confirmed death report blur: renderBackground once before content, render existing two Button widgets directly in both anatomy and history instead of Screen.render, preserve registered widget input and original death controls. Medical inventory already separates custom and vanilla rendering; no changes there.",
+    "static_gui": {
+      "id": "tr-death-render-order",
+      "target": "neoforge-mc1.21.1",
+      "test": "checkHudStatusLayout -> DeathRenderOrderCheck.verify; javap actual compiled client methods, one background, no inherited Screen.render, both page button paths, separate inventory branch",
+      "negative": "old duplicate Screen.render fails"
+    },
+    "client": {
+      "status": "NOT_RUN",
+      "reason": "Graphical client unavailable in current backend",
+      "actions": [
+        "die in survival and inspect report text, anatomy and buttons at menu blur 0 and nonzero",
+        "toggle History and Anatomy",
+        "hover for tooltips",
+        "Continue to vanilla death screen, respawn, /traumadeath",
+        "open health tab and check readability"
+      ],
+      "expected": "Only backdrop blurred; report panel, anatomy, text, history and widgets crisp; normal input and navigation"
+    },
+    "server": "Existing scenario unchanged; run full regression with pinned Core 1.2.1 diagnostic candidate. No API/gameplay/texture changes."
+  },
+  "version_0_8_12": {
+    "version": "0.8.12",
+    "scope": "Fatal cumulative mechanical head damage destroys brain; death report always shows brain function zero, tooltip preserves tissue integrity and causal markers. Compact report bounds, darker numeric contrast and unshadowed title. Full native visual language coordinated with Core #253, no new texture or separate style framework.",
+    "server": "traumaqa deathreport: 6 nonfatal subthreshold hits, 7th fatal head/brain, blood loss/native deaths preserve organ structure, archive roundtrip; existing regressions",
+    "static_gui": "checkHudStatusLayout: compact bounded layouts, no second blur",
+    "client": "NOT_RUN: actual GUI screenshots and Core 1.3.0 shared rail integration; current pinned Core 1.2.1 diagnostic candidate remains unchanged",
+    "remaining": "Full redesign deferred to shared Core style; no new API or packet format; no claim that brain tissue always physically destroyed."
   }
 }

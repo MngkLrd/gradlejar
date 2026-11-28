@@ -23,8 +23,10 @@ public final class TraumaCraft {
         dev.minemods.traumacraft.content.HerbContent.register(modBus);
         ModItems.register(modBus); ModMenus.register(modBus); ModCreativeTabs.register(modBus);
         modBus.addListener(ModNetwork::register);
+        modBus.addListener((net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent e)->e.enqueueWork(dev.minemods.traumacraft.integration.CorePresentation::register));
         var bus=NeoForge.EVENT_BUS;
         bus.addListener(EventPriority.LOWEST,TraumaEvents::onDamage);
+        bus.addListener(EventPriority.LOWEST,dev.minemods.traumacraft.event.DeathReports::onDeath);
         bus.addListener(EventPriority.LOWEST,VitalityBridge::onHeal);
         bus.addListener(TraumaEvents::onPlayerTick);
         bus.addListener(EventPriority.HIGHEST,FunctionEvents::attack);

@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "worldlogicterrain:wild_water_mint",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:water_mint",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:wild_wild_mint",
+      "required": false
+    }
+  ]
+}

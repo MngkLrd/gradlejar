@@ -1,0 +1,13 @@
+{
+  "name": "Измельчённые травы",
+  "category": "worldlogic:trauma",
+  "icon": "traumacraft:botanical_powder",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "traumacraft:botanical_powder",
+      "link_recipe": true,
+      "text": "Положите одну порцию на подходящую поверхность. Обработайте все 16 ячеек рукой, кремнем или булыжником; инструмент захватывает соседние ячейки. Подберите результат после полной обработки. Выход: две порции."
+    }
+  ]
+}

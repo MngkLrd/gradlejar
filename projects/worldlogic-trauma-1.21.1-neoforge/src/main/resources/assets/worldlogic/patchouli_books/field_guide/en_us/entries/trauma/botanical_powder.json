@@ -1,0 +1,13 @@
+{
+  "name": "Botanical powder",
+  "category": "worldlogic:trauma",
+  "icon": "traumacraft:botanical_powder",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "traumacraft:botanical_powder",
+      "link_recipe": true,
+      "text": "Place one portion on a supported surface. Process all 16 cells with an empty hand, flint or cobblestone; tools affect neighboring cells. Collect after every cell is processed. Yields two portions."
+    }
+  ]
+}

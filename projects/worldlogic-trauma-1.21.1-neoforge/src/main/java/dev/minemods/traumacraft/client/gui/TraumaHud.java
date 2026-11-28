@@ -24,9 +24,8 @@ public final class TraumaHud {
         Minecraft mc=Minecraft.getInstance();
         if(mc.player==null || !mc.player.isAlive() || mc.options.hideGui || mc.screen!=null || !ClientBodyState.hasReceived())return;
         TreatmentRing.render(gui);
-        if(mc.player.isCreative() || mc.player.isSpectator())return;
+        if(!HudStatusLayout.replacesVanillaHealth(ClientBodyState.hasReceived(),mc.player.isAlive(),mc.player.isCreative(),mc.player.isSpectator()))return;
         int mask=activeMask();
-        if(!HudStatusLayout.visible(ClientBodyState.hasAnyInjuries(),mask))return;
         int x=AnatomyLayout.hudX(gui.guiWidth(),mask), y=AnatomyLayout.hudY(gui.guiWidth(),gui.guiHeight(),mask);
         BodyVisual.draw(gui,x,y,true);
         int count=Integer.bitCount(mask);

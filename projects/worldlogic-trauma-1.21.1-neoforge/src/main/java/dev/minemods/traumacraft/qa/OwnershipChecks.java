@@ -18,8 +18,9 @@ import java.util.LinkedHashMap;
 public final class OwnershipChecks {
     private OwnershipChecks(){}
     private static void require(boolean value,String label){if(!value)throw new IllegalStateException("Ownership QA: "+label);}
-    private static void post(ServerPlayer p,DamageSource source,float amount){
-        NeoForge.EVENT_BUS.post(new LivingDamageEvent.Pre(p,new DamageContainer(source,amount)));
+    private static float post(ServerPlayer p,DamageSource source,float amount){
+        var e=new LivingDamageEvent.Pre(p,new DamageContainer(source,amount));
+        NeoForge.EVENT_BUS.post(e);return e.getNewDamage();
     }
     public static void verify(ServerPlayer p){
         var saved=Rules.snapshot();
@@ -33,10 +34,10 @@ public final class OwnershipChecks {
             require(!WorldLogicApi.ruleEnabled("injuries")&&!WorldLogicApi.ruleEnabled("shoulder_impact"),"Core legacy rules disabled");
             var b=BodyStates.get(p);b.reset();
             require(WorldLogicBridge.injuryEnabled(p)&&WorldLogicBridge.functionsEnabled(p),"Trauma stays active when Core delegates");
-            post(p,p.damageSources().fall(),5);
+            require(post(p,p.damageSources().fall(),5)==0,"vanilla HP damage disabled for nonlethal anatomical fall");
             require(b.health(BodyPart.LEFT_LEG)==45&&b.health(BodyPart.RIGHT_LEG)==45&&b.fractured(BodyPart.LEFT_LEG)&&b.fractured(BodyPart.RIGHT_LEG),"one registered fall event damages legs exactly once");
             require(b.health(BodyPart.HEAD)==35&&b.health(BodyPart.CHEST)==85,"unrelated regions untouched");
-            post(p,p.damageSources().inFire(),2);
+            require(post(p,p.damageSources().inFire(),2)==0,"vanilla damage disabled for nonlethal fire");
             require(b.health(BodyPart.CHEST)==79&&(b.wounds(BodyPart.CHEST)&WoundKind.BURN.bit)!=0,"registered fire event still damages anatomy");
             post(p,p.damageSources().fall(),0);
             require(b.health(BodyPart.LEFT_LEG)==45,"zero damage ignored");
@@ -49,12 +50,19 @@ public final class OwnershipChecks {
             require(TraumaApi.reportInjury(p,TraumaApi.Zone.LEFT_ARM,TraumaApi.Injury.FROSTBITE,4,0),"external addon injury accepted under delegation");
             require(TraumaApi.status(p).orElseThrow().regions().stream().anyMatch(r->r.zone()==TraumaApi.Zone.LEFT_ARM&&r.health()==56),"external injury visible");
             require(WorldLogicBridge.mergePenalty(p,0)>=.42f,"limb movement restriction survives delegation");
+            p.setHealth(1);VitalityBridge.maintainBackingHealth(p);
+            require(p.getHealth()==p.getMaxHealth(),"native backing restored independently of anatomy");
             p.gameMode.changeGameModeForPlayer(GameType.CREATIVE);
-            post(p,p.damageSources().fall(),5);
+            require(post(p,p.damageSources().fall(),5)==5,"creative native damage untouched");
             require(b.health(BodyPart.LEFT_LEG)==45&&!WorldLogicBridge.functionsEnabled(p)&&TraumaApi.status(p).isEmpty(),"creative excluded");
             p.gameMode.changeGameModeForPlayer(GameType.SPECTATOR);
             post(p,p.damageSources().fall(),5);
             require(b.health(BodyPart.LEFT_LEG)==45&&!WorldLogicBridge.functionsEnabled(p),"spectator excluded");
+            p.gameMode.changeGameModeForPlayer(GameType.SURVIVAL);b.reset();
+            b.damage(BodyPart.LEFT_LEG,65);b.damage(BodyPart.RIGHT_LEG,65);
+            require(post(p,p.damageSources().fall(),100)>0&&b.vitalDestroyed(),"vital destruction permits lethal native damage");
+            b.reset();
+            require(post(p,p.damageSources().fellOutOfWorld(),1)>0,"void damage is not suppressed");
         }finally{
             p.gameMode.changeGameModeForPlayer(GameType.SURVIVAL);
             Rules.apply(saved);

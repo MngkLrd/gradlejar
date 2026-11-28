@@ -1,0 +1,78 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:stripped_oak_log",
+    "minecraft:stripped_oak_wood",
+    "minecraft:stripped_spruce_log",
+    "minecraft:stripped_spruce_wood",
+    "minecraft:stripped_birch_log",
+    "minecraft:stripped_birch_wood",
+    "minecraft:stripped_jungle_log",
+    "minecraft:stripped_jungle_wood",
+    "minecraft:stripped_acacia_log",
+    "minecraft:stripped_acacia_wood",
+    "minecraft:stripped_dark_oak_log",
+    "minecraft:stripped_dark_oak_wood",
+    "minecraft:stripped_mangrove_log",
+    "minecraft:stripped_mangrove_wood",
+    "minecraft:stripped_cherry_log",
+    "minecraft:stripped_cherry_wood",
+    "minecraft:stripped_bamboo_block",
+    "minecraft:stripped_crimson_stem",
+    "minecraft:stripped_warped_stem",
+    "minecraft:stripped_crimson_hyphae",
+    "minecraft:stripped_warped_hyphae",
+    {
+      "id": "worldlogicterrain:stripped_willow_log",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:stripped_larch_log",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:stripped_pine_log",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:stripped_fir_log",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:stripped_cedar_log",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:stripped_maple_log",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:stripped_beech_log",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:stripped_alder_log",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:stripped_palm_log",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:stripped_date_palm_log",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:stripped_baobab_log",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:stripped_ebony_log",
+      "required": false
+    },
+    {
+      "id": "worldlogicterrain:stripped_mahogany_log",
+      "required": false
+    }
+  ]
+}

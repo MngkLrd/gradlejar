@@ -1,0 +1,13 @@
+{
+  "name": "Шина",
+  "category": "worldlogic:trauma",
+  "icon": "traumacraft:splint",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "traumacraft:splint",
+      "link_recipe": true,
+      "text": "Используйте по назначению в интерфейсе анатомии. Доступные рецепты смотрите через JEI."
+    }
+  ]
+}

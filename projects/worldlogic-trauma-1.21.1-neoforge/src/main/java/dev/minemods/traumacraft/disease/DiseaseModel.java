@@ -59,7 +59,8 @@ public final class DiseaseModel {
         if(!canTreat(s))return s;
         return new State(s.kind(),s.dose(),s.severity(),0,s.elapsed(),150,s.vomiting());
     }
-    public static Step second(State s,Physiology physiology,boolean resting){
+    public static Step second(State s,Physiology physiology,boolean resting){return second(s,physiology,resting,1);}
+    public static Step second(State s,Physiology physiology,boolean resting,double resistance){
         if(s.kind()==Kind.NONE)return new Step(new State(Kind.NONE,Math.max(0,s.dose()-.003),0,0,0,0,0),false,false);
         if(s.incubation()>1)return new Step(new State(s.kind(),s.dose(),0,s.incubation()-1,0,0,0),false,false);
         if(s.incubation()==1){
@@ -69,7 +70,7 @@ public final class DiseaseModel {
         }
         if(!s.symptomatic())return new Step(State.HEALTHY,false,false);
         double speed=(s.kind()==Kind.ENTEROCOLITIS?.00145:.0022)
-                *physiology.recoveryFactor()*(resting?1.25:1)*(s.support()>0?2.5:1);
+                *physiology.recoveryFactor()*clamp(resistance,.1,1)*(resting?1.25:1)*(s.support()>0?2.5:1);
         double severity=Math.max(0,s.severity()-speed);
         if(severity<.10)return new Step(State.HEALTHY,false,false);
         int elapsed=s.elapsed()+1;

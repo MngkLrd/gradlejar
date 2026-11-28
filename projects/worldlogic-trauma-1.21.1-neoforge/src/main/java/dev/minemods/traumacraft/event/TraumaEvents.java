@@ -4,6 +4,7 @@ import dev.minemods.traumacraft.climb.ClimbManager;
 import dev.minemods.traumacraft.health.*;
 import dev.minemods.traumacraft.integration.WorldLogicBridge;
 import dev.minemods.traumacraft.integration.ThermalBridge;
+import dev.minemods.traumacraft.integration.MetabolismBridge;
 import dev.minemods.traumacraft.integration.LegacyFrostExposure;
 import dev.minemods.traumacraft.disease.WaterIllness;
 import dev.minemods.traumacraft.medical.TreatmentManager;
@@ -28,6 +29,8 @@ public final class TraumaEvents {
         ModNetwork.progress(p,0,0);
     }
     public static void resetAfterDeath(ServerPlayer p) {
+        DeathReports.resetHistory(p);
+        MetabolismBridge.forget(p);
         ClimbManager.cancel(p);
         TreatmentManager.forget(p);
         WorldLogicBridge.clearLegacyInjuries(p);
@@ -38,9 +41,11 @@ public final class TraumaEvents {
         ModNetwork.progress(p,0,0);
     }
     public static void onLogout(PlayerEvent.PlayerLoggedOutEvent e) {
-        if(e.getEntity() instanceof ServerPlayer p){ClimbManager.cancel(p);ClimbManager.forget(p);BodyStates.flush(p);BodyStates.forget(p);TreatmentManager.forget(p);}
+        if(e.getEntity() instanceof ServerPlayer p){DeathReports.resetHistory(p);MetabolismBridge.forget(p);ClimbManager.cancel(p);ClimbManager.forget(p);BodyStates.flush(p);BodyStates.forget(p);TreatmentManager.forget(p);}
     }
     public static void onClone(PlayerEvent.Clone e) {
+        DeathReports.copyArchive(e.getOriginal(),e.getEntity());
+        if(e.getOriginal() instanceof ServerPlayer oldPlayer)DeathReports.resetHistory(oldPlayer);
         BodyStates.copy(e.getOriginal(),e.getEntity(),e.isWasDeath());
         LegacyFrostExposure.clonePlayer(e.getOriginal(),e.getEntity(),e.isWasDeath());
         WaterIllness.clonePlayer(e.getOriginal(),e.getEntity(),e.isWasDeath());
@@ -64,28 +69,38 @@ public final class TraumaEvents {
     public static void onDamage(LivingDamageEvent.Pre e) {
         if(INTERNAL.get() || !(e.getEntity() instanceof ServerPlayer p) || !WorldLogicBridge.active(p)) return;
         float amount=e.getNewDamage();
-        if(amount<=0) return;
+        if(!(amount>0)||!Float.isFinite(amount)) return;
         ClimbManager.cancel(p);
         TreatmentManager.cancel(p);
         if(!WorldLogicBridge.injuryEnabled(p)) return;
         BodyState b=BodyStates.get(p);
+        // Engine kill/void are not physical impacts; retain the real pre-death anatomy in the report.
+        if(VitalityBridge.engineFatalSource(e.getSource())){DeathReports.clear(p);return;}
+        boolean alreadyFatal=b.vitalDestroyed()||b.fatalBloodLoss();
+        var beforeImpact=TraumaHistory.Snapshot.of(b);
         applyDamage(p,b,e.getSource(),amount);
-        // Keep vanilla hearts authoritative: only a destroyed vital zone may force lethal damage.
-        if(b.vitalDestroyed()) e.setNewDamage(Math.max(amount,p.getHealth()+p.getAbsorptionAmount()+1));
+        DeathReports.observe(p,TraumaHistory.Kind.IMPACT,DeathReports.origin(e.getSource()),beforeImpact,b);
+        DeathReports.hit(p,b,e.getSource(),alreadyFatal);
+        // Anatomical damage is the only normal survival damage. Preserve engine-level kill/void.
+        if(!VitalityBridge.engineFatalSource(e.getSource())) e.setNewDamage(b.vitalDestroyed()?Math.max(amount,p.getHealth()+p.getAbsorptionAmount()+1):0f);
         ModNetwork.sync(p);
     }
     public static void applyDamage(ServerPlayer p,BodyState b,DamageSource source,float amount) {
         if(!WorldLogicBridge.active(p) || !(amount>0) || !Float.isFinite(amount)) return;
+        // Vanilla air supply supplies the breathing input; do not also inflict direct chest HP for drowning.
+        if(source.is(net.minecraft.world.damagesource.DamageTypes.DROWN))return;
         if(source.is(DamageTypeTags.IS_FALL)) {
-            float points=amount*4f;
+            float points=Math.min(amount,440f)*4f;
+            float overflow=0,threshold=17f*MetabolismBridge.read(p).fracture();
             for(BodyPart leg:new BodyPart[]{BodyPart.LEFT_LEG,BodyPart.RIGHT_LEG}){
-                b.wound(leg,points,WoundKind.CONTUSION);
-                if(points>=17f) b.setFractured(leg,true);
+                overflow+=woundOverflow(b,leg,points,WoundKind.CONTUSION);
+                if(points>=threshold) b.setFractured(leg,true);
             }
+            transferImpact(b,overflow,WoundKind.CONTUSION);
             return;
         }
         if(source.is(DamageTypeTags.IS_EXPLOSION)) {
-            for(BodyPart zone:BodyPart.values()) b.wound(zone,amount*(zone==BodyPart.CHEST?1.5f:.65f),WoundKind.LACERATION);
+            for(BodyPart zone:BodyPart.values()) b.impact(zone,Math.min(amount,440f)*(zone==BodyPart.CHEST?1.5f:.65f),WoundKind.LACERATION);
             // World Logic owns blast concussion; do not generate a second effect.
             return;
         }
@@ -97,8 +112,9 @@ public final class TraumaEvents {
         boolean fire=source.is(DamageTypeTags.IS_FIRE);
         boolean projectile=source.is(DamageTypeTags.IS_PROJECTILE);
         boolean physical=!fire && (source.getEntity()!=null || projectile);
-        BodyPart part=physical?HitLocation.locate(p,source):BodyPart.CHEST;
-        float points=amount*(projectile?4f:3f);
+        var contact=physical?HitLocation.impact(p,source):null;
+        BodyPart part=contact!=null?contact.region():BodyPart.CHEST;
+        float points=Math.min(amount,440f)*(projectile?4f:3f);
         // LivingDamageEvent.Pre already reflects armor/resistance. Do not apply armor again.
         WoundKind wound=null;
         if(fire)wound=WoundKind.BURN;
@@ -108,7 +124,13 @@ public final class TraumaEvents {
             wound=tool instanceof net.minecraft.world.item.SwordItem?WoundKind.CUT:
                 tool instanceof net.minecraft.world.item.AxeItem?WoundKind.LACERATION:WoundKind.CONTUSION;
         }
-        if(wound!=null)b.wound(part,points,wound);else b.damage(part,points);
+        if(wound!=null){
+            var organ=contact==null?null:OrganTarget.select(part,contact.lateral(),contact.height(),contact.rear());
+            float capacity=b.health(part);
+            b.impact(part,points,wound,organ);
+            float overflow=Math.max(0,points-capacity);
+            if(physical&&part!=BodyPart.HEAD&&part!=BodyPart.CHEST)transferImpact(b,overflow,WoundKind.CONTUSION);
+        }else b.damage(part,points);
         if(physical && part==BodyPart.HEAD && points>=12 && p.getRandom().nextFloat()<.45f) b.addConcussion(600);
         if(physical && points>=12) {
             float roll=p.getRandom().nextFloat();
@@ -117,42 +139,76 @@ public final class TraumaEvents {
             else if(roll<(open?.80f:.15f))b.setBleeding(part,1);
         }
     }
+    /** Spend local HP first, then pass the unabsorbed mechanical impact to the trunk. */
+    private static float woundOverflow(BodyState b,BodyPart part,float points,WoundKind kind){
+        if(!Float.isFinite(points)||points<=0)return 0;
+        float capacity=b.health(part);
+        b.impact(part,points,kind);
+        return Math.max(0,points-capacity);
+    }
+    private static void transferImpact(BodyState b,float overflow,WoundKind kind){
+        if(!(overflow>0))return;
+        // Abdomen and chest take 60/40 of the first transmitted impact.
+        // Any unabsorbed part continues through the torso; exhausted limbs cannot swallow damage.
+        float remaining=woundOverflow(b,BodyPart.STOMACH,overflow*.6f,kind)
+                       +woundOverflow(b,BodyPart.CHEST,overflow*.4f,kind);
+        remaining=woundOverflow(b,BodyPart.STOMACH,remaining,kind);
+        remaining=woundOverflow(b,BodyPart.CHEST,remaining,kind);
+        woundOverflow(b,BodyPart.HEAD,remaining,kind);
+    }
     public static void onPlayerTick(EntityTickEvent.Post e) {
         if(!(e.getEntity() instanceof ServerPlayer p)) return;
         FunctionEvents.update(p);
         ClimbManager.tick(p);
         if(!WorldLogicBridge.active(p)){TreatmentManager.tick(p);if(p.tickCount%40==0)ModNetwork.syncGait(p);return;}
         BodyState b=BodyStates.get(p);
-        if(b.vitalDestroyed()||b.fatalBloodLoss()){fatalCollapse(p);return;}
+        if(b.vitalDestroyed()||b.fatalBloodLoss()){fatalCollapse(p,null);return;}
+        DeathReports.clear(p);
+        VitalityBridge.maintainBackingHealth(p);
         TreatmentManager.tick(p);
         if(p.tickCount%20!=0) return;
         b.tickMedicalEffects();
+        var nutrition=MetabolismBridge.read(p);
+        if(nutrition.toxin()>=.55f&&p.tickCount%100==0&&p.connection!=null&&!(p instanceof net.neoforged.neoforge.common.util.FakePlayer))p.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.CONFUSION,120,0,false,false,true));
+        boolean resting=!ClimbManager.active(p)&&WorldLogicBridge.resting(p);
+        var thermal=ThermalBridge.condition(p);
+        var support=dev.minemods.traumacraft.integration.OrganSupport.read(p,thermal,nutrition);
+        var beforePhysiology=TraumaHistory.Snapshot.of(b);
+        b.physiologySecond(p.getAirSupply()>0,resting,support.repair(),support.circulation());
+        DeathReports.observe(p,TraumaHistory.Kind.INTERNAL_DECLINE,DeathReport.Origin.SYSTEMIC,beforePhysiology,b);
+        if(b.organs().unconscious()){TreatmentManager.cancel(p);ClimbManager.cancel(p);}
+        if(b.vitalDestroyed()||b.fatalBloodLoss()){fatalCollapse(p,b.fatalBloodLoss()?DeathReport.Cause.INTERNAL_BLEEDING:DeathReport.Cause.HYPOXIA);return;}
         WaterIllness.tick(p);
         if(LegacyFrostExposure.tick(p,b)){
             TreatmentManager.cancel(p);
             ClimbManager.cancel(p);
         }
-        if(!ClimbManager.active(p)&&WorldLogicBridge.resting(p)) {
-            var thermal=ThermalBridge.condition(p);
-            ThermalBridge.recover(b,thermal,p.tickCount%100==0);
-            if(!b.hasBleeding())b.recoverBlood(6f*thermal.recoveryFactor);
+        if(b.vitalDestroyed()||b.fatalBloodLoss()){fatalCollapse(p,null);return;}
+        float before=totalHp(b);
+        if(resting) {
+            ThermalBridge.recover(b,thermal,p.tickCount%100==0,nutrition.tissue(),nutrition.bone());
+            if(!b.hasAnyBleeding())b.recoverBlood(6f*thermal.recoveryFactor*nutrition.blood()*b.organs().repairFactor(b.bloodFraction()));
         }
+        MetabolismBridge.record(p,Math.max(0,totalHp(b)-before));
         if(p.tickCount%40==0 && b.hasBleeding()) {
-            float blood=b.bleedStep();
-            if(b.vitalDestroyed()||b.fatalBloodLoss()){fatalCollapse(p);return;}
-            if(blood>0 && p.getHealth()>1f) p.setHealth(Math.max(1f,p.getHealth()-blood*.20f));
+            var beforeBleed=TraumaHistory.Snapshot.of(b);
+            b.bleedStep();
+            DeathReports.observe(p,TraumaHistory.Kind.EXTERNAL_BLEED,DeathReport.Origin.SYSTEMIC,beforeBleed,b);
+            if(b.vitalDestroyed()||b.fatalBloodLoss()){fatalCollapse(p,DeathReport.Cause.EXTERNAL_BLEEDING);return;}
         }
         if(BodyStates.flush(p) || p.tickCount%40==0) ModNetwork.sync(p);
     }
     /** No grace period for a destroyed brain or chest. Direct kill bypasses armor and totems. */
-    private static void fatalCollapse(ServerPlayer p){
+    private static float totalHp(BodyState b){float hp=0;for(var part:BodyPart.values())hp+=b.health(part);return hp;}
+    private static void fatalCollapse(ServerPlayer p,DeathReport.Cause phase){
+        DeathReports.collapse(p,BodyStates.get(p),phase);
         ClimbManager.cancel(p);
         TreatmentManager.cancel(p);
         BodyStates.flush(p);
         try{
             INTERNAL.set(true);
             p.kill();
-        }finally{INTERNAL.set(false);}
+        }finally{INTERNAL.set(false);DeathReports.clear(p);}
         if(p.isAlive())ModNetwork.sync(p);
     }
     // Existing admin command calls this after reset. World Logic alone owns movement modifiers.

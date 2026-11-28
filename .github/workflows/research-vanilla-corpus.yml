@@ -1,0 +1,55 @@
+name: Vanilla visual research R1
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'tools/qa/real_art_review.py'
+      - 'tools/qa/research/real-art-r7.json'
+      - 'tools/qa/tests/test_real_art_review.py'
+      - 'tools/qa/research/vanilla-art-rules.json'
+      - 'tools/qa/art_review_lock.py'
+      - 'tools/qa/vanilla_corpus.py'
+      - 'tools/qa/vanilla_extended.py'
+      - 'tools/qa/tests/test_vanilla_extended.py'
+      - 'tools/qa/tests/test_vanilla_corpus.py'
+      - 'tools/qa/vanilla_benchmark.py'
+      - 'tools/qa/tests/test_vanilla_benchmark.py'
+      - '.github/workflows/research-vanilla-corpus.yml'
+permissions:
+  contents: read
+jobs:
+  corpus:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install Pillow==12.0.0
+      - run: python -m unittest tools.qa.tests.test_vanilla_corpus tools.qa.tests.test_vanilla_benchmark tools.qa.tests.test_vanilla_extended tools.qa.tests.test_real_art_review -v
+      - run: python -m tools.qa.vanilla_corpus --minecraft 1.21.1 --out vanilla-corpus
+      - run: python -m tools.qa.vanilla_benchmark --minecraft 1.21.1 --out vanilla-benchmark
+      - run: python -m tools.qa.vanilla_benchmark --minecraft 1.21.1 --suite expanded --seed 209 --out vanilla-benchmark-expanded
+      - name: Verify real mod sources and generate exploratory reviewer packet
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python -m tools.qa.real_art_review build --seed 207 --out real-art-r7
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: vanilla-corpus-metrics
+          path: |
+            vanilla-corpus/corpus.json
+            vanilla-corpus/extended-corpus.json
+            vanilla-benchmark/benchmark-summary.json
+            vanilla-benchmark-expanded/benchmark-summary.json
+            real-art-r7/summary.json
+          if-no-files-found: warn
+          retention-days: 14
+      - uses: actions/upload-artifact@v4
+        with:
+          name: r7-exploratory-reviewer-packet
+          path: real-art-r7/reviewer/
+          if-no-files-found: error
+          retention-days: 14

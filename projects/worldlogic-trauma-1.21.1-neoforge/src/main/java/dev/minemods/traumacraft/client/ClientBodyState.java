@@ -11,6 +11,9 @@ public final class ClientBodyState {
     private static final byte[] BLEEDING = new byte[BodyPart.values().length];
     private static final boolean[] FRACTURE = new boolean[BodyPart.values().length];
     private static final boolean[] STABILIZED = new boolean[BodyPart.values().length];
+    private static final float[] ORGANS=new float[dev.minemods.traumacraft.health.OrganState.Organ.values().length], INTERNAL=new float[ORGANS.length];
+    private static float oxygen=1,perfusion=1,delivery=1,renal=1,digestive=1,repair=1,shockLoad;
+    private static boolean unconscious;
     private static boolean received;
     private static int concussionTicks;
     private static int painkillerTicks;
@@ -42,8 +45,23 @@ public final class ClientBodyState {
         illnessStage=illnessKind!=DiseaseModel.Kind.NONE&&packet.illnessStage()>=DiseaseModel.Stage.MILD.ordinal()&&packet.illnessStage()<stages.length?stages[packet.illnessStage()]:DiseaseModel.Stage.HEALTHY;
         if(illnessStage==DiseaseModel.Stage.HEALTHY)illnessKind=DiseaseModel.Kind.NONE;
         illnessTreated=illnessKind!=DiseaseModel.Kind.NONE&&packet.illnessTreated();
+        var clinical=packet.clinical();
+        for(int i=0;i<ORGANS.length;i++){ORGANS[i]=bounded(clinical.integrity()[i],1,1);INTERNAL[i]=bounded(clinical.internalBleeding()[i],12,0);}
+        oxygen=bounded(clinical.oxygen(),1,1);perfusion=bounded(clinical.perfusion(),1,1);delivery=bounded(clinical.delivery(),1,1);renal=bounded(clinical.renal(),1,1);digestive=bounded(clinical.digestive(),1,1);repair=bounded(clinical.repair(),1,1);shockLoad=bounded(clinical.shockLoad(),1,0);unconscious=clinical.unconscious();
         received = true;
     }
+    private static float bounded(float v,float max,float fallback){return Float.isFinite(v)?Math.max(0,Math.min(max,v)):fallback;}
+    public static float organ(dev.minemods.traumacraft.health.OrganState.Organ o){return received?ORGANS[o.ordinal()]:1;}
+    public static float internal(dev.minemods.traumacraft.health.OrganState.Organ o){return received?INTERNAL[o.ordinal()]:0;}
+    public static float internalLoss(){float total=0;if(received)for(float x:INTERNAL)total+=x;return total;}
+    public static float oxygen(){return received?oxygen:1;}
+    public static float perfusion(){return received?perfusion:1;}
+    public static float delivery(){return received?delivery:1;}
+    public static float renal(){return received?renal:1;}
+    public static float digestive(){return received?digestive:1;}
+    public static float repair(){return received?repair:1;}
+    public static float shockLoad(){return received?shockLoad:0;}
+    public static boolean unconscious(){return received&&unconscious;}
     public static DiseaseModel.Kind illnessKind(){return received?illnessKind:DiseaseModel.Kind.NONE;}
     public static DiseaseModel.Stage illnessStage(){return received?illnessStage:DiseaseModel.Stage.HEALTHY;}
     public static boolean illnessTreated(){return received&&illnessTreated;}

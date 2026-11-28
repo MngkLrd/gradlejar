@@ -23,7 +23,7 @@ public final class RegressionChecks {
     private static void require(boolean ok,String message){if(!ok)throw new IllegalStateException(message);}
     public static void register(RegisterCommandsEvent e){
         var root=Commands.literal("traumaqa").requires(s->s.hasPermission(4)&&s.getEntity()==null);
-        for(String name:new String[]{"state","treatment","bridge","damage","api","procedure","persistence","targeting","identity","thermal","respawn","bloodloss","physiology","wounds","primitive","publicapi","climb","ownership","frostcompat","waterillness","hydrationpack"})
+        for(String name:new String[]{"state","treatment","bridge","damage","api","procedure","persistence","targeting","identity","thermal","respawn","bloodloss","physiology","wounds","primitive","publicapi","climb","ownership","frostcompat","waterillness","organs","deathreport","hydrationpack","adminrestore"})
             root.then(Commands.literal(name).executes(c->run(c.getSource(),name)));
         e.getDispatcher().register(root);
     }
@@ -36,6 +36,23 @@ public final class RegressionChecks {
             setFixtureMode(p,GameType.SURVIVAL);
             BodyState b=BodyStates.get(p); b.reset();
             switch(name){
+                case "adminrestore" -> {
+                    b.impact(BodyPart.STOMACH,20,WoundKind.PUNCTURE);
+                    b.setBleeding(BodyPart.LEFT_ARM,2);
+                    b.setFractured(BodyPart.RIGHT_LEG,true);
+                    b.loseBlood(1000);b.addConcussion(200);b.setPainkillerTicks(100);
+                    var api=dev.minemods.traumacraft.api.TraumaApi.class;
+                    require(!dev.minemods.traumacraft.api.TraumaApi.adminRestore(null),"null restore accepted");
+                    require(dev.minemods.traumacraft.api.TraumaApi.adminRestore(p),"admin restore rejected");
+                    var restored=dev.minemods.traumacraft.api.TraumaApi.status(p).orElseThrow();
+                    require(restored.regions().stream().allMatch(z->z.health()==z.maximum()&&z.bleeding()==0&&!z.fractured()&&!z.stabilized()&&z.injuries().isEmpty()),"zones not restored");
+                    require(restored.bloodMl()==restored.maximumBloodMl()&&restored.concussionTicks()==0&&restored.analgesiaTicks()==0&&restored.shock()==0,"clinical reset incomplete");
+                    var phys=dev.minemods.traumacraft.api.TraumaApi.physiology(p).orElseThrow();
+                    require(phys.organs().stream().allMatch(o->o.integrity()==1f&&o.internalBleedingMlPerSecond()==0)&&phys.oxygenDebtSeconds()==0&&!phys.unconscious(),"organ reset incomplete");
+                    require(dev.minemods.traumacraft.api.TraumaApi.illnessStatus(p).orElseThrow().kind().equals("NONE"),"illness not cleared");
+                    BodyStates.forget(p);require(BodyStates.get(p).health(BodyPart.STOMACH)==BodyPart.STOMACH.maximum,"restore not persistent");
+                    require(dev.minemods.traumacraft.api.TraumaApi.adminRestore(p),"repeat restore rejected");
+                }
                 case "state" -> {
                     int total=0;for(BodyPart part:BodyPart.values()){
                         total+=part.maximum;
@@ -211,6 +228,7 @@ public final class RegressionChecks {
                 }
                 case "primitive" -> {
                     dev.minemods.traumacraft.content.HerbWorkChecks.verify(source.getLevel(),p);
+                    PrimitiveRecipeChecks.verify(source.getLevel());
                     var arm=BodyPart.LEFT_ARM;
                     b.reset();b.damage(arm,60);b.setBleeding(arm,2);
                     require(!MedicalAction.canApply(b,MedicalItem.Type.MEDKIT,arm),"medkit cannot resurrect black limb");
@@ -231,6 +249,19 @@ public final class RegressionChecks {
                     require(recipes.byKey(ModItems.HERBAL_POULTICE.getId()).isPresent(),"new poultice recipe registered");
                 }
                 case "publicapi" -> {
+                    var metabolism=dev.minemods.traumacraft.integration.MetabolismBridge.read(p);
+                    require(metabolism.equals(dev.minemods.traumacraft.integration.MetabolismBridge.Factors.NEUTRAL),"absent Metabolism is neutral");
+                    dev.minemods.traumacraft.integration.MetabolismBridge.forget(p);
+                    require(dev.minemods.traumacraft.api.TraumaApi.passiveRecoveryHpPerMinute(p)==-1,"unobserved recovery unknown");
+                    for(int i=0;i<4;i++)dev.minemods.traumacraft.integration.MetabolismBridge.record(p,0);
+                    require(dev.minemods.traumacraft.api.TraumaApi.passiveRecoveryHpPerMinute(p)==-1,"insufficient samples");
+                    dev.minemods.traumacraft.integration.MetabolismBridge.record(p,.75f);
+                    require(Math.abs(dev.minemods.traumacraft.api.TraumaApi.passiveRecoveryHpPerMinute(p)-9)<.001,"observed HP per minute");
+                    for(int i=0;i<60;i++)dev.minemods.traumacraft.integration.MetabolismBridge.record(p,0);
+                    require(dev.minemods.traumacraft.api.TraumaApi.passiveRecoveryHpPerMinute(p)==0,"old sample expires");
+                    dev.minemods.traumacraft.integration.MetabolismBridge.forget(p);
+                    require(dev.minemods.traumacraft.api.TraumaApi.passiveRecoveryHpPerMinute(p)==-1,"rate resets on forget");
+
                     require(dev.minemods.traumacraft.api.TraumaApi.API_VERSION==1,"public API version");
                     var initial=dev.minemods.traumacraft.api.TraumaApi.status(p).orElseThrow();
                     require(initial.regions().size()==7&&initial.bloodMl()==5000,"healthy public snapshot");
@@ -394,10 +425,28 @@ public final class RegressionChecks {
                 case "hydrationpack" -> dev.minemods.traumacraft.qa.DiseaseChecks.verifyIntegration(p);
                 case "ownership" -> dev.minemods.traumacraft.qa.OwnershipChecks.verify(p);
                 case "frostcompat" -> dev.minemods.traumacraft.qa.FrostCompatibilityChecks.verify(p);
+                case "organs" -> OrganChecks.verify(p,b);
+                case "deathreport" -> DeathReportChecks.verify(p,b);
                 case "damage" -> {
                     TraumaEvents.applyDamage(p,b,p.damageSources().fall(),5);
                     require(b.health(BodyPart.LEFT_LEG)==45&&b.health(BodyPart.RIGHT_LEG)==45&&b.fractured(BodyPart.LEFT_LEG),"single fall damage");
                     require(b.health(BodyPart.HEAD)==35&&!b.hasBleeding(),"fall negative control");
+                    b.reset();b.damage(BodyPart.LEFT_LEG,65);
+                    TraumaEvents.applyDamage(p,b,p.damageSources().fall(),5);
+                    require(b.health(BodyPart.LEFT_LEG)==0&&b.health(BodyPart.RIGHT_LEG)==45,"one black leg preserves opposite impact");
+                    require(Math.abs(b.health(BodyPart.STOMACH)-58)<.001&&Math.abs(b.health(BodyPart.CHEST)-77)<.001,"one black leg transfers exact 20 HP");
+                    b.reset();b.damage(BodyPart.LEFT_LEG,60);b.damage(BodyPart.RIGHT_LEG,60);
+                    TraumaEvents.applyDamage(p,b,p.damageSources().fall(),5);
+                    require(b.health(BodyPart.LEFT_LEG)==0&&b.health(BodyPart.RIGHT_LEG)==0,"newly exhausted legs");
+                    require(Math.abs(b.health(BodyPart.STOMACH)-52)<.001&&Math.abs(b.health(BodyPart.CHEST)-73)<.001,"exact 30 HP overflow on same hit");
+                    b.reset();b.damage(BodyPart.LEFT_LEG,65);b.damage(BodyPart.RIGHT_LEG,65);
+                    TraumaEvents.applyDamage(p,b,p.damageSources().fall(),5);
+                    require(Math.abs(b.health(BodyPart.STOMACH)-46)<.001&&Math.abs(b.health(BodyPart.CHEST)-69)<.001,"both black legs transfer all 40 HP");
+                    for(int i=0;i<5&&!b.vitalDestroyed();i++)TraumaEvents.applyDamage(p,b,p.damageSources().fall(),5);
+                    require(b.vitalDestroyed(),"repeated falling must kill");
+                    b.reset();TraumaEvents.applyDamage(p,b,p.damageSources().fall(),100);
+                    require(b.vitalDestroyed(),"extreme fall cannot be absorbed by legs");
+                    b.reset();TraumaEvents.applyDamage(p,b,p.damageSources().fall(),5);
                     setFixtureMode(p,GameType.CREATIVE);
                     require(p.isCreative(),"fixture creative mode not applied");
                     TraumaEvents.applyDamage(p,b,p.damageSources().fall(),5);

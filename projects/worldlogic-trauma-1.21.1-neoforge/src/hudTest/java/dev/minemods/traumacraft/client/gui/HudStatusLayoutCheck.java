@@ -8,8 +8,8 @@ public final class HudStatusLayoutCheck {
         for(int mask=0;mask<16;mask++){
             int actual=HudStatusLayout.mask((mask&1)!=0,(mask&2)!=0,(mask&4)!=0?1:0,(mask&8)!=0?1:0);
             require(actual==mask,"mask "+mask);
-            require(HudStatusLayout.visible(false,actual)==(mask!=0),"healthy visibility "+mask);
-            require(HudStatusLayout.visible(true,actual),"injury visibility "+mask);
+            require(HudStatusLayout.replacesVanillaHealth(true,true,false,false),"healthy and injured survival visibility "+mask);
+            require(!HudStatusLayout.replacesVanillaHealth(false,true,false,false)&&!HudStatusLayout.replacesVanillaHealth(true,false,false,false)&&!HudStatusLayout.replacesVanillaHealth(true,true,true,false)&&!HudStatusLayout.replacesVanillaHealth(true,true,false,true),"fallback, death, creative and spectator");
             int next=0;
             for(int i=0;i<4;i++){
                 int row=HudStatusLayout.row(actual,i);
@@ -55,7 +55,7 @@ public final class HudStatusLayoutCheck {
                 int mask=HudStatusLayout.withThermal(base,condition);
                 require((mask&15)==base,"medical status preservation");
                 require(Integer.bitCount(mask)==Integer.bitCount(base)+(condition.stressed()?1:0),"one actual thermal glyph");
-                require(HudStatusLayout.visible(false,mask)==(mask!=0),"thermal HUD visibility");
+                require(HudStatusLayout.replacesVanillaHealth(true,true,false,false),"thermal HUD visibility");
                 int cols=HudStatusLayout.hudColumns(mask),rows=(Integer.bitCount(mask)+cols-1)/cols;
                 if(rows>0)require(HudStatusLayout.ICON_SIZE+(rows-1)*HudStatusLayout.STEP<=AnatomyLayout.HEIGHT,"thermal glyph bounds");
                 for(int w:new int[]{320,330,400,480,640,960}){
@@ -119,6 +119,31 @@ public final class HudStatusLayoutCheck {
         }
         System.out.println("PASS: gait asymmetry, independent climb arms, monotonic phase under packet jitter");
         System.out.println("PASS: seven independent zones, centered lower inventory, 96 HUD layouts, injury palette and status bounds");
+        int dashboards=0;
+        for(int w:new int[]{330,360,400,480,640,960})for(int h:new int[]{202,220,240,270,480}){
+            var l=MedicalDashboardLayout.of(w,h);
+            require(l.x()>0&&l.y()>0&&l.x()+l.width()<w&&l.y()+l.height()<h,"dashboard margins");
+            require(l.bodyX()+48*l.bodyScale()<l.regionX()&&l.regionX()<l.regionRight()&&l.regionRight()<l.organX(),"separate anatomy and organs");
+            require(l.bodyY()+82*l.bodyScale()<=l.footerY()&&l.rowTop()+7*l.regionRow()<=l.footerY()&&l.rowTop()+9*l.organRow()<=l.footerY(),"all rows above footer");
+            require(l.organRow()>=12&&l.regionRow()>=15&&l.backX()+74<=l.x()+l.width(),"minimum readable rows and back button");
+            dashboards++;
+        }
+        require(!MedicalDashboardLayout.available(320,200),"too small");
+        System.out.println("PASS: "+dashboards+" exclusive medical dashboard layouts");
+        int deathLayouts=0;
+        for(int w:new int[]{300,320,330,480,640,960})for(int h:new int[]{174,202,240,270,480}){
+            var l=DeathReportLayout.of(w,h);
+            require(l.x()>0&&l.y()>0&&l.x()+l.width()<w&&l.y()+l.height()<h,"death report margins");
+            require(l.width()<=560&&l.height()<=278,"compact report does not fill screen with empty area");
+            require(l.bodyX()+48*l.scale()<l.regionX()&&l.regionX()<l.regionRight()&&l.regionRight()<l.organX(),"death columns");
+            require(l.bodyY()+82*l.scale()<=l.footerY()&&l.rowTop()+7*l.regionRow()<=l.footerY()&&l.rowTop()+9*l.organRow()<=l.footerY(),"all death rows visible");
+            require(l.organRow()>=9&&l.buttonY()>=l.footerY()+11&&l.buttonY()+18<=l.y()+l.height()&&l.buttonX()+116<=l.x()+l.width(),"death exit and labels");
+            require(l.historyRows()>=1&&l.rowTop()+l.historyRows()*15<=l.footerY()&&l.x()+l.width()/2-119>=l.x()+5&&l.x()+l.width()/2+119<=l.x()+l.width()-5,"history and both buttons fit");
+            deathLayouts++;
+        }
+        require(!DeathReportLayout.available(299,174)&&!DeathReportLayout.available(300,173),"small screen falls back to native death screen");
+        System.out.println("PASS: "+deathLayouts+" death report layouts");
+        DeathRenderOrderCheck.verify();
         System.out.println("PASS: 16 combinations, "+transitions+" removal transitions, timer boundaries and visibility");
     }
 }

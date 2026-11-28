@@ -1,0 +1,13 @@
+{
+  "name": "Splint",
+  "category": "worldlogic:trauma",
+  "icon": "traumacraft:splint",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "traumacraft:splint",
+      "link_recipe": true,
+      "text": "Use in the anatomy interface as appropriate. Look up available recipes through JEI."
+    }
+  ]
+}

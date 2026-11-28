@@ -28,7 +28,7 @@ public final class MedicalAction {
             case MEDKIT -> livingDamage(b,part);
             case HERBAL_POULTICE -> b.bleeding(part)==0&&!b.fractured(part)&&livingDamage(b,part)&&(b.wounds(part)&WoundKind.CONTUSION.bit)!=0;
             case RAG_DRESSING -> b.bleeding(part)==1;
-            case TRAUMA_KIT -> livingDamage(b,part)||b.bleeding(part)>0||(limb(part)&&b.fractured(part)&&!b.stabilized(part));
+            case TRAUMA_KIT -> livingDamage(b,part)||b.bleeding(part)>0||b.organs().canStabilize(part)||(limb(part)&&b.fractured(part)&&!b.stabilized(part));
             case SURGICAL_KIT -> limb(part)&&b.health(part)==0;
             case ANALGESIC_TABLETS -> b.pain()>0&&b.painkillerTicks()==0;
             default -> false;
@@ -50,7 +50,8 @@ public final class MedicalAction {
         for(var part:BodyPart.values()){
             if(!canApply(b,canonical,part))continue;
             float score=switch(canonical){
-                case BANDAGE,HEMOSTATIC_GEL,TOURNIQUET,RAG_DRESSING,TRAUMA_KIT -> b.bleeding(part)*2+(1-b.percent(part));
+                case BANDAGE,HEMOSTATIC_GEL,TOURNIQUET,RAG_DRESSING -> b.bleeding(part)*2+(1-b.percent(part));
+                case TRAUMA_KIT -> b.bleeding(part)*2+(1-b.percent(part))+(b.organs().canStabilize(part)?2:0);
                 case ANALGESIC_TABLETS -> part==BodyPart.CHEST?2:1;
                 default -> 1-b.percent(part);
             };
@@ -61,17 +62,19 @@ public final class MedicalAction {
     public static boolean apply(Player player,BodyState b,MedicalItem.Type type,BodyPart part){
         if(!canApply(player,b,type,part))return false;
         if(part==BodyPart.STOMACH&&canonical(type)==MedicalItem.Type.MEDKIT&&WaterIllness.canTreat(player))return WaterIllness.treat(player);
+        float repair=dev.minemods.traumacraft.integration.MetabolismBridge.read(player).treatment();
         switch(canonical(type)){
             case BANDAGE -> b.reduceBleeding(part);
             case TOURNIQUET -> b.stopBleeding(part);
-            case HEMOSTATIC_GEL -> {b.stopBleeding(part);if(b.health(part)>0)b.heal(part,10);}
+            case HEMOSTATIC_GEL -> {b.stopBleeding(part);if(b.health(part)>0)b.heal(part,10*repair);}
             case SPLINT -> b.stabilize(part,4800);
-            case MEDKIT -> b.heal(part,25);
-            case HERBAL_POULTICE -> {b.heal(part,6);b.setPainkillerTicks(Math.max(b.painkillerTicks(),200));}
+            case MEDKIT -> b.heal(part,25*repair);
+            case HERBAL_POULTICE -> {b.heal(part,6*repair);b.setPainkillerTicks(Math.max(b.painkillerTicks(),200));}
             case RAG_DRESSING -> b.stopBleeding(part);
             case TRAUMA_KIT -> {
-                if(b.health(part)>0)b.heal(part,45);
+                if(b.health(part)>0)b.heal(part,45*repair);
                 b.stopBleeding(part);
+                b.stabilizeInternal(part);
                 if(limb(part)&&b.fractured(part)&&!b.stabilized(part))b.stabilize(part,3600);
             }
             case SURGICAL_KIT -> {

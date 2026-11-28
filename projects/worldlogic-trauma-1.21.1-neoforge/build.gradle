@@ -10,10 +10,10 @@ version = mod_version
 base.archivesName = 'worldlogic_trauma-neoforge-mc1.21.1'
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
-def coreJar = file('libs/worldlogic-neoforge-mc1.21.1-1.0.0-rc22.jar')
-def coreVersion = '1.0.0-rc22'
-def coreHash = '1c0d23ca034cd17f783e4d1abbf01f1eda8783ac0ba3b48cf6afdc1291d21dc8'
-def coreUrl = 'https://github.com/MngkLrd/gradlejar/releases/download/ci-worldlogic-mc1.21.1-neoforge-1.0.0-rc22-1246-1/worldlogic-neoforge-mc1.21.1-1.0.0-rc22.jar'
+def coreJar = file('libs/worldlogic-neoforge-mc1.21.1-1.5.1.jar')
+def coreVersion = '1.5.1'
+def coreHash = 'a966fb939988e794586cd6a1ea18fafe340296447b67ef8a9827963328e20548'
+// Exact Actions artifact 15254721484 from Core run 46123087105; no release substitution.
 def validCore = { File f ->
     f.isFile() && MessageDigest.getInstance('SHA-256').digest(f.bytes).encodeHex().toString() == coreHash
 }
@@ -23,19 +23,15 @@ def prepareCore = tasks.register('prepareWorldLogic') {
     doLast {
         if (!validCore(coreJar)) {
             coreJar.parentFile.mkdirs()
-            def tmp = new File(coreJar.parentFile,coreJar.name+'.tmp')
-            try {
-                def conn = new URI(coreUrl).toURL().openConnection()
-                conn.connectTimeout=15000
-                conn.readTimeout=60000
-                conn.inputStream.withCloseable { input -> tmp.withOutputStream { output -> output << input } }
-                if (!validCore(tmp)) throw new GradleException('World Logic RC22 SHA-256 mismatch')
-                java.nio.file.Files.move(tmp.toPath(),coreJar.toPath(),java.nio.file.StandardCopyOption.REPLACE_EXISTING)
-            } finally { tmp.delete() }
+            def explicit = providers.gradleProperty('worldlogicCoreJar').orNull
+            def cache = System.getenv('MINEMODS_DEP_CACHE')
+            def source = explicit != null ? file(explicit) : cache != null ? new File(cache,coreHash) : null
+            if (source == null || !validCore(source)) throw new GradleException('Exact Core 1.5.1 artifact required (SHA-256 '+coreHash+'); supply -PworldlogicCoreJar=/path/to/verified.jar or CI dependency cache')
+            java.nio.file.Files.copy(source.toPath(),coreJar.toPath(),java.nio.file.StandardCopyOption.REPLACE_EXISTING);
         }
         new ZipFile(coreJar).withCloseable { zip ->
             if(zip.getEntry('META-INF/neoforge.mods.toml')==null ||
-               zip.getEntry('dev/minemods/worldlogic/api/WorldLogicApi.class')==null)
+               zip.getEntry('dev/minemods/worldlogic/api/WorldLogicApi.class')==null || zip.getEntry('dev/minemods/worldlogic/api/PhysicalMaterials$SurfaceContact.class')==null)
                 throw new GradleException('Wrong World Logic API or loader')
         }
     }

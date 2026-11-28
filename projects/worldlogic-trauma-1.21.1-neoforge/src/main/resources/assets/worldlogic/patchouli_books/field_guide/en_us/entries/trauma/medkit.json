@@ -1,0 +1,13 @@
+{
+  "name": "Medkit",
+  "category": "worldlogic:trauma",
+  "icon": "traumacraft:medkit",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "traumacraft:medkit",
+      "link_recipe": true,
+      "text": "Use in the anatomy interface as appropriate. Look up available recipes through JEI."
+    }
+  ]
+}

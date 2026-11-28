@@ -20,9 +20,7 @@ public final class TraumaCommands {
                 .then(Commands.literal("reset").requires(source -> source.hasPermission(2))
                         .executes(ctx -> {
                             ServerPlayer p = ctx.getSource().getPlayerOrException();
-                            BodyStates.get(p).reset();
-                            dev.minemods.traumacraft.disease.WaterIllness.clear(p);
-                            dev.minemods.traumacraft.network.ModNetwork.sync(p);
+                            if(!dev.minemods.traumacraft.api.TraumaApi.adminRestore(p))return 0;
                             p.sendSystemMessage(Component.literal("Trauma state reset"));
                             return 1;
                         }));
@@ -55,6 +53,16 @@ public final class TraumaCommands {
                             })));
         }
         event.getDispatcher().register(root);
+        event.getDispatcher().register(Commands.literal("traumadeath").executes(ctx->dev.minemods.traumacraft.event.DeathReports.openLast(ctx.getSource().getPlayerOrException())));
+        event.getDispatcher().register(Commands.literal("traumaphysiology").executes(ctx->{
+            ServerPlayer p=ctx.getSource().getPlayerOrException();
+            var snapshot=dev.minemods.traumacraft.api.TraumaApi.physiology(p);
+            if(snapshot.isEmpty())return 0;
+            var f=snapshot.get();
+            p.sendSystemMessage(Component.literal(String.format(java.util.Locale.ROOT,"Oxygen %.0f%% | Perfusion %.0f%% | Delivery %.0f%% | Internal blood loss %.1f mL/s",f.oxygenFraction()*100,f.perfusion()*100,f.oxygenDelivery()*100,f.internalBleedingMlPerSecond())));
+            for(var organ:f.organs())p.sendSystemMessage(Component.literal(String.format(java.util.Locale.ROOT,"%s: %.0f%% | internal loss %.1f mL/s",organ.id(),organ.integrity()*100,organ.internalBleedingMlPerSecond())));
+            return 1;
+        }));
         event.getDispatcher().register(Commands.literal("traumaillness").executes(ctx->{
             ServerPlayer p=ctx.getSource().getPlayerOrException();
             p.sendSystemMessage(dev.minemods.traumacraft.disease.WaterIllness.diagnosis(dev.minemods.traumacraft.disease.WaterIllness.load(p)));
