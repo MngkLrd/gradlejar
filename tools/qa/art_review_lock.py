@@ -161,8 +161,8 @@ def atlas_errors(record,profile,catalog):
         if ref.get("minecraft")==catalog["minecraft"] and path in known and ref.get("sha256")!=known[path]:
             errors.append("Official atlas SHA-256 mismatch: "+rid)
     if rule_id=="custom":
-        if profile!="other":
-            errors.append("Custom atlas rule is reserved for genuinely uncovered other profiles")
+        if profile not in ("other","tool","stateful_item","functional_item","consumable","armor_icon","armor_icon_overlay","armor_uv"):
+            errors.append("Custom atlas rule is reserved for genuinely uncovered other or specialized item/armor profiles")
         if any(profile in q["profiles"] and n in q["reference_ids"] for q in catalog["rules"].values()):
             errors.append("Known applicable comparator requires an atlas rule, not custom")
         if not observation(evidence.get("custom_reason")):
