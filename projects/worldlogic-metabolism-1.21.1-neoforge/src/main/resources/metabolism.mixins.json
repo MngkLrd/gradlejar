@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.minemods.metabolism.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "PlayerFoodMixin",
+    "CakeFoodMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

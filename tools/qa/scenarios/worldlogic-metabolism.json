@@ -1,0 +1,344 @@
+{
+  "schema": 1,
+  "name": "Metabolism 0.9.4 peer integration and fish portions",
+  "coverage": [
+    {
+      "id": "nutrition-model",
+      "kind": "mechanic",
+      "subject": "Actual model: energy, nutrient uptake, toxin, limiting nutrient and NBT",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "individual-nutrient-reserves",
+      "kind": "mechanic",
+      "subject": "individual-nutrient-reserves",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "digestion-and-capacity",
+      "kind": "mechanic",
+      "subject": "digestion-and-capacity",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "resting-fat-oxidation",
+      "kind": "mechanic",
+      "subject": "resting-fat-oxidation",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "deficiency-trends",
+      "kind": "mechanic",
+      "subject": "deficiency-trends",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "schema-migration",
+      "kind": "mechanic",
+      "subject": "schema-migration",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "energy-forecasts",
+      "kind": "mechanic",
+      "subject": "energy-forecasts",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "clinical-factors",
+      "kind": "mechanic",
+      "subject": "clinical-factors",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "hydration-thermal-factors",
+      "kind": "mechanic",
+      "subject": "hydration-thermal-factors",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "daily-history",
+      "kind": "mechanic",
+      "subject": "daily-history",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "history-persistence",
+      "kind": "mechanic",
+      "subject": "history-persistence",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "core-dependency-runtime",
+      "kind": "mechanic",
+      "subject": "Actual Core fatigue and exertion API on installed dependency",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "instant-food-energy",
+      "kind": "mechanic",
+      "subject": "Actual immediate Core energy and calorie conservation",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "digestion-energy",
+      "kind": "mechanic",
+      "subject": "Gradual recovery stronger at rest",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "water-energy",
+      "kind": "mechanic",
+      "subject": "Actual water boost and cooldown, no calories",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "overeating-energy",
+      "kind": "mechanic",
+      "subject": "Bounded meal capacity and overload persistence",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "generic-food",
+      "kind": "mechanic",
+      "subject": "Vanilla and unknown FOOD component and milk support",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "full-hunger-food",
+      "kind": "mechanic",
+      "subject": "Vanilla full-hunger compatibility with stomach capacity",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "food-finish-event",
+      "kind": "mechanic",
+      "subject": "Registered completed consumption event",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "cake-bite",
+      "kind": "mechanic",
+      "subject": "Real vanilla cake block consumption and full stomach negative",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "water-item",
+      "kind": "mechanic",
+      "subject": "Completed water bottle event and medicine negative",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "external-food-contract",
+      "kind": "mechanic",
+      "subject": "Validated external meal and actual energy snapshot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "vanilla-food-composition",
+      "kind": "mechanic",
+      "subject": "Explicit vanilla food profiles, consistent macronutrient kcal and species differences, public read-only food composition",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "rest-recovery-tiers",
+      "kind": "mechanic",
+      "subject": "3/5/7/10/12 seconds with and without existing Core passive recovery; effort negative and poor metabolism",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "admin-feed",
+      "kind": "mechanic",
+      "subject": "Admin nutrition restore public API and command registration",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "nonfood-ominous-bottle",
+      "kind": "mechanic",
+      "subject": "Non-nutritive potion carrier exclusion",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "trauma-organ-functions",
+      "kind": "mechanic",
+      "subject": "Digestive throughput, quick intake, hepatic clearance, zero/invalid/missing inputs and persistence isolation",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "native-core-ownership",
+      "kind": "mechanic",
+      "subject": "Native Core handshake or verified old Core fallback; no second action expenditure",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "hydration-authoritative-intake",
+      "kind": "mechanic",
+      "subject": "Hydration rev5 callback precedence and standalone fallback, no duplicated intake",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    },
+    {
+      "id": "aqua-fish-nutrition",
+      "kind": "mechanic",
+      "subject": "All 36 Aqua fish species, 17/100 g raw and 80 g cooked scaling, retention, lean/fatty and invalid/whole catches",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Metabolic model and NBT"
+        }
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "name": "Metabolic model and NBT",
+      "command": "metabolism selftest",
+      "expect": "METABOLISM_MODEL_CHECKS_PASSED",
+      "assertion": true
+    }
+  ]
+}
