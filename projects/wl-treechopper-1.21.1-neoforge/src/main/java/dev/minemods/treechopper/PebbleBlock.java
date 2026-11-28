@@ -19,7 +19,7 @@ public final class PebbleBlock extends Block {
     final ResourceLocation source;
     final boolean flint;
     PebbleBlock(Properties properties,ResourceLocation source,boolean flint){super(properties);this.source=source;this.flint=flint;}
-    ItemStack yield(){return new ItemStack(flint?Items.FLINT:asItem());}
+    ItemStack collectedStack(){return new ItemStack(flint?Items.FLINT:asItem());}
     @Override protected boolean canSurvive(BlockState state,LevelReader level,BlockPos pos){
         return BuiltInRegistries.BLOCK.getKey(level.getBlockState(pos.below()).getBlock()).equals(source)
             &&level.getBlockState(pos.below()).isFaceSturdy(level,pos.below(),Direction.UP);
@@ -33,7 +33,7 @@ public final class PebbleBlock extends Block {
         if(level instanceof ServerLevel l&&player instanceof net.minecraft.server.level.ServerPlayer server){
             if(!player.mayBuild()||!TreeChopper.allowed(l,server,pos,state))return InteractionResult.FAIL;
             if(l.removeBlock(pos,false)&&!player.getAbilities().instabuild){
-                ItemStack drop=yield();
+                ItemStack drop=collectedStack();
                 if(!player.getInventory().add(drop))Block.popResource(l,pos,drop);
             }
         }

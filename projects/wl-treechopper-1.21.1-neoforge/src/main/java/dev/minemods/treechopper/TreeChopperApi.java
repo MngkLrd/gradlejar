@@ -25,7 +25,7 @@ public final class TreeChopperApi {
             return Optional.of(new LooseFind(LooseKind.TWIG,BuiltInRegistries.BLOCK.getKey(original.getBlock()),BuiltInRegistries.ITEM.getKey(Items.STICK),Double.NaN));
         }
         if(state.getBlock() instanceof PebbleBlock rock)return Optional.of(new LooseFind(rock.flint?LooseKind.FLINT:LooseKind.PEBBLE,rock.source,
-            BuiltInRegistries.ITEM.getKey(rock.yield().getItem()),rock.flint?LooseRocks.FLINT_VOLUME:LooseRocks.PEBBLE_VOLUME));
+            BuiltInRegistries.ITEM.getKey(rock.collectedStack().getItem()),rock.flint?LooseRocks.FLINT_VOLUME:LooseRocks.PEBBLE_VOLUME));
         return Optional.empty();
     }
     public static Optional<LooseFind> looseFind(ServerLevel l,BlockPos pos){

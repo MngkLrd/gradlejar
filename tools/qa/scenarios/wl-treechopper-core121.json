@@ -52,6 +52,12 @@
       "expect": "Test passed",
       "assertion": true,
       "name": "core-upper-log-preserved"
+    },
+    {
+      "command": "wltreechopper qa_rock_material",
+      "expect": "TreeChopper Core pebble materials PASS",
+      "assertion": true,
+      "name": "core-pebble-composition"
     }
   ],
   "coverage": [
@@ -82,6 +88,17 @@
         {
           "backend": "server",
           "name": "core-upper-log-preserved"
+        }
+      ]
+    },
+    {
+      "id": "core-pebble-composition",
+      "kind": "mechanic",
+      "subject": "Core-owned granite and limestone composition and density preserved in held and placed pebbles, scaled nominal volume and mass",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "core-pebble-composition"
         }
       ]
     }

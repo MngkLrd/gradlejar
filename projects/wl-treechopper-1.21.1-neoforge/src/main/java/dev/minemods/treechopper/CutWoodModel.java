@@ -35,6 +35,11 @@ public final class CutWoodModel {
         @SubscribeEvent public static void tick(net.neoforged.neoforge.client.event.ClientTickEvent.Post event){
             if(done||!Boolean.getBoolean("wl.treechopper.clientQa"))return;
             var client=net.minecraft.client.Minecraft.getInstance();
+            // New game directories may stop at the first-run accessibility onboarding screen.
+            // Only bypass that opt-in test fixture after the real resource-loading overlay is gone.
+            if(client.getOverlay()==null&&client.screen!=null&&client.screen.getClass().getSimpleName().equals("AccessibilityOnboardingScreen")){
+                client.setScreen(new net.minecraft.client.gui.screens.TitleScreen());return;
+            }
             if(!(client.screen instanceof net.minecraft.client.gui.screens.TitleScreen)||client.getOverlay()!=null){readyTicks=0;return;}
             if(++readyTicks<20)return;
             done=true;

@@ -158,6 +158,10 @@ final class TreeQA {
             if(!felled||ChopEffort.progress(new int[]{300,0,300,0})!=600||!ChopEffort.severed(new int[]{500,0,500,0})||!ChopEffort.severed(new int[]{620,130,0,0}))return 0;
             c.getSource().sendSuccess(()->Component.literal("TreeChopper cumulative cut PASS"),false);return 1;
           }))
+          .then(Commands.literal("qa_rock_material").executes(c->{
+            if(!LooseRocks.qaCoreMaterials()){c.getSource().sendFailure(Component.literal("TreeChopper Core pebble materials FAILED"));return 0;}
+            c.getSource().sendSuccess(()->Component.literal("TreeChopper Core pebble materials PASS"),false);return 1;
+          }))
           .then(Commands.literal("qa_forest_start").executes(c->{
             ServerLevel l=c.getSource().getLevel();BlockPos p=new BlockPos(995,200,1007);
             var oak=net.minecraft.world.level.block.Blocks.OAK_LOG.defaultBlockState();

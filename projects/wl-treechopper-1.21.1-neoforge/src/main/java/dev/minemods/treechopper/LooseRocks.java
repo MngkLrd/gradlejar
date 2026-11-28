@@ -54,6 +54,28 @@ final class LooseRocks {
         }
         return l.setBlock(pos,state,Block.UPDATE_ALL);
     }
+    static boolean qaCoreMaterials(){
+        try{
+            Class<?> api=Class.forName("dev.minemods.worldlogic.api.PhysicalMaterials"),profile=Class.forName(api.getName()+"$ObjectProfile"),component=Class.forName(api.getName()+"$Component"),state=Class.forName(api.getName()+"$State"),result=Class.forName(api.getName()+"$Result");
+            Method block=api.getMethod("block",BlockState.class),item=api.getMethod("item",ItemStack.class),volume=profile.getMethod("volumeM3"),components=profile.getMethod("components"),material=component.getMethod("materialId"),evaluate=api.getMethod("evaluate",profile,state),mass=result.getMethod("massKg");
+            Object reference=state.getMethod("reference").invoke(null);
+            for(String key:List.of("minecraft:granite","worldlogic:limestone")){
+                var source=BuiltInRegistries.BLOCK.get(ResourceLocation.parse(key));
+                if(source==Blocks.AIR)return false;
+                var pebble=(PebbleBlock)forSurface(source.defaultBlockState()).getBlock();
+                Object original=block.invoke(null,source.defaultBlockState()),ground=block.invoke(null,pebble.defaultBlockState()),held=item.invoke(null,pebble.collectedStack());
+                var a=(List<?>)components.invoke(original);var b=(List<?>)components.invoke(ground);var c=(List<?>)components.invoke(held);
+                if(a.isEmpty()||a.size()!=b.size()||b.size()!=c.size())return false;
+                for(int i=0;i<a.size();i++)if(!material.invoke(a.get(i)).equals(material.invoke(b.get(i)))||!material.invoke(b.get(i)).equals(material.invoke(c.get(i))))return false;
+                double va=((Number)volume.invoke(original)).doubleValue(),vb=((Number)volume.invoke(ground)).doubleValue(),vc=((Number)volume.invoke(held)).doubleValue();
+                double ma=((Number)mass.invoke(evaluate.invoke(null,original,reference))).doubleValue(),mb=((Number)mass.invoke(evaluate.invoke(null,ground,reference))).doubleValue(),mc=((Number)mass.invoke(evaluate.invoke(null,held,reference))).doubleValue();
+                if(!Double.isFinite(ma)||!Double.isFinite(mb)||!Double.isFinite(mc)||Math.abs(vb-PEBBLE_VOLUME)>1e-10||Math.abs(vc-vb)>1e-10||Math.abs(mb-ma*vb/va)>1e-8||Math.abs(mc-mb)>1e-8)return false;
+            }
+            return true;
+        }catch(ReflectiveOperationException|LinkageError|RuntimeException failure){
+            LogUtils.getLogger().warn("TreeChopper Core rock material diagnostic failed",failure);return false;
+        }
+    }
     /** Register addon objects against the existing authoritative material IDs, without duplicating geology. */
     @SuppressWarnings({"unchecked","rawtypes"})
     static void bindCore(){
