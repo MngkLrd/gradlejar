@@ -10,9 +10,9 @@ neoForge {
  runs { client { client() }; server { server(); programArgument '--nogui' } }
  mods { worldlogicterrain { sourceSet(sourceSets.main) } }
 }
-def coreUrl='https://github.com/MngkLrd/gradlejar/releases/download/ci-worldlogic-mc1.21.1-neoforge-1.0.0-rc20-1211-1/worldlogic-neoforge-mc1.21.1-1.0.0-rc20.jar'
-def coreHash='c03b7156d8cdcb04fcc0ef11e454b5ca6d018c98c3fbd2b67a8bef84cb10b9be'
-def coreJar=layout.buildDirectory.file('worldlogic-dependency/worldlogic-neoforge-mc1.21.1-1.0.0-rc20.jar')
+def coreUrl='https://api.github.com/repos/MngkLrd/gradlejar/actions/artifacts/15246915092/zip'
+def coreHash='33d2ce25db884ba8f3044d672f5970430de968c863b83372ed188774572cfb56'
+def coreJar=layout.buildDirectory.file('worldlogic-dependency/worldlogic-neoforge-mc1.21.1-1.2.1.jar')
 def digest={ File f -> MessageDigest.getInstance('SHA-256').digest(f.bytes).encodeHex().toString() }
 def fetchCore=tasks.register('fetchWorldLogic') {
  inputs.property('url',coreUrl)
@@ -23,6 +23,15 @@ def fetchCore=tasks.register('fetchWorldLogic') {
   File out=coreJar.get().asFile
   out.parentFile.mkdirs()
   File tmp=new File(out.parentFile,out.name+'.tmp')
+  // Diagnostic CI preloads the actual RC54 JAR from the exact artifact into the QA dependency cache.
+  def cacheDir=System.getenv('MINEMODS_DEP_CACHE')
+  File cached=cacheDir ? new File(cacheDir,coreHash) : null
+  if(cached?.isFile()) {
+   if(digest(cached)!=coreHash) throw new GradleException('WorldLogic core checksum mismatch in dependency cache')
+   java.nio.file.Files.copy(cached.toPath(),out.toPath(),java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+   return
+  }
+  if(coreUrl.endsWith('/zip')) throw new GradleException('RC54 is NOT-RELEASE; exact artifact must be preloaded in MINEMODS_DEP_CACHE for diagnostic integration only')
   def connection=URI.create(coreUrl).toURL().openConnection()
   connection.connectTimeout=30000
   connection.readTimeout=90000

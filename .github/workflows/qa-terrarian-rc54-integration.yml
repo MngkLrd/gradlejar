@@ -1,0 +1,73 @@
+name: Terrarian RC54 exact-artifact integration diagnostic
+on:
+  pull_request:
+    paths:
+      - 'projects/worldlogic-terrain-1.21.1-neoforge/**'
+      - 'tools/qa/scenarios/worldlogicterrain.json'
+      - '.github/workflows/qa-terrarian-rc54-integration.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  rc54-diagnostic:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.ref == 'draft/terrarian-core-rc53-physics'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      CORE_HASH: 33d2ce25db884ba8f3044d672f5970430de968c863b83372ed188774572cfb56
+      CORE_NAME: worldlogic-neoforge-mc1.21.1-1.2.1.jar
+      PROJECT: projects/worldlogic-terrain-1.21.1-neoforge
+      MINEMODS_DEP_CACHE: ${{ github.workspace }}/.terrarian-diagnostic-cache
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.2.1'
+      - name: Fetch and verify exact Core candidate and QA provenance
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/46103365227" --jq '.head_sha + " " + .conclusion' | grep -Fx '5c6a56da6019ee23ba1941fee9e9a9a1438491e2 failure'
+          mkdir -p core-candidate core-report "$MINEMODS_DEP_CACHE"
+          gh run download 46103365227 --repo "$GITHUB_REPOSITORY" --name qa-candidate-NOT-RELEASE-0-1 --dir core-candidate
+          gh run download 46103365227 --repo "$GITHUB_REPOSITORY" --name qa-report-0-1 --dir core-report
+          python3 -c 'import json,os; r=json.load(open("core-report/qa-report-0.json")); assert r["jar"]==os.environ["CORE_NAME"] and r["sha256"]==os.environ["CORE_HASH"] and r["eligible"] is False'
+          echo "$CORE_HASH  core-candidate/$CORE_NAME" | sha256sum -c -
+          cp "core-candidate/$CORE_NAME" "$MINEMODS_DEP_CACHE/$CORE_HASH"
+      - name: Compile Terrarian against exact Core candidate
+        run: |
+          set -euo pipefail
+          cd "$PROJECT"
+          gradle --no-daemon --stacktrace clean build 2>&1 | tee "$GITHUB_WORKSPACE/terrarian-build.log"
+      - name: Execute existing production server QA without release authorization
+        run: |
+          set -euo pipefail
+          python3 -m tools.qa.gate "$PROJECT" --jar "$PROJECT/build/libs/worldlogicterrain-neoforge-mc1.21.1-1.5.1.jar" --report terrarian-diagnostic-report.json --work terrarian-diagnostic-work
+      - name: Upload diagnostic JAR only, never a release
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: terrarian-1.5.1-core-1.2.1-NOT-RELEASE
+          path: projects/worldlogic-terrain-1.21.1-neoforge/build/libs/worldlogicterrain-neoforge-mc1.21.1-1.5.1.jar
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Upload diagnostic QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: terrarian-1.5.1-diagnostic-evidence
+          path: |
+            core-report/qa-report-0.json
+            terrarian-diagnostic-report.json
+            terrarian-build.log
+            terrarian-diagnostic-work/logs/
+          if-no-files-found: warn
+          retention-days: 7
