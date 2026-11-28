@@ -24,7 +24,7 @@ side="BOTH"
 [[dependencies.worldlogic_trauma]]
 modId="worldlogic"
 type="required"
-versionRange="[1.0.0-rc20,)"
+versionRange="[${worldlogic_version},)"
 ordering="AFTER"
 side="BOTH"
 

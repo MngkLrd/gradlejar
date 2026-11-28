@@ -18,6 +18,13 @@ public final class ClientEvents {
     private ClientEvents() {}
     public static void register(IEventBus modBus){
         modBus.addListener(ClientEvents::registerScreens);
+        modBus.addListener((net.neoforged.fml.event.lifecycle.FMLClientSetupEvent e)->e.enqueueWork(()->{
+            dev.minemods.worldlogic.api.client.WorldLogicTabs.register(ResourceLocation.fromNamespaceAndPath(TraumaCraft.LOADER_MOD_ID,"dashboard"),40,net.minecraft.network.chat.Component.translatable("screen.traumacraft.tab"),()->new net.minecraft.world.item.ItemStack(dev.minemods.traumacraft.registry.ModItems.BANDAGE.get()),parent->{
+                var mc=Minecraft.getInstance();var p=mc.player;
+                if(p==null||p.isCreative()||p.isSpectator()||!MedicalDashboardLayout.available(mc.getWindow().getGuiScaledWidth(),mc.getWindow().getGuiScaledHeight()))return null;
+                var screen=new TraumaInventoryScreen(p);screen.worldlogic$openAnatomy();return screen;
+            });
+        }));
         modBus.addListener(ClientEvents::registerLayers);
         NeoForge.EVENT_BUS.addListener(ClientEvents::opening);
         NeoForge.EVENT_BUS.addListener(ClientEvents::hideVanillaHealth);

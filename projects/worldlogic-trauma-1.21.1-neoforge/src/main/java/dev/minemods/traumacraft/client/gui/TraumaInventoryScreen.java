@@ -17,25 +17,28 @@ import java.util.Locale;
 import java.util.List;
 
 /** Same server inventory menu, separate full medical view. Hidden slots never receive input. */
-public final class TraumaInventoryScreen extends InventoryScreen {
+public final class TraumaInventoryScreen extends InventoryScreen implements dev.minemods.worldlogic.client.compat.NativeTraumaView {
     private static final int TAB_WIDTH=74,TAB_HEIGHT=20;
     private boolean anatomyOpen,consumeRelease;
     private MedicalDashboardLayout layout;
     public TraumaInventoryScreen(Player player){super(player);imageWidth=176;imageHeight=166;}
+    @Override public boolean worldlogic$anatomy(){return anatomyOpen;}
+    @Override public void worldlogic$openAnatomy(){anatomyOpen=true;}
     @Override protected void init(){
-        imageWidth=176;imageHeight=166;super.init();layout=MedicalDashboardLayout.of(width,height);
+        imageWidth=176;imageHeight=166;super.init();layout=MedicalDashboardLayout.of(dev.minemods.worldlogic.TabLayout.nativeContentWidth(width),height);
         if(!MedicalDashboardLayout.available(width,height))anatomyOpen=false;
     }
     private boolean available(){return MedicalDashboardLayout.available(width,height)&&!getRecipeBookComponent().isVisible();}
     private int tabX(){return anatomyOpen?layout.backX():leftPos+176-TAB_WIDTH;}
     private int tabY(){return anatomyOpen?layout.backY():Math.max(1,topPos-TAB_HEIGHT);}
-    private boolean onTab(double mx,double my){return available()&&mx>=tabX()&&mx<tabX()+TAB_WIDTH&&my>=tabY()&&my<tabY()+TAB_HEIGHT;}
+    private boolean legacyTab(){return anatomyOpen||!dev.minemods.worldlogic.client.TabRail.replacesLegacy(this,"worldlogic_trauma");}
+    private boolean onTab(double mx,double my){return legacyTab()&&available()&&mx>=tabX()&&mx<tabX()+TAB_WIDTH&&my>=tabY()&&my<tabY()+TAB_HEIGHT;}
     private Component t(String key){return Component.translatable("screen.traumacraft."+key);}
     private void label(GuiGraphics g,Component text,int x,int y,int w,int color){
         g.drawString(font,font.plainSubstrByWidth(text.getString(),Math.max(0,w)),x,y,color,false);
     }
     private void tab(GuiGraphics g,int mx,int my){
-        if(!available())return;int x=tabX(),y=tabY();
+        if(!available()||!legacyTab())return;int x=tabX(),y=tabY();
         g.blitSprite(ResourceLocation.withDefaultNamespace(onTab(mx,my)?"widget/button_highlighted":"widget/button"),x,y,TAB_WIDTH,TAB_HEIGHT);
         g.drawCenteredString(font,font.plainSubstrByWidth(t(anatomyOpen?"inventory_back":"tab").getString(),TAB_WIDTH-8),x+TAB_WIDTH/2,y+6,0xFFFFFFFF);
     }
@@ -74,7 +77,7 @@ public final class TraumaInventoryScreen extends InventoryScreen {
         var ill=ClientBodyState.illnessKind();
         boolean sick=ill!=dev.minemods.traumacraft.disease.DiseaseModel.Kind.NONE;
         Component illness=sick?Component.translatable("illness.traumacraft.status",Component.translatable("illness.traumacraft.kind."+ill.name().toLowerCase(Locale.ROOT)),Component.translatable("illness.traumacraft.stage."+ClientBodyState.illnessStage().name().toLowerCase(Locale.ROOT))):Component.translatable("illness.traumacraft.stage.healthy");
-        label(g,illness,x+8,y+17,l.width()-16,sick?0xFF9A353A:0xFF3F503A);
+        label(g,illness,x+8,y+17,l.width()-92,sick?0xFF9A353A:0xFF3F503A);
         g.fill(x+6,y+26,r-6,y+27,0xFF8A8A8A);
         g.fill(l.organX()-8,y+29,l.organX()-7,l.footerY()-3,0xFF999999);
         g.pose().pushPose();g.pose().translate(l.bodyX(),l.bodyY(),0);g.pose().scale(l.bodyScale(),l.bodyScale(),1);

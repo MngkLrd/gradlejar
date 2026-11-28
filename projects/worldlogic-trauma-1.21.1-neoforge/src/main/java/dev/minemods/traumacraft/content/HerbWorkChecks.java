@@ -12,6 +12,7 @@ public final class HerbWorkChecks {
     private static void check(boolean value,String label){if(!value)throw new IllegalStateException("Herb QA: "+label);}
     private static HerbWorkpieceEntity piece(ServerLevel l,BlockPos pos){return (HerbWorkpieceEntity)l.getBlockEntity(pos);}
     public static void verify(ServerLevel l,ServerPlayer p){
+        dev.minemods.traumacraft.integration.CorePresentation.verify();
         var support=new BlockPos(10,99,8);var at=support.above();var box=new AABB(at).inflate(1.5);
         var hand=p.getMainHandItem().copy();var old=l.getBlockState(support);var oldAbove=l.getBlockState(at);
         try{

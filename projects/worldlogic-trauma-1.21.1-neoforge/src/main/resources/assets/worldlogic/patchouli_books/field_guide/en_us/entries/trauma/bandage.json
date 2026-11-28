@@ -1,0 +1,13 @@
+{
+  "name": "Bandage",
+  "category": "worldlogic:trauma",
+  "icon": "traumacraft:bandage",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "traumacraft:bandage",
+      "link_recipe": true,
+      "text": "Use in the anatomy interface as appropriate. Look up available recipes through JEI."
+    }
+  ]
+}

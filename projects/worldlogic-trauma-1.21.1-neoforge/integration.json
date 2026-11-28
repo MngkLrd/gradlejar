@@ -1,0 +1,249 @@
+{
+  "schema": 2,
+  "ecosystem": "worldlogic",
+  "module": "worldlogic_trauma",
+  "role": "addon",
+  "core_module": "worldlogic",
+  "parent_module": "worldlogic",
+  "target": {
+    "minecraft": "1.21.1",
+    "loader": "neoforge"
+  },
+  "provides": [
+    {
+      "id": "worldlogic:trauma_status",
+      "version": 1,
+      "revision": 7,
+      "domains": [
+        "anatomical_injury",
+        "clinical_physiology",
+        "medical_treatment"
+      ],
+      "entrypoints": [
+        "dev.minemods.traumacraft.api.TraumaApi"
+      ],
+      "documentation": "projects/worldlogic-trauma-1.21.1-neoforge/API.md",
+      "source_paths": [
+        "projects/worldlogic-trauma-1.21.1-neoforge/src/main/java/dev/minemods/traumacraft/api/TraumaApi.java"
+      ],
+      "operations": [
+        {
+          "id": "status",
+          "kind": "query",
+          "entrypoint": "dev.minemods.traumacraft.api.TraumaApi",
+          "semantics": "Immutable regional health, wounds, bleeding and pain"
+        },
+        {
+          "id": "physiology",
+          "kind": "query",
+          "entrypoint": "dev.minemods.traumacraft.api.TraumaApi",
+          "semantics": "Immutable organ function, oxygen and perfusion"
+        },
+        {
+          "id": "illness_status",
+          "kind": "query",
+          "entrypoint": "dev.minemods.traumacraft.api.TraumaApi",
+          "semantics": "Water illness diagnosis snapshot"
+        },
+        {
+          "id": "report_injury",
+          "kind": "command",
+          "entrypoint": "dev.minemods.traumacraft.api.TraumaApi",
+          "semantics": "Validated injury not already represented by vanilla damage"
+        },
+        {
+          "id": "report_water_intake",
+          "kind": "command",
+          "entrypoint": "dev.minemods.traumacraft.api.TraumaApi",
+          "semantics": "Actual external water intake once"
+        },
+        {
+          "id": "admin_restore",
+          "kind": "command",
+          "entrypoint": "dev.minemods.traumacraft.api.TraumaApi",
+          "semantics": "Full Trauma-only administrative reset"
+        }
+      ]
+    }
+  ],
+  "consumes": [
+    {
+      "id": "worldlogic:survival_physics",
+      "version": 1,
+      "min_revision": 0,
+      "required": true,
+      "status": "implemented",
+      "fallback": "Required Core 1.5.1; loader rejects older versions."
+    },
+    {
+      "id": "worldlogic:material_properties",
+      "version": 1,
+      "min_revision": 2,
+      "required": true,
+      "status": "implemented",
+      "fallback": "Required Core 1.5.1; loader rejects older versions."
+    },
+    {
+      "id": "worldlogic:client_navigation",
+      "version": 1,
+      "min_revision": 0,
+      "required": true,
+      "status": "implemented",
+      "fallback": "Required Core 1.5.1; loader rejects older versions."
+    },
+    {
+      "id": "worldlogic:field_processing",
+      "version": 1,
+      "min_revision": 0,
+      "required": true,
+      "status": "implemented",
+      "fallback": "Required Core 1.5.1; loader rejects older versions."
+    },
+    {
+      "id": "worldlogic:dashboards",
+      "version": 1,
+      "min_revision": 0,
+      "required": true,
+      "status": "implemented",
+      "fallback": "Required Core 1.5.1; loader rejects older versions."
+    },
+    {
+      "id": "worldlogic:capability_discovery",
+      "version": 1,
+      "min_revision": 0,
+      "required": true,
+      "status": "implemented",
+      "fallback": "Required Core 1.5.1; loader rejects older versions."
+    },
+    {
+      "id": "worldlogic:hydration_physiology",
+      "version": 1,
+      "min_revision": 5,
+      "required": false,
+      "status": "implemented",
+      "fallback": "Whole vanilla water bottle only on older provider; neutral absent physiology."
+    },
+    {
+      "id": "worldlogic:metabolism_physiology",
+      "version": 1,
+      "min_revision": 0,
+      "required": false,
+      "status": "implemented",
+      "fallback": "Neutral nutritional recovery factors."
+    },
+    {
+      "id": "worldlogic:thermal_status",
+      "version": 1,
+      "min_revision": 0,
+      "required": false,
+      "status": "implemented",
+      "fallback": "Neutral thermal recovery or existing legacy fallback."
+    },
+    {
+      "id": "worldlogic:botanical_resources",
+      "version": 1,
+      "min_revision": 0,
+      "required": false,
+      "status": "implemented",
+      "fallback": "Optional tags, existing legacy herb bundle remains usable."
+    }
+  ],
+  "features": [
+    {
+      "id": "anatomical_injury",
+      "source_paths": [
+        "projects/worldlogic-trauma-1.21.1-neoforge/src/main/java/dev/minemods/traumacraft/api/TraumaApi.java",
+        "projects/worldlogic-trauma-1.21.1-neoforge/src/main/java/dev/minemods/traumacraft/health/BodyState.java",
+        "projects/worldlogic-trauma-1.21.1-neoforge/src/main/java/dev/minemods/traumacraft/health/OrganState.java",
+        "projects/worldlogic-trauma-1.21.1-neoforge/src/main/java/dev/minemods/traumacraft/event/TraumaEvents.java",
+        "projects/worldlogic-trauma-1.21.1-neoforge/src/main/java/dev/minemods/traumacraft/integration/WorldLogicBridge.java",
+        "projects/worldlogic-trauma-1.21.1-neoforge/src/main/java/dev/minemods/traumacraft/integration/ContactPhysics.java",
+        "projects/worldlogic-trauma-1.21.1-neoforge/src/main/java/dev/minemods/traumacraft/integration/ThermalBridge.java",
+        "projects/worldlogic-trauma-1.21.1-neoforge/src/main/java/dev/minemods/traumacraft/integration/MetabolismBridge.java",
+        "projects/worldlogic-trauma-1.21.1-neoforge/src/main/java/dev/minemods/traumacraft/integration/OrganSupport.java",
+        "projects/worldlogic-trauma-1.21.1-neoforge/src/main/java/dev/minemods/traumacraft/disease/WaterIllness.java"
+      ],
+      "provides": [
+        "worldlogic:trauma_status"
+      ],
+      "consumes": [
+        "worldlogic:survival_physics",
+        "worldlogic:material_properties",
+        "worldlogic:hydration_physiology",
+        "worldlogic:metabolism_physiology",
+        "worldlogic:thermal_status"
+      ],
+      "integration_review": "Core #270 and #244; Hydration #271; Trauma #239 and #266. Existing clinical ownership and optional legacy APIs preserved."
+    },
+    {
+      "id": "medicine_processing",
+      "source_paths": [
+        "projects/worldlogic-trauma-1.21.1-neoforge/src/main/java/dev/minemods/traumacraft/content/HerbInteraction.java",
+        "projects/worldlogic-trauma-1.21.1-neoforge/src/main/java/dev/minemods/traumacraft/content/HerbSpecies.java",
+        "projects/worldlogic-trauma-1.21.1-neoforge/src/main/java/dev/minemods/traumacraft/content/HerbWorkpieceEntity.java",
+        "projects/worldlogic-trauma-1.21.1-neoforge/src/main/java/dev/minemods/traumacraft/integration/SurfaceWater.java",
+        "projects/worldlogic-trauma-1.21.1-neoforge/src/main/java/dev/minemods/traumacraft/health/MedicalAction.java",
+        "projects/worldlogic-trauma-1.21.1-neoforge/src/main/java/dev/minemods/traumacraft/integration/CorePresentation.java"
+      ],
+      "provides": [],
+      "consumes": [
+        "worldlogic:field_processing",
+        "worldlogic:hydration_physiology",
+        "worldlogic:botanical_resources"
+      ],
+      "integration_review": "Actual Hydration rev5 #271 exact withdrawal, Terrarian #250 tags and Core #253 processing catalogue.",
+      "no_public_surface_reason": "Processing presentation and existing treatment use authoritative local logic."
+    },
+    {
+      "id": "clinical_ui",
+      "source_paths": [
+        "projects/worldlogic-trauma-1.21.1-neoforge/src/main/java/dev/minemods/traumacraft/client/gui/TraumaInventoryScreen.java",
+        "projects/worldlogic-trauma-1.21.1-neoforge/src/main/java/dev/minemods/traumacraft/client/ClientEvents.java",
+        "projects/worldlogic-trauma-1.21.1-neoforge/src/main/java/dev/minemods/traumacraft/network/ModNetwork.java",
+        "projects/worldlogic-trauma-1.21.1-neoforge/src/main/java/dev/minemods/traumacraft/integration/CorePresentation.java"
+      ],
+      "provides": [],
+      "consumes": [
+        "worldlogic:client_navigation",
+        "worldlogic:dashboards",
+        "worldlogic:capability_discovery"
+      ],
+      "integration_review": "Core #253 and #270 native screen/rail and typed registry; retain native treatment controls.",
+      "no_public_surface_reason": "Private visual and network implementation; public clinical capability declared above."
+    },
+    {
+      "id": "death_reports_and_climbing",
+      "source_paths": [
+        "projects/worldlogic-trauma-1.21.1-neoforge/src/main/java/dev/minemods/traumacraft/event/DeathReports.java",
+        "projects/worldlogic-trauma-1.21.1-neoforge/src/main/java/dev/minemods/traumacraft/health/DeathReport.java",
+        "projects/worldlogic-trauma-1.21.1-neoforge/src/main/java/dev/minemods/traumacraft/event/FunctionEvents.java"
+      ],
+      "provides": [],
+      "consumes": [
+        "worldlogic:survival_physics"
+      ],
+      "integration_review": "Preserve death archive, existing Core movement ownership and death reports.",
+      "no_public_surface_reason": "Private lifecycle/visual implementation."
+    }
+  ],
+  "tests": [
+    {
+      "id": "trauma.server.contract",
+      "capabilities": [
+        "worldlogic:trauma_status",
+        "worldlogic:survival_physics",
+        "worldlogic:material_properties",
+        "worldlogic:client_navigation",
+        "worldlogic:field_processing",
+        "worldlogic:dashboards",
+        "worldlogic:capability_discovery",
+        "worldlogic:hydration_physiology",
+        "worldlogic:metabolism_physiology",
+        "worldlogic:thermal_status",
+        "worldlogic:botanical_resources"
+      ],
+      "ref": "tools/qa/scenarios/worldlogic-trauma-rc20.json",
+      "status": "implemented"
+    }
+  ]
+}

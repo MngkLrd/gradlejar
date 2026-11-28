@@ -223,5 +223,14 @@
   "death.traumacraft.surface_response": "Материал: %s | оценка тормозного пути: %s м",
   "death.traumacraft.brain_function": "Мозг (функция)",
   "death.traumacraft.brain_activity_stopped": "Функция мозга: 0% (смерть)",
-  "death.traumacraft.legend_zero": "Чёрный: 0 / отказ"
+  "death.traumacraft.legend_zero": "Чёрный: 0 / отказ",
+  "illness.traumacraft.stage.healthy": "Нет диагностированных заболеваний",
+  "traumacraft.processing.crush": "Измельчение трав",
+  "traumacraft.processing.dry": "Сушка трав",
+  "traumacraft.processing.crush1": "Положите одну порцию на подходящую поверхность.",
+  "traumacraft.processing.crush2": "Обработайте все 16 ячеек рукой, кремнем или булыжником; инструмент захватывает соседние ячейки.",
+  "traumacraft.processing.crush3": "Подберите результат после полной обработки. Выход: две порции.",
+  "traumacraft.processing.dry1": "Промойте верхнюю поверхность обтёсанного бревна 250 мБ чистой пресной воды.",
+  "traumacraft.processing.dry2": "Положите целую порцию травы; 180 секунд под открытым небом без дождя. При укрытии или дожде процесс приостанавливается.",
+  "traumacraft.processing.dry3": "Подберите одну высушенную порцию; затем можно измельчать."
 }

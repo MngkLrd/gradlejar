@@ -1,0 +1,13 @@
+{
+  "name": "Бинт",
+  "category": "worldlogic:trauma",
+  "icon": "traumacraft:bandage",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "traumacraft:bandage",
+      "link_recipe": true,
+      "text": "Используйте по назначению в интерфейсе анатомии. Доступные рецепты смотрите через JEI."
+    }
+  ]
+}

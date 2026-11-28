@@ -223,5 +223,14 @@
   "death.traumacraft.surface_response": "Material: %s | estimated stopping distance: %s m",
   "death.traumacraft.brain_function": "Brain (function)",
   "death.traumacraft.brain_activity_stopped": "Brain function: 0% (death)",
-  "death.traumacraft.legend_zero": "Black: zero / inactive"
+  "death.traumacraft.legend_zero": "Black: zero / inactive",
+  "illness.traumacraft.stage.healthy": "No diagnosed illness",
+  "traumacraft.processing.crush": "Herb crushing",
+  "traumacraft.processing.dry": "Herb drying",
+  "traumacraft.processing.crush1": "Place one portion on a supported surface.",
+  "traumacraft.processing.crush2": "Process all 16 cells with an empty hand, flint or cobblestone; tools affect neighboring cells.",
+  "traumacraft.processing.crush3": "Collect after every cell is processed. Yields two portions.",
+  "traumacraft.processing.dry1": "Wash the top of a stripped log with 250 mB of clean fresh water.",
+  "traumacraft.processing.dry2": "Place a whole herb portion; allow 180 seconds under open sky without rain. Cover or rain pauses progress.",
+  "traumacraft.processing.dry3": "Collect one dried portion; it can then be crushed."
 }
