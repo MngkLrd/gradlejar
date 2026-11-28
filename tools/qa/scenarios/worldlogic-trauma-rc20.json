@@ -739,6 +739,20 @@
           "name": "TR-PRIMITIVE: herb workpiece placement, cell processing, partial resume, drop, canonical treatment roles"
         }
       ]
+    },
+    {
+      "id": "tr-metabolism-passive-rate",
+      "kind": "mechanic",
+      "subject": "Optional Metabolism absent fallback and public observed recovery rate: insufficient samples, rolling HP/min, expiry and reset",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-PUBLICAPI: immutable seven-region snapshot, external injury, invalid input and creative guards"
+        }
+      ]
     }
   ]
 }

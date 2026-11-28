@@ -232,6 +232,19 @@ public final class RegressionChecks {
                     require(recipes.byKey(ModItems.HERBAL_POULTICE.getId()).isPresent(),"new poultice recipe registered");
                 }
                 case "publicapi" -> {
+                    var metabolism=dev.minemods.traumacraft.integration.MetabolismBridge.read(p);
+                    require(metabolism.equals(dev.minemods.traumacraft.integration.MetabolismBridge.Factors.NEUTRAL),"absent Metabolism is neutral");
+                    dev.minemods.traumacraft.integration.MetabolismBridge.forget(p);
+                    require(dev.minemods.traumacraft.api.TraumaApi.passiveRecoveryHpPerMinute(p)==-1,"unobserved recovery unknown");
+                    for(int i=0;i<4;i++)dev.minemods.traumacraft.integration.MetabolismBridge.record(p,0);
+                    require(dev.minemods.traumacraft.api.TraumaApi.passiveRecoveryHpPerMinute(p)==-1,"insufficient samples");
+                    dev.minemods.traumacraft.integration.MetabolismBridge.record(p,.75f);
+                    require(Math.abs(dev.minemods.traumacraft.api.TraumaApi.passiveRecoveryHpPerMinute(p)-9)<.001,"observed HP per minute");
+                    for(int i=0;i<60;i++)dev.minemods.traumacraft.integration.MetabolismBridge.record(p,0);
+                    require(dev.minemods.traumacraft.api.TraumaApi.passiveRecoveryHpPerMinute(p)==0,"old sample expires");
+                    dev.minemods.traumacraft.integration.MetabolismBridge.forget(p);
+                    require(dev.minemods.traumacraft.api.TraumaApi.passiveRecoveryHpPerMinute(p)==-1,"rate resets on forget");
+
                     require(dev.minemods.traumacraft.api.TraumaApi.API_VERSION==1,"public API version");
                     var initial=dev.minemods.traumacraft.api.TraumaApi.status(p).orElseThrow();
                     require(initial.regions().size()==7&&initial.bloodMl()==5000,"healthy public snapshot");

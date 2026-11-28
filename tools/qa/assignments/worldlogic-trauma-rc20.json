@@ -975,5 +975,13 @@
     "hydration": "NOT_RUN: optional public bottleWater adapter; standalone fallback and pure profile predicates tested, vessel withdrawal unavailable",
     "terrarian": "NOT_RUN: optional stripped custom IDs not confirmed; vanilla stripped logs supported",
     "remaining": "liquid remedies and wound irrigation, climate-driven drying not implemented"
+  },
+  "primitive_rc4": {
+    "version": "0.7.0-rc4",
+    "scope": "Canonical Trauma revision; all RC3 functionality and optional Metabolism clinical integration, public Trauma API revision 3",
+    "standalone": "traumaqa publicapi: neutral fallback, observed passive HP/min rolling window, sample reset; existing disease and recovery regression",
+    "combined": "NOT_RUN: Metabolism provider and integrated interface not in standalone QA dependencies",
+    "client": "NOT_RUN",
+    "remaining": "liquid remedies and wound irrigation remain outside this revision"
   }
 }
