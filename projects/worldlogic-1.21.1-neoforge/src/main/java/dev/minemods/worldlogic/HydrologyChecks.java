@@ -14,6 +14,7 @@ final class HydrologyChecks{
  private static void close(double a,double b,String s){require(Math.abs(a-b)<1e-8,s+" "+a+" != "+b);}
  static void verify(ServerLevel l){
   require(Rules.on("hydrology"),"enabled by default");
+  GroundChecks.verify(l);
   RegionalDrainage.verify();BasinTerrain.verify(l);
   RiverProfiles.verify();
   require(!GeoModel.channelEligible(90,5.99)&&GeoModel.channelEligible(90,6)&&GeoModel.channelEligible(90,12)&&!GeoModel.channelEligible(62,20),"runoff threshold and submerged negative control");

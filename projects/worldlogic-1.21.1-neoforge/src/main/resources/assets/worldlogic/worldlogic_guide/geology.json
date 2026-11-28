@@ -7,7 +7,7 @@
     "ru": "Геология и руды",
     "en": "Geology and ores"
   },
-  "source": "WorldLogic RC48",
+  "source": "WorldLogic RC51",
   "pages": [
     {
       "id": "geography",
@@ -323,6 +323,34 @@
         "en": [
           "Five coral types grow in warm shallow seawater. Fringing reefs follow the shore, barrier reefs are separated by a lagoon, and scattered colonies form patch reefs.",
           "Reef crests stay submerged and lagoons retain open sandy areas. Cold and deep oceans do not receive tropical coral colonies."
+        ]
+      }
+    },
+    {
+      "id": "natural_ground",
+      "title": {
+        "ru": "Природные грунты",
+        "en": "Natural ground materials"
+      },
+      "models": [
+        "worldlogic:white_sand",
+        "worldlogic:volcanic_sand",
+        "worldlogic:chernozem",
+        "worldlogic:sandy_loam",
+        "worldlogic:laterite",
+        "worldlogic:volcanic_ash",
+        "worldlogic:volcanic_tuff"
+      ],
+      "body": {
+        "ru": [
+          "Чернозём формируется под степной и луговой растительностью. Супесь характерна для более сухих участков, латеритная почва для влажных тёплых областей. Плодородие и водоудержание различаются.",
+          "Белый карбонатный песок встречается на тёплых побережьях, связанных с рифами. Чёрный песок связан с вулканическими областями; пепел и туф с древними вулканическими конусами.",
+          "Вулканы имеют кратеры и слои базальта и туфа. Это не активные извержения; новые формы генерируются только в новых чанках."
+        ],
+        "en": [
+          "Chernozem forms in steppe and meadow soils. Sandy loam occurs on drier ground, lateritic soils in warm wet regions. Fertility and water retention differ.",
+          "White carbonate sand occurs on warm reef-associated coasts. Black sand is linked to volcanic areas; ash and tuff to volcanic cones.",
+          "Volcanoes have craters and basalt/tuff layers. They are dormant terrain features, generated only in new chunks."
         ]
       }
     }

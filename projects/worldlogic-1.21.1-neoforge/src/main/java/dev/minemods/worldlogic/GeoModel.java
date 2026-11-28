@@ -47,6 +47,10 @@ public final class GeoModel {
  private double t(double x,double z){return tectonic.getValue(x*.115,0,z*.115);}
  private double d(double x,double z,double s){return detail.getValue(x*s,0,z*s);}
  private double m(double x,double z){return moisture.getValue(x*.16,0,z*.16);}
+ /** Tectonic-belt proxy used only for rare volcanic local landforms. */
+ double volcanicPotential(double x,double z){
+  double warp=d(x,z,.075)*130;return Math.exp(-Math.abs(t(x+warp*.7,z-warp*.7))*9);
+ }
  /** Broad ocean basins, shelves, quiet interiors and narrow uplift belts. */
  double raw(double x,double z){
   double warp=d(x,z,.075)*130;double cont=c(x+warp,z-warp);

@@ -97,7 +97,7 @@ final class MarineEcology {
    }
    var bed=chunk.getBlockState(p.set(wx,h,wz));
    if(GeologyGeneration.rock(bed)||ReefTerrain.coral(bed))stone++;
-   else if(bed.is(Blocks.SAND)||bed.is(Blocks.GRAVEL)||bed.is(Blocks.CLAY)||bed.is(Blocks.RED_SAND))sediment++;
+   else if(bed.is(net.minecraft.tags.BlockTags.SAND)||bed.is(Blocks.GRAVEL)||bed.is(Blocks.CLAY))sediment++;
    else if(bed.is(Blocks.DIRT)||bed.is(Blocks.GRASS_BLOCK)||bed.is(Blocks.COARSE_DIRT))dirt++;
   }
   return "MARINE_AUDIT ocean="+ocean+" wet="+wet+" wrongLand="+wrongLand+" sea="+sea+" stone="+stone+" sediment="+sediment+" dirt="+dirt+" habitat="+habitat+" plants="+plants+" nativePlants="+nativePlants+" vanillaPlantWater="+vanillaPlantWater;

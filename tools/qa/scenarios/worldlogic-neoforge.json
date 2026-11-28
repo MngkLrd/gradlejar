@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge RC50 cumulative landscape and marine regression",
+  "name": "World Logic NeoForge RC51 natural materials and volcanic geology",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -1824,6 +1824,17 @@
         {
           "backend": "server",
           "name": "Unified custom biome registry and exact RC22 base-height regression seed a"
+        }
+      ]
+    },
+    {
+      "id": "rc51-natural-ground",
+      "kind": "mechanic",
+      "subject": "Seven actual registered block/items, mineable tags, loot, falling sand/ash, three soil horizons and soil API, regional material controls, actual basalt/tuff uplift and volcanic crater geometry; natural frequency and client evidence separate",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Hydrology mass conservation, snowmelt, permeability, evaporation, groundwater, saved state and five soil blocks"
         }
       ]
     }
