@@ -1,0 +1,57 @@
+// Model and recipe variants are generated from the same authoritative catalog as registration.
+def generated=layout.buildDirectory.dir('generated/excavation')
+tasks.register('generateExcavationAssets') {
+ def catalog=file('src/main/resources/worldlogic_excavation/catalog.json')
+ inputs.file(catalog);outputs.dir(generated)
+ doLast {
+  def data=new groovy.json.JsonSlurper().parse(catalog)
+  def root=generated.get().asFile;delete(root)
+  def write={String path,Object content->def f=new File(root,path);f.parentFile.mkdirs();f.setText(groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(content))+'\n','UTF-8')}
+  def ns='worldlogicexcavation',asset="assets/${ns}", datap="data/${ns}"
+  def en=[:],ru=[:],pickaxe=[]
+  data.specs.each { s ->
+   def id='chipped_'+s.source.replace(':','_')
+   write("${asset}/blockstates/${id}.json",[variants:['':[model:"${ns}:block/${id}"]]])
+   write("${asset}/models/block/${id}.json",[parent:'minecraft:block/block',loader:"${ns}:chip",core_mineral:s.coreMineral,textures:[particle:s.texture,surface:s.texture,host:s.host,mineral:s.mineral]])
+   write("${datap}/loot_table/blocks/${id}.json",[type:'minecraft:block',pools:[]])
+   pickaxe.add("${ns}:${id}")
+   en["block.${ns}.${id}"]="Chipped "+s.en;ru["block.${ns}.${id}"]="Скол: "+s.ru
+  }
+  write('data/minecraft/tags/block/mineable/pickaxe.json',[replace:false,values:pickaxe])
+  def shapeless={String id,List ingredients,String result,int count ->
+   write("${datap}/recipe/${id}.json",[type:'minecraft:crafting_shapeless',category:'misc',ingredients:ingredients.collect{[item:it]},result:[id:result,count:count]])
+  }
+  def furnace={String id,String from,String to,int count ->
+   ['smelting','blasting'].each{type ->
+    write("${datap}/recipe/${id}_${type}.json",[type:"minecraft:${type}",category:'misc',ingredient:[item:from],result:[id:to,count:count],experience:.1f*count,cookingtime:type=='smelting'?200:100])
+   }
+  }
+  def itemModel={String id,String texture,double scale ->
+   write("${asset}/models/item/${id}.json",[parent:'minecraft:item/generated',textures:[layer0:texture],display:[gui:[scale:[scale,scale,scale]],ground:[scale:[.5d*scale,.5d*scale,.5d*scale]],fixed:[scale:[scale,scale,scale]]]])
+  }
+  data.families.each{f ->
+   def ids=[small:"small_${f.id}_fragment",medium:"medium_${f.id}_fragment",large:"large_${f.id}_fragment"]
+   ids.each{size,id ->
+    def scale=[small:.45d,medium:.72d,large:1d][size]
+    itemModel(id,f.texture,scale)
+    en["item.${ns}.${id}"]=[small:'Small',medium:'Medium',large:'Large'][size]+" "+f.en+" fragment"
+    ru["item.${ns}.${id}"]=[small:'Малый',medium:'Средний',large:'Крупный'][size]+" фрагмент: "+f.ru
+   }
+   def small="${ns}:${ids.small}",medium="${ns}:${ids.medium}",large="${ns}:${ids.large}"
+   shapeless("combine_${f.id}_medium",([small]*4),medium,1)
+   shapeless("combine_${f.id}_large",([medium]*2)+[small],large,1)
+   shapeless("combine_${f.id}_large_small",([small]*9),large,1)
+   if(f.processing=='metal'){
+    furnace(ids.small,small,f.nugget,1);furnace(ids.medium,medium,f.nugget,4);furnace(ids.large,large,f.product,1)
+   }else if(f.processing=='smelt')furnace(ids.large,large,f.product,1)
+   else shapeless("process_${f.id}",[large],f.product,1)
+  }
+  itemModel('copper_nugget','minecraft:item/copper_ingot',.38d)
+  en["item.${ns}.copper_nugget"]='Copper nugget';ru["item.${ns}.copper_nugget"]='Медный самородок'
+  shapeless('copper_ingot_from_nuggets',(["${ns}:copper_nugget"]*9),'minecraft:copper_ingot',1)
+  shapeless('copper_nuggets_from_ingot',['minecraft:copper_ingot'],"${ns}:copper_nugget",9)
+  write("${asset}/lang/en_us.json",en);write("${asset}/lang/ru_ru.json",ru)
+ }
+}
+sourceSets.main.resources.srcDir(generated)
+tasks.named('processResources') { dependsOn tasks.named('generateExcavationAssets') }
