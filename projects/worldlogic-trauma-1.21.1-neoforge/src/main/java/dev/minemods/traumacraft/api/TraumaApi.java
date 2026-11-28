@@ -13,7 +13,7 @@ import java.util.EnumSet;
 /** Public server-thread API. Immutable snapshots; no internal NBT or mutable state exposed. */
 public final class TraumaApi {
     public static final int API_VERSION=1;
-    public static final int API_REVISION=4;
+    public static final int API_REVISION=5;
     public enum Zone { HEAD,CHEST,ABDOMEN,LEFT_ARM,RIGHT_ARM,LEFT_LEG,RIGHT_LEG }
     public enum Injury { CONTUSION,CUT,PUNCTURE,LACERATION,BURN,FROSTBITE }
     public record Region(Zone zone,float health,float maximum,float function,int bleeding,boolean fractured,boolean stabilized,Set<Injury> injuries){
@@ -24,7 +24,7 @@ public final class TraumaApi {
     }
     public record OrganStatus(String id,Zone region,float integrity,float internalBleedingMlPerSecond){}
     public record Physiology(float oxygenFraction,float ventilation,float perfusion,float oxygenDelivery,float oxygenDebtSeconds,
-        float renalFunction,float digestiveFunction,float internalBleedingMlPerSecond,float repairFactor,List<OrganStatus> organs){
+        float renalFunction,float digestiveFunction,float internalBleedingMlPerSecond,float repairFactor,float shockLoad,boolean unconscious,float circulationSupport,List<OrganStatus> organs){
         public Physiology{organs=List.copyOf(organs);}
     }
     /** Read-only function and integrity; fractions 0..1. No ownership of Hydration or Metabolism. */
@@ -32,7 +32,7 @@ public final class TraumaApi {
         if(!usable(p))return Optional.empty();
         var b=BodyStates.get(p);var o=b.organs();var list=new ArrayList<OrganStatus>();
         for(var organ:OrganState.Organ.values())list.add(new OrganStatus(organ.name().toLowerCase(java.util.Locale.ROOT),organ.region==BodyPart.STOMACH?Zone.ABDOMEN:Zone.valueOf(organ.region.name()),o.integrity(organ),o.bleeding(organ)));
-        return Optional.of(new Physiology(o.oxygen(),o.ventilation(),o.perfusion(b.bloodFraction()),o.delivery(b.bloodFraction()),o.oxygenDebt(),o.renalFunction(),o.digestiveFunction(),o.internalLossPerSecond(),o.repairFactor(b.bloodFraction()),list));
+        return Optional.of(new Physiology(o.oxygen(),o.ventilation(),o.perfusion(b.bloodFraction()),o.delivery(b.bloodFraction()),o.oxygenDebt(),o.renalFunction(),o.digestiveFunction(),o.internalLossPerSecond(),o.repairFactor(b.bloodFraction()),o.shockLoad(),o.unconscious(),o.circulationSupport(),list));
     }
     private TraumaApi(){}
     private static boolean usable(ServerPlayer p){

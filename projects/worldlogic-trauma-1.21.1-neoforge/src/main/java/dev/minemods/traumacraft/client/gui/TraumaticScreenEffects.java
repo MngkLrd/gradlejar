@@ -19,6 +19,10 @@ public final class TraumaticScreenEffects {
         if(player!=p){reset();player=p;}
         long now=System.nanoTime();float dt=last==0?1/60f:Math.min(.1f,(now-last)/1_000_000_000f);last=now;
         if(mc.options.hideGui||mc.screen!=null||mc.isPaused())return;
+        if(ClientBodyState.unconscious()){
+            gui.fill(0,0,gui.guiWidth(),gui.guiHeight(),0xF5101115);
+            gui.drawCenteredString(mc.font,net.minecraft.network.chat.Component.translatable("screen.traumacraft.unconscious"),gui.guiWidth()/2,gui.guiHeight()/2-4,0xFFDDDDDD);return;
+        }
         int wounds=0;
         for(var part:BodyPart.values())wounds+=ClientBodyState.bleeding(part);
         float blood=ClientBodyState.bloodMl()/5000f;

@@ -117,6 +117,7 @@ public final class ClientClimbState {
         var mc=Minecraft.getInstance();var p=mc.player;
         if(p==null||e.getEntity()!=p)return;
         var input=e.getInput();
+        if(ClientBodyState.unconscious()&&!p.isCreative()&&!p.isSpectator()){input.forwardImpulse=0;input.leftImpulse=0;input.jumping=false;input.shiftKeyDown=false;p.setSprinting(false);return;}
         if(pose(p,0)!=null){
             input.forwardImpulse=0;input.leftImpulse=0;input.jumping=false;
             p.setSprinting(false);p.setDeltaMovement(Vec3.ZERO);return;

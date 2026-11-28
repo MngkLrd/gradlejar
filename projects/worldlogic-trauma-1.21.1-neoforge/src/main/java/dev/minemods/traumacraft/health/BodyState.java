@@ -8,9 +8,11 @@ public final class BodyState {
     private final OrganState organs=new OrganState();
     public OrganState organs(){return organs;}
     public boolean hasAnyBleeding(){return hasBleeding()||organs.hasInternalBleeding();}
-    public void impact(BodyPart part,float points,WoundKind kind){wound(part,points,kind);if(organs.impact(part,points,kind))dirty=true;}
-    public void physiologySecond(boolean breathing,boolean resting,float nutrition){
-        var before=organs.save();float loss=organs.second(bloodFraction(),breathing,resting&&!hasBleeding(),nutrition);loseBlood(loss);
+    public void impact(BodyPart part,float points,WoundKind kind){impact(part,points,kind,null);}
+    public void impact(BodyPart part,float points,WoundKind kind,OrganState.Organ target){wound(part,points,kind);if(organs.impact(part,points,kind,target))dirty=true;}
+    public void physiologySecond(boolean breathing,boolean resting,float nutrition){physiologySecond(breathing,resting,nutrition,1);}
+    public void physiologySecond(boolean breathing,boolean resting,float repair,float circulation){
+        var before=organs.save();float loss=organs.second(bloodFraction(),breathing,resting&&!hasBleeding(),repair,circulation,pain()/100f);loseBlood(loss);
         if(!before.equals(organs.save()))dirty=true;
     }
     public boolean stabilizeInternal(BodyPart part){if(!organs.stabilize(part))return false;dirty=true;return true;}
@@ -57,10 +59,8 @@ public final class BodyState {
     }
     public int shockStage(){
         float blood=bloodFraction(),pain=pain();
-        if(blood<=.4f)return 3;
-        if(blood<=.6f||pain>=85)return 2;
-        if(blood<=.85f||pain>=55)return 1;
-        return 0;
+        int old=blood<=.4f?3:blood<=.6f||pain>=85?2:blood<=.85f||pain>=55?1:0;
+        return Math.max(old,organs.systemicShock());
     }
     public boolean fatalBloodLoss(){return bloodFraction()<=.20f;}
     public boolean vitalDestroyed() {

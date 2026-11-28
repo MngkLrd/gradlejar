@@ -15,7 +15,7 @@ public final class WorldLogicBridge {
     public static boolean legInjury(Player p) { return injuryEnabled(p) && BodyStates.get(p).legPenalty()>0; }
     public static boolean armInjury(Player p) { return injuryEnabled(p) && BodyStates.get(p).armImpaired(); }
     public static double mergePenalty(Player p,double original) { return injuryEnabled(p)?Math.max(original,PhysicalFunction.movementPenalty(BodyStates.get(p))):original; }
-    public static boolean canTreat(Player p) { return !Balance.down(p); }
+    public static boolean canTreat(Player p) { return !Balance.down(p)&&(!(p instanceof ServerPlayer)||!BodyStates.get(p).organs().unconscious()); }
     public static boolean resting(Player p) {
         return active(p) && p.onGround() && !p.isSprinting() && !p.isSwimming() && !p.isInWater()
              && !p.isUsingItem() && p.getFoodData().getFoodLevel()>=14 && fatigue(p)<55

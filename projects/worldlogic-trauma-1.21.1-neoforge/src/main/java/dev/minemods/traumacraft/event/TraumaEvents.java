@@ -103,7 +103,8 @@ public final class TraumaEvents {
         boolean fire=source.is(DamageTypeTags.IS_FIRE);
         boolean projectile=source.is(DamageTypeTags.IS_PROJECTILE);
         boolean physical=!fire && (source.getEntity()!=null || projectile);
-        BodyPart part=physical?HitLocation.locate(p,source):BodyPart.CHEST;
+        var contact=physical?HitLocation.impact(p,source):null;
+        BodyPart part=contact!=null?contact.region():BodyPart.CHEST;
         float points=Math.min(amount,440f)*(projectile?4f:3f);
         // LivingDamageEvent.Pre already reflects armor/resistance. Do not apply armor again.
         WoundKind wound=null;
@@ -115,7 +116,10 @@ public final class TraumaEvents {
                 tool instanceof net.minecraft.world.item.AxeItem?WoundKind.LACERATION:WoundKind.CONTUSION;
         }
         if(wound!=null){
-            float overflow=woundOverflow(b,part,points,wound);
+            var organ=contact==null?null:OrganTarget.select(part,contact.lateral(),contact.height(),contact.rear());
+            float capacity=b.health(part);
+            b.impact(part,points,wound,organ);
+            float overflow=Math.max(0,points-capacity);
             if(physical&&part!=BodyPart.HEAD&&part!=BodyPart.CHEST)transferImpact(b,overflow,WoundKind.CONTUSION);
         }else b.damage(part,points);
         if(physical && part==BodyPart.HEAD && points>=12 && p.getRandom().nextFloat()<.45f) b.addConcussion(600);
@@ -157,7 +161,10 @@ public final class TraumaEvents {
         var nutrition=MetabolismBridge.read(p);
         if(nutrition.toxin()>=.55f&&p.tickCount%100==0&&p.connection!=null&&!(p instanceof net.neoforged.neoforge.common.util.FakePlayer))p.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.CONFUSION,120,0,false,false,true));
         boolean resting=!ClimbManager.active(p)&&WorldLogicBridge.resting(p);
-        b.physiologySecond(p.getAirSupply()>0,resting,nutrition.tissue());
+        var thermal=ThermalBridge.condition(p);
+        var support=dev.minemods.traumacraft.integration.OrganSupport.read(p,thermal,nutrition);
+        b.physiologySecond(p.getAirSupply()>0,resting,support.repair(),support.circulation());
+        if(b.organs().unconscious()){TreatmentManager.cancel(p);ClimbManager.cancel(p);}
         if(b.vitalDestroyed()||b.fatalBloodLoss()){fatalCollapse(p);return;}
         WaterIllness.tick(p);
         if(LegacyFrostExposure.tick(p,b)){
@@ -166,7 +173,6 @@ public final class TraumaEvents {
         }
         float before=totalHp(b);
         if(resting) {
-            var thermal=ThermalBridge.condition(p);
             ThermalBridge.recover(b,thermal,p.tickCount%100==0,nutrition.tissue(),nutrition.bone());
             if(!b.hasAnyBleeding())b.recoverBlood(6f*thermal.recoveryFactor*nutrition.blood()*b.organs().repairFactor(b.bloodFraction()));
         }

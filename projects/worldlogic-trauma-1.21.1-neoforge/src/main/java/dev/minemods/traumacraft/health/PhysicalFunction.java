@@ -25,7 +25,7 @@ public final class PhysicalFunction {
         return Math.max(Math.max(b.legPenalty(),systemicPenalty),1-systemic(b));
     }
     public static boolean canUse(BodyState b,BodyPart arm,boolean twoHanded){
-        if(b.shockStage()>=3||systemic(b)<.20f||arm(b,arm)<=0)return false;
+        if(b.organs().unconscious()||b.shockStage()>=3||systemic(b)<.20f||arm(b,arm)<=0)return false;
         BodyPart other=arm==BodyPart.LEFT_ARM?BodyPart.RIGHT_ARM:BodyPart.LEFT_ARM;
         return !twoHanded||Math.min(arm(b,arm),arm(b,other))>=.35f;
     }

@@ -16,6 +16,7 @@ import net.neoforged.neoforge.event.level.BlockEvent;
 
 public final class FunctionEvents {
     private static final ResourceLocation ATTACK=ResourceLocation.fromNamespaceAndPath("traumacraft","arm_attack_speed");
+    private static final ResourceLocation CONSCIOUS=ResourceLocation.fromNamespaceAndPath("traumacraft","unconscious");
     private FunctionEvents(){}
     public static void update(ServerPlayer p){
         var a=p.getAttribute(Attributes.ATTACK_SPEED);
@@ -29,6 +30,10 @@ public final class FunctionEvents {
                 if(amount<-.001)a.addTransientModifier(new AttributeModifier(ATTACK,amount,AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
             }
         }
+        boolean unconscious=active&&BodyStates.get(p).organs().unconscious();
+        var move=p.getAttribute(Attributes.MOVEMENT_SPEED);
+        if(move!=null){var prior=move.getModifier(CONSCIOUS);if(unconscious&&prior==null)move.addTransientModifier(new AttributeModifier(CONSCIOUS,-1,AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));else if(!unconscious&&prior!=null)move.removeModifier(CONSCIOUS);}
+        if(unconscious){p.setSprinting(false);p.stopUsingItem();}
         if(active&&!PhysicalFunction.canSprint(BodyStates.get(p)))p.setSprinting(false);
     }
     public static void attack(AttackEntityEvent e){
