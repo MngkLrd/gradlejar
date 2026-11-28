@@ -15,6 +15,27 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 final class TreeQA {
     static void register(RegisterCommandsEvent registrationEvent){
         registrationEvent.getDispatcher().register(Commands.literal("wltreechopper").requires(s->s.hasPermission(2))
+          .then(Commands.literal("qa_api").then(Commands.argument("pos",BlockPosArgument.blockPos()).then(Commands.argument("registered",IntegerArgumentType.integer(0,1)).executes(c->{
+            ServerLevel l=c.getSource().getLevel();BlockPos p=BlockPosArgument.getLoadedBlockPos(c,"pos");
+            boolean expected=IntegerArgumentType.getInteger(c,"registered")==1;
+            var found=TreeChopperApi.coreContract(TreeChopperApi.API_REVISION);
+            if(found.isPresent()!=expected||TreeChopperApi.coreContract(TreeChopperApi.API_REVISION+1).isPresent())return 0;
+            var api=found.orElse(TreeChopperApi.contract());
+            var cut=api.cut(l,p);
+            if(cut.isEmpty()||cut.get().totalPermille()<=0||!api.requiresAxe(l.getBlockState(p))
+                ||!cut.equals(TreeChopperApi.cut(l,p))||api.cut(l,p.offset(1000000,0,1000000)).isPresent()
+                ||api.requiresAxe(net.minecraft.world.level.block.Blocks.STONE.defaultBlockState()))return 0;
+            var rock=api.rockForSurface(net.minecraft.world.level.block.Blocks.GRANITE.defaultBlockState());
+            if(rock.isEmpty()||api.rockForSurface(net.minecraft.world.level.block.Blocks.DIRT.defaultBlockState()).isPresent()
+                ||api.looseFind(rock.get()).filter(v->v.sourceBlock().toString().equals("minecraft:granite")
+                    &&v.kind()==TreeChopperApi.LooseKind.PEBBLE).isEmpty())return 0;
+            c.getSource().sendSuccess(()->Component.literal("TreeChopper API contract PASS"),false);return 1;
+          }))))
+          .then(Commands.literal("qa_terrarian_moisture").then(Commands.argument("pos",BlockPosArgument.blockPos()).executes(c->{
+            var l=c.getSource().getLevel();var p=BlockPosArgument.getLoadedBlockPos(c,"pos");
+            if(!MaterialPhysics.qaTerrarianMoisture(l,p)){c.getSource().sendFailure(Component.literal("TreeChopper Terrarian moisture FAILED"));return 0;}
+            c.getSource().sendSuccess(()->Component.literal("TreeChopper Terrarian moisture PASS"),false);return 1;
+          })))
           .then(Commands.literal("qa_buck").then(Commands.argument("pos",BlockPosArgument.blockPos()).then(Commands.argument("expected",IntegerArgumentType.integer(0,1)).executes(c->{
             ServerLevel l=c.getSource().getLevel();BlockPos p=BlockPosArgument.getLoadedBlockPos(c,"pos");
             var fake=FakePlayerFactory.getMinecraft(l);fake.setPos(p.getX()+.5,p.getY(),p.getZ()-1.5);

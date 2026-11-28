@@ -32,6 +32,12 @@
       "name": "cut-oak"
     },
     {
+      "command": "wltreechopper qa_api 1000 200 1000 0",
+      "expect": "TreeChopper API contract PASS",
+      "assertion": true,
+      "name": "direct-api-contract"
+    },
+    {
       "command": "wltreechopper qa_hit 1000 200 1000 south 1",
       "expect": "TreeChopper QA hit dispatched"
     },
@@ -2410,6 +2416,17 @@
         {
           "backend": "server",
           "name": "twig-fall-land"
+        }
+      ]
+    },
+    {
+      "id": "direct-api-contract",
+      "kind": "mechanic",
+      "subject": "Standalone public tree cut and ground resource contract, loaded-only negative control",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "direct-api-contract"
         }
       ]
     }

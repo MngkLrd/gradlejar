@@ -57,7 +57,11 @@ final class MaterialPhysics {
         }catch(ReflectiveOperationException|LinkageError|RuntimeException e){core=null;canonical=null;warn("Core PhysicalMaterials",e);}
         if(ModList.get().isLoaded("worldlogicterrain"))try{
             Class<?> p=Class.forName("dev.minemods.worldlogicterrain.api.WoodPhysicsApi");
-            if(p.getField("API_VERSION").getInt(null)!=1)throw new IllegalStateException("Expected WoodPhysicsApi v1");
+            int version=p.getField("API_VERSION").getInt(null);
+            // Terrarian 1.7.1 exposes the same typed facade with API_VERSION=3.
+            // Its v3 no longer owns numerical wood data: only use it with canonical Core.
+            if(version!=1&&version!=3)throw new IllegalStateException("Unsupported WoodPhysicsApi version "+version);
+            if(version==3&&(canonical==null||!Boolean.TRUE.equals(p.getMethod("available").invoke(null))))return;
             Class<?> profile=Class.forName(p.getName()+"$Profile"),sample=Class.forName(p.getName()+"$Sample");
             wood=new Wood(p.getMethod("profile",BlockState.class),p.getMethod("sample",ServerLevel.class,BlockPos.class),
                 p.getMethod("atMoisture",profile,double.class),profile.getMethod("greenMoisturePercent"),
@@ -147,6 +151,23 @@ final class MaterialPhysics {
         if(!positive(v))v=Double.NaN;
         if(!positive(hardness))hardness=Double.NaN;
         return new Data(v,mass,hardness,moisture,source);
+    }
+    /** Compare the actual peer's loaded-world sample with the same sample used for a cut. */
+    static boolean qaTerrarianMoisture(ServerLevel level,BlockPos pos){
+        init();
+        if(wood==null||canonical==null)return false;
+        try{
+            var state=level.getBlockState(pos);
+            Object sample=((Optional<?>)wood.sample.invoke(null,level,pos)).orElse(null);
+            if(sample==null)return false;
+            double moisture=number(wood.moisture.invoke(sample));
+            Data actual=read(level,pos,state,true,Double.NaN);
+            Data saved=read(level,pos,state,true,moisture);
+            return actual.known()&&saved.known()&&actual.source().equals("core")&&saved.source().equals("core")
+                &&Double.isFinite(moisture)&&Math.abs(actual.moisturePercent()-moisture)<1e-8
+                &&Math.abs(actual.massKg()-saved.massKg())<1e-8
+                &&positive(actual.hardnessN())&&Math.abs(actual.hardnessN()-saved.hardnessN())<1e-8;
+        }catch(ReflectiveOperationException|LinkageError|RuntimeException e){warn("Terrarian integration QA",e);return false;}
     }
     /** Canonical oak reference for gameplay normalization, not a hardcoded physical value. */
     static double oakMassKg(){

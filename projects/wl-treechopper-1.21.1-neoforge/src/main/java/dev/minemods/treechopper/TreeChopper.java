@@ -80,7 +80,7 @@ public final class TreeChopper {
         NeoForge.EVENT_BUS.addListener(TreeQA::register);
         NeoForge.EVENT_BUS.addListener(ForestSticks::tick);
         NeoForge.EVENT_BUS.addListener(PrimitiveRecipeSync::tick);
-        modBus.addListener((net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent event)->event.enqueueWork(LooseRocks::bindCore));
+        modBus.addListener((net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent event)->event.enqueueWork(()->{LooseRocks.bindCore();TreeChopperApi.registerCore();}));
     }
     static BlockState twigState(BlockState leaf,Direction facing){
         var id=BuiltInRegistries.BLOCK.getKey(leaf.getBlock());
