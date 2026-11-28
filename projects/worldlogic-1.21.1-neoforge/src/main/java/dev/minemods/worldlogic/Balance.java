@@ -25,7 +25,7 @@ public final class Balance {
   long last,downUntil,cooldown,jumpAt=-100,failedUntil,started;
   boolean sprint,ground,owned;
   float roll;
-  double jumpY,jumpSpeed;
+  double jumpY,jumpSpeed,descent,run;
  }
  private static final Map<Player,State> STATES=new WeakHashMap<>();
  private static State state(Player p){return STATES.computeIfAbsent(p,k->new State());}
@@ -68,14 +68,14 @@ public final class Balance {
  }
  public static void tick(PlayerTickEvent.Post e){
   Player p=e.getEntity();if(!(p.level() instanceof ServerLevel l))return;State s=state(p);long now=l.getGameTime();
-  if(!eligible(p)||!Rules.on("physical_falls")){release(p,s);s.position=null;return;}
+  if(!eligible(p)||!Rules.on("physical_falls")){release(p,s);s.position=null;s.descent=s.run=0;return;}
   if(s.owned){
    if(now>=s.downUntil||p.getForcedPose()!=Pose.SWIMMING){release(p,s);}
    else{p.setSprinting(false);if(p.isUsingItem())p.stopUsingItem();Vec3 v=p.getDeltaMovement();double damping=canCrawl(p)?.9:.65;p.setDeltaMovement(v.x*damping,v.y,v.z*damping);ImpactDynamics.rollDown(l,p);if(now-s.started==8&&p instanceof ServerPlayer sp)RuleSync.send(sp);}
    s.position=p.position();s.last=now;s.ground=p.onGround();s.sprint=false;return;
   }
   if(s.position==null||s.last!=now-1||p.position().distanceToSqr(s.position)>4){
-   s.position=p.position();s.velocity=Vec3.ZERO;s.last=now;s.ground=p.onGround();s.sprint=p.isSprinting();s.failedUntil=0;s.jumpAt=-100;return;
+   s.position=p.position();s.velocity=Vec3.ZERO;s.last=now;s.ground=p.onGround();s.sprint=p.isSprinting();s.failedUntil=0;s.jumpAt=-100;s.descent=s.run=0;return;
   }
   Vec3 delta=p.position().subtract(s.position),previous=s.velocity;double speed=previous.horizontalDistance(),current=delta.horizontalDistance();
   boolean injured=Rules.on("injured_balance")&&Survival.injured(p,now);
@@ -112,6 +112,13 @@ public final class Balance {
    double risk=slipRisk(injured,fatigue,burden,weak)+(Rules.on("dangerous_darkness")&&l.getMaxLocalRawBrightness(p.blockPosition())<=3?.20:0);
    // No random falls on flat terrain: require a sudden vertical step or drop and measurable loss of speed.
    if(rough&&rise>=.23&&rise<=.65&&current<speed*.72&&risk>=.35)fall(l,p,s,previous,"rough",Math.min(1.1,risk),injured);
+  }
+  // Exclude jumps, walking, sneaking and large teleport steps. Risk is accumulated from actual travel.
+  if(p.isShiftKeyDown()||now-s.jumpAt<=20||delta.y< -1.35||delta.y>.35){s.descent=s.run=0;}
+  else{s.descent=s.descent*.84+Math.max(0,-delta.y);s.run=s.run*.84+current;}
+  if(!s.owned&&Rules.on("downhill_falls")&&now>=s.cooldown&&p.onGround()&&!p.isShiftKeyDown()&&(s.sprint||p.isSprinting())){
+   double risk=GroundMotion.downhillRisk(Math.max(speed,current),s.descent,s.run,slick(l,p),injured,fatigue);
+   if(risk>=.78){fall(l,p,s,previous.horizontalDistance()>.04?previous:delta,"slope",risk,injured);s.descent=s.run=0;}
   }
   if(!s.owned&&p.onGround()&&!s.ground&&s.failedUntil>0&&s.failedUntil>=now&&now>=s.cooldown&&p.getY()<s.jumpY+.50&&!p.isShiftKeyDown()){
    Vec3 dir=previous.horizontalDistance()>.04?previous:p.getLookAngle();fall(l,p,s,dir,"jump",.6,injured);

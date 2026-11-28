@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "worldlogic:block/limestone_slab"
+    },
+    "type=top": {
+      "model": "worldlogic:block/limestone_slab_top"
+    },
+    "type=double": {
+      "model": "worldlogic:block/limestone"
+    }
+  }
+}

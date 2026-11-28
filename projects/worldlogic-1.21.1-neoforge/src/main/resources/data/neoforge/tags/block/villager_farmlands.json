@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "worldlogic:humus_farmland",
+    "worldlogic:loam_farmland",
+    "worldlogic:peat_farmland",
+    "worldlogic:alluvial_silt_farmland",
+    "worldlogic:chernozem_farmland",
+    "worldlogic:sandy_loam_farmland",
+    "worldlogic:laterite_farmland"
+  ]
+}

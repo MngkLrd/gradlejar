@@ -11,10 +11,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(value=LivingEntity.class,remap=false)
 public abstract class FrictionMixin {
- @Redirect(method="travel",at=@At(value="INVOKE",target="Lnet/minecraft/world/level/block/state/BlockState;getFriction(Lnet/minecraft/world/level/LevelReader;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/entity/Entity;)F"),remap=false,require=0)
+ @Redirect(method="travel",at=@At(value="INVOKE",target="Lnet/minecraft/world/level/block/state/BlockState;getFriction(Lnet/minecraft/world/level/LevelReader;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/entity/Entity;)F"),remap=false,require=1)
  private float worldlogic$friction(BlockState state,LevelReader reader,BlockPos pos,Entity entity){
   float vanilla=state.getFriction(reader,pos,entity);
-  if(reader instanceof Level l&&RuleSync.friction(l.isClientSide)&&l.isRainingAt(pos.above())&&Material.block(state,"slippery"))return Math.max(vanilla,Math.min(.90f,vanilla+(float)(.18*RuleSync.weather(l.isClientSide))));
+  if(reader instanceof Level l)return GroundMotion.effective(l,pos,state,entity,vanilla);
   return vanilla;
  }
 }

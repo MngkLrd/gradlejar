@@ -1,0 +1,53 @@
+{
+  "schema": 1,
+  "id": "structures",
+  "order": 75,
+  "requires": "worldlogic_structures",
+  "title": {
+    "ru": "Заброшенные сооружения",
+    "en": "Abandoned structures"
+  },
+  "source": "Structures PR #256 API catalogue",
+  "pages": [
+    {
+      "id": "regions",
+      "title": {
+        "ru": "Следы поселений",
+        "en": "Signs of settlement"
+      },
+      "models": [
+        "minecraft:bricks"
+      ],
+      "body": {
+        "ru": [
+          "Сооружения подстраиваются под климат: в холодных, засушливых, тропических, прибрежных и горных областях встречается разная архитектура. Ищи небольшие заброшенные здания и руины в новых чанках.",
+          "Они не гарантируют добычу или безопасное укрытие. Осмотри повреждённые стены и опоры прежде, чем заходить внутрь."
+        ],
+        "en": [
+          "Architecture varies with cold, arid, tropical, coastal and mountain climates. Look for small abandoned buildings and ruins in newly generated chunks.",
+          "Loot and safe shelter are not guaranteed. Inspect damaged walls and supports before entering."
+        ]
+      }
+    },
+    {
+      "id": "locate",
+      "title": {
+        "ru": "Поиск сооружений",
+        "en": "Locating structures"
+      },
+      "models": [
+        "minecraft:compass"
+      ],
+      "body": {
+        "ru": [
+          "Для поиска с разрешением на команды используется /worldlogic structure_find или обычный /locate structure #worldlogic_structures:abandoned. Возможные регионы: cold, boreal, temperate, arid, tropical, wetland, alpine, coast.",
+          "Генерация зависит от подходящей местности. Расстояние между попытками размещения не гарантирует, что в каждой области есть руины."
+        ],
+        "en": [
+          "With command permissions, use /worldlogic structure_find or /locate structure #worldlogic_structures:abandoned. Regions include cold, boreal, temperate, arid, tropical, wetland, alpine and coast.",
+          "Placement depends on terrain suitability. Attempt spacing does not guarantee that each region contains ruins."
+        ]
+      }
+    }
+  ]
+}
