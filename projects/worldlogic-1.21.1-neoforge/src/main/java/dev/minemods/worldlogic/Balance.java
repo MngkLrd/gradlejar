@@ -46,8 +46,9 @@ public final class Balance {
   BlockPos pos=p.getOnPos();var b=l.getBlockState(pos);
   return b.is(Blocks.ICE)||b.is(Blocks.PACKED_ICE)||b.is(Blocks.BLUE_ICE)||b.is(Blocks.FROSTED_ICE)||Rules.on("slippery_rain")&&Material.block(b,"slippery")&&l.isRainingAt(pos.above());
  }
+ static boolean fallReasonEnabled(String reason){return switch(reason){case "slope"->Rules.on("downhill_falls");case "jump"->Rules.on("failed_jump_falls");default->true;};}
  private static void fall(ServerLevel l,Player p,State s,Vec3 dir,String reason,double severity,boolean injured){
-  if(s.owned||p.getForcedPose()!=null||!eligible(p))return;
+  if(!fallReasonEnabled(reason)||s.owned||p.getForcedPose()!=null||!eligible(p))return;
   long now=l.getGameTime();s.started=now;s.downUntil=now+Math.min(75,duration(severity,injured)+(Rules.on("ground_recovery")?GroundHazards.recoveryExtra(p):0)+(int)(Trauma.load(p)*.08));s.cooldown=s.downUntil+60;s.owned=true;
   s.fallDirection=dir.multiply(1,0,1).normalize();s.roll=dir.cross(p.getLookAngle()).y>=0?18:-18;
   p.stopUsingItem();p.setSprinting(false);p.setForcedPose(Pose.SWIMMING);p.setPose(Pose.SWIMMING);
@@ -93,7 +94,7 @@ public final class Balance {
    boolean front=current<speed*.5&&blocked(l,p,box,forward.scale(.18),0);
    boolean obstacle=x||z||front;
    boolean step=obstacle&&!blocked(l,p,box,forward.scale(.18),.62);
-   if(obstacle&&airborneJump){s.failedUntil=now+16;}
+   if(obstacle&&airborneJump){s.failedUntil=Rules.on("failed_jump_falls")?now+16:0;}
    else if(obstacle&&!step){
     if(p.onGround()&&s.ground&&s.sprint&&delta.y<.10){
      fall(l,p,s,forward,"collision",Math.min(1.4,speed/min*.55),injured);
@@ -114,13 +115,14 @@ public final class Balance {
    if(rough&&rise>=.23&&rise<=.65&&current<speed*.72&&risk>=.35)fall(l,p,s,previous,"rough",Math.min(1.1,risk),injured);
   }
   // Exclude jumps, walking, sneaking and large teleport steps. Risk is accumulated from actual travel.
-  if(p.isShiftKeyDown()||now-s.jumpAt<=20||delta.y< -1.35||delta.y>.35){s.descent=s.run=0;}
+  if(!Rules.on("downhill_falls")||p.isShiftKeyDown()||now-s.jumpAt<=20||delta.y< -1.35||delta.y>.35){s.descent=s.run=0;}
   else{s.descent=s.descent*.84+Math.max(0,-delta.y);s.run=s.run*.84+current;}
   if(!s.owned&&Rules.on("downhill_falls")&&now>=s.cooldown&&p.onGround()&&!p.isShiftKeyDown()&&(s.sprint||p.isSprinting())){
    double risk=GroundMotion.downhillRisk(Math.max(speed,current),s.descent,s.run,slick(l,p),injured,fatigue);
    if(risk>=.78){fall(l,p,s,previous.horizontalDistance()>.04?previous:delta,"slope",risk,injured);s.descent=s.run=0;}
   }
-  if(!s.owned&&p.onGround()&&!s.ground&&s.failedUntil>0&&s.failedUntil>=now&&now>=s.cooldown&&p.getY()<s.jumpY+.50&&!p.isShiftKeyDown()){
+  if(!Rules.on("failed_jump_falls"))s.failedUntil=0;
+  if(Rules.on("failed_jump_falls")&&!s.owned&&p.onGround()&&!s.ground&&s.failedUntil>0&&s.failedUntil>=now&&now>=s.cooldown&&p.getY()<s.jumpY+.50&&!p.isShiftKeyDown()){
    Vec3 dir=previous.horizontalDistance()>.04?previous:p.getLookAngle();fall(l,p,s,dir,"jump",.6,injured);
   }
   if(p.onGround()&&!s.ground)s.failedUntil=0;
