@@ -11,7 +11,7 @@ final class LimbExposure {
  private LimbExposure(){}
  static double protection(ItemStack s){
   if(s.isEmpty())return 0;
-  if(s.getItem() instanceof ClimateGarment g)return Math.min(1,g.profile().insulation()*2.2+g.profile().windShield()*.3);
+  if(s.getItem() instanceof ClimateGarment g)return Math.min(1,PhysicalBridge.garmentInsulation(s,g.profile().insulation())*2.2+g.profile().windShield()*.3);
   var physical=PhysicalBridge.insulation(s);
   if(physical.isPresent())return Math.min(1,physical.getAsDouble()*2.2);
   if(PhysicalBridge.advertised())return Math.min(1,EnvironmentSampler.materialInsulation(s)*2.2);

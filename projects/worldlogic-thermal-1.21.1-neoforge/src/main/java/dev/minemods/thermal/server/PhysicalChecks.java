@@ -26,6 +26,17 @@ final class PhysicalChecks {
   require(EnvironmentSampler.materialInsulation(leather)>EnvironmentSampler.materialInsulation(iron),"production gear uses registry");
   require(PhysicalBridge.waterInertia(Fluids.WATER)==1,"freshwater reference from Core");
   require(PhysicalBridge.item(ItemStack.EMPTY).isEmpty(),"empty item has no physical insulation");
+  if(PhysicalBridge.revision2()){
+   var coat=new ItemStack(dev.minemods.thermal.content.ThermalContent.FUR_COAT.get());
+   var linen=new ItemStack(dev.minemods.thermal.content.ThermalContent.LINEN_CLOTHES.get());
+   var grass=new ItemStack(dev.minemods.thermal.content.ThermalContent.GRASS_COAT.get());
+   require(PhysicalBridge.garmentResistance(coat,0).orElseThrow()>PhysicalBridge.garmentResistance(linen,0).orElseThrow(),"actual series resistance for fur and flax");
+   require(PhysicalBridge.garmentResistance(coat,1).orElseThrow()<PhysicalBridge.garmentResistance(coat,0).orElseThrow(),"Core moisture changes layer resistance");
+   require(PhysicalBridge.garmentInsulation(coat,0)>PhysicalBridge.garmentInsulation(linen,0)&&PhysicalBridge.garmentInsulation(grass,0)>=.16,"real textile registry drives gameplay");
+   require(PhysicalBridge.freezing(Fluids.WATER).orElseThrow()==0,"Core freshwater freezing");
+   require(ClimateModel.naturalWater(-30,-15,"RIVER",0,1,PhysicalBridge.freezing(Fluids.WATER).orElseThrow())==0,"Core freezing threshold used");
+   require(PhysicalBridge.waterInertia(Fluids.WATER,20)==1,"actual solution heat capacity ratio");
+  }
   var pos=p.blockPosition().east(3);var old=l.getBlockState(pos);
   try{
    l.setBlock(pos,Blocks.STONE.defaultBlockState(),2);

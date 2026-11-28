@@ -60,7 +60,7 @@ public final class EnvironmentSampler {
         double ins=0,ventilation=0,rainShield=0,windShield=0,sunShield=0;
         for (ItemStack stack : p.getArmorSlots()) {
             if (stack.isEmpty()) continue;
-            if(stack.getItem() instanceof ClimateGarment garment){var profile=garment.profile();ins+=profile.insulation();ventilation+=profile.ventilation();rainShield+=profile.rainShield();windShield+=profile.windShield();sunShield+=profile.sunShield();}
+            if(stack.getItem() instanceof ClimateGarment garment){var profile=garment.profile();ins+=PhysicalBridge.garmentInsulation(stack,profile.insulation());ventilation+=profile.ventilation();rainShield+=profile.rainShield();windShield+=profile.windShield();sunShield+=profile.sunShield();}
             else if(stack.is(SUMMER)){ventilation+=.45;ins+=.02;}
             else ins += materialInsulation(stack);
         }

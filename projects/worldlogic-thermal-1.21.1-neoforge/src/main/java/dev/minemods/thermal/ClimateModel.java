@@ -18,6 +18,9 @@ public final class ClimateModel {
         return naturalWater(air,base,kind,depth,1);
     }
     public static double naturalWater(double air,double base,String kind,int depth,double thermalInertia){
+        return naturalWater(air,base,kind,depth,thermalInertia,kind.equals("SEA")?-1.8:kind.equals("BRACKISH")?-.6:.1);
+    }
+    public static double naturalWater(double air,double base,String kind,int depth,double thermalInertia,double freezingC){
         double d=clamp(depth,0,48);
         double inertia=Double.isFinite(thermalInertia)?clamp(thermalInertia,.5,2):1;
         double influence=switch(kind) {
@@ -30,7 +33,7 @@ public final class ClimateModel {
         double surface=anchor+(air-anchor)*clamp(influence/inertia,0,1);
         double deep=kind.equals("SEA")?clamp(3+base*.24,1,13):kind.equals("SPRING")||kind.equals("GROUNDWATER")?anchor:clamp(4+base*.22,3,17);
         double mix=1-Math.exp(-d/(kind.equals("SEA")?16:kind.equals("RIVER")?24:9));
-        return clamp(surface+(deep-surface)*mix,kind.equals("SEA")?-1.8:kind.equals("BRACKISH")?-.6:.1,38);
+        return clamp(surface+(deep-surface)*mix,Double.isFinite(freezingC)?freezingC:0,38);
     }
     public static double skinWetness(double previous, boolean water, boolean rain, double radiant) {
         return clamp(water ? 1 : previous + (rain ? .08 : -.015 - Math.max(0,radiant)*.003),0,1);
