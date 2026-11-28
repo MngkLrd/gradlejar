@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "worldlogic:slate_bricks"
+  },
+  "result": {
+    "id": "worldlogic:slate_bricks_wall",
+    "count": 1
+  }
+}

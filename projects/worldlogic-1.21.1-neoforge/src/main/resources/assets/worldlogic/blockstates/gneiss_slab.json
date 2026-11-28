@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "worldlogic:block/gneiss_slab"
+    },
+    "type=top": {
+      "model": "worldlogic:block/gneiss_slab_top"
+    },
+    "type=double": {
+      "model": "worldlogic:block/gneiss"
+    }
+  }
+}

@@ -24,7 +24,12 @@ public final class RuleSync {
  static final StreamCodec<RegistryFriendlyByteBuf,State> CODEC=StreamCodec.of((b,m)->{b.writeBoolean(m.friction);b.writeBoolean(m.momentum);b.writeDouble(m.weather);b.writeVarInt(m.streak);b.writeUtf(m.family,256);b.writeUtf(m.tool,256);b.writeDouble(m.boatLimit);b.writeBoolean(m.down);b.writeFloat(m.roll);b.writeBoolean(m.crawl);b.writeBoolean(m.hanging);b.writeFloat(m.armFactor);b.writeBoolean(m.cramped);b.writeVarInt(m.fatiguePercent);},
   b->new State(b.readBoolean(),b.readBoolean(),b.readDouble(),b.readVarInt(),b.readUtf(256),b.readUtf(256),b.readDouble(),b.readBoolean(),b.readFloat(),b.readBoolean(),b.readBoolean(),b.readFloat(),b.readBoolean(),b.readVarInt()));
  public static void init(RegisterPayloadHandlersEvent e){
-  e.registrar("7").playToClient(State.TYPE,CODEC,(m,c)->{client=m;received=System.nanoTime();});
+  var registrar=e.registrar("12");
+  registrar.playToClient(State.TYPE,CODEC,(m,c)->{client=m;received=System.nanoTime();});
+  registrar.playToClient(LocalWeatherSync.State.TYPE,LocalWeatherSync.CODEC,(m,c)->LocalWeatherSync.receive(m));
+  registrar.playToClient(AnalyticsSync.State.TYPE,AnalyticsSync.CODEC,(m,c)->AnalyticsSync.receive(m));
+  registrar.playToClient(DashboardSync.State.TYPE,DashboardSync.CODEC,(m,c)->DashboardSync.receive(m));
+  registrar.playToClient(TreeDescentSync.State.TYPE,TreeDescentSync.CODEC,(m,c)->TreeDescentSync.receive(m));
  }
  private static State get(ServerPlayer p){
   var b=Body.state(p);int streak=p.level().getGameTime()-b.lastBreak<=40?b.streak:0;
@@ -36,7 +41,7 @@ public final class RuleSync {
  public static void login(PlayerEvent.PlayerLoggedInEvent e){if(e.getEntity() instanceof ServerPlayer p){SENT.remove(p);send(p);}}
  public static void tick(PlayerTickEvent.Post e){if(e.getEntity() instanceof ServerPlayer p&&p.tickCount%10==0)send(p);}
  public static void logout(PlayerEvent.PlayerLoggedOutEvent e){if(e.getEntity() instanceof ServerPlayer p)SENT.remove(p);}
- public static void clearClient(){client=null;received=0;}
+ public static void clearClient(){client=null;received=0;LocalWeatherSync.clear();AnalyticsSync.clear();DashboardSync.clear();TreeDescentSync.clear();}
  public static boolean friction(boolean clientSide){State s=client;return clientSide&&s!=null?s.friction:Rules.on("slippery_rain");}
  public static double weather(boolean clientSide){State s=client;return clientSide&&s!=null?s.weather:Rules.strength("weather");}
  public static boolean clientCramped(){State s=client;return s!=null&&s.cramped;}

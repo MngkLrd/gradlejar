@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "worldlogic:sphalerite_ore",
+    "worldlogic:deepslate_sphalerite_ore"
+  ]
+}

@@ -14,9 +14,27 @@
     "DoorPhysicsMixin",
     "FurnaceMenuMixin",
     "CampfireFuelMixin",
-    "FoodRecoveryMixin"
+    "FoodRecoveryMixin",
+    "GeologyCarverMixin",
+    "GeologyDecorationMixin",
+    "GeologyOreMixin",
+    "GeologyScatteredOreMixin",
+    "ShipwreckTerrainMixin",
+    "MarinePlantPlacementMixin",
+    "NativeWaterEntityMixin",
+    "SoilFarmlandMixin",
+    "RockHardnessMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "client": [
+    "client.LiquidRendererMixin",
+    "client.SodiumWaterRendererMixin",
+    "client.OwnedScreenBackgroundMixin",
+    "client.IrisPlantMaterialMixin",
+    "client.NativeTraumaScreenMixin",
+    "client.SodiumWaterOcclusionMixin",
+    "client.TreeDescentModelMixin"
+  ]
 }

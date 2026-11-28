@@ -17,7 +17,7 @@ import net.neoforged.neoforge.event.level.BlockEvent;
 public final class MineInstability {
  private record Risk(BlockPos pos,BlockPos trigger,Block block,long due){}
  private static final Map<ServerLevel,ArrayDeque<Risk>> QUEUE=new WeakHashMap<>();
- static boolean rock(net.minecraft.world.level.block.state.BlockState s){return s.is(Blocks.STONE)||s.is(Blocks.DEEPSLATE)||s.is(Blocks.GRAVEL)||s.is(Blocks.ANDESITE)||s.is(Blocks.DIORITE)||s.is(Blocks.GRANITE);}
+ static boolean rock(net.minecraft.world.level.block.state.BlockState s){return s.is(Blocks.STONE)||s.is(Blocks.DEEPSLATE)||s.is(Blocks.GRAVEL)||s.is(Blocks.ANDESITE)||s.is(Blocks.DIORITE)||s.is(Blocks.GRANITE)||RockContent.natural(s)||GroundMaterials.volcanicRock(s);}
  private static boolean supported(ServerLevel l,BlockPos roof){
   for(int x=-2;x<=2;x++)for(int z=-2;z<=2;z++){BlockPos q=roof.offset(x,-1,z);if(!l.hasChunkAt(q))return true;var s=l.getBlockState(q);
    if(!s.is(BlockTags.LOGS)&&!s.is(BlockTags.FENCES))continue;

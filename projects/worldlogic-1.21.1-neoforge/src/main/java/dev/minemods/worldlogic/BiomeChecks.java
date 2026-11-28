@@ -1,0 +1,175 @@
+package dev.minemods.worldlogic;
+import java.util.*;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.LevelHeightAccessor;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
+import net.minecraft.world.level.levelgen.RandomState;
+public final class BiomeChecks {
+ private static void require(boolean v,String s){if(!v)throw new IllegalStateException("biomes: "+s);}
+ private static NoiseBasedChunkGenerator generator(ServerLevel l,String id){
+  var key=ResourceKey.create(Registries.WORLD_PRESET,ResourceLocation.fromNamespaceAndPath("worldlogic",id));
+  return (NoiseBasedChunkGenerator)l.registryAccess().lookupOrThrow(Registries.WORLD_PRESET).getOrThrow(key).value().createWorldDimensions().overworld();
+ }
+ public static void verify(ServerLevel l,long seed){
+  RegionalBiomeClimate.verify();RegionalBiomeEdges.verify();LandscapeBlend.verify();SurfaceErosion.verify(l);
+  verifyLocalRelief(l);
+  var old=generator(l,"earthlike_climate");var gen=generator(l,"realistic_unified");
+  var normal=l.registryAccess().lookupOrThrow(Registries.WORLD_PRESET).getOrThrow(ResourceKey.create(Registries.WORLD_PRESET,ResourceLocation.withDefaultNamespace("normal"))).value().createWorldDimensions().overworld();
+  require(BiomeSurvey.supported(normal)&&normal.getMinY()==gen.getMinY()&&normal.getGenDepth()==gen.getGenDepth(),"new default world uses unified realism");
+  require(gen.getMinY()==-256&&gen.getGenDepth()==768&&gen.getSeaLevel()==63&&GeologyGeneration.enabled(gen),"unified bounds and geology");
+  require(gen.getBiomeSource().possibleBiomes().size()==58,"58 active custom classes");
+  for(String retired:List.of("tallgrass_prairie","lichen_tundra","humid_taiga")){
+   var key=ResourceKey.create(Registries.BIOME,ResourceLocation.fromNamespaceAndPath("worldlogic",retired));
+   require(l.registryAccess().lookupOrThrow(Registries.BIOME).get(key).isPresent(),"legacy save ID retained "+retired);
+   require(gen.getBiomeSource().possibleBiomes().stream().noneMatch(v->v.is(key)),"retired biome still generated "+retired);
+  }
+  for(var b:gen.getBiomeSource().possibleBiomes())require(b.unwrapKey().orElseThrow().location().getNamespace().equals("worldlogic"),"vanilla biome leaked");
+  var noise=l.registryAccess().lookupOrThrow(Registries.NOISE);
+  var a=RandomState.create(old.generatorSettings().value(),noise,seed);var b=RandomState.create(gen.generatorSettings().value(),noise,seed);
+  var ob=LevelHeightAccessor.create(-64,384);var nb=LevelHeightAccessor.create(-256,768);
+  int maxDelta=0;Set<String> seen=new TreeSet<>(),subsurface=new TreeSet<>();int depthSamples=0;
+  for(int x=-2;x<=2;x++)for(int z=-2;z<=2;z++){
+   int px=x*768,pz=z*768;
+   int h=old.getBaseHeight(px,pz,Heightmap.Types.OCEAN_FLOOR_WG,ob,a);
+   int n=gen.getBaseHeight(px,pz,Heightmap.Types.OCEAN_FLOOR_WG,nb,b);
+   maxDelta=Math.max(maxDelta,Math.abs(h-n));
+   require(h==n,"RC22 height changed at "+px+","+pz+": "+h+" -> "+n);
+   require((h>=63)==(n>=63),"coastline changed");
+   var actualBiome=BiomeSurvey.at(gen,b,px,Math.max(63,n),pz);
+   if(n>=68)require(!actualBiome.getPath().endsWith("ocean"),"dry land classified ocean at "+px+","+pz+" y="+n+" "+actualBiome);
+   if(n<=53)require(actualBiome.getPath().endsWith("ocean"),"deep water classified as land at "+px+","+pz+" y="+n+" "+actualBiome);
+   if(actualBiome.getPath().endsWith("sandy_coast"))require(n>=60&&n<=67,"sandy shore escaped narrow sea-level band at "+px+","+pz+" y="+n);
+  }
+  for(int z=-20480;z<=20480;z+=4096)for(int x=-20480;x<=20480;x+=4096){
+   var p=new net.minecraft.world.level.levelgen.DensityFunction.SinglePointContext(x,128,z);
+   int h=(int)Math.max(63,128+128*b.router().depth().compute(p));
+   var id=gen.getBiomeSource().getNoiseBiome(x>>2,h>>2,z>>2,b.sampler()).unwrapKey().orElseThrow().location();
+   require(id.getNamespace().equals("worldlogic"),"vanilla biome selected");
+   seen.add(id.toString());
+   if(h>=70){
+    var deep=BiomeSurvey.at(gen,b,x,-180,z);
+    require(deep.getPath().equals("deep_rock_cavern"),"deep climate depth at land "+x+","+z+" -> "+deep);
+    if(depthSamples==0){
+     var result=BiomeSurvey.find(gen,b,new net.minecraft.core.BlockPos(x,63,z),deep);
+     require(result.isPresent()&&result.get().getX()==x&&result.get().getZ()==z&&BiomeSurvey.at(gen,b,x,result.get().getY(),z).equals(deep),"sampled biome search actual seed");
+     require(BiomeSurvey.find(gen,b,new net.minecraft.core.BlockPos(x,63,z),ResourceLocation.withDefaultNamespace("plains")).isEmpty(),"search rejects unavailable vanilla ID");
+    }
+    depthSamples++;
+    subsurface.add(deep.toString());
+    subsurface.add(BiomeSurvey.at(gen,b,x,h-80,z).toString());
+   }
+  }
+  require(seen.size()>=8&&depthSamples>0,"insufficient macro biome diversity "+seen);
+  Set<String> missing=new TreeSet<>();for(var v:gen.getBiomeSource().possibleBiomes())missing.add(v.unwrapKey().orElseThrow().location().toString());
+  missing.removeAll(seen);missing.removeAll(subsurface);
+  org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_BIOME_SURVEY seed={} surface={} subterranean={} depthSamples={} unsampled={}",seed,seen.size(),subsurface,depthSamples,missing);
+  org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_UNIFIED seed={} heightSamples=25 maxDelta={} biomeClasses={}",seed,maxDelta,seen);
+ }
+ // Broad real-seed reachability audit in independent bounded server commands.
+ private static final Map<ServerLevel,Set<String>> COVERAGE=new WeakHashMap<>();
+ private static final Map<ServerLevel,Integer> NEXT_ROW=new WeakHashMap<>();
+ private record Survey(NoiseBasedChunkGenerator gen,RandomState state,long seed){}
+ private static final Map<ServerLevel,Survey> SURVEYS=new WeakHashMap<>();
+ public static int verifyCoverageRow(ServerLevel l,int seedIndex,int band,int row){
+  require(seedIndex>=0&&seedIndex<2&&band>=0&&band<4&&row>=0&&row<10,"survey row bounds");
+  int ordinal=seedIndex*40+band*10+row;
+  if(ordinal==0){COVERAGE.remove(l);NEXT_ROW.put(l,0);SURVEYS.remove(l);}
+  require(NEXT_ROW.getOrDefault(l,-1)==ordinal,"missing or out-of-order survey row "+ordinal);
+  long seed=seedIndex==0?1234L:-6487130996193510395L;
+  var survey=SURVEYS.get(l);
+  if(survey==null||survey.seed()!=seed){
+   var gen=generator(l,"realistic_unified");
+   survey=new Survey(gen,RandomState.create(gen.generatorSettings().value(),l.registryAccess().lookupOrThrow(Registries.NOISE),seed),seed);
+   SURVEYS.put(l,survey);
+  }
+  var gen=survey.gen();var state=survey.state();var seen=COVERAGE.computeIfAbsent(l,v->new TreeSet<>());
+  var bounds=LevelHeightAccessor.create(gen.getMinY(),gen.getGenDepth());
+  int before=seen.size(),samples=0,iz=band*10-20+row;
+  for(int ix=-14;ix<=14;ix++){
+   int x=ix*2048,z=iz*2048,model=BiomeSurvey.modelY(state,x,z);
+   int guess=Math.max(gen.getSeaLevel(),model);
+   var predicted=BiomeSurvey.at(gen,state,x,guess,z);
+   if(!seen.contains(predicted.toString())){
+    int actual=Math.max(gen.getSeaLevel(),gen.getBaseHeight(x,z,Heightmap.Types.OCEAN_FLOOR_WG,bounds,state));
+    var found=BiomeSurvey.at(gen,state,x,actual,z);
+    if(seen.add(found.toString()))org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_BIOME_REACHED {} seed={} x={} y={} z={}",found,seed,x,actual,z);
+   }
+   if(model>=75)for(int y:new int[]{-180,model-80}){
+    var id=BiomeSurvey.at(gen,state,x,y,z);
+    if(id.getPath().endsWith("cavern")&&seen.add(id.toString()))org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_BIOME_REACHED {} seed={} x={} y={} z={}",id,seed,x,y,z);
+   }
+   samples++;
+  }
+  require(samples==29,"complete biome audit row");
+  // Retain every original point. Additional climate-directed search is independent
+  // of the 2048 lattice. Sample actual seeded climate, never fabricate a climate
+  // point or inject a biome. Only candidate columns need expensive base heights.
+  String rare="worldlogic:subtropical_rainforest";
+  int rareProbes=0,climateCandidates=0;
+  if(!seen.contains(rare)&&gen.getBiomeSource() instanceof net.minecraft.world.level.biome.MultiNoiseBiomeSource source){
+   search: for(int dz:new int[]{256,768,1280,1792})for(int ix=-56;ix<=56;ix++){
+    int x=ix*512+((row&1)*256),z=iz*2048+dz;
+    var climate=state.sampler().sample(x>>2,0,z>>2);
+    if(climate.temperature()<1600||climate.temperature()>3800||climate.humidity()<3600||climate.erosion()<-1200)continue;
+    climateCandidates++;
+    int model=BiomeSurvey.modelY(state,x,z);
+    if(model<gen.getSeaLevel()-4)continue;
+    int actual=gen.getBaseHeight(x,z,Heightmap.Types.OCEAN_FLOOR_WG,bounds,state);
+    rareProbes++;
+    if(actual<=gen.getSeaLevel()+4)continue;
+    // Dry inland column: same elevation-derived continentalness and edge
+    // resolution as PhysicalBiomeReconciliation. At this height the surface
+    // palette does not use shore or underwater rules.
+    long coast=(long)(10000*PhysicalBiomeReconciliation.continental(actual,gen.getSeaLevel(),false,false));
+    var surface=RegionalBiomeEdges.resolve(source,(qx,qz)->state.sampler().sample(qx,0,qz),x>>2,z>>2,coast);
+    var raw=BiomeSurvey.at(gen,state,x,actual,z);
+    var id=surface.unwrapKey().orElseThrow().location();
+    if(raw.toString().equals(rare)&&id.toString().equals(rare)){
+     seen.add(rare);
+     org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_BIOME_REACHED {} seed={} x={} y={} z={} probe=dense_climate_verified_surface",id,seed,x,actual,z);
+     break search;
+    }
+    org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_SUBTROPICAL_CANDIDATE seed={} x={} y={} z={} temperature={} humidity={} erosion={} continental={} raw={} reconciled={}",seed,x,actual,z,climate.temperature(),climate.humidity(),climate.erosion(),coast,raw,id);
+   }
+  }
+  if(climateCandidates>0)org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_SUBTROPICAL_PROBE seed={} row={} climateCandidates={} actualHeightChecks={} reached={}",seed,ordinal,climateCandidates,rareProbes,seen.contains(rare));
+  NEXT_ROW.put(l,ordinal+1);
+  org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_BIOME_COVERAGE_ROW seed={} band={} row={} points={} new={} cumulative={}",seed,band,row,samples,seen.size()-before,seen.size());
+  return (ordinal+1)*29;
+ }
+ public static void verifyCoverage(ServerLevel l){
+  require(NEXT_ROW.getOrDefault(l,-1)==80,"all 2320 survey points required");
+  SURVEYS.remove(l);
+  var gen=generator(l,"realistic_unified");
+  var seen=COVERAGE.getOrDefault(l,Set.of());
+  var missing=new TreeSet<String>();
+  for(var h:gen.getBiomeSource().possibleBiomes())missing.add(h.unwrapKey().orElseThrow().location().toString());
+  missing.removeAll(seen);
+  require(missing.isEmpty(),"actual seeded biome coverage "+seen.size()+"/58; unsampled="+missing);
+ }
+
+ private static void verifyLocalRelief(ServerLevel l){
+  var c=new net.minecraft.world.level.chunk.ProtoChunk(new net.minecraft.world.level.ChunkPos(0,0),net.minecraft.world.level.chunk.UpgradeData.EMPTY,LevelHeightAccessor.create(-256,768),l.registryAccess().registryOrThrow(Registries.BIOME),null);
+  var p=new net.minecraft.core.BlockPos.MutableBlockPos();
+  for(int y=90;y<=100;y++)c.setBlockState(p.set(4,y,4),net.minecraft.world.level.block.Blocks.STONE.defaultBlockState(),false);
+  require(LandscapeBlend.reshape(c,4,4,100,6),"actual foothill raises natural column");
+  require(c.getBlockState(p.set(4,106,4)).is(net.minecraft.world.level.block.Blocks.STONE)&&c.getBlockState(p.set(4,107,4)).isAir(),"foothill profile upper bound");
+  require(LandscapeBlend.reshape(c,4,4,106,-2),"actual ridge surface adjustment");
+  require(c.getBlockState(p.set(4,104,4)).is(net.minecraft.world.level.block.Blocks.STONE)&&c.getBlockState(p.set(4,105,4)).isAir(),"ridge top retained");
+  c.setBlockState(p.set(4,105,4),net.minecraft.world.level.block.Blocks.WATER.defaultBlockState(),false);
+  require(!LandscapeBlend.reshape(c,4,4,104,3)&&c.getBlockState(p.set(4,105,4)).is(net.minecraft.world.level.block.Blocks.WATER),"water negative control");
+  c.setBlockState(p.set(4,105,4),net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(),false);
+  c.setBlockState(p.set(4,103,4),net.minecraft.world.level.block.Blocks.CAVE_AIR.defaultBlockState(),false);
+  require(!LandscapeBlend.reshape(c,4,4,104,-2),"open cavity negative control");
+  var q=new net.minecraft.core.BlockPos.MutableBlockPos();
+  for(int y=85;y<=100;y++)c.setBlockState(q.set(9,y,9),net.minecraft.world.level.block.Blocks.STONE.defaultBlockState(),false);
+  require(LandscapeBlend.reshape(c,9,9,100,14),"extended natural shoulder");
+  require(!LandscapeBlend.reshape(c,9,9,114,15),"local mountain uplift bound");
+  require(LandscapeBlend.reshape(c,9,9,114,-4)&&c.getBlockState(q.set(9,110,9)).is(net.minecraft.world.level.block.Blocks.STONE),"bounded valley adjustment");
+ }
+
+}
