@@ -1,0 +1,35 @@
+{
+  "name": "Переносное тепло и охлаждение",
+  "category": "worldlogic:thermal_survival",
+  "icon": "worldlogic_thermal:hot_stone",
+  "sortnum": 6,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogic_thermal:hot_stone",
+      "link_recipe": true,
+      "text": "Нажмите ПКМ по активному источнику тепла горячим камнем, кожаной грелкой или термосом. Держите заряженный предмет в хотбаре. Угольная грелка дополнительно расходует уголь из второй руки."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Охлаждайте подходящую грелку на льду или полном снегу. Мокрая ткань использует воду в котле; веер работает по ПКМ. Заряд расходуется со временем; действует сильнейший предмет, не сумма всех."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:hot_stone"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:charcoal_warmer"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:hand_fan"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:wet_cloth"
+    }
+  ],
+  "flag": "mod:worldlogic_thermal"
+}

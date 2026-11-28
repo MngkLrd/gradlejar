@@ -1,0 +1,23 @@
+{
+  "name": "Forest canopy",
+  "category": "worldlogic:thermal_survival",
+  "icon": "worldlogic_thermal:leaf_canopy",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogic_thermal:leaf_canopy",
+      "link_recipe": true,
+      "text": "Four leaf inputs in the player grid make two canopy blocks. Use ordinary leaves or collected Terrarian forest litter, fallen leaves and needles."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Attach panels above your head to a nearby tree or other block. They shade and reduce rain wetting and wind but do not form a sealed room. They burn; keep fire away."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:leaf_canopy"
+    }
+  ],
+  "flag": "mod:worldlogic_thermal"
+}

@@ -51,3 +51,31 @@ tasks.register('verifyWorldLogic') {
 tasks.named('compileJava') { dependsOn 'verifyWorldLogic' }
 tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8'; options.release = 21 }
 tasks.named('test', Test) { useJUnitPlatform() }
+
+tasks.register('verifyThermalGuide') {
+    inputs.dir('src/main/resources/assets/worldlogic/patchouli_books/field_guide')
+    doLast {
+        def base = file('src/main/resources/assets/worldlogic/patchouli_books/field_guide')
+        def parser = new groovy.json.JsonSlurper()
+        def locales = ['en_us','ru_ru']
+        def sets = locales.collect { loc ->
+            def category = parser.parse(new File(base, loc+'/categories/thermal_survival.json'))
+            assert category.flag == 'mod:worldlogic_thermal'
+            def entries = new File(base, loc+'/entries/thermal_survival').listFiles().findAll { it.name.endsWith('.json') }
+            assert entries.size() == 7
+            entries.each { entry ->
+                def data = parser.parse(entry)
+                assert data.category == 'worldlogic:thermal_survival' && data.flag == 'mod:worldlogic_thermal'
+                assert data.pages[0].type == 'patchouli:spotlight' && data.pages[0].link_recipe
+                data.pages.findAll { it.type == 'patchouli:crafting' }.each { page ->
+                    assert page.recipe.startsWith('worldlogic_thermal:')
+                    assert file('src/main/resources/data/worldlogic_thermal/recipe/'+page.recipe.split(':')[1]+'.json').isFile()
+                }
+                if (data.icon.startsWith('worldlogic_thermal:')) assert file('src/main/resources/assets/worldlogic_thermal/models/item/'+data.icon.split(':')[1]+'.json').isFile()
+            }
+            entries.collect { it.name }.toSet()
+        }
+        assert sets[0] == sets[1]
+    }
+}
+tasks.named('processResources') { dependsOn 'verifyThermalGuide' }

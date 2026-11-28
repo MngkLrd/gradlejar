@@ -260,6 +260,12 @@
       "command": "thermal qa admin_restore",
       "expect": "THERMAL_QA_admin_restore_PASS",
       "assertion": true
+    },
+    {
+      "name": "Core presentation registry and actual Thermal processing descriptors",
+      "command": "thermal qa presentation",
+      "expect": "THERMAL_QA_presentation_PASS",
+      "assertion": true
     }
   ],
   "coverage": [
@@ -689,6 +695,17 @@
         {
           "backend": "server",
           "name": "Core admin reset restores thermal state, preserves adaptation and clears own penalty"
+        }
+      ]
+    },
+    {
+      "id": "core-presentation",
+      "kind": "mechanic",
+      "subject": "Core presentation registry and actual Thermal processing descriptors",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core presentation registry and actual Thermal processing descriptors"
         }
       ]
     }

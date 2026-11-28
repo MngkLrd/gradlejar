@@ -69,7 +69,10 @@ public final class CorePresentation {
  public static List<Process> processes(){
   List<Process> out=new ArrayList<>();
   var supports=BuiltInRegistries.BLOCK.getTag(FiberWorkpieceBlock.SURFACES).map(t->t.stream().map(h->stack(h.value())).filter(s->!s.isEmpty()).toList()).orElse(List.of());
-  if(!supports.isEmpty())out.add(process("fiber",List.of(slot("INPUT",stack(ThermalContent.RAW_FIBER.get())),new Slot("SUPPORT",supports),slot("OUTPUT",FiberWorkpieceEntity.finishedOutput())),"fiber.step1","fiber.step2","fiber.step3"));
+  if(!supports.isEmpty()){
+   out.add(process("fiber",List.of(slot("INPUT",stack(ThermalContent.RAW_FIBER.get())),new Slot("SUPPORT",supports),slot("OUTPUT",FiberWorkpieceEntity.finishedOutput())),"fiber.step1","fiber.step2","fiber.step3"));
+   out.add(process("fiber_scraper",List.of(slot("INPUT",stack(ThermalContent.RAW_FIBER.get())),new Slot("SUPPORT",supports),slot("TOOL",stack(ThermalContent.SCRAPER.get())),slot("OUTPUT",FiberWorkpieceEntity.finishedOutput())),"fiber.step1","fiber.step2","fiber.step3"));
+  }
   var plants=BuiltInRegistries.BLOCK.getTag(FiberHarvest.PLANTS).map(t->t.stream().map(h->stack(h.value())).filter(s->!s.isEmpty()).distinct().toList()).orElse(List.of());
   if(!plants.isEmpty())out.add(process("harvest",List.of(new Slot("INPUT",plants),slot("OUTPUT",stack(ThermalContent.RAW_FIBER.get()))),"harvest.step"));
   var spindle=ThermalContent.SPINDLE.get();
@@ -97,7 +100,7 @@ public final class CorePresentation {
    for(Process p:processes()){
     List<Object> slots=new ArrayList<>();
     for(Slot v:p.slots())slots.add(slot.newInstance(Enum.valueOf((Class)role,v.role()),v.alternatives()));
-    result.add(recipe.newInstance(id("process/"+p.name()),key(p.name().startsWith("repair_")?"repair":p.name())+".title",slots,p.steps()));
+    result.add(recipe.newInstance(id("process/"+p.name()),key(p.name().startsWith("repair_")?"repair":p.name().equals("fiber_scraper")?"fiber":p.name())+".title",slots,p.steps()));
    }
    return List.copyOf(result);
   }catch(ReflectiveOperationException ex){throw new IllegalStateException("Thermal processing contract",ex);}

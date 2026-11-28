@@ -87,7 +87,7 @@
       "fallback": "Core atmosphere/environment; no thermal update if absent."
     },
     {
-      "id": "worldlogic:fatigue",
+      "id": "worldlogic:survival_physics",
       "version": 1,
       "min_revision": 0,
       "required": true,
@@ -95,7 +95,7 @@
       "fallback": "Core authoritative fatigue; respects disabled rule."
     },
     {
-      "id": "worldlogic:physical_materials",
+      "id": "worldlogic:material_properties",
       "version": 1,
       "min_revision": 2,
       "required": false,
@@ -125,6 +125,30 @@
       "required": false,
       "status": "implemented",
       "fallback": "Neutral circulation when optional trauma API absent."
+    },
+    {
+      "id": "worldlogic:client_navigation",
+      "version": 1,
+      "min_revision": 0,
+      "required": false,
+      "status": "implemented",
+      "fallback": "Old Core retains native inventory shortcut and optional EMI; Patchouli resources load only with a compatible Core book."
+    },
+    {
+      "id": "worldlogic:dashboards",
+      "version": 1,
+      "min_revision": 0,
+      "required": false,
+      "status": "implemented",
+      "fallback": "Old Core retains native inventory shortcut and optional EMI; Patchouli resources load only with a compatible Core book."
+    },
+    {
+      "id": "worldlogic:field_processing",
+      "version": 1,
+      "min_revision": 0,
+      "required": false,
+      "status": "implemented",
+      "fallback": "Old Core retains native inventory shortcut and optional EMI; Patchouli resources load only with a compatible Core book."
     }
   ],
   "features": [
@@ -142,8 +166,8 @@
       ],
       "consumes": [
         "worldlogic:environment",
-        "worldlogic:fatigue",
-        "worldlogic:physical_materials",
+        "worldlogic:survival_physics",
+        "worldlogic:material_properties",
         "worldlogic:hydration_physiology",
         "worldlogic:metabolism_physiology",
         "worldlogic:trauma_status"
@@ -166,7 +190,7 @@
       ],
       "consumes": [
         "worldlogic:environment",
-        "worldlogic:physical_materials"
+        "worldlogic:material_properties"
       ],
       "integration_review": "RC54 Core API 15 PhysicalMaterials thermalResistance is authoritative for series wall resistance. Thermal owns cladding placement, geometric thickness and room air evolution; API exposes the actual face query used by the solver. Straw uses vanilla hay fire hooks, clay is nonflammable; native block lifecycle invalidates actual room state, so no separate fire capability or duplicate material table is needed. Enclosed air receives bounded waste heat from living noncreative nonspectator occupants, using Thermal's room solver and Core material profiles for snow/ice; no new resource deduction or global weather change. Leaf canopy consumes optional Terrarian resource tags; compact snow insulation and bare-handed packing operate on actual vanilla snow. No duplicate provider state."
     },
@@ -180,10 +204,26 @@
       ],
       "provides": [],
       "consumes": [
-        "worldlogic:physical_materials"
+        "worldlogic:material_properties"
       ],
       "integration_review": "Existing devices, wearable layers and portable heat sources feed Thermal exposure and room simulation; physical data are read from Core where supported.",
       "no_public_surface_reason": "Device and garment contributions are implementation details already reflected by public body and room snapshots."
+    },
+    {
+      "id": "core_presentation",
+      "source_paths": [
+        "projects/worldlogic-thermal-1.21.1-neoforge/src/main/java/dev/minemods/thermal/integration/CorePresentation.java",
+        "projects/worldlogic-thermal-1.21.1-neoforge/src/main/java/dev/minemods/thermal/client/ThermalCoreClient.java",
+        "projects/worldlogic-thermal-1.21.1-neoforge/src/main/java/dev/minemods/thermal/client/ThermalScreen.java"
+      ],
+      "provides": [],
+      "consumes": [
+        "worldlogic:client_navigation",
+        "worldlogic:dashboards",
+        "worldlogic:field_processing"
+      ],
+      "integration_review": "Core owns navigation, synchronized dashboard and JEI processing categories. Thermal registers native four-panel screen and read-only authoritative snapshots, supplies existing station/tool mechanics as descriptors and unique bilingual resource-pack book entries.",
+      "no_public_surface_reason": "Presentation uses Core extension surfaces; no second public dashboard or recipe system."
     }
   ],
   "tests": [
@@ -193,11 +233,21 @@
         "worldlogic:thermal_status",
         "worldlogic:room_climate",
         "worldlogic:environment",
-        "worldlogic:fatigue",
-        "worldlogic:physical_materials",
+        "worldlogic:survival_physics",
+        "worldlogic:material_properties",
         "worldlogic:hydration_physiology",
         "worldlogic:metabolism_physiology",
         "worldlogic:trauma_status"
+      ],
+      "ref": "tools/qa/scenarios/worldlogic-thermal.json",
+      "status": "implemented"
+    },
+    {
+      "id": "thermal.presentation.contract",
+      "capabilities": [
+        "worldlogic:client_navigation",
+        "worldlogic:dashboards",
+        "worldlogic:field_processing"
       ],
       "ref": "tools/qa/scenarios/worldlogic-thermal.json",
       "status": "implemented"

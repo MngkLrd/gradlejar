@@ -1,0 +1,23 @@
+{
+  "name": "Snow shelters",
+  "category": "worldlogic:thermal_survival",
+  "icon": "minecraft:snow_block",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "minecraft:snow_block",
+      "link_recipe": true,
+      "text": "Crouch and right-click snow with an empty main hand. Snow layers give snowballs; full blocks give one snow block. Four snowballs pack into one block in the player crafting grid."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Build a 2×2×2 interior with full snow walls, roof and snow floor. Leave a two-block-high entrance while building; close it with removable snow blocks when inside. Ice is a poorer insulator."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "No bedding, wood or shovel required. Body heat gradually warms compact rooms; an empty igloo creates no heat. Monitor Body and Room. Severe frost remains dangerous."
+    }
+  ],
+  "flag": "mod:worldlogic_thermal"
+}

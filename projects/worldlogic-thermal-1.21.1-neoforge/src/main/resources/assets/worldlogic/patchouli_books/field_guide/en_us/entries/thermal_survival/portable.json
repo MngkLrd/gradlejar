@@ -1,0 +1,35 @@
+{
+  "name": "Portable warmth and cooling",
+  "category": "worldlogic:thermal_survival",
+  "icon": "worldlogic_thermal:hot_stone",
+  "sortnum": 6,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogic_thermal:hot_stone",
+      "link_recipe": true,
+      "text": "Right-click an active heat source with a hot stone, leather warmer or insulated flask. Keep the charged item in your hotbar. Charcoal warmer additionally consumes coal or charcoal from offhand."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Cool a compatible pack on ice or full snow. Wet cloth uses water in a cauldron; a hand fan works by right-click. Charge decays over time and the strongest item wins, not a sum of all items."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:hot_stone"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:charcoal_warmer"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:hand_fan"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:wet_cloth"
+    }
+  ],
+  "flag": "mod:worldlogic_thermal"
+}

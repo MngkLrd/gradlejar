@@ -1,0 +1,27 @@
+{
+  "name": "Exterior insulation",
+  "category": "worldlogic:thermal_survival",
+  "icon": "worldlogic_thermal:straw_insulation",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogic_thermal:straw_insulation",
+      "link_recipe": true,
+      "text": "Place clay or straw cladding on the OUTSIDE of a solid horizontal wall face. Inside furniture can still touch the wall. Only covered faces reduce heat loss."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Clay is unfired and nonflammable. Straw provides stronger insulation but burns like hay. If the support or cladding disappears, its insulation disappears too. A room must still be enclosed."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:clay_insulation"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:straw_insulation"
+    }
+  ],
+  "flag": "mod:worldlogic_thermal"
+}

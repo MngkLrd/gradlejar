@@ -1,0 +1,23 @@
+{
+  "name": "Лиственный навес",
+  "category": "worldlogic:thermal_survival",
+  "icon": "worldlogic_thermal:leaf_canopy",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogic_thermal:leaf_canopy",
+      "link_recipe": true,
+      "text": "Четыре порции листвы в инвентаре дают два блока навеса. Подходят обычные листья, опавшая листва, хвоя и лесная подстилка Terrarian."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Закрепите панели над головой на дереве или другом блоке. Они дают тень, уменьшают промокание и ветер, но не образуют закрытое помещение. Берегите от огня."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:leaf_canopy"
+    }
+  ],
+  "flag": "mod:worldlogic_thermal"
+}

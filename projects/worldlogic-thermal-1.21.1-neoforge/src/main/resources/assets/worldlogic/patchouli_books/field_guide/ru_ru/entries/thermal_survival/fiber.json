@@ -1,0 +1,35 @@
+{
+  "name": "Обработка волокон",
+  "category": "worldlogic:thermal_survival",
+  "icon": "worldlogic_thermal:raw_fiber_bundle",
+  "sortnum": 4,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "worldlogic_thermal:raw_fiber_bundle",
+      "link_recipe": true,
+      "text": "Пустой основной рукой соберите подходящую траву, камыш, крапиву или лианы. Положите пучок на подходящий камень."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "ЛКМ обработайте все 64 ячейки рукой или каменным скребком. Скребок обрабатывает крест. Shift + ЛКМ забирает незавершённую работу. После завершения нажмите ещё раз: четыре сухих волокна."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Веретено: два волокна во второй руке, веретено в основной, ПКМ даёт четыре нити. Станок: три нити, пять секунд, две плетёные ткани. JEI и рецепты Core показывают процессы."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:stone_scraper"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:spindle"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "worldlogic_thermal:textile_loom"
+    }
+  ],
+  "flag": "mod:worldlogic_thermal"
+}
