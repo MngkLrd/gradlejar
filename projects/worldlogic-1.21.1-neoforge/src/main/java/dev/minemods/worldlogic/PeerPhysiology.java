@@ -58,6 +58,7 @@ public final class PeerPhysiology {
   player.setHealth(player.getMaxHealth());player.getFoodData().setFoodLevel(20);player.getFoodData().setSaturation(20);player.getFoodData().setExhaustion(0);
   player.setAirSupply(player.getMaxAirSupply());player.clearFire();player.setTicksFrozen(0);player.fallDistance=0;
   Survival.adminRestore(player);Trauma.adminRestore(player);Balance.adminRestore(player);Body.adminRestore(player);CombatConsequences.adminRestore(player);
+  GroundHazards.adminRestore(player);ImpactDynamics.adminRestore(player);TravelPhysics.adminRestore(player);
   done.add("vanilla/Core");
   for(var peer:HEAL){
    if(!ModList.get().isLoaded(peer.mod()))continue;

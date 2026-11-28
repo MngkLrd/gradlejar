@@ -376,7 +376,40 @@
       ]
     }
   ],
-  "consumes": [],
+  "consumes": [
+    {
+      "id": "worldlogic:trauma_status",
+      "version": 1,
+      "min_revision": 7,
+      "required": false,
+      "status": "implemented",
+      "fallback": "Installed compatible reset required for full heal; older or absent provider never written by Core."
+    },
+    {
+      "id": "worldlogic:hydration_physiology",
+      "version": 1,
+      "min_revision": 5,
+      "required": false,
+      "status": "implemented",
+      "fallback": "Installed compatible reset required for full heal; absent provider no hydration state."
+    },
+    {
+      "id": "worldlogic:thermal_status",
+      "version": 1,
+      "min_revision": 4,
+      "required": false,
+      "status": "implemented",
+      "fallback": "Installed compatible reset required for full heal; absent provider no thermal state."
+    },
+    {
+      "id": "worldlogic:metabolism_physiology",
+      "version": 1,
+      "min_revision": 6,
+      "required": false,
+      "status": "implemented",
+      "fallback": "Legacy Core stationary recovery when absent/incompatible; full heal reports unavailable installed reset."
+    }
+  ],
   "features": [
     {
       "id": "material_properties",
@@ -417,13 +450,21 @@
         "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/PeerPhysiology.java",
         "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/api/WorldLogicBreaks.java",
         "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/mixin/CompletedMiningMixin.java",
-        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/AdminCommands.java"
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/AdminCommands.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/Body.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/GroundHazards.java",
+        "projects/worldlogic-1.21.1-neoforge/src/main/java/dev/minemods/worldlogic/ImpactDynamics.java"
       ],
       "provides": [
         "worldlogic:survival_physics"
       ],
-      "consumes": [],
-      "integration_review": "Trauma #219 consumes collision and injury context; no medical or nutrition ownership transferred. Core alone owns exertion speed and attack factors; do not apply them again from peers. Core calls Metabolism rev6 native rest and public admin provider methods only; #265–267. Missing installed reset is explicitly incomplete. TreeChopper/Excavation consume protection marker and explicit accepted work; #264."
+      "consumes": [
+        "worldlogic:trauma_status",
+        "worldlogic:hydration_physiology",
+        "worldlogic:thermal_status",
+        "worldlogic:metabolism_physiology"
+      ],
+      "integration_review": "Trauma #219 consumes collision and injury context; no medical or nutrition ownership transferred. Core alone owns exertion speed and attack factors; do not apply them again from peers. Core calls Metabolism rev6 native rest and public admin provider methods only; #265–267. Missing installed reset is explicitly incomplete. TreeChopper/Excavation consume protection marker and explicit accepted work; #264. Core 1.5.2 checks actual Trauma rev7, Hydration rev5, Thermal rev4, Metabolism rev6+ public methods; no new API revision or ownership. Core clears its own transient motion/impact timers and modifier immediately on heal."
     },
     {
       "id": "client_navigation",

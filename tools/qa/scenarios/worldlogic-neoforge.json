@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge 1.5.1 / Core 6 inter-addon integration",
+  "name": "World Logic NeoForge 1.5.2 / active integration",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -2142,7 +2142,7 @@
     {
       "id": "core6-admin-heal",
       "kind": "mechanic",
-      "subject": "Core admin restore health, hunger, stamina and legacy state; absent optional providers do not fail standalone heal",
+      "subject": "Core admin restore health, hunger, stamina and legacy state; absent optional providers do not fail standalone heal; immediate Core movement modifier cleanup",
       "checks": [
         {
           "backend": "server",
