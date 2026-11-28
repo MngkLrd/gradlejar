@@ -1,3 +1,7 @@
+# World Logic 1.2.2 development / RC54 biome hotfix
+
+The exact RC54 1.2.1 API candidate compiled and passed the material and loaded-world fixtures, but the seeded reachability gate reported 57/58, missing subtropical_rainforest (Build Hub 46103365227). The humid subtropical climate partition now starts at humidity index 0.36 rather than 0.48; warm broadleaf remains 0.12–0.36 and marsh/relief conditions remain independent. This is a bounded classification correction, not evidence that the old biome was mathematically unreachable. Both active preset definitions are identical; no changes to noise density, climate equations, world bounds, sea level, existing saved chunks or physical API. Four climate parameter controls and an independent offset sampling lattice supplement the unchanged 2320-point two-seed survey; all 58 IDs still required. Natural reachability and later QA gates are pending exact CI. Product version advances to 1.2.2 to distinguish candidate bytes, API revision 15 / PhysicalMaterials revision 2 unchanged.
+
 # World Logic 1.2.1 development / RC54 — addon physical API
 
 API revision 15 / PhysicalMaterials revision 2. Implements requests from Temperature, Hydration, Trauma #244, TreeChopper #241, Aqua #242 and Terrarian discussion #240. See API.md for exact interfaces and scope. No added gameplay burden, world generation changes, or addon source changes. Core 1.2.0 -> 1.2.1 incremental API extension, internal archive worldlogic-neoforge-mc1.21.1-1.2.1.jar. Joint addon tests and existing biome QA gate remain required.

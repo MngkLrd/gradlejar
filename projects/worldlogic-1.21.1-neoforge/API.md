@@ -210,3 +210,7 @@ Additive binary-compatible API (existing records and legacy methods unchanged). 
 **Trauma #244**: `PhysicalMaterials.surfaceContact(ServerLevel,BlockPos)` returns Optional<SurfaceContact> with nominal stoppingDistanceM, moisture, material and ESTIMATED evidence for recognized loaded surfaces/geometry. Soft substrate requires full support below; air, fluid, unsupported/compound surfaces unknown. This is a conservative gameplay calibration, not resolved collision observation. `impactEnergyJ(double effectiveMovingMassKg,double normalSpeedMps)` requires caller-supplied SI mass and pre-contact normal speed; no automatic body mass inference or collision tracking. `itemContact(ItemStack,int componentIndex,double contactAreaM2,double movingMassKg,double normalSpeedMps)` returns actual selected constituent and input-area/energy context; caller identifies impact face and mass/speed. Trauma owns injury and must avoid double damage. No claims of actual pre-impact speed acquisition from Core.
 
 QA: executable tests in PhysicalAddonChecks through existing Core selftest/world fixtures, six coverage entries. Exact CI and joint addon tests required. Nominal material numbers and contact distances are game estimates.
+
+### 1.2.2 biome hotfix
+
+All 1.2.1 public physical interfaces and material calculations remain unchanged (API revision 15 / PhysicalMaterials revision 2). Use the exact 1.2.2 binary/checksum for integration QA once available; 1.2.1 is still a development candidate, not an eligible release.

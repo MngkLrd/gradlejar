@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge 1.2.1 development / RC54 addon physical API",
+  "name": "World Logic NeoForge 1.2.2 development / RC54 subtropical biome correction",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -1978,6 +1978,21 @@
         {
           "backend": "server",
           "name": "Live support and falling debris, material tags and saved data"
+        }
+      ]
+    },
+    {
+      "id": "rc54-subtropical-biome-correction",
+      "kind": "mechanic",
+      "subject": "Subtropical warm broadleaf/rainforest humidity partition with inland and wetland negative controls; 2320-point two-seed survey retained plus independent offset rare-biome probe, all 58 required",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Worker-safe deterministic habitat API, soil controls and ten refined climate biome fixtures"
+        },
+        {
+          "backend": "server",
+          "name": "All 58 biomes reached in seeded generation survey"
         }
       ]
     }
