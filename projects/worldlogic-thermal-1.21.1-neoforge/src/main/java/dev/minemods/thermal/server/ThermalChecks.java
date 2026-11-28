@@ -175,11 +175,21 @@ final class ThermalChecks {
                 case "frostbite" -> ClimateEvolutionChecks.frostbite(l,p);
                 case "nutrition" -> ClimateEvolutionChecks.nutrition(l,p);
                 case "room_inertia" -> ClimateEvolutionChecks.room(l,p);
-                case "room_ventilation","room_humidity","room_persistence","room_cache","wall_insulation","insulation_fire","snow_shelter","leaf_canopy" -> RoomChecks.verify(l,p,name);
+                case "room_ventilation","room_humidity","room_persistence","room_cache","wall_insulation","insulation_fire","snow_shelter","leaf_canopy","polar_survival" -> RoomChecks.verify(l,p,name);
                 case "village_climate" -> ClimateEvolutionChecks.settlement(l,p);
                 case "integration" -> IntegrationChecks.verify(l,p);
                 case "water_exposure","room_response","hud_signals" -> StabilityChecks.verify(l,p,name);
                 case "physical_materials" -> PhysicalChecks.verify(l,p);
+                case "admin_restore" -> {
+                    var saved=new CompoundTag();saved.putDouble("body",31);saved.putInt("coldSeconds",90);saved.putInt("hotSeconds",40);saved.putDouble("frost_LEFT_ARM",120);saved.putDouble("skinWet",1);saved.putDouble("adaptCold",.4);
+                    n.put(ThermalEvents.KEY,saved);ThermalEvents.penalty(p,.22);
+                    require(dev.minemods.thermal.api.ThermalApi.adminRestore(p),"admin restore succeeds");
+                    var restored=n.getCompound(ThermalEvents.KEY);
+                    require(restored.getDouble("body")==37&&restored.getInt("coldSeconds")==0&&restored.getInt("hotSeconds")==0&&restored.getDouble("frost_LEFT_ARM")==0&&restored.getDouble("skinWet")==0,"thermal condition and doses reset");
+                    require(restored.getDouble("adaptCold")==.4&&p.getAttribute(Attributes.MOVEMENT_SPEED).getModifier(ThermalEvents.SPEED)==null,"adaptation preserved and own movement penalty cleared");
+                    require(dev.minemods.thermal.api.ThermalApi.status(p).orElseThrow().bodyC()==37,"fresh public status");
+                    require(dev.minemods.thermal.api.ThermalApi.adminRestore(p),"idempotent reset");
+                }
                 default -> throw new IllegalArgumentException(name);
             }
         } finally {

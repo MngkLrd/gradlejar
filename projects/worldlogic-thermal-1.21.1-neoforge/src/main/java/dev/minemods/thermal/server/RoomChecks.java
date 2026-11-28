@@ -154,6 +154,18 @@ final class RoomChecks {
      l.setBlock(canopy,Blocks.AIR.defaultBlockState(),3);
      require(!VentBlock.leafCover(l,below),"leaf cover gone after removal");
     }
+    case "polar_survival" -> {
+     require(RoomPhysics.occupantHeat(1,8,1)>RoomPhysics.occupantHeat(1,27,1)&&RoomPhysics.occupantHeat(0,8,1)==0,"compact snow shelter bonus depends on real occupants");
+     BlockPos snow=CENTER.east(3);old.put(snow,l.getBlockState(snow));l.setBlock(snow,Blocks.SNOW_BLOCK.defaultBlockState(),3);
+     require(SnowGathering.gather(l,snow,p)&&l.getBlockState(snow).isAir(),"full snow block can be recovered bare-handed");
+     require(!SnowGathering.gather(l,snow,p),"no duplicate snow");
+     l.setBlock(snow,Blocks.POWDER_SNOW.defaultBlockState(),3);
+     require(!SnowGathering.gather(l,snow,p)&&l.getBlockState(snow).is(Blocks.POWDER_SNOW),"powder snow excluded");
+     var initial=RoomPhysics.initial(-30,60);
+     var compact=RoomPhysics.step(initial,new RoomPhysics.Inputs(-30,60,.035,.22,.35,8,RoomPhysics.occupantHeat(1,8,1),0,0),120);
+     var unoccupied=RoomPhysics.step(initial,new RoomPhysics.Inputs(-30,60,.035,.22,.35,8,0,0,0),120);
+     require(compact.air()>unoccupied.air()+10&&unoccupied.air()==-30,"compact shelter gives meaningful but bounded warmth");
+    }
     case "room_ventilation" -> {
      door(l,false);l.setBlock(WINDOW,Blocks.GLASS_PANE.defaultBlockState(),2);heater(l,true);
      var closed=run(l,10,50,.7,now,60);

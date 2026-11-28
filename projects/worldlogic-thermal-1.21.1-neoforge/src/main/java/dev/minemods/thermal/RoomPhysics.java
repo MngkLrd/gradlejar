@@ -9,6 +9,12 @@ public final class RoomPhysics {
     /** Dimensionless room-source units, calibrated against existing heaters, not watts.
      * A living occupant produces a small source; the bound keeps crowded rooms stable. */
     public static double occupantHeat(int occupants){return 10.0*Math.max(0,Math.min(4,occupants));}
+    /** Compact snow cavities retain more of the calibrated metabolic heat source.
+     * Bounded survival balance coefficient, not SI heat production. */
+    public static double occupantHeat(int occupants,int volume,double snowFraction){
+        double compact=clamp((27.0-volume)/19.0,0,1);
+        return occupantHeat(occupants)*(1+1.6*compact*clamp(snowFraction,0,1));
+    }
     public static double saturation(double temperature){
         double t=clamp(temperature,-60,70);
         return 216.7*(6.112*Math.exp(17.62*t/(243.12+t)))/(273.15+t);

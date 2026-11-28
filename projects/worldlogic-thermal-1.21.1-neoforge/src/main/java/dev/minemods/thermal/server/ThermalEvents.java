@@ -75,6 +75,28 @@ public final class ThermalEvents {
         ThermalSync.send(p,new ThermalSync.Snapshot(p.getId(),true,state.bodyC(),e.airC(),state.feelsLikeC(),state.trendCPerMinute(),e.wetness(),e.insulation(),e.radiantC(),sample.sheltered(),progress.kind(),sample.weather(),adapted.cold(),adapted.heat(),e.nutrition(),e.roomDelta(),sample.room(),e.submerged()?e.waterC():Double.NaN));
         HistoryStore.tick(p,sample.weather(),state,e.airC());
     }
+    /** Core admin coordinator resets only Thermal-owned transient physiology. */
+    public static boolean adminRestore(ServerPlayer p){
+        if(!p.serverLevel().getServer().isSameThread())throw new IllegalStateException("Thermal API requires server thread");
+        if(!p.isAlive()||p.isCreative()||p.isSpectator())return false;
+        var root=p.getPersistentData();var n=root.getCompound(KEY);
+        n.putDouble("body",37);n.putDouble("trend",0);n.putDouble("skinWet",0);n.putDouble("wet",0);
+        n.putString("stage",ThermalModel.Stage.COMFORTABLE.name());n.putString("condition",ThermalCondition.Kind.NONE.name());
+        for(String key:new String[]{"coldSeconds","hotSeconds","sunSeconds","criticalSeconds"})n.remove(key);
+        for(String limb:LimbExposure.LIMBS)n.remove("frost_"+limb);
+        n.remove("physiology");n.remove("room");n.remove("sampleTick");n.remove("sampleDimension");
+        penalty(p,0);
+        root.put(KEY,n);
+        var sample=EnvironmentSampler.sample(p,0);
+        if(sample.isPresent()){
+            var v=sample.get();var x=v.exposure();
+            var state=ThermalModel.tick(ThermalModel.initial(),x,0);
+            n.putDouble("air",x.airC());n.putDouble("felt",state.feelsLikeC());n.putDouble("insulation",x.insulation());n.putDouble("radiant",x.radiantC());
+            n.putLong("sampleTick",p.serverLevel().getGameTime());n.putString("sampleDimension",p.serverLevel().dimension().location().toString());
+            ThermalSync.send(p,new ThermalSync.Snapshot(p.getId(),true,37,x.airC(),state.feelsLikeC(),0,0,x.insulation(),x.radiantC(),v.sheltered(),ThermalCondition.Kind.NONE,v.weather(),n.getDouble("adaptCold"),n.getDouble("adaptHeat"),x.nutrition(),x.roomDelta(),v.room(),x.submerged()?x.waterC():Double.NaN));
+        }else ThermalSync.send(p,new ThermalSync.Snapshot(p.getId(),false,37,22,22,0,0,0,0,false,ThermalCondition.Kind.NONE,WeatherReading.unavailable(),0,0,1,0));
+        root.put(KEY,n);return true;
+    }
     static void penalty(ServerPlayer p,double amount) {
         var attribute=p.getAttribute(Attributes.MOVEMENT_SPEED); if(attribute==null) return;
         var old=attribute.getModifier(SPEED);
@@ -109,7 +131,7 @@ public final class ThermalEvents {
     }
     public static void registerCommands(RegisterCommandsEvent event) {
         var qa=Commands.literal("qa").requires(s->s.hasPermission(2));
-        for(String name:new String[]{"climate","dry","heat","blocked","armor","effects","conditions","weather","history","comfort","fixtures","clothing","fiber_work","creative_tab","portable","advanced_clothes","devices","textile","adaptation","frostbite","nutrition","room_inertia","room_ventilation","room_humidity","room_persistence","room_cache","village_climate","integration","water_exposure","room_response","hud_signals","physical_materials","wall_insulation","insulation_fire","snow_shelter","leaf_canopy"}) {
+        for(String name:new String[]{"climate","dry","heat","blocked","armor","effects","conditions","weather","history","comfort","fixtures","clothing","fiber_work","creative_tab","portable","advanced_clothes","devices","textile","adaptation","frostbite","nutrition","room_inertia","room_ventilation","room_humidity","room_persistence","room_cache","village_climate","integration","water_exposure","room_response","hud_signals","physical_materials","wall_insulation","insulation_fire","snow_shelter","leaf_canopy","polar_survival","admin_restore"}) {
             qa.then(Commands.literal(name).executes(c->{
                 ThermalChecks.verify(c.getSource().getLevel(),name);
                 c.getSource().sendSuccess(()->Component.literal("THERMAL_QA_"+name+"_PASS"),false);

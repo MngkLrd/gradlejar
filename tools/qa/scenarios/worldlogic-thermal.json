@@ -248,6 +248,18 @@
       "command": "thermal qa leaf_canopy",
       "expect": "THERMAL_QA_leaf_canopy_PASS",
       "assertion": true
+    },
+    {
+      "name": "Compact snow shelter and bare-handed snow gathering",
+      "command": "thermal qa polar_survival",
+      "expect": "THERMAL_QA_polar_survival_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Core admin reset restores thermal state, preserves adaptation and clears own penalty",
+      "command": "thermal qa admin_restore",
+      "expect": "THERMAL_QA_admin_restore_PASS",
+      "assertion": true
     }
   ],
   "coverage": [
@@ -655,6 +667,28 @@
         {
           "backend": "server",
           "name": "Leaf canopy cover and combustion"
+        }
+      ]
+    },
+    {
+      "id": "polar-survival",
+      "kind": "mechanic",
+      "subject": "Compact snow shelter and bare-handed snow gathering",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Compact snow shelter and bare-handed snow gathering"
+        }
+      ]
+    },
+    {
+      "id": "admin-restore",
+      "kind": "mechanic",
+      "subject": "Core admin reset restores thermal state, preserves adaptation and clears own penalty",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core admin reset restores thermal state, preserves adaptation and clears own penalty"
         }
       ]
     }

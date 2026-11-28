@@ -13,7 +13,7 @@ import java.util.*;
 /** Server-thread, shared bounded room topology and air/mass/vapor simulation. No chunk loads. */
 public final class RoomHeat {
  static final int MAX_VOLUME=384, MAX_ROOMS=128, TOPOLOGY_TICKS=40;
- private record Geometry(BlockPos anchor,long signature,long built,Set<BlockPos> cells,Set<BlockPos> boundaries,Set<BlockPos> portals,List<BlockPos> sourceCells,int openings,double mass,double conductance){}
+ private record Geometry(BlockPos anchor,long signature,long built,Set<BlockPos> cells,Set<BlockPos> boundaries,Set<BlockPos> portals,List<BlockPos> sourceCells,int openings,double mass,double conductance,double snowFraction){}
  private record Sources(double heat,double cooling,double moisture){}
  private static final class Cache {
   final Map<Long,Geometry> byCell=new HashMap<>();
@@ -92,7 +92,7 @@ public final class RoomHeat {
   Set<BlockPos> cells=new HashSet<>(),walls=new HashSet<>(),ports=new HashSet<>();
   Map<BlockPos,Boolean> roofs=new HashMap<>();Map<BlockPos,PhysicalBridge.Wall> physicalWalls=new HashMap<>();ArrayDeque<BlockPos> todo=new ArrayDeque<>();
   cells.add(start.immutable());todo.add(start.immutable());roofs.put(start.immutable(),true);
-  BlockPos key=start.immutable();double mass=0,conduct=0;int faces=0,holes=0;
+  BlockPos key=start.immutable();double mass=0,conduct=0;int faces=0,holes=0,snowFaces=0;
   while(!todo.isEmpty()){
    BlockPos p=todo.removeFirst();if(p.asLong()<key.asLong())key=p;
    for(Direction d:Direction.values()){
@@ -110,7 +110,7 @@ public final class RoomHeat {
       walls.add(q);
       var t=physicalWalls.computeIfAbsent(q,b->PhysicalBridge.wall(l,b,legacyWall(s)));
       var layer=wallInsulation(l,q,d);
-      mass+=t.massFactor();conduct+=t.conductance()*layer.map(dev.minemods.thermal.api.ThermalApi.WallInsulation::conductanceMultiplier).orElse(1.0);faces++;continue;
+      mass+=t.massFactor();conduct+=t.conductance()*layer.map(dev.minemods.thermal.api.ThermalApi.WallInsulation::conductanceMultiplier).orElse(1.0);if(s.is(Blocks.SNOW_BLOCK))snowFaces++;faces++;continue;
     }
     if(!roofs.computeIfAbsent(q,b->roof(l,b))){holes++;continue;}
     if(q.distManhattan(start)>16||cells.size()>=MAX_VOLUME)return null;
@@ -122,7 +122,7 @@ public final class RoomHeat {
   sig^=(long)cells.size()<<32;
   Set<BlockPos> possible=new HashSet<>(cells);possible.addAll(walls);
   var sources=possible.stream().filter(q->{var s=l.getBlockState(q);return EnvironmentSampler.potential(s)||s.getFluidState().is(net.minecraft.tags.FluidTags.WATER);}).toList();
-  return new Geometry(key,sig,now,Set.copyOf(cells),Set.copyOf(walls),Set.copyOf(ports),sources,holes,mass/faces,conduct/faces);
+  return new Geometry(key,sig,now,Set.copyOf(cells),Set.copyOf(walls),Set.copyOf(ports),sources,holes,mass/faces,conduct/faces,snowFaces/(double)faces);
  }
  /** Exterior cladding on the specified support face. No forced loads or indoor state mutation. */
  public static Optional<dev.minemods.thermal.api.ThermalApi.WallInsulation> wallInsulation(ServerLevel l,BlockPos support,Direction outward){
@@ -171,7 +171,7 @@ public final class RoomHeat {
     if(++occupants>=4)break;
    }
   }
-  double heat=RoomPhysics.occupantHeat(occupants),cooling=0,moisture=0;
+  double heat=RoomPhysics.occupantHeat(occupants,g.cells().size(),g.snowFraction()),cooling=0,moisture=0;
   for(BlockPos q:g.sourceCells()){
    if(!loaded(l,q))continue;
    BlockState s=l.getBlockState(q);var block=s.getBlock();
