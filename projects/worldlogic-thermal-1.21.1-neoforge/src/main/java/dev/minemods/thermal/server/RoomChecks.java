@@ -61,6 +61,30 @@ final class RoomChecks {
      double fast=ThermalModel.tick(chilled,roomExposure,1).bodyC()-35,normal=ThermalModel.tick(chilled,neutralExposure,1).bodyC()-35;
      require(fast>2.9*normal&&fast<3.01*normal,"existing accelerated recovery preserved");
     }
+    case "wall_insulation" -> {
+     BlockPos support=CENTER.east(2),outer=support.east(),inner=support.west();
+     old.put(outer,l.getBlockState(outer));
+     var clay=ThermalContent.CLAY_INSULATION.get().defaultBlockState().setValue(WallInsulationBlock.FACING,Direction.EAST);
+     var straw=ThermalContent.STRAW_INSULATION.get().defaultBlockState().setValue(WallInsulationBlock.FACING,Direction.EAST);
+     l.setBlock(outer,Blocks.AIR.defaultBlockState(),2);RoomHeat.invalidate(l);
+     double bare=RoomHeat.roomConductance(l,CENTER,now);
+     require(Double.isFinite(bare)&&clay.canSurvive(l,outer)&&straw.canSurvive(l,outer),"both types supported on exterior face");
+     l.setBlock(outer,clay,3);RoomHeat.markDirty(l,outer);
+     var clayApi=dev.minemods.thermal.api.ThermalApi.wallInsulation(l,support,Direction.EAST).orElseThrow();
+     double clayRoom=RoomHeat.roomConductance(l,CENTER,now);
+     require(clayApi.thicknessM()==.125&&clayApi.conductanceMultiplier()<1&&clayRoom<bare,"clay improves only covered wall face");
+     l.setBlock(outer,straw,3);RoomHeat.markDirty(l,outer);
+     var strawApi=dev.minemods.thermal.api.ThermalApi.wallInsulation(l,support,Direction.EAST).orElseThrow();
+     double strawRoom=RoomHeat.roomConductance(l,CENTER,now);
+     require(strawApi.thicknessM()==.1875&&strawRoom<clayRoom,"straw retains more heat than clay");
+     if(PhysicalBridge.revision2())require(clayApi.coreResistance()&&strawApi.coreResistance(),"Core series resistance used for real wall");
+     require(l.getBlockState(inner).isAir()&&run(l,10,50,0,now,0).volume()==27,"interior volume and adjacent voxel unchanged");
+     require(dev.minemods.thermal.api.ThermalApi.wallInsulation(l,support,Direction.WEST).isEmpty(),"opposite face not insulated");
+     l.setBlock(outer,Blocks.AIR.defaultBlockState(),3);RoomHeat.markDirty(l,outer);
+     require(Math.abs(RoomHeat.roomConductance(l,CENTER,now)-bare)<1e-8,"removal restores bare wall");
+     l.setBlock(outer,straw,3);l.setBlock(support,Blocks.AIR.defaultBlockState(),3);
+     require(!straw.canSurvive(l,outer)&&l.getBlockState(outer).isAir(),"unsupported panel detaches through neighbor update");
+    }
     case "room_ventilation" -> {
      door(l,false);l.setBlock(WINDOW,Blocks.GLASS_PANE.defaultBlockState(),2);heater(l,true);
      var closed=run(l,10,50,.7,now,60);

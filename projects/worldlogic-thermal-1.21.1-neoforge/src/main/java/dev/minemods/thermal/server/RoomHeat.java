@@ -34,7 +34,11 @@ public final class RoomHeat {
   Cache c=CACHES.get(l);if(c==null)return;
   c.outside.clear();
   Geometry g=c.byCell.get(pos.asLong());if(g!=null)c.dirty.add(g.anchor().asLong());
-  for(Direction d:Direction.values()){g=c.byCell.get(pos.relative(d).asLong());if(g!=null)c.dirty.add(g.anchor().asLong());}
+  for(Direction d:Direction.values()){
+   g=c.byCell.get(pos.relative(d).asLong());if(g!=null)c.dirty.add(g.anchor().asLong());
+   // Cladding lies one voxel beyond the wall; its placement/removal invalidates the room too.
+   g=c.byCell.get(pos.relative(d,2).asLong());if(g!=null)c.dirty.add(g.anchor().asLong());
+  }
  }
  static void forget(ServerLevel l,BlockPos start,long now){
   Geometry g=geometry(l,start,now);
@@ -105,7 +109,8 @@ public final class RoomHeat {
     if(Block.isShapeFullBlock(s.getCollisionShape(l,q))||isGlass(s)||!s.getFluidState().isEmpty()){
       walls.add(q);
       var t=physicalWalls.computeIfAbsent(q,b->PhysicalBridge.wall(l,b,legacyWall(s)));
-      mass+=t.massFactor();conduct+=t.conductance();faces++;continue;
+      var layer=wallInsulation(l,q,d);
+      mass+=t.massFactor();conduct+=t.conductance()*layer.map(dev.minemods.thermal.api.ThermalApi.WallInsulation::conductanceMultiplier).orElse(1.0);faces++;continue;
     }
     if(!roofs.computeIfAbsent(q,b->roof(l,b))){holes++;continue;}
     if(q.distManhattan(start)>16||cells.size()>=MAX_VOLUME)return null;
@@ -118,6 +123,20 @@ public final class RoomHeat {
   Set<BlockPos> possible=new HashSet<>(cells);possible.addAll(walls);
   var sources=possible.stream().filter(q->{var s=l.getBlockState(q);return EnvironmentSampler.potential(s)||s.getFluidState().is(net.minecraft.tags.FluidTags.WATER);}).toList();
   return new Geometry(key,sig,now,Set.copyOf(cells),Set.copyOf(walls),Set.copyOf(ports),sources,holes,mass/faces,conduct/faces);
+ }
+ /** Exterior cladding on the specified support face. No forced loads or indoor state mutation. */
+ public static Optional<dev.minemods.thermal.api.ThermalApi.WallInsulation> wallInsulation(ServerLevel l,BlockPos support,Direction outward){
+  if(!l.getServer().isSameThread())throw new IllegalStateException("Thermal API requires server thread");
+  if(!outward.getAxis().isHorizontal()||!loaded(l,support))return Optional.empty();
+  BlockPos pos=support.relative(outward);
+  if(!loaded(l,pos))return Optional.empty();
+  BlockState s=l.getBlockState(pos);
+  if(!(s.getBlock() instanceof WallInsulationBlock panel)||s.getValue(WallInsulationBlock.FACING)!=outward||!s.canSurvive(l,pos))return Optional.empty();
+  var result=PhysicalBridge.cladding(l,support,panel.kind());
+  return Optional.of(new dev.minemods.thermal.api.ThermalApi.WallInsulation(panel.kind().name().toLowerCase(Locale.ROOT),panel.kind().thicknessM(),result.multiplier(),result.coreResistance()));
+ }
+ static double roomConductance(ServerLevel l,BlockPos pos,long now){
+  Geometry g=geometry(l,pos,now);return g==null?Double.NaN:g.conductance();
  }
  /** Only a legacy gameplay fallback for old Core; RC53 unknown materials use a neutral estimate. */
  private static PhysicalBridge.Wall legacyWall(BlockState s){

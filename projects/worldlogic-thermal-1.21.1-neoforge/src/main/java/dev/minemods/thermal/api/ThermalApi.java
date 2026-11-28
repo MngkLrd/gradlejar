@@ -5,7 +5,7 @@ import java.util.Optional;
 /** Optional addon contract. Read on server thread; no mutation or private core/Trauma access. */
 public final class ThermalApi {
     public static final int API_VERSION=1;
-    public static final int API_REVISION=2;
+    public static final int API_REVISION=3;
     public record Physiology(dev.minemods.thermal.PhysiologyInputs inputs,double nutritionFactor,double coolingCapacity){}
     /** Last completed server thermal sample; empty before update, across dimensions or after 40 ticks. No resource mutation. */
     public static Optional<Physiology> physiology(ServerPlayer p){
@@ -18,6 +18,12 @@ public final class ThermalApi {
     }
     /** Additive room contract; legacy API_VERSION remains compatible. */
     public static final int ROOM_API_VERSION=1;
+    /** Material key, layer thickness in metres, relative room conductance multiplier and whether Core computed series resistance. */
+    public record WallInsulation(String kind,double thicknessM,double conductanceMultiplier,boolean coreResistance){}
+    /** Loaded support and its outward face only. Read-only, server thread, empty if absent or unsupported. */
+    public static Optional<WallInsulation> wallInsulation(net.minecraft.server.level.ServerLevel level,net.minecraft.core.BlockPos support,net.minecraft.core.Direction outward){
+        return dev.minemods.thermal.server.RoomHeat.wallInsulation(level,support,outward);
+    }
     public record Status(double bodyC,ThermalCondition.Kind condition,int coldSeconds,int hotSeconds,int sunSeconds){}
     private ThermalApi(){}
     /** Current modeled room at a loaded coordinate, independent of player presence.

@@ -124,6 +124,9 @@ public final class PhysicalBridge {
   return waterInertia(fluid);
  }
  private static OptionalDouble singleWallU(ServerLevel l,BlockPos pos){
+  return singleWallU(l,pos,null);
+ }
+ private static OptionalDouble singleWallU(ServerLevel l,BlockPos pos,dev.minemods.thermal.content.WallInsulationBlock.Kind cladding){
   if(LAYERS==null)return OptionalDouble.empty();
   try{
    Object result=((Optional<?>)API.placed().invoke(null,l,pos)).orElse(null);
@@ -134,7 +137,13 @@ public final class PhysicalBridge {
    if(components.size()!=1)return OptionalDouble.empty();
    Object part=components.get(0);
    Object layer=LAYERS.layer().newInstance(LAYERS.materialId().invoke(part),Math.max(.05,number(API.componentVolume(),part)),state);
-   Object r=((Optional<?>)LAYERS.resistance().invoke(null,List.of(layer))).orElse(null);
+   List<Object> assembly=new ArrayList<>();
+   assembly.add(layer);
+   if(cladding!=null){
+    Object reference=LAYERS.state().newInstance(20d,Double.NaN);
+    assembly.add(LAYERS.layer().newInstance(ResourceLocation.fromNamespaceAndPath("worldlogic",cladding.material()),cladding.thicknessM(),reference));
+   }
+   Object r=((Optional<?>)LAYERS.resistance().invoke(null,assembly)).orElse(null);
    return r==null?OptionalDouble.empty():OptionalDouble.of(number(LAYERS.u(),r));
   }catch(ReflectiveOperationException|LinkageError|RuntimeException ex){warn(ex);return OptionalDouble.empty();}
  }
@@ -186,6 +195,15 @@ public final class PhysicalBridge {
   Wall w=placed(l,p).map(t->wallFactors(t,fallback)).orElse(fallback);
   var u=singleWallU(l,p);
   return u.isPresent()&&Double.isFinite(u.getAsDouble())&&u.getAsDouble()>0?new Wall(w.massFactor(),ClimateModel.clamp(.85*Math.sqrt(u.getAsDouble()/2.5),.2,3)):w;
+ }
+ record Cladding(double multiplier,boolean coreResistance){}
+ static Cladding cladding(ServerLevel level,BlockPos support,dev.minemods.thermal.content.WallInsulationBlock.Kind kind){
+  var bare=singleWallU(level,support);var insulated=singleWallU(level,support,kind);
+  if(bare.isPresent()&&insulated.isPresent()&&Double.isFinite(bare.getAsDouble())&&bare.getAsDouble()>0&&Double.isFinite(insulated.getAsDouble())&&insulated.getAsDouble()>0){
+   // Same square-root calibration as the bounded room solver. R and U are computed by Core.
+   return new Cladding(ClimateModel.clamp(Math.sqrt(insulated.getAsDouble()/bare.getAsDouble()),.08,1),true);
+  }
+  return new Cladding(kind.legacyMultiplier(),false);
  }
  static OptionalDouble insulation(ItemStack stack){
   var t=item(stack).orElse(null);

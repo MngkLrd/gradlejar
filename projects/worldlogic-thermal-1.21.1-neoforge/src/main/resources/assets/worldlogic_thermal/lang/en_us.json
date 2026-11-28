@@ -229,5 +229,9 @@
   "hud.worldlogic_thermal.jump": "Shift",
   "hud.worldlogic_thermal.wet": "Wet",
   "hud.worldlogic_thermal.rate": "Rate",
-  "hud.worldlogic_thermal.state": "State"
+  "hud.worldlogic_thermal.state": "State",
+  "block.worldlogic_thermal.clay_insulation": "Clay wall plaster",
+  "block.worldlogic_thermal.clay_insulation.info": "Apply to the outside of a solid wall to reduce heat transfer.",
+  "block.worldlogic_thermal.straw_insulation": "Straw wall cladding",
+  "block.worldlogic_thermal.straw_insulation.info": "Attach to the outside of a solid wall for stronger insulation."
 }

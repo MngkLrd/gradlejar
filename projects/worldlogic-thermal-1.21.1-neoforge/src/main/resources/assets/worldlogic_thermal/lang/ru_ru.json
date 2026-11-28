@@ -229,5 +229,9 @@
   "hud.worldlogic_thermal.jump": "Скачок",
   "hud.worldlogic_thermal.wet": "Мокро",
   "hud.worldlogic_thermal.rate": "Темп",
-  "hud.worldlogic_thermal.state": "Статус"
+  "hud.worldlogic_thermal.state": "Статус",
+  "block.worldlogic_thermal.clay_insulation": "Глиняная обмазка",
+  "block.worldlogic_thermal.clay_insulation.info": "Нанесите на наружную грань стены. Снижает теплопотери.",
+  "block.worldlogic_thermal.straw_insulation": "Соломенная обшивка",
+  "block.worldlogic_thermal.straw_insulation.info": "Закрепите на наружной грани стены. Эффективно удерживает тепло."
 }

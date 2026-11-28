@@ -224,6 +224,12 @@
       "command": "thermal qa physical_materials",
       "expect": "THERMAL_QA_physical_materials_PASS",
       "assertion": true
+    },
+    {
+      "name": "Exterior clay and straw cladding, face-specific room conductance and support removal",
+      "command": "thermal qa wall_insulation",
+      "expect": "THERMAL_QA_wall_insulation_PASS",
+      "assertion": true
     }
   ],
   "coverage": [
@@ -576,6 +582,28 @@
         {
           "backend": "server",
           "name": "Physical material normalization, legacy fallback and advertised Core registry integration"
+        }
+      ]
+    },
+    {
+      "id": "clay-insulation",
+      "kind": "block",
+      "subject": "clay-insulation",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Exterior clay and straw cladding, face-specific room conductance and support removal"
+        }
+      ]
+    },
+    {
+      "id": "straw-insulation",
+      "kind": "block",
+      "subject": "straw-insulation",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Exterior clay and straw cladding, face-specific room conductance and support removal"
         }
       ]
     }
