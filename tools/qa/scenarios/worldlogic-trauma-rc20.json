@@ -133,6 +133,12 @@
       "expect": "TRAUMAQA deathreport PASS",
       "assertion": true,
       "name": "TR-DEATH-REPORT: fatal origin, causal markers, blood loss, hypoxia, frozen snapshot and packet"
+    },
+    {
+      "command": "traumaqa adminrestore",
+      "expect": "TRAUMAQA adminrestore PASS",
+      "assertion": true,
+      "name": "TR-ADMIN-RESTORE: anatomical and clinical reset, persistence, invalid input and repeat"
     }
   ],
   "coverage": [
@@ -987,6 +993,20 @@
         {
           "backend": "server",
           "name": "TR-DEATH-REPORT: fatal origin, causal markers, blood loss, hypoxia, frozen snapshot and packet"
+        }
+      ]
+    },
+    {
+      "id": "tr-admin-restore",
+      "kind": "mechanic",
+      "subject": "TR-ADMIN-RESTORE: anatomical and clinical reset, persistence, invalid input and repeat",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-ADMIN-RESTORE: anatomical and clinical reset, persistence, invalid input and repeat"
         }
       ]
     }

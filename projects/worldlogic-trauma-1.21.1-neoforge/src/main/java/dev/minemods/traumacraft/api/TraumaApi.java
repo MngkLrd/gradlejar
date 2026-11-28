@@ -13,7 +13,7 @@ import java.util.EnumSet;
 /** Public server-thread API. Immutable snapshots; no internal NBT or mutable state exposed. */
 public final class TraumaApi {
     public static final int API_VERSION=1;
-    public static final int API_REVISION=6;
+    public static final int API_REVISION=7;
     public enum Zone { HEAD,CHEST,ABDOMEN,LEFT_ARM,RIGHT_ARM,LEFT_LEG,RIGHT_LEG }
     public enum Injury { CONTUSION,CUT,PUNCTURE,LACERATION,BURN,FROSTBITE }
     public record Region(Zone zone,float health,float maximum,float function,int bleeding,boolean fractured,boolean stabilized,Set<Injury> injuries){
@@ -66,6 +66,25 @@ public final class TraumaApi {
             regions.add(new Region(z,b.health(part),part.maximum,b.limbFunction(part),b.bleeding(part),b.fractured(part),b.stabilized(part),injuries));
         }
         return Optional.of(new Status(b.bloodMl(),BodyState.MAX_BLOOD,b.pain(),b.shockStage(),b.concussionTicks(),b.painkillerTicks(),regions));
+    }
+    /** Trusted administrative coordinator only; live server player and server thread required.
+     * Resets Trauma-owned state, preserving archived deaths. Does not restore other addons or vanilla health.
+     * Command permission is enforced by the calling command, not the target player's operator status.
+     */
+    public static boolean adminRestore(ServerPlayer p){
+        if(p==null||!p.serverLevel().getServer().isSameThread()||!p.isAlive()||p.isSpectator())return false;
+        dev.minemods.traumacraft.medical.TreatmentManager.cancel(p);
+        dev.minemods.traumacraft.climb.ClimbManager.cancel(p);
+        dev.minemods.traumacraft.climb.ClimbManager.forget(p);
+        dev.minemods.traumacraft.integration.MetabolismBridge.forget(p);
+        dev.minemods.traumacraft.integration.LegacyFrostExposure.clear(p);
+        dev.minemods.traumacraft.disease.WaterIllness.clear(p);
+        BodyStates.resetForNewLife(p);
+        BodyStates.get(p).markVitalityLinked();
+        BodyStates.flush(p);
+        ModNetwork.progress(p,0,0);
+        ModNetwork.sync(p);
+        return true;
     }
     /** Actual consumed water, once per intake, server thread only; no water-balance mutation. */
     public static void reportWaterIntake(ServerPlayer player,int volumeMb,double contaminationRisk,double salinityGkg){

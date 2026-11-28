@@ -23,7 +23,7 @@ public final class RegressionChecks {
     private static void require(boolean ok,String message){if(!ok)throw new IllegalStateException(message);}
     public static void register(RegisterCommandsEvent e){
         var root=Commands.literal("traumaqa").requires(s->s.hasPermission(4)&&s.getEntity()==null);
-        for(String name:new String[]{"state","treatment","bridge","damage","api","procedure","persistence","targeting","identity","thermal","respawn","bloodloss","physiology","wounds","primitive","publicapi","climb","ownership","frostcompat","waterillness","organs","deathreport","hydrationpack"})
+        for(String name:new String[]{"state","treatment","bridge","damage","api","procedure","persistence","targeting","identity","thermal","respawn","bloodloss","physiology","wounds","primitive","publicapi","climb","ownership","frostcompat","waterillness","organs","deathreport","hydrationpack","adminrestore"})
             root.then(Commands.literal(name).executes(c->run(c.getSource(),name)));
         e.getDispatcher().register(root);
     }
@@ -36,6 +36,23 @@ public final class RegressionChecks {
             setFixtureMode(p,GameType.SURVIVAL);
             BodyState b=BodyStates.get(p); b.reset();
             switch(name){
+                case "adminrestore" -> {
+                    b.impact(BodyPart.STOMACH,20,WoundKind.PUNCTURE);
+                    b.setBleeding(BodyPart.LEFT_ARM,2);
+                    b.setFractured(BodyPart.RIGHT_LEG,true);
+                    b.loseBlood(1000);b.addConcussion(200);b.setPainkillerTicks(100);
+                    var api=dev.minemods.traumacraft.api.TraumaApi.class;
+                    require(!dev.minemods.traumacraft.api.TraumaApi.adminRestore(null),"null restore accepted");
+                    require(dev.minemods.traumacraft.api.TraumaApi.adminRestore(p),"admin restore rejected");
+                    var restored=dev.minemods.traumacraft.api.TraumaApi.status(p).orElseThrow();
+                    require(restored.regions().stream().allMatch(z->z.health()==z.maximum()&&z.bleeding()==0&&!z.fractured()&&!z.stabilized()&&z.injuries().isEmpty()),"zones not restored");
+                    require(restored.bloodMl()==restored.maximumBloodMl()&&restored.concussionTicks()==0&&restored.analgesiaTicks()==0&&restored.shock()==0,"clinical reset incomplete");
+                    var phys=dev.minemods.traumacraft.api.TraumaApi.physiology(p).orElseThrow();
+                    require(phys.organs().stream().allMatch(o->o.integrity()==1f&&o.internalBleedingMlPerSecond()==0)&&phys.oxygenDebtSeconds()==0&&!phys.unconscious(),"organ reset incomplete");
+                    require(dev.minemods.traumacraft.api.TraumaApi.illnessStatus(p).orElseThrow().kind().equals("NONE"),"illness not cleared");
+                    BodyStates.forget(p);require(BodyStates.get(p).health(BodyPart.STOMACH)==BodyPart.STOMACH.maximum,"restore not persistent");
+                    require(dev.minemods.traumacraft.api.TraumaApi.adminRestore(p),"repeat restore rejected");
+                }
                 case "state" -> {
                     int total=0;for(BodyPart part:BodyPart.values()){
                         total+=part.maximum;

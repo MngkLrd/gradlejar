@@ -20,9 +20,7 @@ public final class TraumaCommands {
                 .then(Commands.literal("reset").requires(source -> source.hasPermission(2))
                         .executes(ctx -> {
                             ServerPlayer p = ctx.getSource().getPlayerOrException();
-                            BodyStates.get(p).reset();
-                            dev.minemods.traumacraft.disease.WaterIllness.clear(p);
-                            dev.minemods.traumacraft.network.ModNetwork.sync(p);
+                            if(!dev.minemods.traumacraft.api.TraumaApi.adminRestore(p))return 0;
                             p.sendSystemMessage(Component.literal("Trauma state reset"));
                             return 1;
                         }));

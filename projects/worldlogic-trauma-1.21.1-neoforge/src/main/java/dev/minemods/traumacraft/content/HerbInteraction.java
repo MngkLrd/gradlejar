@@ -21,11 +21,15 @@ public final class HerbInteraction {
     }
     public static boolean wash(ServerLevel l,BlockPos support,Player p){
         var water=p.getMainHandItem();var at=support.above();
-        if(!canWork(l,support,p,water)||!HerbWorkpieceBlock.dryingSurface(l,support)||!l.isEmptyBlock(at)||!SurfaceWater.clean(water))return false;
+        if(!canWork(l,support,p,water)||!HerbWorkpieceBlock.dryingSurface(l,support)||!l.isEmptyBlock(at))return false;
+        boolean transaction=SurfaceWater.transactional();
+        java.util.Optional<?> quote=transaction&&p instanceof ServerPlayer sp?SurfaceWater.preview(sp):java.util.Optional.empty();
+        if(transaction?quote.isEmpty():!SurfaceWater.clean(water))return false;
         if(!l.setBlockAndUpdate(at,HerbContent.WORKPIECE.get().defaultBlockState()))return false;
         if(!(l.getBlockEntity(at) instanceof HerbWorkpieceEntity work)){l.removeBlock(at,false);return false;}
+        if(transaction&&(!(p instanceof ServerPlayer sp)||!SurfaceWater.withdraw(sp,quote.orElseThrow()))){l.removeBlock(at,false);return false;}
         work.prepareSurface();
-        if(!p.getAbilities().instabuild){
+        if(!transaction&&!p.getAbilities().instabuild){
             water.shrink(1);var bottle=new ItemStack(Items.GLASS_BOTTLE);
             if(water.isEmpty())p.setItemInHand(InteractionHand.MAIN_HAND,bottle);else if(!p.getInventory().add(bottle))p.drop(bottle,false);
             p.getInventory().setChanged();
@@ -47,7 +51,7 @@ public final class HerbInteraction {
     }
     public static void right(PlayerInteractEvent.RightClickBlock e){
         if(e.isCanceled()||e.getHand()!=InteractionHand.MAIN_HAND||e.getEntity().isSpectator())return;
-        if(e.getFace()==Direction.UP&&HerbWorkpieceBlock.dryingSurface(e.getLevel(),e.getPos())&&SurfaceWater.waterBottle(e.getItemStack())){
+        if(e.getFace()==Direction.UP&&HerbWorkpieceBlock.dryingSurface(e.getLevel(),e.getPos())&&SurfaceWater.candidate(e.getItemStack())){
             if(e.getLevel() instanceof ServerLevel l){boolean ok=wash(l,e.getPos(),e.getEntity());e.getEntity().displayClientMessage(Component.translatable(ok?"message.traumacraft.surface_washed":"message.traumacraft.wash_rejected"),true);}
             e.setCancellationResult(InteractionResult.SUCCESS);e.setCanceled(true);return;
         }

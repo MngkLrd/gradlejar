@@ -71,6 +71,10 @@ public final class TraumaInventoryScreen extends InventoryScreen {
         g.fill(x+3,y+3,r-3,b-3,0xFFC6C6C6);g.fill(r-3,y+3,r-2,b-3,0xFF555555);
         g.fill(x+3,b-3,r-2,b-2,0xFF555555);
         label(g,t("dashboard"),x+8,y+9,l.width()-92,0xFF333333);tab(g,mx,my);
+        var ill=ClientBodyState.illnessKind();
+        boolean sick=ill!=dev.minemods.traumacraft.disease.DiseaseModel.Kind.NONE;
+        Component illness=sick?Component.translatable("illness.traumacraft.status",Component.translatable("illness.traumacraft.kind."+ill.name().toLowerCase(Locale.ROOT)),Component.translatable("illness.traumacraft.stage."+ClientBodyState.illnessStage().name().toLowerCase(Locale.ROOT))):Component.translatable("illness.traumacraft.stage.healthy");
+        label(g,illness,x+8,y+17,l.width()-16,sick?0xFF9A353A:0xFF3F503A);
         g.fill(x+6,y+26,r-6,y+27,0xFF8A8A8A);
         g.fill(l.organX()-8,y+29,l.organX()-7,l.footerY()-3,0xFF999999);
         g.pose().pushPose();g.pose().translate(l.bodyX(),l.bodyY(),0);g.pose().scale(l.bodyScale(),l.bodyScale(),1);
@@ -124,6 +128,10 @@ public final class TraumaInventoryScreen extends InventoryScreen {
             if(ClientBodyState.bleeding(selected)>0)tip.add(Component.translatable("condition.traumacraft."+(ClientBodyState.bleeding(selected)==2?"heavy_bleed":"bleeding")));
             if(ClientBodyState.fractured(selected))tip.add(Component.translatable("condition.traumacraft."+(ClientBodyState.stabilized(selected)?"splinted":"fracture")));
             if(menu.getCarried().getItem() instanceof MedicalItem)tip.add(t("click_to_treat"));
+        }
+        if(tip.isEmpty()&&my>=y+17&&my<y+26&&mx>=x+8&&mx<r-8){
+            tip.add(illness);
+            if(sick)tip.add(Component.translatable(ClientBodyState.illnessTreated()?"illness.traumacraft.support_active":"illness.traumacraft.support_hint"));
         }
         if(tip.isEmpty()&&my>=fy&&my<fy+30){
             tip.add(Component.translatable("screen.traumacraft.function",Math.round(ClientBodyState.delivery()*100)));
