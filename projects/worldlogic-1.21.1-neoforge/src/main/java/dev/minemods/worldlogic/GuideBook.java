@@ -84,6 +84,13 @@ public final class GuideBook{
     for(var page:chapter.pages()){
      var entry=packaged(root+"/entries/"+name+"/"+page.id()+".json");
      var pages=entry.getAsJsonArray("pages");var text=new ArrayList<String>();
+     if(pages.size()%2!=0)throw new IllegalStateException("Patchouli odd filler "+name+"/"+page.id());
+     var actualModels=new HashSet<String>();
+     for(var pe:pages){var obj=pe.getAsJsonObject();String type=obj.get("type").getAsString();
+      if(type.equals("patchouli:spotlight"))actualModels.add(obj.get("item").getAsString());
+      if(type.equals("patchouli:empty")&&(!obj.has("draw_filler")||obj.get("draw_filler").getAsBoolean()))throw new IllegalStateException("Patchouli placeholder cube");
+     }
+     for(var model:page.models())if((model.getNamespace().equals("minecraft")||model.getNamespace().equals("worldlogic"))&&!actualModels.contains(model.toString()))throw new IllegalStateException("missing Patchouli spotlight "+model);
      for(var e:pages){var obj=e.getAsJsonObject();if(obj.get("type").getAsString().equals("patchouli:text"))text.add(obj.get("text").getAsString());}
      String original=String.join(" ",page.body().get(lang.equals("ru_ru"))).replaceAll("\\s+"," ").strip();
      if(!String.join(" ",text).equals(original))throw new IllegalStateException("Patchouli text loss "+name+"/"+page.id()+"/"+lang);

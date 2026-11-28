@@ -296,5 +296,10 @@
   "block.worldlogic.volcanic_tuff_bricks_stairs": "Volcanic Tuff Bricks Stairs",
   "block.worldlogic.volcanic_tuff_bricks_wall": "Volcanic Tuff Bricks Wall",
   "worldlogic.journeymap.season": "Season",
-  "worldlogic.journeymap.season.tooltip": "Local WorldLogic season below the minimap"
+  "worldlogic.journeymap.season.tooltip": "Local WorldLogic season below the minimap",
+  "worldlogic.jei.processing": "Field processing",
+  "worldlogic.jei.role.input": "Input",
+  "worldlogic.jei.role.support": "Base",
+  "worldlogic.jei.role.tool": "Tool",
+  "worldlogic.jei.role.output": "Output"
 }

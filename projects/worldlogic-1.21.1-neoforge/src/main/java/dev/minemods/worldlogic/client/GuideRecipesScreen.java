@@ -9,7 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 final class GuideRecipesScreen extends ClearScreen{
- private static final Set<String> NS=Set.of("worldlogic","hydration","traumacraft","worldlogic_thermal","worldlogicterrain","wl_treechopper","worldlogic_metabolism","metabolism");
+ private static final Set<String> NS=Set.of("worldlogic","hydration","traumacraft","worldlogic_thermal","worldlogicterrain","wl_treechopper","worldlogic_metabolism","metabolism","worldlogic_trauma","worldlogic_aqua","worldlogic_aquaculture");
  private final Screen parent;private final boolean ru;private int selected;private EditBox search;
  private record Entry(RecipeHolder<?> holder,ItemStack output){}
  private List<Entry> recipes=List.of();
@@ -19,7 +19,7 @@ final class GuideRecipesScreen extends ClearScreen{
  @Override protected void init(){
   var mc=Minecraft.getInstance();var entries=new ArrayList<Entry>();
   if(mc.level!=null)for(var h:mc.level.getRecipeManager().getRecipes()){
-   var r=h.value();if(!(r instanceof ShapedRecipe)&&!(r instanceof ShapelessRecipe))continue;
+   var r=h.value();if(r.getIngredients().isEmpty()||r.getIngredients().size()>9)continue;
    var out=r.getResultItem(mc.level.registryAccess());if(out.isEmpty()||!(NS.contains(h.id().getNamespace())||NS.contains(BuiltInRegistries.ITEM.getKey(out.getItem()).getNamespace())))continue;
    entries.add(new Entry(h,out.copy()));
   }
@@ -40,7 +40,7 @@ final class GuideRecipesScreen extends ClearScreen{
   else{
    selected=Math.max(0,Math.min(selected,list.size()-1));var e=list.get(selected);var r=e.holder().value();
    int x=Math.max(12,usable()/2-55),y=82;g.drawCenteredString(font,font.plainSubstrByWidth(e.output().getHoverName().getString(),usable()-24),usable()/2,54,0xfff0dfc0);
-   g.drawCenteredString(font,Component.literal(r instanceof ShapedRecipe?(ru?"По форме":"Shaped"):(ru?"Без формы":"Shapeless")),usable()/2,66,0xffdbc29a);
+   g.drawCenteredString(font,Component.literal(r instanceof ShapedRecipe?(ru?"По форме":"Shaped"):r instanceof ShapelessRecipe?(ru?"Без формы":"Shapeless"):BuiltInRegistries.RECIPE_TYPE.getKey(r.getType()).toString()),usable()/2,66,0xffdbc29a);
    int rw=r instanceof ShapedRecipe s?s.getWidth():3;
    var ingredients=r.getIngredients();for(int k=0;k<9;k++){int sx=x+k%3*20,sy=y+k/3*20;slot(g,sx,sy);int i=k%3<rw?k/3*rw+k%3:-1;if(i<0||i>=ingredients.size())continue;var alternatives=ingredients.get(i).getItems();if(alternatives.length==0)continue;var st=alternatives[(int)((System.currentTimeMillis()/1500)%alternatives.length)];g.renderItem(st,sx+2,sy+2);if(mx>=sx&&mx<sx+20&&my>=sy&&my<sy+20)hover=st;}
    g.drawString(font,"→",x+66,y+25,0xfff0dfc0,false);int ox=x+82,oy=y+20;slot(g,ox,oy);g.renderItem(e.output(),ox+2,oy+2);g.renderItemDecorations(font,e.output(),ox+2,oy+2);if(mx>=ox&&mx<ox+20&&my>=oy&&my<oy+20)hover=e.output();

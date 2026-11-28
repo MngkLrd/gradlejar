@@ -296,5 +296,10 @@
   "block.worldlogic.volcanic_tuff_bricks_stairs": "Ступени: кирпичи: вулканический туф",
   "block.worldlogic.volcanic_tuff_bricks_wall": "Ограда: кирпичи: вулканический туф",
   "worldlogic.journeymap.season": "Время года",
-  "worldlogic.journeymap.season.tooltip": "Местное время года WorldLogic под миникартой"
+  "worldlogic.journeymap.season.tooltip": "Местное время года WorldLogic под миникартой",
+  "worldlogic.jei.processing": "Обработка в мире",
+  "worldlogic.jei.role.input": "Вход",
+  "worldlogic.jei.role.support": "Блок",
+  "worldlogic.jei.role.tool": "Оруд.",
+  "worldlogic.jei.role.output": "Выход"
 }

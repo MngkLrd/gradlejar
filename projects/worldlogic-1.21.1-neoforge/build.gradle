@@ -20,6 +20,9 @@ def patchouliOutput = layout.buildDirectory.dir('generated/worldlogicPatchouli')
 tasks.register('generatePatchouliGuide') {
  def source = file('src/main/resources/assets/worldlogic/worldlogic_guide')
  inputs.dir(source)
+ inputs.dir(file('src/main/resources/assets/worldlogic/models/item'))
+ inputs.dir(file('src/main/resources/assets/worldlogic/textures'))
+ inputs.dir(file('src/main/resources/data/worldlogic/recipe'))
  outputs.dir(patchouliOutput)
  doLast {
   def output = patchouliOutput.get().asFile
@@ -32,7 +35,7 @@ tasks.register('generatePatchouliGuide') {
    name:'item.worldlogic.guidebook',landing_text:'worldlogic.patchouli.landing',
    use_resource_pack:true,dont_generate_book:true,custom_book_item:'worldlogic:guidebook',
    book_texture:'patchouli:textures/gui/book_brown.png',i18n:true,show_progress:false,
-   show_toasts:false,version:'37',text_overflow_mode:'resize'])
+   show_toasts:false,version:'55',text_overflow_mode:'resize'])
   def icons=[core:'minecraft:campfire',water:'minecraft:water_bucket',hydration:'minecraft:glass_bottle',
    weather:'minecraft:clock',thermal:'minecraft:leather_chestplate',trauma:'minecraft:redstone',
    treechopper:'minecraft:stone_axe',terrarian:'minecraft:wheat',geology:'minecraft:raw_iron',biomes:'minecraft:map']
@@ -55,14 +58,56 @@ tasks.register('generatePatchouliGuide') {
       }
       if(line)pages.add([type:'patchouli:text',text:line])
      }
-     // Optional addon item references must never break Core-only book loading.
-     article.models.findAll{it.startsWith('minecraft:')||it.startsWith('worldlogic:')}.each{id ->
-      pages.add([type:'patchouli:spotlight',item:id,text:''])
+     article.models.findAll{it.startsWith('minecraft:')||it.startsWith('worldlogic:')}.unique().each{id ->
+      pages.add([type:'patchouli:spotlight',item:id,link_recipe:true,text:lang=='ru'?'Предмет или блок, связанный с этой статьёй.':'Item or block referenced by this article.'])
      }
+     (article.icons?:[]).findAll{it.startsWith('worldlogic:textures/')}.unique().eachWithIndex{loc,idx ->
+      def src=file('src/main/resources/assets/worldlogic/'+loc.split(':',2)[1])
+      if(src.isFile()){
+       def image=javax.imageio.ImageIO.read(src)
+       if(image!=null){
+        def canvas=new java.awt.image.BufferedImage(256,256,java.awt.image.BufferedImage.TYPE_INT_ARGB)
+        def gg=canvas.createGraphics()
+        gg.setRenderingHint(java.awt.RenderingHints.KEY_INTERPOLATION,java.awt.RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR)
+        double scale=Math.min(192d/image.width,192d/image.height)
+        int ww=Math.max(1,(int)Math.round(image.width*scale)),hh=Math.max(1,(int)Math.round(image.height*scale))
+        gg.drawImage(image,(200-ww).intdiv(2),(200-hh).intdiv(2),ww,hh,null);gg.dispose()
+        def imageName='textures/gui/patchouli_generated/'+chapter.id+'/'+article.id+'_'+idx+'.png'
+        def dest=new File(output,'assets/worldlogic/'+imageName);dest.parentFile.mkdirs()
+        javax.imageio.ImageIO.write(canvas,'png',dest)
+        pages.add([type:'patchouli:image',images:['worldlogic:'+imageName],border:false,text:lang=='ru'?'Иллюстрация к статье.':'Article illustration.'])
+       }
+      }
+     }
+     if(pages.size()%2!=0)pages.add([type:'patchouli:empty',draw_filler:false])
      writeJson("${root}/entries/${chapter.id}/${article.id}.json",[
-      name:article.title[lang],category:"worldlogic:${chapter.id}",icon:icons[chapter.id]?:'minecraft:book',
+      name:article.title[lang],category:"worldlogic:${chapter.id}",icon:article.models.find{it.startsWith('minecraft:')||it.startsWith('worldlogic:')}?:icons[chapter.id]?:'minecraft:book',
       sortnum:index,pages:pages])
     }
+   }
+  }
+  def recipes=fileTree('src/main/resources/data/worldlogic/recipe').matching{include '**/*.json'}.files.sort{it.path}
+  def coreItems=file('src/main/resources/assets/worldlogic/models/item').listFiles().findAll{it.name.endsWith('.json')}.sort{it.name}
+  ['en_us','ru_ru'].each{locale ->
+   boolean ru=locale=='ru_ru'
+   def root='assets/worldlogic/patchouli_books/field_guide/'+locale
+   writeJson(root+'/categories/material_catalog.json',[name:ru?'Блоки и предметы':'Blocks and items',description:ru?'Каталог материалов ядра.':'Core material catalog.',icon:'minecraft:stone',sortnum:95])
+   def langMap=parser.parse(file('src/main/resources/assets/worldlogic/lang/'+locale+'.json'))
+   coreItems.eachWithIndex{model,index ->
+    def path=model.name.replaceFirst(/\.json$/,'')
+    def item='worldlogic:'+path
+    def title=langMap['item.worldlogic.'+path]?:langMap['block.worldlogic.'+path]?:path
+    def pages=[[type:'patchouli:text',text:item],[type:'patchouli:spotlight',item:item,link_recipe:true,text:ru?'Модель предмета из реестра WorldLogic.':'Registered WorldLogic item model.']]
+    recipes.each{rf ->
+     def recipe=parser.parse(rf)
+     def result=recipe.result instanceof Map?(recipe.result.id?:recipe.result.item):recipe.result
+     if(result!=item)return
+     def rel=file('src/main/resources/data/worldlogic/recipe').toPath().relativize(rf.toPath()).toString().replace('\\','/').replaceFirst(/\.json$/,'')
+     if(recipe.type in ['minecraft:crafting_shaped','minecraft:crafting_shapeless'])pages.add([type:'patchouli:crafting',recipe:'worldlogic:'+rel])
+     else if(recipe.type=='minecraft:smelting')pages.add([type:'patchouli:smelting',recipe:'worldlogic:'+rel])
+    }
+    if(pages.size()%2!=0)pages.add([type:'patchouli:empty',draw_filler:false])
+    writeJson(root+'/entries/material_catalog/'+path+'.json',[name:title,category:'worldlogic:material_catalog',icon:item,sortnum:index,pages:pages])
    }
   }
  }

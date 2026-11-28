@@ -24,6 +24,7 @@ public final class PhysicalMaterialChecks {
  private static boolean material(ObjectProfile p,String name){return p.components().stream().anyMatch(c->c.materialId().equals(id(name)));}
  public static void verify(){
   PhysicalAddonChecks.verify();
+  dev.minemods.worldlogic.api.WorldLogicRecipes.verify();
   for(var a:NaturalFluids.families()){
    require(WaterRenderCompatibility.same(a.source.get(),net.minecraft.world.level.material.Fluids.WATER),"native/vanilla render equivalence");
    for(var b:NaturalFluids.families()){
