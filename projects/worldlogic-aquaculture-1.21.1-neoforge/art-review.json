@@ -1776,6 +1776,1338 @@
         "context_view": "Side and top static orthographic projections generated from actual UV bytes and geometry; live client rendering not tested.",
         "context_type": "model_uv"
       }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/item/raw_pike.png": {
+      "sha256": "ddec735880e099ab2272abec7874605bd74b3005411f5b9311e553559c56a88a",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/cod",
+          "minecraft": "1.21.1",
+          "sha256": "5a4cddbf3f573fb1d63b0d9cbc3c5166287a07ad8f4cf84ac44c83ce28cf5911"
+        }
+      ],
+      "comparison": "Unlike the reference's stronger diagonal compact fish, pike uses a elongated narrow taper with extended head with pale spots in the flank and small rear-set dorsal; same 16-pixel sprite role. Original pixel clusters, not reused vanilla pixels.",
+      "findings": {
+        "silhouette": "elongated narrow taper with extended head readable in the six-by-six icon sheet.",
+        "cluster_structure": "pale spots in the flank concentrated on the body rather than random noise.",
+        "micro_contrast": "Back #6f8849 against mid-flank #aeb77a; darker eye is confined to the head.",
+        "light_and_volume": "Upper contour darker, broad middle plane turns into lighter belly #ced49b; localized contrast rather than full black outline.",
+        "material_continuity": "Body uses linked back and flank ramps; fin #7c7950 has its own restrained shadow and highlight.",
+        "edge_variation": "small rear-set dorsal breaks the upper silhouette; taper and tail have discrete stepped edges.",
+        "variant_identity": "pike: pale spots in the flank paired with elongated narrow taper with extended head distinguishes this icon in the group.",
+        "vanilla_comparison": "Reference minecraft:item/cod is a compact angled 16x16 whole-fish icon; ours retains transparent background and deliberate small clusters, with a shallower diagonal.",
+        "functional_material_cues": "Eye, gill region, caudal and dorsal/anal structures read as a whole raw fish rather than a fillet or a meat slab."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The branch atlas has food rules for bread/apple, not fish anatomy or whole non-edible catches. Actual same-version cod/salmon item icons are the closer comparator.",
+        "reference_source": "Actual version-pinned misode/mcmeta 1.21.1-assets item PNGs viewed and SHA-256 computed; official client SHA-1 not independently checked.",
+        "applied_pattern": "Preserve a recognizable small angled body, stepped fins and controlled material/contour clusters; independently draw the species.",
+        "reference_limit": "Vanilla cod/salmon are edible item silhouettes; Aqua whole catches are non-edible and biologically varied.",
+        "native_view": "Actual original 16x16 sprites inspected in a 3x nearest-neighbor sheet; reference PNG viewed at native size. Client not run.",
+        "context_view": "Six by six icon-family comparison on inventory-like dark neutral cells; generated item model references the exact local PNG.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/item/raw_perch.png": {
+      "sha256": "970f25a20c8e40e1b75a5305075b8cd5d144cd01e260e252a2c0efdfb3f9b5d1",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/cod",
+          "minecraft": "1.21.1",
+          "sha256": "5a4cddbf3f573fb1d63b0d9cbc3c5166287a07ad8f4cf84ac44c83ce28cf5911"
+        }
+      ],
+      "comparison": "Unlike the reference's stronger diagonal compact fish, perch uses a deep-bodied profile with clear shoulders with dark vertical marks on the upper flank and two distinct dorsal groups; same 16-pixel sprite role. Original pixel clusters, not reused vanilla pixels.",
+      "findings": {
+        "silhouette": "deep-bodied profile with clear shoulders readable in the six-by-six icon sheet.",
+        "cluster_structure": "dark vertical marks on the upper flank concentrated on the body rather than random noise.",
+        "micro_contrast": "Back #87923d against mid-flank #c2b85b; darker eye is confined to the head.",
+        "light_and_volume": "Upper contour darker, broad middle plane turns into lighter belly #ded291; localized contrast rather than full black outline.",
+        "material_continuity": "Body uses linked back and flank ramps; fin #b85b26 has its own restrained shadow and highlight.",
+        "edge_variation": "two distinct dorsal groups breaks the upper silhouette; taper and tail have discrete stepped edges.",
+        "variant_identity": "perch: dark vertical marks on the upper flank paired with deep-bodied profile with clear shoulders distinguishes this icon in the group.",
+        "vanilla_comparison": "Reference minecraft:item/cod is a compact angled 16x16 whole-fish icon; ours retains transparent background and deliberate small clusters, with a shallower diagonal.",
+        "functional_material_cues": "Eye, gill region, caudal and dorsal/anal structures read as a whole raw fish rather than a fillet or a meat slab."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The branch atlas has food rules for bread/apple, not fish anatomy or whole non-edible catches. Actual same-version cod/salmon item icons are the closer comparator.",
+        "reference_source": "Actual version-pinned misode/mcmeta 1.21.1-assets item PNGs viewed and SHA-256 computed; official client SHA-1 not independently checked.",
+        "applied_pattern": "Preserve a recognizable small angled body, stepped fins and controlled material/contour clusters; independently draw the species.",
+        "reference_limit": "Vanilla cod/salmon are edible item silhouettes; Aqua whole catches are non-edible and biologically varied.",
+        "native_view": "Actual original 16x16 sprites inspected in a 3x nearest-neighbor sheet; reference PNG viewed at native size. Client not run.",
+        "context_view": "Six by six icon-family comparison on inventory-like dark neutral cells; generated item model references the exact local PNG.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/item/raw_crucian_carp.png": {
+      "sha256": "457cf1683d654099f9214fa80db00418ee6e346d24d31e30ab88fbeac1c2a445",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/cod",
+          "minecraft": "1.21.1",
+          "sha256": "5a4cddbf3f573fb1d63b0d9cbc3c5166287a07ad8f4cf84ac44c83ce28cf5911"
+        }
+      ],
+      "comparison": "Unlike the reference's stronger diagonal compact fish, crucian_carp uses a rounded deep flank and narrow caudal peduncle with alternating sparse scale clusters and low dorsal; same 16-pixel sprite role. Original pixel clusters, not reused vanilla pixels.",
+      "findings": {
+        "silhouette": "rounded deep flank and narrow caudal peduncle readable in the six-by-six icon sheet.",
+        "cluster_structure": "alternating sparse scale clusters concentrated on the body rather than random noise.",
+        "micro_contrast": "Back #947a37 against mid-flank #c4a65c; darker eye is confined to the head.",
+        "light_and_volume": "Upper contour darker, broad middle plane turns into lighter belly #e2ca84; localized contrast rather than full black outline.",
+        "material_continuity": "Body uses linked back and flank ramps; fin #8c6637 has its own restrained shadow and highlight.",
+        "edge_variation": "low dorsal breaks the upper silhouette; taper and tail have discrete stepped edges.",
+        "variant_identity": "crucian_carp: alternating sparse scale clusters paired with rounded deep flank and narrow caudal peduncle distinguishes this icon in the group.",
+        "vanilla_comparison": "Reference minecraft:item/cod is a compact angled 16x16 whole-fish icon; ours retains transparent background and deliberate small clusters, with a shallower diagonal.",
+        "functional_material_cues": "Eye, gill region, caudal and dorsal/anal structures read as a whole raw fish rather than a fillet or a meat slab."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The branch atlas has food rules for bread/apple, not fish anatomy or whole non-edible catches. Actual same-version cod/salmon item icons are the closer comparator.",
+        "reference_source": "Actual version-pinned misode/mcmeta 1.21.1-assets item PNGs viewed and SHA-256 computed; official client SHA-1 not independently checked.",
+        "applied_pattern": "Preserve a recognizable small angled body, stepped fins and controlled material/contour clusters; independently draw the species.",
+        "reference_limit": "Vanilla cod/salmon are edible item silhouettes; Aqua whole catches are non-edible and biologically varied.",
+        "native_view": "Actual original 16x16 sprites inspected in a 3x nearest-neighbor sheet; reference PNG viewed at native size. Client not run.",
+        "context_view": "Six by six icon-family comparison on inventory-like dark neutral cells; generated item model references the exact local PNG.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/item/raw_carp.png": {
+      "sha256": "5a079ce8c75cda41bd183a193627ac19b6eaa189653fd3e4860fcee519db67b7",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/cod",
+          "minecraft": "1.21.1",
+          "sha256": "5a4cddbf3f573fb1d63b0d9cbc3c5166287a07ad8f4cf84ac44c83ce28cf5911"
+        }
+      ],
+      "comparison": "Unlike the reference's stronger diagonal compact fish, carp uses a deep-bodied profile with clear shoulders with alternating sparse scale clusters and long dorsal edge; same 16-pixel sprite role. Original pixel clusters, not reused vanilla pixels.",
+      "findings": {
+        "silhouette": "deep-bodied profile with clear shoulders readable in the six-by-six icon sheet.",
+        "cluster_structure": "alternating sparse scale clusters concentrated on the body rather than random noise.",
+        "micro_contrast": "Back #8d7651 against mid-flank #bc9b70; darker eye is confined to the head.",
+        "light_and_volume": "Upper contour darker, broad middle plane turns into lighter belly #e4c69b; localized contrast rather than full black outline.",
+        "material_continuity": "Body uses linked back and flank ramps; fin #8e6344 has its own restrained shadow and highlight.",
+        "edge_variation": "long dorsal edge breaks the upper silhouette; taper and tail have discrete stepped edges.",
+        "variant_identity": "carp: alternating sparse scale clusters paired with deep-bodied profile with clear shoulders distinguishes this icon in the group.",
+        "vanilla_comparison": "Reference minecraft:item/cod is a compact angled 16x16 whole-fish icon; ours retains transparent background and deliberate small clusters, with a shallower diagonal.",
+        "functional_material_cues": "Eye, gill region, caudal and dorsal/anal structures read as a whole raw fish rather than a fillet or a meat slab."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The branch atlas has food rules for bread/apple, not fish anatomy or whole non-edible catches. Actual same-version cod/salmon item icons are the closer comparator.",
+        "reference_source": "Actual version-pinned misode/mcmeta 1.21.1-assets item PNGs viewed and SHA-256 computed; official client SHA-1 not independently checked.",
+        "applied_pattern": "Preserve a recognizable small angled body, stepped fins and controlled material/contour clusters; independently draw the species.",
+        "reference_limit": "Vanilla cod/salmon are edible item silhouettes; Aqua whole catches are non-edible and biologically varied.",
+        "native_view": "Actual original 16x16 sprites inspected in a 3x nearest-neighbor sheet; reference PNG viewed at native size. Client not run.",
+        "context_view": "Six by six icon-family comparison on inventory-like dark neutral cells; generated item model references the exact local PNG.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/item/raw_roach.png": {
+      "sha256": "7195331c085e6c8dc3e4f09bdcedee18556f3b717976373cd9da64346bab4661",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/cod",
+          "minecraft": "1.21.1",
+          "sha256": "5a4cddbf3f573fb1d63b0d9cbc3c5166287a07ad8f4cf84ac44c83ce28cf5911"
+        }
+      ],
+      "comparison": "Unlike the reference's stronger diagonal compact fish, roach uses a streamlined narrow silverfish-like profile with continuous subdued lateral stripe and short central dorsal; same 16-pixel sprite role. Original pixel clusters, not reused vanilla pixels.",
+      "findings": {
+        "silhouette": "streamlined narrow silverfish-like profile readable in the six-by-six icon sheet.",
+        "cluster_structure": "continuous subdued lateral stripe concentrated on the body rather than random noise.",
+        "micro_contrast": "Back #697b86 against mid-flank #b1b8c2; darker eye is confined to the head.",
+        "light_and_volume": "Upper contour darker, broad middle plane turns into lighter belly #e1e4dc; localized contrast rather than full black outline.",
+        "material_continuity": "Body uses linked back and flank ramps; fin #b24736 has its own restrained shadow and highlight.",
+        "edge_variation": "short central dorsal breaks the upper silhouette; taper and tail have discrete stepped edges.",
+        "variant_identity": "roach: continuous subdued lateral stripe paired with streamlined narrow silverfish-like profile distinguishes this icon in the group.",
+        "vanilla_comparison": "Reference minecraft:item/cod is a compact angled 16x16 whole-fish icon; ours retains transparent background and deliberate small clusters, with a shallower diagonal.",
+        "functional_material_cues": "Eye, gill region, caudal and dorsal/anal structures read as a whole raw fish rather than a fillet or a meat slab."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The branch atlas has food rules for bread/apple, not fish anatomy or whole non-edible catches. Actual same-version cod/salmon item icons are the closer comparator.",
+        "reference_source": "Actual version-pinned misode/mcmeta 1.21.1-assets item PNGs viewed and SHA-256 computed; official client SHA-1 not independently checked.",
+        "applied_pattern": "Preserve a recognizable small angled body, stepped fins and controlled material/contour clusters; independently draw the species.",
+        "reference_limit": "Vanilla cod/salmon are edible item silhouettes; Aqua whole catches are non-edible and biologically varied.",
+        "native_view": "Actual original 16x16 sprites inspected in a 3x nearest-neighbor sheet; reference PNG viewed at native size. Client not run.",
+        "context_view": "Six by six icon-family comparison on inventory-like dark neutral cells; generated item model references the exact local PNG.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/item/raw_bream.png": {
+      "sha256": "34670794f0ecb341ea7f3a2d7882b1a9fb044e2d8040fbd99975f9f39517d873",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/cod",
+          "minecraft": "1.21.1",
+          "sha256": "5a4cddbf3f573fb1d63b0d9cbc3c5166287a07ad8f4cf84ac44c83ce28cf5911"
+        }
+      ],
+      "comparison": "Unlike the reference's stronger diagonal compact fish, bream uses a rounded deep flank and narrow caudal peduncle with continuous subdued lateral stripe and tall anterior dorsal; same 16-pixel sprite role. Original pixel clusters, not reused vanilla pixels.",
+      "findings": {
+        "silhouette": "rounded deep flank and narrow caudal peduncle readable in the six-by-six icon sheet.",
+        "cluster_structure": "continuous subdued lateral stripe concentrated on the body rather than random noise.",
+        "micro_contrast": "Back #76796d against mid-flank #aeab8d; darker eye is confined to the head.",
+        "light_and_volume": "Upper contour darker, broad middle plane turns into lighter belly #d7d0ac; localized contrast rather than full black outline.",
+        "material_continuity": "Body uses linked back and flank ramps; fin #746b61 has its own restrained shadow and highlight.",
+        "edge_variation": "tall anterior dorsal breaks the upper silhouette; taper and tail have discrete stepped edges.",
+        "variant_identity": "bream: continuous subdued lateral stripe paired with rounded deep flank and narrow caudal peduncle distinguishes this icon in the group.",
+        "vanilla_comparison": "Reference minecraft:item/cod is a compact angled 16x16 whole-fish icon; ours retains transparent background and deliberate small clusters, with a shallower diagonal.",
+        "functional_material_cues": "Eye, gill region, caudal and dorsal/anal structures read as a whole raw fish rather than a fillet or a meat slab."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The branch atlas has food rules for bread/apple, not fish anatomy or whole non-edible catches. Actual same-version cod/salmon item icons are the closer comparator.",
+        "reference_source": "Actual version-pinned misode/mcmeta 1.21.1-assets item PNGs viewed and SHA-256 computed; official client SHA-1 not independently checked.",
+        "applied_pattern": "Preserve a recognizable small angled body, stepped fins and controlled material/contour clusters; independently draw the species.",
+        "reference_limit": "Vanilla cod/salmon are edible item silhouettes; Aqua whole catches are non-edible and biologically varied.",
+        "native_view": "Actual original 16x16 sprites inspected in a 3x nearest-neighbor sheet; reference PNG viewed at native size. Client not run.",
+        "context_view": "Six by six icon-family comparison on inventory-like dark neutral cells; generated item model references the exact local PNG.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/item/raw_trout.png": {
+      "sha256": "0b17294bc37792b671b8f8d2c6271fe647d73835686757ea975e23ca32bd559f",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/salmon",
+          "minecraft": "1.21.1",
+          "sha256": "f841d55cfd55f26e5508f42753357576d77e70ef10f04e81f1cabaf3c9c39b21"
+        }
+      ],
+      "comparison": "Unlike the reference's stronger diagonal compact fish, trout uses a streamlined narrow silverfish-like profile with localized rust red spots and short central dorsal; same 16-pixel sprite role. Original pixel clusters, not reused vanilla pixels.",
+      "findings": {
+        "silhouette": "streamlined narrow silverfish-like profile readable in the six-by-six icon sheet.",
+        "cluster_structure": "localized rust red spots concentrated on the body rather than random noise.",
+        "micro_contrast": "Back #80694c against mid-flank #b6986c; darker eye is confined to the head.",
+        "light_and_volume": "Upper contour darker, broad middle plane turns into lighter belly #e4cda1; localized contrast rather than full black outline.",
+        "material_continuity": "Body uses linked back and flank ramps; fin #ad5638 has its own restrained shadow and highlight.",
+        "edge_variation": "short central dorsal breaks the upper silhouette; taper and tail have discrete stepped edges.",
+        "variant_identity": "trout: localized rust red spots paired with streamlined narrow silverfish-like profile distinguishes this icon in the group.",
+        "vanilla_comparison": "Reference minecraft:item/salmon is a compact angled 16x16 whole-fish icon; ours retains transparent background and deliberate small clusters, with a shallower diagonal.",
+        "functional_material_cues": "Eye, gill region, caudal and dorsal/anal structures read as a whole raw fish rather than a fillet or a meat slab."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/salmon",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The branch atlas has food rules for bread/apple, not fish anatomy or whole non-edible catches. Actual same-version cod/salmon item icons are the closer comparator.",
+        "reference_source": "Actual version-pinned misode/mcmeta 1.21.1-assets item PNGs viewed and SHA-256 computed; official client SHA-1 not independently checked.",
+        "applied_pattern": "Preserve a recognizable small angled body, stepped fins and controlled material/contour clusters; independently draw the species.",
+        "reference_limit": "Vanilla cod/salmon are edible item silhouettes; Aqua whole catches are non-edible and biologically varied.",
+        "native_view": "Actual original 16x16 sprites inspected in a 3x nearest-neighbor sheet; reference PNG viewed at native size. Client not run.",
+        "context_view": "Six by six icon-family comparison on inventory-like dark neutral cells; generated item model references the exact local PNG.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/item/raw_grayling.png": {
+      "sha256": "54c27da76fea596773b990189224de13453c6ffc103c76b2af868266bceea0f9",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/salmon",
+          "minecraft": "1.21.1",
+          "sha256": "f841d55cfd55f26e5508f42753357576d77e70ef10f04e81f1cabaf3c9c39b21"
+        }
+      ],
+      "comparison": "Unlike the reference's stronger diagonal compact fish, grayling uses a streamlined narrow silverfish-like profile with dark vertical marks on the upper flank and large raised dorsal sail; same 16-pixel sprite role. Original pixel clusters, not reused vanilla pixels.",
+      "findings": {
+        "silhouette": "streamlined narrow silverfish-like profile readable in the six-by-six icon sheet.",
+        "cluster_structure": "dark vertical marks on the upper flank concentrated on the body rather than random noise.",
+        "micro_contrast": "Back #667285 against mid-flank #a5a7b3; darker eye is confined to the head.",
+        "light_and_volume": "Upper contour darker, broad middle plane turns into lighter belly #d9d7d9; localized contrast rather than full black outline.",
+        "material_continuity": "Body uses linked back and flank ramps; fin #786390 has its own restrained shadow and highlight.",
+        "edge_variation": "large raised dorsal sail breaks the upper silhouette; taper and tail have discrete stepped edges.",
+        "variant_identity": "grayling: dark vertical marks on the upper flank paired with streamlined narrow silverfish-like profile distinguishes this icon in the group.",
+        "vanilla_comparison": "Reference minecraft:item/salmon is a compact angled 16x16 whole-fish icon; ours retains transparent background and deliberate small clusters, with a shallower diagonal.",
+        "functional_material_cues": "Eye, gill region, caudal and dorsal/anal structures read as a whole raw fish rather than a fillet or a meat slab."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/salmon",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The branch atlas has food rules for bread/apple, not fish anatomy or whole non-edible catches. Actual same-version cod/salmon item icons are the closer comparator.",
+        "reference_source": "Actual version-pinned misode/mcmeta 1.21.1-assets item PNGs viewed and SHA-256 computed; official client SHA-1 not independently checked.",
+        "applied_pattern": "Preserve a recognizable small angled body, stepped fins and controlled material/contour clusters; independently draw the species.",
+        "reference_limit": "Vanilla cod/salmon are edible item silhouettes; Aqua whole catches are non-edible and biologically varied.",
+        "native_view": "Actual original 16x16 sprites inspected in a 3x nearest-neighbor sheet; reference PNG viewed at native size. Client not run.",
+        "context_view": "Six by six icon-family comparison on inventory-like dark neutral cells; generated item model references the exact local PNG.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/item/raw_char.png": {
+      "sha256": "4826c1cbf1a83b5857fedb4adc49f3d5e9eb96ffe0a8e803cf3fd53296e1635b",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/salmon",
+          "minecraft": "1.21.1",
+          "sha256": "f841d55cfd55f26e5508f42753357576d77e70ef10f04e81f1cabaf3c9c39b21"
+        }
+      ],
+      "comparison": "Unlike the reference's stronger diagonal compact fish, char uses a streamlined narrow silverfish-like profile with light cream markings and short central dorsal; same 16-pixel sprite role. Original pixel clusters, not reused vanilla pixels.",
+      "findings": {
+        "silhouette": "streamlined narrow silverfish-like profile readable in the six-by-six icon sheet.",
+        "cluster_structure": "light cream markings concentrated on the body rather than random noise.",
+        "micro_contrast": "Back #626e53 against mid-flank #b38466; darker eye is confined to the head.",
+        "light_and_volume": "Upper contour darker, broad middle plane turns into lighter belly #df9d69; localized contrast rather than full black outline.",
+        "material_continuity": "Body uses linked back and flank ramps; fin #c76438 has its own restrained shadow and highlight.",
+        "edge_variation": "short central dorsal breaks the upper silhouette; taper and tail have discrete stepped edges.",
+        "variant_identity": "char: light cream markings paired with streamlined narrow silverfish-like profile distinguishes this icon in the group.",
+        "vanilla_comparison": "Reference minecraft:item/salmon is a compact angled 16x16 whole-fish icon; ours retains transparent background and deliberate small clusters, with a shallower diagonal.",
+        "functional_material_cues": "Eye, gill region, caudal and dorsal/anal structures read as a whole raw fish rather than a fillet or a meat slab."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/salmon",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The branch atlas has food rules for bread/apple, not fish anatomy or whole non-edible catches. Actual same-version cod/salmon item icons are the closer comparator.",
+        "reference_source": "Actual version-pinned misode/mcmeta 1.21.1-assets item PNGs viewed and SHA-256 computed; official client SHA-1 not independently checked.",
+        "applied_pattern": "Preserve a recognizable small angled body, stepped fins and controlled material/contour clusters; independently draw the species.",
+        "reference_limit": "Vanilla cod/salmon are edible item silhouettes; Aqua whole catches are non-edible and biologically varied.",
+        "native_view": "Actual original 16x16 sprites inspected in a 3x nearest-neighbor sheet; reference PNG viewed at native size. Client not run.",
+        "context_view": "Six by six icon-family comparison on inventory-like dark neutral cells; generated item model references the exact local PNG.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/item/raw_taimen.png": {
+      "sha256": "fb834bb79fbd850bdda9d95698343af52a4bf1e4121e4aab8275ecfb83b107c0",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/salmon",
+          "minecraft": "1.21.1",
+          "sha256": "f841d55cfd55f26e5508f42753357576d77e70ef10f04e81f1cabaf3c9c39b21"
+        }
+      ],
+      "comparison": "Unlike the reference's stronger diagonal compact fish, taimen uses a elongated narrow taper with extended head with small dark flank spots and short central dorsal; same 16-pixel sprite role. Original pixel clusters, not reused vanilla pixels.",
+      "findings": {
+        "silhouette": "elongated narrow taper with extended head readable in the six-by-six icon sheet.",
+        "cluster_structure": "small dark flank spots concentrated on the body rather than random noise.",
+        "micro_contrast": "Back #776b5e against mid-flank #b29984; darker eye is confined to the head.",
+        "light_and_volume": "Upper contour darker, broad middle plane turns into lighter belly #d9c4a9; localized contrast rather than full black outline.",
+        "material_continuity": "Body uses linked back and flank ramps; fin #a54b43 has its own restrained shadow and highlight.",
+        "edge_variation": "short central dorsal breaks the upper silhouette; taper and tail have discrete stepped edges.",
+        "variant_identity": "taimen: small dark flank spots paired with elongated narrow taper with extended head distinguishes this icon in the group.",
+        "vanilla_comparison": "Reference minecraft:item/salmon is a compact angled 16x16 whole-fish icon; ours retains transparent background and deliberate small clusters, with a shallower diagonal.",
+        "functional_material_cues": "Eye, gill region, caudal and dorsal/anal structures read as a whole raw fish rather than a fillet or a meat slab."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/salmon",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The branch atlas has food rules for bread/apple, not fish anatomy or whole non-edible catches. Actual same-version cod/salmon item icons are the closer comparator.",
+        "reference_source": "Actual version-pinned misode/mcmeta 1.21.1-assets item PNGs viewed and SHA-256 computed; official client SHA-1 not independently checked.",
+        "applied_pattern": "Preserve a recognizable small angled body, stepped fins and controlled material/contour clusters; independently draw the species.",
+        "reference_limit": "Vanilla cod/salmon are edible item silhouettes; Aqua whole catches are non-edible and biologically varied.",
+        "native_view": "Actual original 16x16 sprites inspected in a 3x nearest-neighbor sheet; reference PNG viewed at native size. Client not run.",
+        "context_view": "Six by six icon-family comparison on inventory-like dark neutral cells; generated item model references the exact local PNG.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/item/raw_whitefish.png": {
+      "sha256": "8a27401b175df337b936200fced8f2f2f6e53dff776db8ddd210d871bf5a5599",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/cod",
+          "minecraft": "1.21.1",
+          "sha256": "5a4cddbf3f573fb1d63b0d9cbc3c5166287a07ad8f4cf84ac44c83ce28cf5911"
+        }
+      ],
+      "comparison": "Unlike the reference's stronger diagonal compact fish, whitefish uses a streamlined narrow silverfish-like profile with continuous subdued lateral stripe and low dorsal; same 16-pixel sprite role. Original pixel clusters, not reused vanilla pixels.",
+      "findings": {
+        "silhouette": "streamlined narrow silverfish-like profile readable in the six-by-six icon sheet.",
+        "cluster_structure": "continuous subdued lateral stripe concentrated on the body rather than random noise.",
+        "micro_contrast": "Back #71838f against mid-flank #bec9cb; darker eye is confined to the head.",
+        "light_and_volume": "Upper contour darker, broad middle plane turns into lighter belly #edf1e8; localized contrast rather than full black outline.",
+        "material_continuity": "Body uses linked back and flank ramps; fin #8b98a0 has its own restrained shadow and highlight.",
+        "edge_variation": "low dorsal breaks the upper silhouette; taper and tail have discrete stepped edges.",
+        "variant_identity": "whitefish: continuous subdued lateral stripe paired with streamlined narrow silverfish-like profile distinguishes this icon in the group.",
+        "vanilla_comparison": "Reference minecraft:item/cod is a compact angled 16x16 whole-fish icon; ours retains transparent background and deliberate small clusters, with a shallower diagonal.",
+        "functional_material_cues": "Eye, gill region, caudal and dorsal/anal structures read as a whole raw fish rather than a fillet or a meat slab."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The branch atlas has food rules for bread/apple, not fish anatomy or whole non-edible catches. Actual same-version cod/salmon item icons are the closer comparator.",
+        "reference_source": "Actual version-pinned misode/mcmeta 1.21.1-assets item PNGs viewed and SHA-256 computed; official client SHA-1 not independently checked.",
+        "applied_pattern": "Preserve a recognizable small angled body, stepped fins and controlled material/contour clusters; independently draw the species.",
+        "reference_limit": "Vanilla cod/salmon are edible item silhouettes; Aqua whole catches are non-edible and biologically varied.",
+        "native_view": "Actual original 16x16 sprites inspected in a 3x nearest-neighbor sheet; reference PNG viewed at native size. Client not run.",
+        "context_view": "Six by six icon-family comparison on inventory-like dark neutral cells; generated item model references the exact local PNG.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/item/raw_burbot.png": {
+      "sha256": "f6e1f4117bc63cebaccf8972410b41dcb6f4eb5b6cdfc8fadfd5d4ab8b5e8dbe",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/cod",
+          "minecraft": "1.21.1",
+          "sha256": "5a4cddbf3f573fb1d63b0d9cbc3c5166287a07ad8f4cf84ac44c83ce28cf5911"
+        }
+      ],
+      "comparison": "Unlike the reference's stronger diagonal compact fish, burbot uses a long taper and small rounded tail with irregular connected upper and mid-flank patches and long dorsal edge; same 16-pixel sprite role. Original pixel clusters, not reused vanilla pixels.",
+      "findings": {
+        "silhouette": "long taper and small rounded tail readable in the six-by-six icon sheet.",
+        "cluster_structure": "irregular connected upper and mid-flank patches concentrated on the body rather than random noise.",
+        "micro_contrast": "Back #685c3b against mid-flank #9b8961; darker eye is confined to the head.",
+        "light_and_volume": "Upper contour darker, broad middle plane turns into lighter belly #d1b58a; localized contrast rather than full black outline.",
+        "material_continuity": "Body uses linked back and flank ramps; fin #847650 has its own restrained shadow and highlight.",
+        "edge_variation": "long dorsal edge breaks the upper silhouette; taper and tail have discrete stepped edges.",
+        "variant_identity": "burbot: irregular connected upper and mid-flank patches paired with long taper and small rounded tail distinguishes this icon in the group.",
+        "vanilla_comparison": "Reference minecraft:item/cod is a compact angled 16x16 whole-fish icon; ours retains transparent background and deliberate small clusters, with a shallower diagonal.",
+        "functional_material_cues": "Eye, gill region, caudal and dorsal/anal structures read as a whole raw fish rather than a fillet or a meat slab."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The branch atlas has food rules for bread/apple, not fish anatomy or whole non-edible catches. Actual same-version cod/salmon item icons are the closer comparator.",
+        "reference_source": "Actual version-pinned misode/mcmeta 1.21.1-assets item PNGs viewed and SHA-256 computed; official client SHA-1 not independently checked.",
+        "applied_pattern": "Preserve a recognizable small angled body, stepped fins and controlled material/contour clusters; independently draw the species.",
+        "reference_limit": "Vanilla cod/salmon are edible item silhouettes; Aqua whole catches are non-edible and biologically varied.",
+        "native_view": "Actual original 16x16 sprites inspected in a 3x nearest-neighbor sheet; reference PNG viewed at native size. Client not run.",
+        "context_view": "Six by six icon-family comparison on inventory-like dark neutral cells; generated item model references the exact local PNG.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/item/raw_catfish.png": {
+      "sha256": "59dc112daae693a48b4c9ad55b3005f2fd4be313cdcf23480395b8662dc27680",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/cod",
+          "minecraft": "1.21.1",
+          "sha256": "5a4cddbf3f573fb1d63b0d9cbc3c5166287a07ad8f4cf84ac44c83ce28cf5911"
+        }
+      ],
+      "comparison": "Unlike the reference's stronger diagonal compact fish, catfish uses a broad head with projecting barbels with irregular connected upper and mid-flank patches and low dorsal; same 16-pixel sprite role. Original pixel clusters, not reused vanilla pixels.",
+      "findings": {
+        "silhouette": "broad head with projecting barbels readable in the six-by-six icon sheet.",
+        "cluster_structure": "irregular connected upper and mid-flank patches concentrated on the body rather than random noise.",
+        "micro_contrast": "Back #505e59 against mid-flank #79867a; darker eye is confined to the head.",
+        "light_and_volume": "Upper contour darker, broad middle plane turns into lighter belly #b7bca2; localized contrast rather than full black outline.",
+        "material_continuity": "Body uses linked back and flank ramps; fin #5b6d60 has its own restrained shadow and highlight.",
+        "edge_variation": "low dorsal breaks the upper silhouette; taper and tail have discrete stepped edges.",
+        "variant_identity": "catfish: irregular connected upper and mid-flank patches paired with broad head with projecting barbels distinguishes this icon in the group.",
+        "vanilla_comparison": "Reference minecraft:item/cod is a compact angled 16x16 whole-fish icon; ours retains transparent background and deliberate small clusters, with a shallower diagonal.",
+        "functional_material_cues": "Eye, gill region, caudal and dorsal/anal structures read as a whole raw fish rather than a fillet or a meat slab."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The branch atlas has food rules for bread/apple, not fish anatomy or whole non-edible catches. Actual same-version cod/salmon item icons are the closer comparator.",
+        "reference_source": "Actual version-pinned misode/mcmeta 1.21.1-assets item PNGs viewed and SHA-256 computed; official client SHA-1 not independently checked.",
+        "applied_pattern": "Preserve a recognizable small angled body, stepped fins and controlled material/contour clusters; independently draw the species.",
+        "reference_limit": "Vanilla cod/salmon are edible item silhouettes; Aqua whole catches are non-edible and biologically varied.",
+        "native_view": "Actual original 16x16 sprites inspected in a 3x nearest-neighbor sheet; reference PNG viewed at native size. Client not run.",
+        "context_view": "Six by six icon-family comparison on inventory-like dark neutral cells; generated item model references the exact local PNG.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/item/raw_tench.png": {
+      "sha256": "4249c33ad412dbda7ed80d59f02e8437f71fffc1b0d837a300524cd09749b144",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/cod",
+          "minecraft": "1.21.1",
+          "sha256": "5a4cddbf3f573fb1d63b0d9cbc3c5166287a07ad8f4cf84ac44c83ce28cf5911"
+        }
+      ],
+      "comparison": "Unlike the reference's stronger diagonal compact fish, tench uses a deep-bodied profile with clear shoulders with continuous subdued lateral stripe and low dorsal; same 16-pixel sprite role. Original pixel clusters, not reused vanilla pixels.",
+      "findings": {
+        "silhouette": "deep-bodied profile with clear shoulders readable in the six-by-six icon sheet.",
+        "cluster_structure": "continuous subdued lateral stripe concentrated on the body rather than random noise.",
+        "micro_contrast": "Back #53673a against mid-flank #879454; darker eye is confined to the head.",
+        "light_and_volume": "Upper contour darker, broad middle plane turns into lighter belly #bdbe81; localized contrast rather than full black outline.",
+        "material_continuity": "Body uses linked back and flank ramps; fin #59693f has its own restrained shadow and highlight.",
+        "edge_variation": "low dorsal breaks the upper silhouette; taper and tail have discrete stepped edges.",
+        "variant_identity": "tench: continuous subdued lateral stripe paired with deep-bodied profile with clear shoulders distinguishes this icon in the group.",
+        "vanilla_comparison": "Reference minecraft:item/cod is a compact angled 16x16 whole-fish icon; ours retains transparent background and deliberate small clusters, with a shallower diagonal.",
+        "functional_material_cues": "Eye, gill region, caudal and dorsal/anal structures read as a whole raw fish rather than a fillet or a meat slab."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The branch atlas has food rules for bread/apple, not fish anatomy or whole non-edible catches. Actual same-version cod/salmon item icons are the closer comparator.",
+        "reference_source": "Actual version-pinned misode/mcmeta 1.21.1-assets item PNGs viewed and SHA-256 computed; official client SHA-1 not independently checked.",
+        "applied_pattern": "Preserve a recognizable small angled body, stepped fins and controlled material/contour clusters; independently draw the species.",
+        "reference_limit": "Vanilla cod/salmon are edible item silhouettes; Aqua whole catches are non-edible and biologically varied.",
+        "native_view": "Actual original 16x16 sprites inspected in a 3x nearest-neighbor sheet; reference PNG viewed at native size. Client not run.",
+        "context_view": "Six by six icon-family comparison on inventory-like dark neutral cells; generated item model references the exact local PNG.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/item/raw_loach.png": {
+      "sha256": "e6cf5a2394e940c2369ed5df158f80676bea3d2ee0511213ad21a0624dbdee1e",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/cod",
+          "minecraft": "1.21.1",
+          "sha256": "5a4cddbf3f573fb1d63b0d9cbc3c5166287a07ad8f4cf84ac44c83ce28cf5911"
+        }
+      ],
+      "comparison": "Unlike the reference's stronger diagonal compact fish, loach uses a long taper and small rounded tail with small dark flank spots and low dorsal; same 16-pixel sprite role. Original pixel clusters, not reused vanilla pixels.",
+      "findings": {
+        "silhouette": "long taper and small rounded tail readable in the six-by-six icon sheet.",
+        "cluster_structure": "small dark flank spots concentrated on the body rather than random noise.",
+        "micro_contrast": "Back #8e7850 against mid-flank #c8ae7a; darker eye is confined to the head.",
+        "light_and_volume": "Upper contour darker, broad middle plane turns into lighter belly #e3d3a8; localized contrast rather than full black outline.",
+        "material_continuity": "Body uses linked back and flank ramps; fin #92825d has its own restrained shadow and highlight.",
+        "edge_variation": "low dorsal breaks the upper silhouette; taper and tail have discrete stepped edges.",
+        "variant_identity": "loach: small dark flank spots paired with long taper and small rounded tail distinguishes this icon in the group.",
+        "vanilla_comparison": "Reference minecraft:item/cod is a compact angled 16x16 whole-fish icon; ours retains transparent background and deliberate small clusters, with a shallower diagonal.",
+        "functional_material_cues": "Eye, gill region, caudal and dorsal/anal structures read as a whole raw fish rather than a fillet or a meat slab."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The branch atlas has food rules for bread/apple, not fish anatomy or whole non-edible catches. Actual same-version cod/salmon item icons are the closer comparator.",
+        "reference_source": "Actual version-pinned misode/mcmeta 1.21.1-assets item PNGs viewed and SHA-256 computed; official client SHA-1 not independently checked.",
+        "applied_pattern": "Preserve a recognizable small angled body, stepped fins and controlled material/contour clusters; independently draw the species.",
+        "reference_limit": "Vanilla cod/salmon are edible item silhouettes; Aqua whole catches are non-edible and biologically varied.",
+        "native_view": "Actual original 16x16 sprites inspected in a 3x nearest-neighbor sheet; reference PNG viewed at native size. Client not run.",
+        "context_view": "Six by six icon-family comparison on inventory-like dark neutral cells; generated item model references the exact local PNG.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/item/raw_rotan.png": {
+      "sha256": "b662a81f3bff49d51bed742c11d6b4a8744ba576948b59a4a281c30b6b6c7491",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/cod",
+          "minecraft": "1.21.1",
+          "sha256": "5a4cddbf3f573fb1d63b0d9cbc3c5166287a07ad8f4cf84ac44c83ce28cf5911"
+        }
+      ],
+      "comparison": "Unlike the reference's stronger diagonal compact fish, rotan uses a short broad head and compact thick body with irregular connected upper and mid-flank patches and two distinct dorsal groups; same 16-pixel sprite role. Original pixel clusters, not reused vanilla pixels.",
+      "findings": {
+        "silhouette": "short broad head and compact thick body readable in the six-by-six icon sheet.",
+        "cluster_structure": "irregular connected upper and mid-flank patches concentrated on the body rather than random noise.",
+        "micro_contrast": "Back #514e34 against mid-flank #827953; darker eye is confined to the head.",
+        "light_and_volume": "Upper contour darker, broad middle plane turns into lighter belly #b3a480; localized contrast rather than full black outline.",
+        "material_continuity": "Body uses linked back and flank ramps; fin #756548 has its own restrained shadow and highlight.",
+        "edge_variation": "two distinct dorsal groups breaks the upper silhouette; taper and tail have discrete stepped edges.",
+        "variant_identity": "rotan: irregular connected upper and mid-flank patches paired with short broad head and compact thick body distinguishes this icon in the group.",
+        "vanilla_comparison": "Reference minecraft:item/cod is a compact angled 16x16 whole-fish icon; ours retains transparent background and deliberate small clusters, with a shallower diagonal.",
+        "functional_material_cues": "Eye, gill region, caudal and dorsal/anal structures read as a whole raw fish rather than a fillet or a meat slab."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The branch atlas has food rules for bread/apple, not fish anatomy or whole non-edible catches. Actual same-version cod/salmon item icons are the closer comparator.",
+        "reference_source": "Actual version-pinned misode/mcmeta 1.21.1-assets item PNGs viewed and SHA-256 computed; official client SHA-1 not independently checked.",
+        "applied_pattern": "Preserve a recognizable small angled body, stepped fins and controlled material/contour clusters; independently draw the species.",
+        "reference_limit": "Vanilla cod/salmon are edible item silhouettes; Aqua whole catches are non-edible and biologically varied.",
+        "native_view": "Actual original 16x16 sprites inspected in a 3x nearest-neighbor sheet; reference PNG viewed at native size. Client not run.",
+        "context_view": "Six by six icon-family comparison on inventory-like dark neutral cells; generated item model references the exact local PNG.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/item/raw_rudd.png": {
+      "sha256": "1a62700d429f6cea293a962998aa54f9a41e6c7ab479a5aa237e31659e2e5a9e",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/cod",
+          "minecraft": "1.21.1",
+          "sha256": "5a4cddbf3f573fb1d63b0d9cbc3c5166287a07ad8f4cf84ac44c83ce28cf5911"
+        }
+      ],
+      "comparison": "Unlike the reference's stronger diagonal compact fish, rudd uses a deep-bodied profile with clear shoulders with continuous subdued lateral stripe and short central dorsal; same 16-pixel sprite role. Original pixel clusters, not reused vanilla pixels.",
+      "findings": {
+        "silhouette": "deep-bodied profile with clear shoulders readable in the six-by-six icon sheet.",
+        "cluster_structure": "continuous subdued lateral stripe concentrated on the body rather than random noise.",
+        "micro_contrast": "Back #8e783e against mid-flank #d1b26c; darker eye is confined to the head.",
+        "light_and_volume": "Upper contour darker, broad middle plane turns into lighter belly #f0d7a0; localized contrast rather than full black outline.",
+        "material_continuity": "Body uses linked back and flank ramps; fin #bd4230 has its own restrained shadow and highlight.",
+        "edge_variation": "short central dorsal breaks the upper silhouette; taper and tail have discrete stepped edges.",
+        "variant_identity": "rudd: continuous subdued lateral stripe paired with deep-bodied profile with clear shoulders distinguishes this icon in the group.",
+        "vanilla_comparison": "Reference minecraft:item/cod is a compact angled 16x16 whole-fish icon; ours retains transparent background and deliberate small clusters, with a shallower diagonal.",
+        "functional_material_cues": "Eye, gill region, caudal and dorsal/anal structures read as a whole raw fish rather than a fillet or a meat slab."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The branch atlas has food rules for bread/apple, not fish anatomy or whole non-edible catches. Actual same-version cod/salmon item icons are the closer comparator.",
+        "reference_source": "Actual version-pinned misode/mcmeta 1.21.1-assets item PNGs viewed and SHA-256 computed; official client SHA-1 not independently checked.",
+        "applied_pattern": "Preserve a recognizable small angled body, stepped fins and controlled material/contour clusters; independently draw the species.",
+        "reference_limit": "Vanilla cod/salmon are edible item silhouettes; Aqua whole catches are non-edible and biologically varied.",
+        "native_view": "Actual original 16x16 sprites inspected in a 3x nearest-neighbor sheet; reference PNG viewed at native size. Client not run.",
+        "context_view": "Six by six icon-family comparison on inventory-like dark neutral cells; generated item model references the exact local PNG.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/item/raw_bowfin.png": {
+      "sha256": "88af515b8b139a8afb5a1e1cb8df2f65fc2100c72fa97d316abcf42b1b1e82c7",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/cod",
+          "minecraft": "1.21.1",
+          "sha256": "5a4cddbf3f573fb1d63b0d9cbc3c5166287a07ad8f4cf84ac44c83ce28cf5911"
+        }
+      ],
+      "comparison": "Unlike the reference's stronger diagonal compact fish, bowfin uses a elongated narrow taper with extended head with dark near-tail mark and long dorsal edge; same 16-pixel sprite role. Original pixel clusters, not reused vanilla pixels.",
+      "findings": {
+        "silhouette": "elongated narrow taper with extended head readable in the six-by-six icon sheet.",
+        "cluster_structure": "dark near-tail mark concentrated on the body rather than random noise.",
+        "micro_contrast": "Back #526745 against mid-flank #82935b; darker eye is confined to the head.",
+        "light_and_volume": "Upper contour darker, broad middle plane turns into lighter belly #bcc18b; localized contrast rather than full black outline.",
+        "material_continuity": "Body uses linked back and flank ramps; fin #798757 has its own restrained shadow and highlight.",
+        "edge_variation": "long dorsal edge breaks the upper silhouette; taper and tail have discrete stepped edges.",
+        "variant_identity": "bowfin: dark near-tail mark paired with elongated narrow taper with extended head distinguishes this icon in the group.",
+        "vanilla_comparison": "Reference minecraft:item/cod is a compact angled 16x16 whole-fish icon; ours retains transparent background and deliberate small clusters, with a shallower diagonal.",
+        "functional_material_cues": "Eye, gill region, caudal and dorsal/anal structures read as a whole raw fish rather than a fillet or a meat slab."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The branch atlas has food rules for bread/apple, not fish anatomy or whole non-edible catches. Actual same-version cod/salmon item icons are the closer comparator.",
+        "reference_source": "Actual version-pinned misode/mcmeta 1.21.1-assets item PNGs viewed and SHA-256 computed; official client SHA-1 not independently checked.",
+        "applied_pattern": "Preserve a recognizable small angled body, stepped fins and controlled material/contour clusters; independently draw the species.",
+        "reference_limit": "Vanilla cod/salmon are edible item silhouettes; Aqua whole catches are non-edible and biologically varied.",
+        "native_view": "Actual original 16x16 sprites inspected in a 3x nearest-neighbor sheet; reference PNG viewed at native size. Client not run.",
+        "context_view": "Six by six icon-family comparison on inventory-like dark neutral cells; generated item model references the exact local PNG.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/item/raw_piranha.png": {
+      "sha256": "cc4239b59e323cecee75ac72b95a991013549481a7bc883ed968d2bc956f5db8",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/cod",
+          "minecraft": "1.21.1",
+          "sha256": "5a4cddbf3f573fb1d63b0d9cbc3c5166287a07ad8f4cf84ac44c83ce28cf5911"
+        }
+      ],
+      "comparison": "Unlike the reference's stronger diagonal compact fish, piranha uses a rounded deep flank and narrow caudal peduncle with colored belly band and short central dorsal; same 16-pixel sprite role. Original pixel clusters, not reused vanilla pixels.",
+      "findings": {
+        "silhouette": "rounded deep flank and narrow caudal peduncle readable in the six-by-six icon sheet.",
+        "cluster_structure": "colored belly band concentrated on the body rather than random noise.",
+        "micro_contrast": "Back #777c7d against mid-flank #b8b6a8; darker eye is confined to the head.",
+        "light_and_volume": "Upper contour darker, broad middle plane turns into lighter belly #d16a44; localized contrast rather than full black outline.",
+        "material_continuity": "Body uses linked back and flank ramps; fin #9b5039 has its own restrained shadow and highlight.",
+        "edge_variation": "short central dorsal breaks the upper silhouette; taper and tail have discrete stepped edges.",
+        "variant_identity": "piranha: colored belly band paired with rounded deep flank and narrow caudal peduncle distinguishes this icon in the group.",
+        "vanilla_comparison": "Reference minecraft:item/cod is a compact angled 16x16 whole-fish icon; ours retains transparent background and deliberate small clusters, with a shallower diagonal.",
+        "functional_material_cues": "Eye, gill region, caudal and dorsal/anal structures read as a whole raw fish rather than a fillet or a meat slab."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The branch atlas has food rules for bread/apple, not fish anatomy or whole non-edible catches. Actual same-version cod/salmon item icons are the closer comparator.",
+        "reference_source": "Actual version-pinned misode/mcmeta 1.21.1-assets item PNGs viewed and SHA-256 computed; official client SHA-1 not independently checked.",
+        "applied_pattern": "Preserve a recognizable small angled body, stepped fins and controlled material/contour clusters; independently draw the species.",
+        "reference_limit": "Vanilla cod/salmon are edible item silhouettes; Aqua whole catches are non-edible and biologically varied.",
+        "native_view": "Actual original 16x16 sprites inspected in a 3x nearest-neighbor sheet; reference PNG viewed at native size. Client not run.",
+        "context_view": "Six by six icon-family comparison on inventory-like dark neutral cells; generated item model references the exact local PNG.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/item/raw_arapaima.png": {
+      "sha256": "65ba25765545bcad95a80b29ebe3d88a013115fc12674b058ec9bbbc747c6e67",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/cod",
+          "minecraft": "1.21.1",
+          "sha256": "5a4cddbf3f573fb1d63b0d9cbc3c5166287a07ad8f4cf84ac44c83ce28cf5911"
+        }
+      ],
+      "comparison": "Unlike the reference's stronger diagonal compact fish, arapaima uses a elongated narrow taper with extended head with red-toned posterior lower flank and small rear-set dorsal; same 16-pixel sprite role. Original pixel clusters, not reused vanilla pixels.",
+      "findings": {
+        "silhouette": "elongated narrow taper with extended head readable in the six-by-six icon sheet.",
+        "cluster_structure": "red-toned posterior lower flank concentrated on the body rather than random noise.",
+        "micro_contrast": "Back #465b55 against mid-flank #819186; darker eye is confined to the head.",
+        "light_and_volume": "Upper contour darker, broad middle plane turns into lighter belly #b9b8a2; localized contrast rather than full black outline.",
+        "material_continuity": "Body uses linked back and flank ramps; fin #ac4c3f has its own restrained shadow and highlight.",
+        "edge_variation": "small rear-set dorsal breaks the upper silhouette; taper and tail have discrete stepped edges.",
+        "variant_identity": "arapaima: red-toned posterior lower flank paired with elongated narrow taper with extended head distinguishes this icon in the group.",
+        "vanilla_comparison": "Reference minecraft:item/cod is a compact angled 16x16 whole-fish icon; ours retains transparent background and deliberate small clusters, with a shallower diagonal.",
+        "functional_material_cues": "Eye, gill region, caudal and dorsal/anal structures read as a whole raw fish rather than a fillet or a meat slab."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The branch atlas has food rules for bread/apple, not fish anatomy or whole non-edible catches. Actual same-version cod/salmon item icons are the closer comparator.",
+        "reference_source": "Actual version-pinned misode/mcmeta 1.21.1-assets item PNGs viewed and SHA-256 computed; official client SHA-1 not independently checked.",
+        "applied_pattern": "Preserve a recognizable small angled body, stepped fins and controlled material/contour clusters; independently draw the species.",
+        "reference_limit": "Vanilla cod/salmon are edible item silhouettes; Aqua whole catches are non-edible and biologically varied.",
+        "native_view": "Actual original 16x16 sprites inspected in a 3x nearest-neighbor sheet; reference PNG viewed at native size. Client not run.",
+        "context_view": "Six by six icon-family comparison on inventory-like dark neutral cells; generated item model references the exact local PNG.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/item/raw_tilapia.png": {
+      "sha256": "b686effe1bf8d818359567ead2a1e6ec06cbdfa4b2c8e72f555ef85d51b7eafe",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/cod",
+          "minecraft": "1.21.1",
+          "sha256": "5a4cddbf3f573fb1d63b0d9cbc3c5166287a07ad8f4cf84ac44c83ce28cf5911"
+        }
+      ],
+      "comparison": "Unlike the reference's stronger diagonal compact fish, tilapia uses a deep-bodied profile with clear shoulders with dark vertical marks on the upper flank and long dorsal edge; same 16-pixel sprite role. Original pixel clusters, not reused vanilla pixels.",
+      "findings": {
+        "silhouette": "deep-bodied profile with clear shoulders readable in the six-by-six icon sheet.",
+        "cluster_structure": "dark vertical marks on the upper flank concentrated on the body rather than random noise.",
+        "micro_contrast": "Back #536f70 against mid-flank #95a6a6; darker eye is confined to the head.",
+        "light_and_volume": "Upper contour darker, broad middle plane turns into lighter belly #c9d1c7; localized contrast rather than full black outline.",
+        "material_continuity": "Body uses linked back and flank ramps; fin #738789 has its own restrained shadow and highlight.",
+        "edge_variation": "long dorsal edge breaks the upper silhouette; taper and tail have discrete stepped edges.",
+        "variant_identity": "tilapia: dark vertical marks on the upper flank paired with deep-bodied profile with clear shoulders distinguishes this icon in the group.",
+        "vanilla_comparison": "Reference minecraft:item/cod is a compact angled 16x16 whole-fish icon; ours retains transparent background and deliberate small clusters, with a shallower diagonal.",
+        "functional_material_cues": "Eye, gill region, caudal and dorsal/anal structures read as a whole raw fish rather than a fillet or a meat slab."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The branch atlas has food rules for bread/apple, not fish anatomy or whole non-edible catches. Actual same-version cod/salmon item icons are the closer comparator.",
+        "reference_source": "Actual version-pinned misode/mcmeta 1.21.1-assets item PNGs viewed and SHA-256 computed; official client SHA-1 not independently checked.",
+        "applied_pattern": "Preserve a recognizable small angled body, stepped fins and controlled material/contour clusters; independently draw the species.",
+        "reference_limit": "Vanilla cod/salmon are edible item silhouettes; Aqua whole catches are non-edible and biologically varied.",
+        "native_view": "Actual original 16x16 sprites inspected in a 3x nearest-neighbor sheet; reference PNG viewed at native size. Client not run.",
+        "context_view": "Six by six icon-family comparison on inventory-like dark neutral cells; generated item model references the exact local PNG.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/item/raw_pacu.png": {
+      "sha256": "b4e9c5ac460118c2c03a489a98fdf7d815ab61c0736775aea99737644eafd92c",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/cod",
+          "minecraft": "1.21.1",
+          "sha256": "5a4cddbf3f573fb1d63b0d9cbc3c5166287a07ad8f4cf84ac44c83ce28cf5911"
+        }
+      ],
+      "comparison": "Unlike the reference's stronger diagonal compact fish, pacu uses a rounded deep flank and narrow caudal peduncle with colored belly band and short central dorsal; same 16-pixel sprite role. Original pixel clusters, not reused vanilla pixels.",
+      "findings": {
+        "silhouette": "rounded deep flank and narrow caudal peduncle readable in the six-by-six icon sheet.",
+        "cluster_structure": "colored belly band concentrated on the body rather than random noise.",
+        "micro_contrast": "Back #6b6462 against mid-flank #a99b8d; darker eye is confined to the head.",
+        "light_and_volume": "Upper contour darker, broad middle plane turns into lighter belly #d2bca6; localized contrast rather than full black outline.",
+        "material_continuity": "Body uses linked back and flank ramps; fin #534747 has its own restrained shadow and highlight.",
+        "edge_variation": "short central dorsal breaks the upper silhouette; taper and tail have discrete stepped edges.",
+        "variant_identity": "pacu: colored belly band paired with rounded deep flank and narrow caudal peduncle distinguishes this icon in the group.",
+        "vanilla_comparison": "Reference minecraft:item/cod is a compact angled 16x16 whole-fish icon; ours retains transparent background and deliberate small clusters, with a shallower diagonal.",
+        "functional_material_cues": "Eye, gill region, caudal and dorsal/anal structures read as a whole raw fish rather than a fillet or a meat slab."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The branch atlas has food rules for bread/apple, not fish anatomy or whole non-edible catches. Actual same-version cod/salmon item icons are the closer comparator.",
+        "reference_source": "Actual version-pinned misode/mcmeta 1.21.1-assets item PNGs viewed and SHA-256 computed; official client SHA-1 not independently checked.",
+        "applied_pattern": "Preserve a recognizable small angled body, stepped fins and controlled material/contour clusters; independently draw the species.",
+        "reference_limit": "Vanilla cod/salmon are edible item silhouettes; Aqua whole catches are non-edible and biologically varied.",
+        "native_view": "Actual original 16x16 sprites inspected in a 3x nearest-neighbor sheet; reference PNG viewed at native size. Client not run.",
+        "context_view": "Six by six icon-family comparison on inventory-like dark neutral cells; generated item model references the exact local PNG.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/item/raw_snakehead.png": {
+      "sha256": "a9993b4fe5ae81debe37e47f7a1cf45147c2f4bfa84098984e720156db87b672",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/cod",
+          "minecraft": "1.21.1",
+          "sha256": "5a4cddbf3f573fb1d63b0d9cbc3c5166287a07ad8f4cf84ac44c83ce28cf5911"
+        }
+      ],
+      "comparison": "Unlike the reference's stronger diagonal compact fish, snakehead uses a elongated narrow taper with extended head with irregular connected upper and mid-flank patches and long dorsal edge; same 16-pixel sprite role. Original pixel clusters, not reused vanilla pixels.",
+      "findings": {
+        "silhouette": "elongated narrow taper with extended head readable in the six-by-six icon sheet.",
+        "cluster_structure": "irregular connected upper and mid-flank patches concentrated on the body rather than random noise.",
+        "micro_contrast": "Back #60503b against mid-flank #9c825d; darker eye is confined to the head.",
+        "light_and_volume": "Upper contour darker, broad middle plane turns into lighter belly #d2b98d; localized contrast rather than full black outline.",
+        "material_continuity": "Body uses linked back and flank ramps; fin #887455 has its own restrained shadow and highlight.",
+        "edge_variation": "long dorsal edge breaks the upper silhouette; taper and tail have discrete stepped edges.",
+        "variant_identity": "snakehead: irregular connected upper and mid-flank patches paired with elongated narrow taper with extended head distinguishes this icon in the group.",
+        "vanilla_comparison": "Reference minecraft:item/cod is a compact angled 16x16 whole-fish icon; ours retains transparent background and deliberate small clusters, with a shallower diagonal.",
+        "functional_material_cues": "Eye, gill region, caudal and dorsal/anal structures read as a whole raw fish rather than a fillet or a meat slab."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The branch atlas has food rules for bread/apple, not fish anatomy or whole non-edible catches. Actual same-version cod/salmon item icons are the closer comparator.",
+        "reference_source": "Actual version-pinned misode/mcmeta 1.21.1-assets item PNGs viewed and SHA-256 computed; official client SHA-1 not independently checked.",
+        "applied_pattern": "Preserve a recognizable small angled body, stepped fins and controlled material/contour clusters; independently draw the species.",
+        "reference_limit": "Vanilla cod/salmon are edible item silhouettes; Aqua whole catches are non-edible and biologically varied.",
+        "native_view": "Actual original 16x16 sprites inspected in a 3x nearest-neighbor sheet; reference PNG viewed at native size. Client not run.",
+        "context_view": "Six by six icon-family comparison on inventory-like dark neutral cells; generated item model references the exact local PNG.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/item/raw_electric_eel.png": {
+      "sha256": "c6ba0689b865d81cb742398eb34a603dde4e6e4d261739fbd5729763c02cd3b2",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/cod",
+          "minecraft": "1.21.1",
+          "sha256": "5a4cddbf3f573fb1d63b0d9cbc3c5166287a07ad8f4cf84ac44c83ce28cf5911"
+        }
+      ],
+      "comparison": "Unlike the reference's stronger diagonal compact fish, electric_eel uses a thin ribbon body and extended anal edge with continuous subdued lateral stripe and long low anal edge rather than a dorsal fin; same 16-pixel sprite role. Original pixel clusters, not reused vanilla pixels.",
+      "findings": {
+        "silhouette": "thin ribbon body and extended anal edge readable in the six-by-six icon sheet.",
+        "cluster_structure": "continuous subdued lateral stripe concentrated on the body rather than random noise.",
+        "micro_contrast": "Back #635d47 against mid-flank #9a8d70; darker eye is confined to the head.",
+        "light_and_volume": "Upper contour darker, broad middle plane turns into lighter belly #c4b090; localized contrast rather than full black outline.",
+        "material_continuity": "Body uses linked back and flank ramps; fin #847256 has its own restrained shadow and highlight.",
+        "edge_variation": "long low anal edge rather than a dorsal fin breaks the upper silhouette; taper and tail have discrete stepped edges.",
+        "variant_identity": "electric_eel: continuous subdued lateral stripe paired with thin ribbon body and extended anal edge distinguishes this icon in the group.",
+        "vanilla_comparison": "Reference minecraft:item/cod is a compact angled 16x16 whole-fish icon; ours retains transparent background and deliberate small clusters, with a shallower diagonal.",
+        "functional_material_cues": "Eye, gill region, caudal and dorsal/anal structures read as a whole raw fish rather than a fillet or a meat slab."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The branch atlas has food rules for bread/apple, not fish anatomy or whole non-edible catches. Actual same-version cod/salmon item icons are the closer comparator.",
+        "reference_source": "Actual version-pinned misode/mcmeta 1.21.1-assets item PNGs viewed and SHA-256 computed; official client SHA-1 not independently checked.",
+        "applied_pattern": "Preserve a recognizable small angled body, stepped fins and controlled material/contour clusters; independently draw the species.",
+        "reference_limit": "Vanilla cod/salmon are edible item silhouettes; Aqua whole catches are non-edible and biologically varied.",
+        "native_view": "Actual original 16x16 sprites inspected in a 3x nearest-neighbor sheet; reference PNG viewed at native size. Client not run.",
+        "context_view": "Six by six icon-family comparison on inventory-like dark neutral cells; generated item model references the exact local PNG.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/item/raw_atlantic_cod.png": {
+      "sha256": "e1d067a040de5bf7d98201f6bf37388be1a9dd89d8a208bfae2378b080b8af64",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/cod",
+          "minecraft": "1.21.1",
+          "sha256": "5a4cddbf3f573fb1d63b0d9cbc3c5166287a07ad8f4cf84ac44c83ce28cf5911"
+        }
+      ],
+      "comparison": "Unlike the reference's stronger diagonal compact fish, atlantic_cod uses a elongated narrow taper with extended head with small dark flank spots and three distinct dorsal groups; same 16-pixel sprite role. Original pixel clusters, not reused vanilla pixels.",
+      "findings": {
+        "silhouette": "elongated narrow taper with extended head readable in the six-by-six icon sheet.",
+        "cluster_structure": "small dark flank spots concentrated on the body rather than random noise.",
+        "micro_contrast": "Back #7c7853 against mid-flank #b2a57c; darker eye is confined to the head.",
+        "light_and_volume": "Upper contour darker, broad middle plane turns into lighter belly #e2d4b0; localized contrast rather than full black outline.",
+        "material_continuity": "Body uses linked back and flank ramps; fin #8d805e has its own restrained shadow and highlight.",
+        "edge_variation": "three distinct dorsal groups breaks the upper silhouette; taper and tail have discrete stepped edges.",
+        "variant_identity": "atlantic_cod: small dark flank spots paired with elongated narrow taper with extended head distinguishes this icon in the group.",
+        "vanilla_comparison": "Reference minecraft:item/cod is a compact angled 16x16 whole-fish icon; ours retains transparent background and deliberate small clusters, with a shallower diagonal.",
+        "functional_material_cues": "Eye, gill region, caudal and dorsal/anal structures read as a whole raw fish rather than a fillet or a meat slab."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The branch atlas has food rules for bread/apple, not fish anatomy or whole non-edible catches. Actual same-version cod/salmon item icons are the closer comparator.",
+        "reference_source": "Actual version-pinned misode/mcmeta 1.21.1-assets item PNGs viewed and SHA-256 computed; official client SHA-1 not independently checked.",
+        "applied_pattern": "Preserve a recognizable small angled body, stepped fins and controlled material/contour clusters; independently draw the species.",
+        "reference_limit": "Vanilla cod/salmon are edible item silhouettes; Aqua whole catches are non-edible and biologically varied.",
+        "native_view": "Actual original 16x16 sprites inspected in a 3x nearest-neighbor sheet; reference PNG viewed at native size. Client not run.",
+        "context_view": "Six by six icon-family comparison on inventory-like dark neutral cells; generated item model references the exact local PNG.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/item/raw_herring.png": {
+      "sha256": "518a8558622806518b49fb7dc9aa289e2b752ce66546c328ece9f81ed1decbdd",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/cod",
+          "minecraft": "1.21.1",
+          "sha256": "5a4cddbf3f573fb1d63b0d9cbc3c5166287a07ad8f4cf84ac44c83ce28cf5911"
+        }
+      ],
+      "comparison": "Unlike the reference's stronger diagonal compact fish, herring uses a streamlined narrow silverfish-like profile with continuous subdued lateral stripe and short central dorsal; same 16-pixel sprite role. Original pixel clusters, not reused vanilla pixels.",
+      "findings": {
+        "silhouette": "streamlined narrow silverfish-like profile readable in the six-by-six icon sheet.",
+        "cluster_structure": "continuous subdued lateral stripe concentrated on the body rather than random noise.",
+        "micro_contrast": "Back #46677d against mid-flank #b5c6d3; darker eye is confined to the head.",
+        "light_and_volume": "Upper contour darker, broad middle plane turns into lighter belly #edf0e4; localized contrast rather than full black outline.",
+        "material_continuity": "Body uses linked back and flank ramps; fin #7c95a6 has its own restrained shadow and highlight.",
+        "edge_variation": "short central dorsal breaks the upper silhouette; taper and tail have discrete stepped edges.",
+        "variant_identity": "herring: continuous subdued lateral stripe paired with streamlined narrow silverfish-like profile distinguishes this icon in the group.",
+        "vanilla_comparison": "Reference minecraft:item/cod is a compact angled 16x16 whole-fish icon; ours retains transparent background and deliberate small clusters, with a shallower diagonal.",
+        "functional_material_cues": "Eye, gill region, caudal and dorsal/anal structures read as a whole raw fish rather than a fillet or a meat slab."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The branch atlas has food rules for bread/apple, not fish anatomy or whole non-edible catches. Actual same-version cod/salmon item icons are the closer comparator.",
+        "reference_source": "Actual version-pinned misode/mcmeta 1.21.1-assets item PNGs viewed and SHA-256 computed; official client SHA-1 not independently checked.",
+        "applied_pattern": "Preserve a recognizable small angled body, stepped fins and controlled material/contour clusters; independently draw the species.",
+        "reference_limit": "Vanilla cod/salmon are edible item silhouettes; Aqua whole catches are non-edible and biologically varied.",
+        "native_view": "Actual original 16x16 sprites inspected in a 3x nearest-neighbor sheet; reference PNG viewed at native size. Client not run.",
+        "context_view": "Six by six icon-family comparison on inventory-like dark neutral cells; generated item model references the exact local PNG.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/item/raw_mackerel.png": {
+      "sha256": "63a5271a153c47d2cadafb60a939c13b33478f6ea85885b7725f07ff9180a87a",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/cod",
+          "minecraft": "1.21.1",
+          "sha256": "5a4cddbf3f573fb1d63b0d9cbc3c5166287a07ad8f4cf84ac44c83ce28cf5911"
+        }
+      ],
+      "comparison": "Unlike the reference's stronger diagonal compact fish, mackerel uses a streamlined narrow silverfish-like profile with dark upper-back marks and two distinct dorsal groups; same 16-pixel sprite role. Original pixel clusters, not reused vanilla pixels.",
+      "findings": {
+        "silhouette": "streamlined narrow silverfish-like profile readable in the six-by-six icon sheet.",
+        "cluster_structure": "dark upper-back marks concentrated on the body rather than random noise.",
+        "micro_contrast": "Back #35696c against mid-flank #76acb4; darker eye is confined to the head.",
+        "light_and_volume": "Upper contour darker, broad middle plane turns into lighter belly #d4e5e0; localized contrast rather than full black outline.",
+        "material_continuity": "Body uses linked back and flank ramps; fin #547f87 has its own restrained shadow and highlight.",
+        "edge_variation": "two distinct dorsal groups breaks the upper silhouette; taper and tail have discrete stepped edges.",
+        "variant_identity": "mackerel: dark upper-back marks paired with streamlined narrow silverfish-like profile distinguishes this icon in the group.",
+        "vanilla_comparison": "Reference minecraft:item/cod is a compact angled 16x16 whole-fish icon; ours retains transparent background and deliberate small clusters, with a shallower diagonal.",
+        "functional_material_cues": "Eye, gill region, caudal and dorsal/anal structures read as a whole raw fish rather than a fillet or a meat slab."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The branch atlas has food rules for bread/apple, not fish anatomy or whole non-edible catches. Actual same-version cod/salmon item icons are the closer comparator.",
+        "reference_source": "Actual version-pinned misode/mcmeta 1.21.1-assets item PNGs viewed and SHA-256 computed; official client SHA-1 not independently checked.",
+        "applied_pattern": "Preserve a recognizable small angled body, stepped fins and controlled material/contour clusters; independently draw the species.",
+        "reference_limit": "Vanilla cod/salmon are edible item silhouettes; Aqua whole catches are non-edible and biologically varied.",
+        "native_view": "Actual original 16x16 sprites inspected in a 3x nearest-neighbor sheet; reference PNG viewed at native size. Client not run.",
+        "context_view": "Six by six icon-family comparison on inventory-like dark neutral cells; generated item model references the exact local PNG.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/item/raw_halibut.png": {
+      "sha256": "eb5281a022b879c005c9ff9a8ff4c01efee3d293d2807e63ef459fb63b99fcf4",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/cod",
+          "minecraft": "1.21.1",
+          "sha256": "5a4cddbf3f573fb1d63b0d9cbc3c5166287a07ad8f4cf84ac44c83ce28cf5911"
+        }
+      ],
+      "comparison": "Unlike the reference's stronger diagonal compact fish, halibut uses a flattened oval with two upper-side eyes with irregular connected upper and mid-flank patches and continuous peripheral fin edge; same 16-pixel sprite role. Original pixel clusters, not reused vanilla pixels.",
+      "findings": {
+        "silhouette": "flattened oval with two upper-side eyes readable in the six-by-six icon sheet.",
+        "cluster_structure": "irregular connected upper and mid-flank patches concentrated on the body rather than random noise.",
+        "micro_contrast": "Back #73614e against mid-flank #a08b72; darker eye is confined to the head.",
+        "light_and_volume": "Upper contour darker, broad middle plane turns into lighter belly #d4c3a6; localized contrast rather than full black outline.",
+        "material_continuity": "Body uses linked back and flank ramps; fin #88715c has its own restrained shadow and highlight.",
+        "edge_variation": "continuous peripheral fin edge breaks the upper silhouette; taper and tail have discrete stepped edges.",
+        "variant_identity": "halibut: irregular connected upper and mid-flank patches paired with flattened oval with two upper-side eyes distinguishes this icon in the group.",
+        "vanilla_comparison": "Reference minecraft:item/cod is a compact angled 16x16 whole-fish icon; ours retains transparent background and deliberate small clusters, with a shallower diagonal.",
+        "functional_material_cues": "Eye, gill region, caudal and dorsal/anal structures read as a whole raw fish rather than a fillet or a meat slab."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The branch atlas has food rules for bread/apple, not fish anatomy or whole non-edible catches. Actual same-version cod/salmon item icons are the closer comparator.",
+        "reference_source": "Actual version-pinned misode/mcmeta 1.21.1-assets item PNGs viewed and SHA-256 computed; official client SHA-1 not independently checked.",
+        "applied_pattern": "Preserve a recognizable small angled body, stepped fins and controlled material/contour clusters; independently draw the species.",
+        "reference_limit": "Vanilla cod/salmon are edible item silhouettes; Aqua whole catches are non-edible and biologically varied.",
+        "native_view": "Actual original 16x16 sprites inspected in a 3x nearest-neighbor sheet; reference PNG viewed at native size. Client not run.",
+        "context_view": "Six by six icon-family comparison on inventory-like dark neutral cells; generated item model references the exact local PNG.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/item/raw_haddock.png": {
+      "sha256": "3b934fa4d50bbce630fddb6486342a25e2a347d93a3001775271080c4e050c1a",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/cod",
+          "minecraft": "1.21.1",
+          "sha256": "5a4cddbf3f573fb1d63b0d9cbc3c5166287a07ad8f4cf84ac44c83ce28cf5911"
+        }
+      ],
+      "comparison": "Unlike the reference's stronger diagonal compact fish, haddock uses a streamlined narrow silverfish-like profile with dark shoulder thumb mark and three distinct dorsal groups; same 16-pixel sprite role. Original pixel clusters, not reused vanilla pixels.",
+      "findings": {
+        "silhouette": "streamlined narrow silverfish-like profile readable in the six-by-six icon sheet.",
+        "cluster_structure": "dark shoulder thumb mark concentrated on the body rather than random noise.",
+        "micro_contrast": "Back #5c6773 against mid-flank #a3a3a8; darker eye is confined to the head.",
+        "light_and_volume": "Upper contour darker, broad middle plane turns into lighter belly #e0d9c7; localized contrast rather than full black outline.",
+        "material_continuity": "Body uses linked back and flank ramps; fin #746e6f has its own restrained shadow and highlight.",
+        "edge_variation": "three distinct dorsal groups breaks the upper silhouette; taper and tail have discrete stepped edges.",
+        "variant_identity": "haddock: dark shoulder thumb mark paired with streamlined narrow silverfish-like profile distinguishes this icon in the group.",
+        "vanilla_comparison": "Reference minecraft:item/cod is a compact angled 16x16 whole-fish icon; ours retains transparent background and deliberate small clusters, with a shallower diagonal.",
+        "functional_material_cues": "Eye, gill region, caudal and dorsal/anal structures read as a whole raw fish rather than a fillet or a meat slab."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The branch atlas has food rules for bread/apple, not fish anatomy or whole non-edible catches. Actual same-version cod/salmon item icons are the closer comparator.",
+        "reference_source": "Actual version-pinned misode/mcmeta 1.21.1-assets item PNGs viewed and SHA-256 computed; official client SHA-1 not independently checked.",
+        "applied_pattern": "Preserve a recognizable small angled body, stepped fins and controlled material/contour clusters; independently draw the species.",
+        "reference_limit": "Vanilla cod/salmon are edible item silhouettes; Aqua whole catches are non-edible and biologically varied.",
+        "native_view": "Actual original 16x16 sprites inspected in a 3x nearest-neighbor sheet; reference PNG viewed at native size. Client not run.",
+        "context_view": "Six by six icon-family comparison on inventory-like dark neutral cells; generated item model references the exact local PNG.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/item/raw_flounder.png": {
+      "sha256": "d9133125ae44edb9abb8ac5f0584b1be00728b642eda76565e28f1e7e2cdb426",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/cod",
+          "minecraft": "1.21.1",
+          "sha256": "5a4cddbf3f573fb1d63b0d9cbc3c5166287a07ad8f4cf84ac44c83ce28cf5911"
+        }
+      ],
+      "comparison": "Unlike the reference's stronger diagonal compact fish, flounder uses a flattened oval with two upper-side eyes with pale spots in the flank and continuous peripheral fin edge; same 16-pixel sprite role. Original pixel clusters, not reused vanilla pixels.",
+      "findings": {
+        "silhouette": "flattened oval with two upper-side eyes readable in the six-by-six icon sheet.",
+        "cluster_structure": "pale spots in the flank concentrated on the body rather than random noise.",
+        "micro_contrast": "Back #8b7959 against mid-flank #b6a582; darker eye is confined to the head.",
+        "light_and_volume": "Upper contour darker, broad middle plane turns into lighter belly #d5c7ac; localized contrast rather than full black outline.",
+        "material_continuity": "Body uses linked back and flank ramps; fin #a08a6b has its own restrained shadow and highlight.",
+        "edge_variation": "continuous peripheral fin edge breaks the upper silhouette; taper and tail have discrete stepped edges.",
+        "variant_identity": "flounder: pale spots in the flank paired with flattened oval with two upper-side eyes distinguishes this icon in the group.",
+        "vanilla_comparison": "Reference minecraft:item/cod is a compact angled 16x16 whole-fish icon; ours retains transparent background and deliberate small clusters, with a shallower diagonal.",
+        "functional_material_cues": "Eye, gill region, caudal and dorsal/anal structures read as a whole raw fish rather than a fillet or a meat slab."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The branch atlas has food rules for bread/apple, not fish anatomy or whole non-edible catches. Actual same-version cod/salmon item icons are the closer comparator.",
+        "reference_source": "Actual version-pinned misode/mcmeta 1.21.1-assets item PNGs viewed and SHA-256 computed; official client SHA-1 not independently checked.",
+        "applied_pattern": "Preserve a recognizable small angled body, stepped fins and controlled material/contour clusters; independently draw the species.",
+        "reference_limit": "Vanilla cod/salmon are edible item silhouettes; Aqua whole catches are non-edible and biologically varied.",
+        "native_view": "Actual original 16x16 sprites inspected in a 3x nearest-neighbor sheet; reference PNG viewed at native size. Client not run.",
+        "context_view": "Six by six icon-family comparison on inventory-like dark neutral cells; generated item model references the exact local PNG.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/item/raw_tuna.png": {
+      "sha256": "660626b3c86be2fdfef7a18e29da414769d8ceb2e618f0f1c59beef5d3ca4832",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/cod",
+          "minecraft": "1.21.1",
+          "sha256": "5a4cddbf3f573fb1d63b0d9cbc3c5166287a07ad8f4cf84ac44c83ce28cf5911"
+        }
+      ],
+      "comparison": "Unlike the reference's stronger diagonal compact fish, tuna uses a fusiform trunk and deeply forked tail with continuous subdued lateral stripe and two distinct dorsal groups; same 16-pixel sprite role. Original pixel clusters, not reused vanilla pixels.",
+      "findings": {
+        "silhouette": "fusiform trunk and deeply forked tail readable in the six-by-six icon sheet.",
+        "cluster_structure": "continuous subdued lateral stripe concentrated on the body rather than random noise.",
+        "micro_contrast": "Back #385d78 against mid-flank #7c9eac; darker eye is confined to the head.",
+        "light_and_volume": "Upper contour darker, broad middle plane turns into lighter belly #c8d6d7; localized contrast rather than full black outline.",
+        "material_continuity": "Body uses linked back and flank ramps; fin #c7a13b has its own restrained shadow and highlight.",
+        "edge_variation": "two distinct dorsal groups breaks the upper silhouette; taper and tail have discrete stepped edges.",
+        "variant_identity": "tuna: continuous subdued lateral stripe paired with fusiform trunk and deeply forked tail distinguishes this icon in the group.",
+        "vanilla_comparison": "Reference minecraft:item/cod is a compact angled 16x16 whole-fish icon; ours retains transparent background and deliberate small clusters, with a shallower diagonal.",
+        "functional_material_cues": "Eye, gill region, caudal and dorsal/anal structures read as a whole raw fish rather than a fillet or a meat slab."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The branch atlas has food rules for bread/apple, not fish anatomy or whole non-edible catches. Actual same-version cod/salmon item icons are the closer comparator.",
+        "reference_source": "Actual version-pinned misode/mcmeta 1.21.1-assets item PNGs viewed and SHA-256 computed; official client SHA-1 not independently checked.",
+        "applied_pattern": "Preserve a recognizable small angled body, stepped fins and controlled material/contour clusters; independently draw the species.",
+        "reference_limit": "Vanilla cod/salmon are edible item silhouettes; Aqua whole catches are non-edible and biologically varied.",
+        "native_view": "Actual original 16x16 sprites inspected in a 3x nearest-neighbor sheet; reference PNG viewed at native size. Client not run.",
+        "context_view": "Six by six icon-family comparison on inventory-like dark neutral cells; generated item model references the exact local PNG.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/item/raw_barracuda.png": {
+      "sha256": "7f09ea3a04f8ab87d80b8a69e68823f30cecaafb38bd307d3604aeee169177a1",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/cod",
+          "minecraft": "1.21.1",
+          "sha256": "5a4cddbf3f573fb1d63b0d9cbc3c5166287a07ad8f4cf84ac44c83ce28cf5911"
+        }
+      ],
+      "comparison": "Unlike the reference's stronger diagonal compact fish, barracuda uses a elongated narrow taper with extended head with dark upper-back marks and two distinct dorsal groups; same 16-pixel sprite role. Original pixel clusters, not reused vanilla pixels.",
+      "findings": {
+        "silhouette": "elongated narrow taper with extended head readable in the six-by-six icon sheet.",
+        "cluster_structure": "dark upper-back marks concentrated on the body rather than random noise.",
+        "micro_contrast": "Back #596e68 against mid-flank #9ca9a2; darker eye is confined to the head.",
+        "light_and_volume": "Upper contour darker, broad middle plane turns into lighter belly #d6e0d3; localized contrast rather than full black outline.",
+        "material_continuity": "Body uses linked back and flank ramps; fin #687e74 has its own restrained shadow and highlight.",
+        "edge_variation": "two distinct dorsal groups breaks the upper silhouette; taper and tail have discrete stepped edges.",
+        "variant_identity": "barracuda: dark upper-back marks paired with elongated narrow taper with extended head distinguishes this icon in the group.",
+        "vanilla_comparison": "Reference minecraft:item/cod is a compact angled 16x16 whole-fish icon; ours retains transparent background and deliberate small clusters, with a shallower diagonal.",
+        "functional_material_cues": "Eye, gill region, caudal and dorsal/anal structures read as a whole raw fish rather than a fillet or a meat slab."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The branch atlas has food rules for bread/apple, not fish anatomy or whole non-edible catches. Actual same-version cod/salmon item icons are the closer comparator.",
+        "reference_source": "Actual version-pinned misode/mcmeta 1.21.1-assets item PNGs viewed and SHA-256 computed; official client SHA-1 not independently checked.",
+        "applied_pattern": "Preserve a recognizable small angled body, stepped fins and controlled material/contour clusters; independently draw the species.",
+        "reference_limit": "Vanilla cod/salmon are edible item silhouettes; Aqua whole catches are non-edible and biologically varied.",
+        "native_view": "Actual original 16x16 sprites inspected in a 3x nearest-neighbor sheet; reference PNG viewed at native size. Client not run.",
+        "context_view": "Six by six icon-family comparison on inventory-like dark neutral cells; generated item model references the exact local PNG.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/item/raw_grouper.png": {
+      "sha256": "e3b7a503cd9319ffb724561b68dbbcc8df4436038d8a2092af5a4e43025ba413",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/cod",
+          "minecraft": "1.21.1",
+          "sha256": "5a4cddbf3f573fb1d63b0d9cbc3c5166287a07ad8f4cf84ac44c83ce28cf5911"
+        }
+      ],
+      "comparison": "Unlike the reference's stronger diagonal compact fish, grouper uses a short broad head and compact thick body with irregular connected upper and mid-flank patches and long dorsal edge; same 16-pixel sprite role. Original pixel clusters, not reused vanilla pixels.",
+      "findings": {
+        "silhouette": "short broad head and compact thick body readable in the six-by-six icon sheet.",
+        "cluster_structure": "irregular connected upper and mid-flank patches concentrated on the body rather than random noise.",
+        "micro_contrast": "Back #806045 against mid-flank #b79465; darker eye is confined to the head.",
+        "light_and_volume": "Upper contour darker, broad middle plane turns into lighter belly #d9b786; localized contrast rather than full black outline.",
+        "material_continuity": "Body uses linked back and flank ramps; fin #8b654b has its own restrained shadow and highlight.",
+        "edge_variation": "long dorsal edge breaks the upper silhouette; taper and tail have discrete stepped edges.",
+        "variant_identity": "grouper: irregular connected upper and mid-flank patches paired with short broad head and compact thick body distinguishes this icon in the group.",
+        "vanilla_comparison": "Reference minecraft:item/cod is a compact angled 16x16 whole-fish icon; ours retains transparent background and deliberate small clusters, with a shallower diagonal.",
+        "functional_material_cues": "Eye, gill region, caudal and dorsal/anal structures read as a whole raw fish rather than a fillet or a meat slab."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The branch atlas has food rules for bread/apple, not fish anatomy or whole non-edible catches. Actual same-version cod/salmon item icons are the closer comparator.",
+        "reference_source": "Actual version-pinned misode/mcmeta 1.21.1-assets item PNGs viewed and SHA-256 computed; official client SHA-1 not independently checked.",
+        "applied_pattern": "Preserve a recognizable small angled body, stepped fins and controlled material/contour clusters; independently draw the species.",
+        "reference_limit": "Vanilla cod/salmon are edible item silhouettes; Aqua whole catches are non-edible and biologically varied.",
+        "native_view": "Actual original 16x16 sprites inspected in a 3x nearest-neighbor sheet; reference PNG viewed at native size. Client not run.",
+        "context_view": "Six by six icon-family comparison on inventory-like dark neutral cells; generated item model references the exact local PNG.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/item/raw_snapper.png": {
+      "sha256": "0ceea76640d3286ceb25a1008cb40e81f658faa7a4dea6d2c5be9f830228a83f",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/cod",
+          "minecraft": "1.21.1",
+          "sha256": "5a4cddbf3f573fb1d63b0d9cbc3c5166287a07ad8f4cf84ac44c83ce28cf5911"
+        }
+      ],
+      "comparison": "Unlike the reference's stronger diagonal compact fish, snapper uses a deep-bodied profile with clear shoulders with continuous subdued lateral stripe and short central dorsal; same 16-pixel sprite role. Original pixel clusters, not reused vanilla pixels.",
+      "findings": {
+        "silhouette": "deep-bodied profile with clear shoulders readable in the six-by-six icon sheet.",
+        "cluster_structure": "continuous subdued lateral stripe concentrated on the body rather than random noise.",
+        "micro_contrast": "Back #a85f50 against mid-flank #d58a77; darker eye is confined to the head.",
+        "light_and_volume": "Upper contour darker, broad middle plane turns into lighter belly #ebc3a5; localized contrast rather than full black outline.",
+        "material_continuity": "Body uses linked back and flank ramps; fin #bd6957 has its own restrained shadow and highlight.",
+        "edge_variation": "short central dorsal breaks the upper silhouette; taper and tail have discrete stepped edges.",
+        "variant_identity": "snapper: continuous subdued lateral stripe paired with deep-bodied profile with clear shoulders distinguishes this icon in the group.",
+        "vanilla_comparison": "Reference minecraft:item/cod is a compact angled 16x16 whole-fish icon; ours retains transparent background and deliberate small clusters, with a shallower diagonal.",
+        "functional_material_cues": "Eye, gill region, caudal and dorsal/anal structures read as a whole raw fish rather than a fillet or a meat slab."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The branch atlas has food rules for bread/apple, not fish anatomy or whole non-edible catches. Actual same-version cod/salmon item icons are the closer comparator.",
+        "reference_source": "Actual version-pinned misode/mcmeta 1.21.1-assets item PNGs viewed and SHA-256 computed; official client SHA-1 not independently checked.",
+        "applied_pattern": "Preserve a recognizable small angled body, stepped fins and controlled material/contour clusters; independently draw the species.",
+        "reference_limit": "Vanilla cod/salmon are edible item silhouettes; Aqua whole catches are non-edible and biologically varied.",
+        "native_view": "Actual original 16x16 sprites inspected in a 3x nearest-neighbor sheet; reference PNG viewed at native size. Client not run.",
+        "context_view": "Six by six icon-family comparison on inventory-like dark neutral cells; generated item model references the exact local PNG.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/item/raw_mahi_mahi.png": {
+      "sha256": "7390f1f1f25cb9c5c2118f5286c030cac9fd00a0269d64cabd00170cb215641d",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/cod",
+          "minecraft": "1.21.1",
+          "sha256": "5a4cddbf3f573fb1d63b0d9cbc3c5166287a07ad8f4cf84ac44c83ce28cf5911"
+        }
+      ],
+      "comparison": "Unlike the reference's stronger diagonal compact fish, mahi_mahi uses a fusiform trunk and deeply forked tail with blue accent marks and large raised dorsal sail; same 16-pixel sprite role. Original pixel clusters, not reused vanilla pixels.",
+      "findings": {
+        "silhouette": "fusiform trunk and deeply forked tail readable in the six-by-six icon sheet.",
+        "cluster_structure": "blue accent marks concentrated on the body rather than random noise.",
+        "micro_contrast": "Back #34736e against mid-flank #7eaa7a; darker eye is confined to the head.",
+        "light_and_volume": "Upper contour darker, broad middle plane turns into lighter belly #c3c77a; localized contrast rather than full black outline.",
+        "material_continuity": "Body uses linked back and flank ramps; fin #749d4f has its own restrained shadow and highlight.",
+        "edge_variation": "large raised dorsal sail breaks the upper silhouette; taper and tail have discrete stepped edges.",
+        "variant_identity": "mahi_mahi: blue accent marks paired with fusiform trunk and deeply forked tail distinguishes this icon in the group.",
+        "vanilla_comparison": "Reference minecraft:item/cod is a compact angled 16x16 whole-fish icon; ours retains transparent background and deliberate small clusters, with a shallower diagonal.",
+        "functional_material_cues": "Eye, gill region, caudal and dorsal/anal structures read as a whole raw fish rather than a fillet or a meat slab."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The branch atlas has food rules for bread/apple, not fish anatomy or whole non-edible catches. Actual same-version cod/salmon item icons are the closer comparator.",
+        "reference_source": "Actual version-pinned misode/mcmeta 1.21.1-assets item PNGs viewed and SHA-256 computed; official client SHA-1 not independently checked.",
+        "applied_pattern": "Preserve a recognizable small angled body, stepped fins and controlled material/contour clusters; independently draw the species.",
+        "reference_limit": "Vanilla cod/salmon are edible item silhouettes; Aqua whole catches are non-edible and biologically varied.",
+        "native_view": "Actual original 16x16 sprites inspected in a 3x nearest-neighbor sheet; reference PNG viewed at native size. Client not run.",
+        "context_view": "Six by six icon-family comparison on inventory-like dark neutral cells; generated item model references the exact local PNG.",
+        "context_type": "icon_family"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/item/raw_parrotfish.png": {
+      "sha256": "c04bd2bcf71840c7c66af6c8dc11d90abc1bd560c7a346bdca18338439c73ed4",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:item/cod",
+          "minecraft": "1.21.1",
+          "sha256": "5a4cddbf3f573fb1d63b0d9cbc3c5166287a07ad8f4cf84ac44c83ce28cf5911"
+        }
+      ],
+      "comparison": "Unlike the reference's stronger diagonal compact fish, parrotfish uses a short broad head and compact thick body with warm contrasting mouth tip and long dorsal edge; same 16-pixel sprite role. Original pixel clusters, not reused vanilla pixels.",
+      "findings": {
+        "silhouette": "short broad head and compact thick body readable in the six-by-six icon sheet.",
+        "cluster_structure": "warm contrasting mouth tip concentrated on the body rather than random noise.",
+        "micro_contrast": "Back #3b817a against mid-flank #78b5a3; darker eye is confined to the head.",
+        "light_and_volume": "Upper contour darker, broad middle plane turns into lighter belly #bad0ad; localized contrast rather than full black outline.",
+        "material_continuity": "Body uses linked back and flank ramps; fin #e39375 has its own restrained shadow and highlight.",
+        "edge_variation": "long dorsal edge breaks the upper silhouette; taper and tail have discrete stepped edges.",
+        "variant_identity": "parrotfish: warm contrasting mouth tip paired with short broad head and compact thick body distinguishes this icon in the group.",
+        "vanilla_comparison": "Reference minecraft:item/cod is a compact angled 16x16 whole-fish icon; ours retains transparent background and deliberate small clusters, with a shallower diagonal.",
+        "functional_material_cues": "Eye, gill region, caudal and dorsal/anal structures read as a whole raw fish rather than a fillet or a meat slab."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:item/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "The branch atlas has food rules for bread/apple, not fish anatomy or whole non-edible catches. Actual same-version cod/salmon item icons are the closer comparator.",
+        "reference_source": "Actual version-pinned misode/mcmeta 1.21.1-assets item PNGs viewed and SHA-256 computed; official client SHA-1 not independently checked.",
+        "applied_pattern": "Preserve a recognizable small angled body, stepped fins and controlled material/contour clusters; independently draw the species.",
+        "reference_limit": "Vanilla cod/salmon are edible item silhouettes; Aqua whole catches are non-edible and biologically varied.",
+        "native_view": "Actual original 16x16 sprites inspected in a 3x nearest-neighbor sheet; reference PNG viewed at native size. Client not run.",
+        "context_view": "Six by six icon-family comparison on inventory-like dark neutral cells; generated item model references the exact local PNG.",
+        "context_type": "icon_family"
+      }
     }
   }
 }

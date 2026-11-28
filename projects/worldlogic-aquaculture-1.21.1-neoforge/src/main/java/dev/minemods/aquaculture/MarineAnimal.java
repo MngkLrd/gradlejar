@@ -105,6 +105,21 @@ public final class MarineAnimal extends WaterAnimal {
   Vec3 target=new Vec3(getX(),p.getY()+n+.65,getZ());steer(l,target,.25);
   if(n<=1)l.sendParticles(ParticleTypes.BUBBLE,getX(),getY()+getBbHeight(),getZ(),6,.2,.2,.2,.02);
  }
+ private boolean sharkContact(ServerLevel l,LivingEntity target){
+  if(!SharkBite.contact(species,center(),getYRot(),target.getBoundingBox()))return false;
+  Vec3 mouth=SharkBite.mouth(species,center(),getYRot());
+  Vec3 contact=SharkBite.closest(target.getBoundingBox(),mouth);
+  return FishEcology.clearWaterPath(l,mouth,contact);
+ }
+ private void approachShark(ServerLevel l,Vec3 target,double speed){
+  Vec3 horizontal=new Vec3(target.x-center().x,0,target.z-center().z);
+  // A prey alongside/inside the body is not bitten by rotating in place. Swim past before turning back.
+  if(horizontal.length()<SharkBite.reach(species)*.70){
+   Vec3 ahead=center().add(SharkBite.forward(getYRot()).scale(3));
+   if(route(l,ahead)){steer(l,ahead,speed);return;}
+  }
+  steer(l,target,speed);
+ }
  private boolean hunt(ServerLevel l,long now){
   Fish prey=null;double best=144;
   for(Fish f:l.getEntitiesOfClass(Fish.class,getBoundingBox().inflate(12))){
@@ -112,21 +127,22 @@ public final class MarineAnimal extends WaterAnimal {
    double d=distanceToSqr(f);if(d<best&&route(l,f.position().add(0,.15,0))){best=d;prey=f;}
   }
   if(prey==null)return false;
-  if(best<Math.pow(Math.max(1,species.width*.7),2)&&now>=nextAttack){
+  if((species.shark()?sharkContact(l,prey):best<Math.pow(Math.max(1,species.width*.7),2))&&now>=nextAttack){
    nextAttack=now+70;
    if(prey.hurt(damageSources().mobAttack(this),Math.max(3,species.damage))&&!prey.isAlive())fedUntil=now+2400;
-  }else steer(l,prey.position().add(0,.15,0),.24);
+  }else if(species.shark())approachShark(l,prey.position().add(0,.15,0),.24);else steer(l,prey.position().add(0,.15,0),.24);
   return true;
  }
  private boolean defend(ServerLevel l,long now){
   if(now<nextAttack)return false;
-  double radius=species.shark()?2.5:1.0;
+  double radius=species.shark()?Math.max(3.5,SharkBite.reach(species)+1.2):1.0;
   for(ServerPlayer p:l.getEntitiesOfClass(ServerPlayer.class,getBoundingBox().inflate(radius))){
    if(p.isCreative()||p.isSpectator()||!p.isAlive()||!FishWater.contact(p))continue;
    // Sea snakes only strike in close self-defense after being injured. Sharks react to close injured/splashing prey.
    if(species==MarineSpecies.SEA_SNAKE&&getLastHurtByMob()!=p)continue;
    if(species.shark()&&getLastHurtByMob()!=p&&p.getHealth()>p.getMaxHealth()*.5&&p.getDeltaMovement().horizontalDistance()<.16)continue;
    if(distanceToSqr(p)>radius*radius||!route(l,p.position().add(0,.4,0)))continue;
+   if(species.shark()&&!sharkContact(l,p)){approachShark(l,p.getBoundingBox().getCenter(),.26);return true;}
    if(p.hurt(damageSources().mobAttack(this),species.damage)){
     nextAttack=now+100;if(species==MarineSpecies.SEA_SNAKE)p.addEffect(new MobEffectInstance(MobEffects.POISON,100,0));return true;
    }

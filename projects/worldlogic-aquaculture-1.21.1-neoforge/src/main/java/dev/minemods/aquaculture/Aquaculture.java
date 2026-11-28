@@ -166,6 +166,10 @@ public final class Aquaculture {
  }
  private void commands(RegisterCommandsEvent e){
   e.getDispatcher().register(Commands.literal("aquaculture").requires(src->src.hasPermission(2))
+   .then(Commands.literal("coast_bite_selftest").executes(c->{
+    try{CoastBiteChecks.run(c.getSource().getLevel());}catch(RuntimeException|LinkageError failure){return qaFailure(c.getSource(),failure);}
+    c.getSource().sendSuccess(()->Component.literal("AQUA_COAST_BITE_PASS"),false);return Command.SINGLE_SUCCESS;
+   }))
    .then(Commands.literal("content_selftest").executes(c->{
     try{AquaContentChecks.run(c.getSource().getLevel());}catch(RuntimeException|LinkageError failure){return qaFailure(c.getSource(),failure);}
     c.getSource().sendSuccess(()->Component.literal("AQUA_CONTENT_80_PASS"),false);return Command.SINGLE_SUCCESS;

@@ -15,6 +15,7 @@ public final class PopulationData extends SavedData {
  private final Map<UUID,Member> members=new HashMap<>();
  private final Map<Area,Map<String,Integer>> totals=new HashMap<>();
  private final Set<Origin> seeded=new HashSet<>();
+ private final Set<Origin> shoreSeeded=new HashSet<>();
  private static final SavedData.Factory<PopulationData> FACTORY=new SavedData.Factory<>(PopulationData::new,PopulationData::load,null);
  public static PopulationData get(ServerLevel l){return l.getDataStorage().computeIfAbsent(FACTORY,"worldlogic_aqua_population");}
  public static Area area(BlockPos p,WaterKind k){return new Area(Math.floorDiv(p.getX(),64),Math.floorDiv(p.getZ(),64),k);}
@@ -23,6 +24,8 @@ public final class PopulationData extends SavedData {
  public int total(Area a){return totals.getOrDefault(a,Map.of()).values().stream().mapToInt(Integer::intValue).sum();}
  public int room(Area a,Species s){return Math.max(0,Math.min(SpawnSelection.LOCAL_CAP-total(a),SpawnSelection.speciesCap(s)-total(a,s.id())));}
  public boolean seeded(Area a,Species s){return seeded.contains(new Origin(a,s.id()));}
+ public boolean shoreSeeded(Area a,Species s){return shoreSeeded.contains(new Origin(a,s.id()));}
+ public void markShoreSeeded(Area a,Species s){if(shoreSeeded.add(new Origin(a,s.id())))setDirty();}
  public void markSeeded(Area a,Species s){if(seeded.add(new Origin(a,s.id())))setDirty();}
  void rollbackFailedFounders(Area a,Species s){
   if(total(a,s.id())==0&&seeded.remove(new Origin(a,s.id())))setDirty();
@@ -67,6 +70,7 @@ public final class PopulationData extends SavedData {
  @Override public CompoundTag save(CompoundTag root,HolderLookup.Provider lookup){
   ListTag origins=new ListTag();for(Origin o:seeded){CompoundTag n=write(o.area,o.species);origins.add(n);}
   ListTag entries=new ListTag();members.forEach((id,m)->{CompoundTag n=write(m.area,m.species);n.putUUID("uuid",id);n.putInt("amount",m.amount);n.putBoolean("clutch",m.clutch);entries.add(n);});
+  ListTag shores=new ListTag();for(Origin o:shoreSeeded)shores.add(write(o.area,o.species));root.put("shore_seeded",shores);
   root.put("seeded",origins);root.put("members",entries);return root;
  }
  private static CompoundTag write(Area a,String species){
@@ -78,6 +82,8 @@ public final class PopulationData extends SavedData {
   for(int i=0;i<origins.size();i++){CompoundTag n=origins.getCompound(i);try{
    Area a=readArea(n);Species s=Species.BY_ID.get(n.getString("species"));if(s!=null&&valid(a.kind))d.seeded.add(new Origin(a,s.id()));
   }catch(IllegalArgumentException ignored){}}
+  ListTag shores=root.getList("shore_seeded",Tag.TAG_COMPOUND);
+  for(int i=0;i<shores.size();i++){CompoundTag n=shores.getCompound(i);try{Area a=readArea(n);Species s=Species.BY_ID.get(n.getString("species"));if(s!=null&&valid(a.kind))d.shoreSeeded.add(new Origin(a,s.id()));}catch(IllegalArgumentException ignored){}}
   ListTag entries=root.getList("members",Tag.TAG_COMPOUND);
   for(int i=0;i<entries.size();i++){CompoundTag n=entries.getCompound(i);try{
    Area a=readArea(n);Species s=Species.BY_ID.get(n.getString("species"));boolean clutch=n.getBoolean("clutch");

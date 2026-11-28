@@ -14,7 +14,20 @@ final class AquaContentChecks {
  static void run(ServerLevel l){
   require(Aquaculture.RAW.size()==36&&Aquaculture.EGGS.size()==44&&Aquaculture.ITEMS.getEntries().size()==80,"registered items");
   require(Aquaculture.AQUA_TAB.get()!=null,"creative tab");
-  for(Species s:Species.ALL)egg(s.id(),Aquaculture.TYPES.get(s.id()).get());
+  var hashes=new HashSet<String>();
+  for(Species s:Species.ALL){
+   egg(s.id(),Aquaculture.TYPES.get(s.id()).get());
+   try(var png=AquaContentChecks.class.getResourceAsStream("/assets/aquaculture/textures/item/raw_"+s.id()+".png");
+       var model=AquaContentChecks.class.getResourceAsStream("/assets/aquaculture/models/item/raw_"+s.id()+".json")){
+    require(png!=null&&model!=null,"missing catch assets "+s.id());
+    byte[] bytes=png.readAllBytes();
+    var d=new java.io.DataInputStream(new java.io.ByteArrayInputStream(bytes));
+    require(d.readLong()==0x89504e470d0a1a0aL&&d.readInt()==13&&d.readInt()==0x49484452&&d.readInt()==16&&d.readInt()==16,"catch PNG "+s.id());
+    require(hashes.add(java.util.HexFormat.of().formatHex(java.security.MessageDigest.getInstance("SHA-256").digest(bytes))),"duplicate catch sprite "+s.id());
+    var json=com.google.gson.JsonParser.parseString(new String(model.readAllBytes(),java.nio.charset.StandardCharsets.UTF_8)).getAsJsonObject();
+    require(json.getAsJsonObject("textures").get("layer0").getAsString().equals("aquaculture:item/raw_"+s.id()),"catch model reference "+s.id());
+   }catch(Exception e){throw new IllegalStateException("catch assets "+s.id(),e);}
+  }
   for(MarineSpecies s:MarineSpecies.values())egg(s.id,Aquaculture.MARINE.get(s).get());
   var types=List.of(EntityType.COD,EntityType.SALMON,EntityType.TROPICAL_FISH,EntityType.PUFFERFISH);
   var entries=new ArrayList<MobSpawnSettings.SpawnerData>();

@@ -2465,6 +2465,28 @@
           "name": "Creative content: 36 catches, 44 typed spawn eggs, registered tab and vanilla natural spawn filtering with manual/custom controls"
         }
       ]
+    },
+    {
+      "id": "coastal-population",
+      "kind": "mechanic",
+      "subject": "coastal-population",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Coastal diversity and actual bank fixture, persistent coastal origin and shark snout front/rear/flank contact"
+        }
+      ]
+    },
+    {
+      "id": "shark-frontal-bite",
+      "kind": "mechanic",
+      "subject": "shark-frontal-bite",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Coastal diversity and actual bank fixture, persistent coastal origin and shark snout front/rear/flank contact"
+        }
+      ]
     }
   ],
   "steps": [
@@ -2497,6 +2519,12 @@
       "name": "All 36 species: feeding, diet, consumption, cooldown, satiety, NBT and maturity controls",
       "command": "aquaculture feeding_selftest",
       "expect": "AQUACULTURE_FEEDING_36_PASS",
+      "assertion": true
+    },
+    {
+      "name": "Coastal diversity and actual bank fixture, persistent coastal origin and shark snout front/rear/flank contact",
+      "command": "aquaculture coast_bite_selftest",
+      "expect": "AQUA_COAST_BITE_PASS",
       "assertion": true
     },
     {
