@@ -22,9 +22,9 @@ public final class VitalityBridge {
         // Do not refill a second independent pool; preserve vanilla healing effects as tissue assistance.
         e.setCanceled(true);
         BodyState b=BodyStates.get(p);
-        if(b.hasBleeding() || b.vitalDestroyed()) return;
+        if(b.hasAnyBleeding() || b.vitalDestroyed()) return;
         float factor=p.hasEffect(MobEffects.REGENERATION)?2f:0.6f;
-        float scale=ThermalBridge.condition(p).recoveryFactor*MetabolismBridge.read(p).tissue();
+        float scale=ThermalBridge.condition(p).recoveryFactor*MetabolismBridge.read(p).tissue()*b.organs().repairFactor(b.bloodFraction());
         if(scale>0)b.healMostDamaged(e.getAmount()*factor*scale);
         BodyStates.flush(p);
     }

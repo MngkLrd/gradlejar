@@ -78,6 +78,8 @@ public final class TraumaEvents {
     }
     public static void applyDamage(ServerPlayer p,BodyState b,DamageSource source,float amount) {
         if(!WorldLogicBridge.active(p) || !(amount>0) || !Float.isFinite(amount)) return;
+        // Vanilla air supply supplies the breathing input; do not also inflict direct chest HP for drowning.
+        if(source.is(net.minecraft.world.damagesource.DamageTypes.DROWN))return;
         if(source.is(DamageTypeTags.IS_FALL)) {
             float points=Math.min(amount,440f)*4f;
             float overflow=0,threshold=17f*MetabolismBridge.read(p).fracture();
@@ -89,7 +91,7 @@ public final class TraumaEvents {
             return;
         }
         if(source.is(DamageTypeTags.IS_EXPLOSION)) {
-            for(BodyPart zone:BodyPart.values()) b.wound(zone,amount*(zone==BodyPart.CHEST?1.5f:.65f),WoundKind.LACERATION);
+            for(BodyPart zone:BodyPart.values()) b.impact(zone,Math.min(amount,440f)*(zone==BodyPart.CHEST?1.5f:.65f),WoundKind.LACERATION);
             // World Logic owns blast concussion; do not generate a second effect.
             return;
         }
@@ -128,7 +130,7 @@ public final class TraumaEvents {
     private static float woundOverflow(BodyState b,BodyPart part,float points,WoundKind kind){
         if(!Float.isFinite(points)||points<=0)return 0;
         float capacity=b.health(part);
-        b.wound(part,points,kind);
+        b.impact(part,points,kind);
         return Math.max(0,points-capacity);
     }
     private static void transferImpact(BodyState b,float overflow,WoundKind kind){
@@ -154,16 +156,19 @@ public final class TraumaEvents {
         b.tickMedicalEffects();
         var nutrition=MetabolismBridge.read(p);
         if(nutrition.toxin()>=.55f&&p.tickCount%100==0&&p.connection!=null&&!(p instanceof net.neoforged.neoforge.common.util.FakePlayer))p.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.CONFUSION,120,0,false,false,true));
-        float before=totalHp(b);
+        boolean resting=!ClimbManager.active(p)&&WorldLogicBridge.resting(p);
+        b.physiologySecond(p.getAirSupply()>0,resting,nutrition.tissue());
+        if(b.vitalDestroyed()||b.fatalBloodLoss()){fatalCollapse(p);return;}
         WaterIllness.tick(p);
         if(LegacyFrostExposure.tick(p,b)){
             TreatmentManager.cancel(p);
             ClimbManager.cancel(p);
         }
-        if(!ClimbManager.active(p)&&WorldLogicBridge.resting(p)) {
+        float before=totalHp(b);
+        if(resting) {
             var thermal=ThermalBridge.condition(p);
             ThermalBridge.recover(b,thermal,p.tickCount%100==0,nutrition.tissue(),nutrition.bone());
-            if(!b.hasBleeding())b.recoverBlood(6f*thermal.recoveryFactor*nutrition.blood());
+            if(!b.hasAnyBleeding())b.recoverBlood(6f*thermal.recoveryFactor*nutrition.blood()*b.organs().repairFactor(b.bloodFraction()));
         }
         MetabolismBridge.record(p,Math.max(0,totalHp(b)-before));
         if(p.tickCount%40==0 && b.hasBleeding()) {

@@ -1,0 +1,109 @@
+package dev.minemods.traumacraft.health;
+
+import net.minecraft.nbt.CompoundTag;
+import java.util.Arrays;
+
+/** Game-scale physiology, not an additional HP pool. All time inputs are server seconds.
+ * Each region keeps its existing structural HP. Organs store function and internal bleeding separately.
+ */
+public final class OrganState {
+    public enum Organ {
+        BRAIN(BodyPart.HEAD), HEART(BodyPart.CHEST), LEFT_LUNG(BodyPart.CHEST), RIGHT_LUNG(BodyPart.CHEST),
+        LIVER(BodyPart.STOMACH), LEFT_KIDNEY(BodyPart.STOMACH), RIGHT_KIDNEY(BodyPart.STOMACH),
+        STOMACH(BodyPart.STOMACH), INTESTINES(BodyPart.STOMACH);
+        public final BodyPart region;
+        Organ(BodyPart region){this.region=region;}
+    }
+    private final float[] integrity=new float[Organ.values().length], bleeding=new float[Organ.values().length];
+    private float oxygen=1, deficit;
+    public OrganState(){reset();}
+    public void reset(){Arrays.fill(integrity,1);Arrays.fill(bleeding,0);oxygen=1;deficit=0;}
+    private static float clamp(float x,float min,float max){return Float.isFinite(x)?Math.max(min,Math.min(max,x)):min;}
+    public float integrity(Organ organ){return integrity[organ.ordinal()];}
+    public float bleeding(Organ organ){return bleeding[organ.ordinal()];}
+    public float oxygen(){return oxygen;}
+    public float oxygenDebt(){return deficit;}
+    public float ventilation(){return (integrity(Organ.LEFT_LUNG)+integrity(Organ.RIGHT_LUNG))*.5f;}
+    public float renalFunction(){return (integrity(Organ.LEFT_KIDNEY)+integrity(Organ.RIGHT_KIDNEY))*.5f;}
+    public float digestiveFunction(){return (integrity(Organ.STOMACH)+integrity(Organ.INTESTINES))*.5f;}
+    public float perfusion(float bloodFraction){
+        // Near-normal volume compensates mild loss; severe hypovolemia and cardiac damage reduce delivery.
+        return clamp(bloodFraction/.85f,0,1)*integrity(Organ.HEART);
+    }
+    public float delivery(float bloodFraction){return oxygen*perfusion(bloodFraction);}
+    public float internalLossPerSecond(){float total=0;for(float x:bleeding)total+=x;return total;}
+    public boolean hasInternalBleeding(){return internalLossPerSecond()>.001f;}
+    public float capacity(float bloodFraction){
+        return Math.min(integrity(Organ.BRAIN),clamp(delivery(bloodFraction)/.75f,0,1));
+    }
+    public float repairFactor(float bloodFraction){
+        return clamp(delivery(bloodFraction)/.75f,0,1)
+          *(.4f+.6f*Math.min(integrity(Organ.LIVER),renalFunction()))
+          *(.6f+.4f*digestiveFunction());
+    }
+    public boolean brainDestroyed(){return integrity(Organ.BRAIN)<=0;}
+    private void injure(Organ organ,float fraction,float bloodRate){
+        int i=organ.ordinal();
+        integrity[i]=clamp(integrity[i]-fraction,0,1);
+        bleeding[i]=clamp(bleeding[i]+bloodRate,0,12);
+    }
+    /** Deterministic regional trauma. Minor impacts do not injure protected organs.
+     * With only seven external hit zones, side-specific penetrating trajectories are intentionally not inferred.
+     */
+    public boolean impact(BodyPart region,float hp,WoundKind kind){
+        if(!Float.isFinite(hp)||hp<=0||kind==null||kind==WoundKind.BURN||kind==WoundKind.FROSTBITE)return false;
+        boolean penetrating=kind==WoundKind.PUNCTURE||kind==WoundKind.LACERATION;
+        float threshold=penetrating?7:12;
+        if(hp<=threshold)return false;
+        float severity=clamp((hp-threshold)/region.maximum*(penetrating?1.35f:1f),0,1.5f);
+        float rate=severity>.20f?(severity-.20f)*(penetrating?9:5):0;
+        switch(region){
+            case HEAD -> injure(Organ.BRAIN,severity*.85f,rate*.20f);
+            case CHEST -> {injure(Organ.HEART,severity*.65f,rate*.40f);injure(Organ.LEFT_LUNG,severity*.85f,rate*.30f);injure(Organ.RIGHT_LUNG,severity*.85f,rate*.30f);}
+            case STOMACH -> {injure(Organ.LIVER,severity*.75f,rate*.36f);injure(Organ.LEFT_KIDNEY,severity*.45f,rate*.12f);injure(Organ.RIGHT_KIDNEY,severity*.45f,rate*.12f);injure(Organ.STOMACH,severity*.65f,rate*.18f);injure(Organ.INTESTINES,severity*.65f,rate*.22f);}
+            default -> {return false;}
+        }
+        return true;
+    }
+    /** Returns the internal blood loss for this second; caller subtracts it from the ONE blood pool. */
+    public float second(float bloodFraction,boolean breathing,boolean resting,float nutrition){
+        float loss=internalLossPerSecond();
+        float target=breathing?ventilation():0;
+        oxygen=clamp(oxygen+Math.max(-.08f,Math.min(.12f,target-oxygen)),0,1);
+        float delivered=delivery(bloodFraction);
+        if(delivered<.45f)deficit=clamp(deficit+(.45f-delivered)/.45f,0,120);
+        else deficit=clamp(deficit-.8f,0,120);
+        if(deficit>=18)injure(Organ.BRAIN,.008f+(.45f-Math.min(.45f,delivered))*.025f,0);
+        // Only low-rate internal leaks can close on their own under safe conditions.
+        if(resting&&delivered>=.50f){
+            for(int i=0;i<bleeding.length;i++)if(bleeding[i]>0&&bleeding[i]<=2.5f)bleeding[i]=Math.max(0,bleeding[i]-.025f);
+        }
+        if(resting&&delivered>=.70f&&!hasInternalBleeding()&&deficit<1){
+            float rate=.0006f*clamp(nutrition,0,1)*repairFactor(bloodFraction);
+            for(int i=0;i<integrity.length;i++)if(integrity[i]>0&&integrity[i]<1)integrity[i]=Math.min(1,integrity[i]+rate);
+        }
+        return loss;
+    }
+    /** Existing advanced trauma kit supplies stabilization, not organ HP or instant internal closure. */
+    public boolean stabilize(BodyPart region){
+        boolean changed=false;
+        for(var organ:Organ.values())if(organ.region==region&&bleeding(organ)>2.5f){
+            bleeding[organ.ordinal()]=Math.max(2.5f,bleeding(organ)*.55f);changed=true;
+        }
+        return changed;
+    }
+    public CompoundTag save(){
+        var n=new CompoundTag();n.putFloat("oxygen",oxygen);n.putFloat("deficit",deficit);
+        for(var organ:Organ.values()){var o=new CompoundTag();o.putFloat("integrity",integrity(organ));o.putFloat("bleeding",bleeding(organ));n.put(organ.name(),o);}
+        return n;
+    }
+    public void load(CompoundTag n){
+        reset();
+        oxygen=read(n,"oxygen",1,1);deficit=read(n,"deficit",0,120);
+        for(var organ:Organ.values())if(n.contains(organ.name(),10)){var o=n.getCompound(organ.name());integrity[organ.ordinal()]=read(o,"integrity",1,1);bleeding[organ.ordinal()]=read(o,"bleeding",0,12);}
+    }
+    private static float read(CompoundTag n,String key,float fallback,float max){
+        if(!n.contains(key,99))return fallback;float value=n.getFloat(key);
+        return Float.isFinite(value)?clamp(value,0,max):fallback;
+    }
+}

@@ -121,6 +121,12 @@
       "expect": "TRAUMAQA waterillness PASS",
       "assertion": true,
       "name": "TR-WATER-ILLNESS: dose, incubation, symptoms, treatment, recovery, persistence, illness-only loss"
+    },
+    {
+      "command": "traumaqa organs",
+      "expect": "TRAUMAQA organs PASS",
+      "assertion": true,
+      "name": "TR-ORGANS: integrity, internal bleeding, oxygen, perfusion, recovery, persistence and API"
     }
   ],
   "coverage": [
@@ -779,6 +785,62 @@
         {
           "backend": "server",
           "name": "TR-OWNERSHIP: registered damage event and Trauma API remain active with Core legacy injuries disabled"
+        }
+      ]
+    },
+    {
+      "id": "tr-organ-integrity",
+      "kind": "mechanic",
+      "subject": "Nine organ identities, threshold and region injury, protected minor impacts, no limb/burn duplication, abdomen and chest functions",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-ORGANS: integrity, internal bleeding, oxygen, perfusion, recovery, persistence and API"
+        }
+      ]
+    },
+    {
+      "id": "tr-organ-circulation",
+      "kind": "mechanic",
+      "subject": "Internal blood loss in existing pool, no recovery during leak, stabilization and slow recovery, function penalties",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-ORGANS: integrity, internal bleeding, oxygen, perfusion, recovery, persistence and API"
+        }
+      ]
+    },
+    {
+      "id": "tr-organ-oxygen",
+      "kind": "mechanic",
+      "subject": "Drowning without chest duplication, air depletion, hypoxic brain damage, breathing recovery, perfusion and fatal collapse",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-ORGANS: integrity, internal bleeding, oxygen, perfusion, recovery, persistence and API"
+        }
+      ]
+    },
+    {
+      "id": "tr-organ-persistence",
+      "kind": "mechanic",
+      "subject": "Organ NBT migration, immutable public API snapshot, reset",
+      "targets": [
+        "neoforge-mc1.21.1"
+      ],
+      "checks": [
+        {
+          "backend": "server",
+          "name": "TR-ORGANS: integrity, internal bleeding, oxygen, perfusion, recovery, persistence and API"
         }
       ]
     }

@@ -5,6 +5,15 @@ import net.minecraft.nbt.CompoundTag;
 
 /** Authoritative player medical state. Saved to player attachment NBT on server. */
 public final class BodyState {
+    private final OrganState organs=new OrganState();
+    public OrganState organs(){return organs;}
+    public boolean hasAnyBleeding(){return hasBleeding()||organs.hasInternalBleeding();}
+    public void impact(BodyPart part,float points,WoundKind kind){wound(part,points,kind);if(organs.impact(part,points,kind))dirty=true;}
+    public void physiologySecond(boolean breathing,boolean resting,float nutrition){
+        var before=organs.save();float loss=organs.second(bloodFraction(),breathing,resting&&!hasBleeding(),nutrition);loseBlood(loss);
+        if(!before.equals(organs.save()))dirty=true;
+    }
+    public boolean stabilizeInternal(BodyPart part){if(!organs.stabilize(part))return false;dirty=true;return true;}
     private final float[] health = new float[BodyPart.values().length];
     private final byte[] wounds=new byte[BodyPart.values().length];
     private final byte[] bleeding = new byte[BodyPart.values().length];
@@ -32,7 +41,7 @@ public final class BodyState {
         if(next!=bloodMl){bloodMl=next;dirty=true;}
     }
     public void recoverBlood(float amount){
-        if(hasBleeding()||!Float.isFinite(amount)||amount<=0)return;
+        if(hasAnyBleeding()||!Float.isFinite(amount)||amount<=0)return;
         float next=Math.min(MAX_BLOOD,bloodMl+amount);
         if(next!=bloodMl){bloodMl=next;dirty=true;}
     }
@@ -55,7 +64,7 @@ public final class BodyState {
     }
     public boolean fatalBloodLoss(){return bloodFraction()<=.20f;}
     public boolean vitalDestroyed() {
-        return health(BodyPart.HEAD) <= 0f || health(BodyPart.CHEST) <= 0f;
+        return health(BodyPart.HEAD) <= 0f || health(BodyPart.CHEST) <= 0f || organs.brainDestroyed();
     }
 
     /** Called once when bleeding, rather than an external hit, blacks a vital zone. */
@@ -241,6 +250,7 @@ public final class BodyState {
         return null;
     }
     public void reset() {
+        organs.reset();
         bloodMl=MAX_BLOOD;
         vitalityLinked = false;
         concussionTicks = 0;
@@ -264,6 +274,7 @@ public final class BodyState {
     public CompoundTag serializeNBT(HolderLookup.Provider provider) {
         CompoundTag result = new CompoundTag();
         result.putFloat("bloodMl",bloodMl);
+        result.put("organs_v1",organs.save());
         result.putBoolean("vitalityLinked", vitalityLinked);
         result.putInt("concussionTicks", concussionTicks);
         result.putInt("painkillerTicks", painkillerTicks);
@@ -281,6 +292,7 @@ public final class BodyState {
     }
     public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
         reset();
+        if(nbt.contains("organs_v1",10))organs.load(nbt.getCompound("organs_v1"));
         float storedBlood=nbt.contains("bloodMl",99)?nbt.getFloat("bloodMl"):MAX_BLOOD;
         bloodMl=Float.isFinite(storedBlood)?Math.max(0,Math.min(MAX_BLOOD,storedBlood)):MAX_BLOOD;
         vitalityLinked = nbt.getBoolean("vitalityLinked");

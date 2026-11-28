@@ -13,7 +13,7 @@ import java.util.EnumSet;
 /** Public server-thread API. Immutable snapshots; no internal NBT or mutable state exposed. */
 public final class TraumaApi {
     public static final int API_VERSION=1;
-    public static final int API_REVISION=3;
+    public static final int API_REVISION=4;
     public enum Zone { HEAD,CHEST,ABDOMEN,LEFT_ARM,RIGHT_ARM,LEFT_LEG,RIGHT_LEG }
     public enum Injury { CONTUSION,CUT,PUNCTURE,LACERATION,BURN,FROSTBITE }
     public record Region(Zone zone,float health,float maximum,float function,int bleeding,boolean fractured,boolean stabilized,Set<Injury> injuries){
@@ -21,6 +21,18 @@ public final class TraumaApi {
     }
     public record Status(float bloodMl,float maximumBloodMl,float pain,int shock,int concussionTicks,int analgesiaTicks,List<Region> regions){
         public Status { regions=List.copyOf(regions); }
+    }
+    public record OrganStatus(String id,Zone region,float integrity,float internalBleedingMlPerSecond){}
+    public record Physiology(float oxygenFraction,float ventilation,float perfusion,float oxygenDelivery,float oxygenDebtSeconds,
+        float renalFunction,float digestiveFunction,float internalBleedingMlPerSecond,float repairFactor,List<OrganStatus> organs){
+        public Physiology{organs=List.copyOf(organs);}
+    }
+    /** Read-only function and integrity; fractions 0..1. No ownership of Hydration or Metabolism. */
+    public static Optional<Physiology> physiology(ServerPlayer p){
+        if(!usable(p))return Optional.empty();
+        var b=BodyStates.get(p);var o=b.organs();var list=new ArrayList<OrganStatus>();
+        for(var organ:OrganState.Organ.values())list.add(new OrganStatus(organ.name().toLowerCase(java.util.Locale.ROOT),organ.region==BodyPart.STOMACH?Zone.ABDOMEN:Zone.valueOf(organ.region.name()),o.integrity(organ),o.bleeding(organ)));
+        return Optional.of(new Physiology(o.oxygen(),o.ventilation(),o.perfusion(b.bloodFraction()),o.delivery(b.bloodFraction()),o.oxygenDebt(),o.renalFunction(),o.digestiveFunction(),o.internalLossPerSecond(),o.repairFactor(b.bloodFraction()),list));
     }
     private TraumaApi(){}
     private static boolean usable(ServerPlayer p){
@@ -64,7 +76,7 @@ public final class TraumaApi {
     public static boolean reportInjury(ServerPlayer p,Zone zone,Injury injury,float points,int bleeding){
         if(!usable(p)||zone==null||injury==null||!Float.isFinite(points)||points<=0||bleeding<0||bleeding>2)return false;
         var part=part(zone);if(points>part.maximum)return false;
-        var b=BodyStates.get(p);b.wound(part,points,WoundKind.valueOf(injury.name()));
+        var b=BodyStates.get(p);b.impact(part,points,WoundKind.valueOf(injury.name()));
         if(bleeding>0)b.setBleeding(part,bleeding);
         dev.minemods.traumacraft.medical.TreatmentManager.cancel(p);
         ModNetwork.sync(p);

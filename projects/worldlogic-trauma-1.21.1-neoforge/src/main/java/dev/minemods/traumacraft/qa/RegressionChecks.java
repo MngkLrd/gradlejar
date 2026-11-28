@@ -23,7 +23,7 @@ public final class RegressionChecks {
     private static void require(boolean ok,String message){if(!ok)throw new IllegalStateException(message);}
     public static void register(RegisterCommandsEvent e){
         var root=Commands.literal("traumaqa").requires(s->s.hasPermission(4)&&s.getEntity()==null);
-        for(String name:new String[]{"state","treatment","bridge","damage","api","procedure","persistence","targeting","identity","thermal","respawn","bloodloss","physiology","wounds","primitive","publicapi","climb","ownership","frostcompat","waterillness","hydrationpack"})
+        for(String name:new String[]{"state","treatment","bridge","damage","api","procedure","persistence","targeting","identity","thermal","respawn","bloodloss","physiology","wounds","primitive","publicapi","climb","ownership","frostcompat","waterillness","organs","hydrationpack"})
             root.then(Commands.literal(name).executes(c->run(c.getSource(),name)));
         e.getDispatcher().register(root);
     }
@@ -408,6 +408,7 @@ public final class RegressionChecks {
                 case "hydrationpack" -> dev.minemods.traumacraft.qa.DiseaseChecks.verifyIntegration(p);
                 case "ownership" -> dev.minemods.traumacraft.qa.OwnershipChecks.verify(p);
                 case "frostcompat" -> dev.minemods.traumacraft.qa.FrostCompatibilityChecks.verify(p);
+                case "organs" -> OrganChecks.verify(p,b);
                 case "damage" -> {
                     TraumaEvents.applyDamage(p,b,p.damageSources().fall(),5);
                     require(b.health(BodyPart.LEFT_LEG)==45&&b.health(BodyPart.RIGHT_LEG)==45&&b.fractured(BodyPart.LEFT_LEG),"single fall damage");

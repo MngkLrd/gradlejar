@@ -992,5 +992,13 @@
     "client": "NOT_RUN: actual heart layer visibility, healthy HUD layout, impact feedback; server component fixture is not client interaction",
     "combined": "NOT_RUN: latest Core and other add-ons not in pinned standalone runtime",
     "remaining": "Verify full pack death/respawn, vanilla effect interactions and armor/absorption with actual network player."
+  },
+  "version_0_8_0": {
+    "version": "0.8.0",
+    "scope": "Internal physiology: 9 organs; organ integrity independent of structural HP; regional mechanical impact, internal blood loss, ventilation, oxygen delivery, hypoxic brain injury, functional/recovery constraints, trauma-kit stabilization; read-only API revision 4",
+    "server": "traumaqa organs; deterministic real server component fixture; existing registered damage/ownership checks retained",
+    "client": "NOT_RUN: no organ UI yet; actual network player survival/drowning and treatment not supported by existing protocol bot",
+    "integration": "NOT_RUN: other providers absent in pinned standalone runtime; no foreign state writes",
+    "remaining": "Side-specific organ hit geometry, GUI, breathing exertion and specialized treatment not implemented. Game-scale parameters require balance. No new diseases."
   }
 }

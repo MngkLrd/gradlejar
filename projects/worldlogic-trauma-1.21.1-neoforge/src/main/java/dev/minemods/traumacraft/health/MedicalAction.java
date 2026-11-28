@@ -73,6 +73,7 @@ public final class MedicalAction {
             case TRAUMA_KIT -> {
                 if(b.health(part)>0)b.heal(part,45*repair);
                 b.stopBleeding(part);
+                b.stabilizeInternal(part);
                 if(limb(part)&&b.fractured(part)&&!b.stabilized(part))b.stabilize(part,3600);
             }
             case SURGICAL_KIT -> {
