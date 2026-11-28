@@ -117,15 +117,26 @@ final class FallingTree {
      * lowering the equal-volume log centroid. No free energy or direction reversal. */
     private static double rotationLift(ServerLevel l,CompoundTag f,float from,float to){
         if(clearAt(l,f,to))return 0;
-        if(from<.35f)return Double.NaN;
         List<CompoundTag> whole=new ArrayList<>();components(f).forEach(whole::addAll);
-        if(canLower(l,f,whole,.005))return Double.NaN; // no actual support yet
+        if(canLower(l,f,whole,.005))return Double.NaN;
         double budget=centroidHeight(f,from)-centroidHeight(f,to);
-        if(!Double.isFinite(budget)||budget<=.001)return Double.NaN;
-        double max=Math.min(.5,budget-.001);
-        for(double up=.015625;up<=max+.0001;up+=.015625){
-            if(!clearAt(l,f,from,up,true))break; // cannot lift through an overhead obstacle
-            if(clearAt(l,f,to,up,true))return up;
+        if(!Double.isFinite(budget)||budget<=.0001)return Double.NaN;
+        // A substep can need less than 1/64 block of lift. The old coarse
+        // increment could reject every admissible pose after a support was removed.
+        double max=Math.min(.5,budget-.00005);
+        double previous=0;
+        for(int i=1;i<=16;i++){
+            double up=max*i/16;
+            if(!clearAt(l,f,from,up,false))break;
+            if(clearAt(l,f,to,up,false)){
+                double lo=previous,hi=up;
+                for(int j=0;j<10;j++){
+                    double mid=(lo+hi)*.5;
+                    if(clearAt(l,f,to,mid,false)&&clearAt(l,f,from,mid,false))hi=mid;else lo=mid;
+                }
+                return hi;
+            }
+            previous=up;
         }
         return Double.NaN;
     }
@@ -279,7 +290,17 @@ final class FallingTree {
         }
         f.putFloat("progress",next);
         boolean rotating=next>old+.00001f;
-        boolean descending=(mask(f)!=0||next>=.99999f||!rotating)&&settle(l,f);
+        boolean branched=false;
+        for(int i=0;i<members(f).size();i++){
+            CompoundTag m=members(f).getCompound(i);
+            if(!m.getBoolean("log")||m.getBoolean("removed"))continue;
+            BlockPos p=BlockPos.of(m.getLong("source"));
+            if(p.getX()!=base(f).getX()||p.getZ()!=base(f).getZ()){branched=true;break;}
+        }
+        // Keep the hinge on a straight, intact tree while an obstacle blocks rotation.
+        // Releasing it early made the subsequent angular path intersect the floor.
+        // Branching trunks may settle on real branch contacts; cut remnants always release.
+        boolean descending=(mask(f)!=0||next>=.99999f||(!rotating&&branched))&&settle(l,f);
         if(rotating||descending){
             removeMarkers(l,f,true);master.removeTag(REST);pose(l,master,f,next);
         }
@@ -300,7 +321,12 @@ final class FallingTree {
         List<List<CompoundTag>> groups=components(f);
         if(groups.isEmpty())return false;
         if(mask(f)==0){List<CompoundTag> whole=new ArrayList<>();groups.forEach(whole::addAll);groups=List.of(whole);}
-        for(List<CompoundTag> group:groups)if(canLower(l,f,group,.005))return false;
+        for(List<CompoundTag> group:groups)if(canLower(l,f,group,.005)){
+            if(mask(f)!=0||f.getFloat("progress")>=.99999f||Math.abs(f.getDouble("dropY"))>.0001)return false;
+            // An unprocessed straight trunk is still held by its cut hinge until rotation completes.
+            // Verify that the actual original stump exists rather than assume support in air.
+            if(!(l.getBlockState(base(f)).getBlock() instanceof StumpBlock))return false;
+        }
         return true;
     }
     static void attack(AttackEntityEvent event){

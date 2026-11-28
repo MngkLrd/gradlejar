@@ -56,6 +56,15 @@ final class TreeQA {
             }
             c.getSource().sendSuccess(()->Component.literal("TreeChopper inclined bucking PASS"),false);return 1;
           })))))
+          .then(Commands.literal("qa_resumed_landing").then(Commands.argument("base",BlockPosArgument.blockPos()).then(Commands.argument("target",BlockPosArgument.blockPos()).executes(c->{
+            ServerLevel l=c.getSource().getLevel();BlockPos p=BlockPosArgument.getLoadedBlockPos(c,"base"),target=BlockPosArgument.getLoadedBlockPos(c,"target");
+            if(l.getBlockState(target).getBlock() instanceof FallenLogBlock){
+                c.getSource().sendSuccess(()->Component.literal("TreeChopper resumed landing PASS"),false);return 1;
+            }
+            var list=l.getEntitiesOfClass(net.minecraft.world.entity.Display.BlockDisplay.class,new net.minecraft.world.phys.AABB(p).inflate(2),d->d.getPersistentData().getCompound(TreeChopper.FALL).getBoolean("coordinator"));
+            String state=list.isEmpty()?"no coordinator":list.get(0).getPersistentData().getCompound(TreeChopper.FALL).toString();
+            c.getSource().sendFailure(Component.literal("TreeChopper resumed landing FAILED: "+state));return 0;
+          }))))
           .then(Commands.literal("qa_branch_support").then(Commands.argument("pos",BlockPosArgument.blockPos()).executes(c->{
             ServerLevel l=c.getSource().getLevel();BlockPos p=BlockPosArgument.getLoadedBlockPos(c,"pos");
             var list=l.getEntitiesOfClass(net.minecraft.world.entity.Display.BlockDisplay.class,new net.minecraft.world.phys.AABB(p).inflate(2),d->d.getTags().contains(FallingTree.REST));

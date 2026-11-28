@@ -840,8 +840,8 @@
     },
     {
       "name": "cleared-fall",
-      "command": "execute if block 1020 200 1038 wl_treechopper:fallen_oak",
-      "expect": "Test passed",
+      "command": "wltreechopper qa_resumed_landing 1020 200 1040 1020 200 1038",
+      "expect": "TreeChopper resumed landing PASS",
       "assertion": true
     },
     {
