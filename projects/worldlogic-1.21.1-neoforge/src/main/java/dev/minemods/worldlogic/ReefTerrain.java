@@ -23,13 +23,16 @@ public final class ReefTerrain{
   return 1+(detail>.68?1:0)+(zone==CoastalTerrain.Zone.BARRIER&&patch>.78&&detail>.82?1:0);
  }
  static int place(ChunkAccess c,int x,int z,int floor,int sea,int height,int species){
-  if(height<1||floor<sea-25||floor+height>sea-3)return 0;
+  height=Math.min(height,sea-3-floor);
+  if(height<1||floor<sea-25)return 0;
   var p=new BlockPos.MutableBlockPos();var bed=c.getBlockState(p.set(x,floor,z));
   if(!RiverTerrain.natural(bed)||bed.is(Blocks.ICE)||bed.is(Blocks.PACKED_ICE)||bed.is(Blocks.BLUE_ICE))return 0;
   // A contiguous seawater column must remain above the living colony.
   for(int y=floor+1;y<=floor+height+1;y++)if(!MarinePlants.seawater(c.getBlockState(p.set(x,y,z))))return 0;
   var b=CORALS[Math.floorMod(species,CORALS.length)].defaultBlockState();
-  for(int y=floor+1;y<=floor+height;y++)c.setBlockState(p.set(x,y,z),b,false);
+  // A carbonate skeleton supports a living exposed surface. No buried
+  // living coral blocks inside a thick colony can subsequently die in air.
+  for(int y=floor+1;y<=floor+height;y++)c.setBlockState(p.set(x,y,z),y==floor+height?b:Blocks.CALCITE.defaultBlockState(),false);
   return height;
  }
  public static void decorate(NoiseBasedChunkGenerator gen,RandomState state,RegistryAccess access,ChunkAccess c,long seed){
@@ -50,7 +53,8 @@ public final class ReefTerrain{
    place(c,wx,wz,h,sea,n,species);
   }
  }
- static String probe(ServerLevel l,BlockPos origin){
+ static String probe(ServerLevel l,BlockPos origin){return probe(l,origin,false);}
+ static String probe(ServerLevel l,BlockPos origin,boolean barrierOnly){
   if(!(l.getChunkSource().getGenerator() instanceof NoiseBasedChunkGenerator gen)||!NaturalWaterGeneration.enabled(gen))return "REEF_PROBE unavailable";
   var state=l.getChunkSource().randomState();var model=GeoDensity.riverModel(state,l.registryAccess());
   var bounds=net.minecraft.world.level.LevelHeightAccessor.create(gen.getMinY(),gen.getGenDepth());
@@ -62,19 +66,20 @@ public final class ReefTerrain{
    double macro=model.raw(x,z);if(macro>sea-3||macro<sea-28)continue;
    var p=field.apply(x,z);if(p.thermal()<.30)continue;
    var predicted=CoastalTerrain.zone(p,sea-(int)Math.round(macro));
-   if(predicted!=CoastalTerrain.Zone.BARRIER&&predicted!=CoastalTerrain.Zone.FRINGE&&predicted!=CoastalTerrain.Zone.PATCH)continue;
+   if(barrierOnly?predicted!=CoastalTerrain.Zone.BARRIER:predicted!=CoastalTerrain.Zone.BARRIER&&predicted!=CoastalTerrain.Zone.FRINGE&&predicted!=CoastalTerrain.Zone.PATCH)continue;
    if(measured++>=18)return "REEF_PROBE no_candidate measured="+measured;
    int h=gen.getBaseHeight(x,z,Heightmap.Types.OCEAN_FLOOR_WG,bounds,state)-1;
    if(h>sea-4||h<sea-24||!warm(BiomeSurvey.at(gen,state,x,sea-1,z).getPath()))continue;
    var zone=CoastalTerrain.zone(p,sea-h);
-   if(zone==CoastalTerrain.Zone.BARRIER||zone==CoastalTerrain.Zone.FRINGE||zone==CoastalTerrain.Zone.PATCH)return "REEF_PROBE x="+x+" z="+z+" zone="+zone;
+   if(barrierOnly?zone==CoastalTerrain.Zone.BARRIER:zone==CoastalTerrain.Zone.BARRIER||zone==CoastalTerrain.Zone.FRINGE||zone==CoastalTerrain.Zone.PATCH)return "REEF_PROBE x="+x+" z="+z+" zone="+zone;
   }
   return "REEF_PROBE no_candidate measured="+measured;
  }
  static String audit(ServerLevel l,BlockPos origin){
   var c=l.getChunkSource().getChunkNow(origin.getX()>>4,origin.getZ()>>4);if(c==null)return "REEF_AUDIT unavailable";
-  int colonies=0,live=0,wrong=0,adjacentSea=0,sea=l.getSeaLevel();Set<Block> species=new HashSet<>();
+  int colonies=0,live=0,wrong=0,adjacentSea=0,barrier=0,sea=l.getSeaLevel();Set<Block> species=new HashSet<>();
   var p=new BlockPos.MutableBlockPos();
+  var field=CoastalTerrain.field(GeoDensity.riverModel(l.getChunkSource().randomState(),l.registryAccess()),l.getSeed());
   for(int x=0;x<16;x++)for(int z=0;z<16;z++){
    int wx=c.getPos().getMinBlockX()+x,wz=c.getPos().getMinBlockZ()+z;
    boolean found=false;
@@ -82,11 +87,12 @@ public final class ReefTerrain{
     var s=c.getBlockState(p.set(wx,y,wz));if(!coral(s))continue;
     found=true;live++;species.add(s.getBlock());
     if(NaturalFluids.kind(c.getFluidState(new BlockPos(wx,y+1,wz)).getType())==WaterKind.SEA)adjacentSea++;
-    if(!warm(l.getBiome(p).unwrapKey().orElseThrow().location().getPath())||!l.getFluidState(new BlockPos(wx,sea-1,wz)).is(FluidTags.WATER))wrong++;
+    if(CoastalTerrain.zone(field.apply(wx,wz),sea-y)==CoastalTerrain.Zone.BARRIER)barrier++;
+    if(!warm(c.getNoiseBiome(wx>>2,(sea-1)>>2,wz>>2).unwrapKey().orElseThrow().location().getPath())||!l.getFluidState(new BlockPos(wx,sea-1,wz)).is(FluidTags.WATER))wrong++;
    }
    if(found)colonies++;
   }
-  return "REEF_AUDIT colonies="+colonies+" live="+live+" species="+species.size()+" wrong="+wrong+" nativeAbove="+adjacentSea;
+  return "REEF_AUDIT colonies="+colonies+" live="+live+" species="+species.size()+" wrong="+wrong+" nativeAbove="+adjacentSea+" barrier="+barrier;
  }
  static void verify(ServerLevel l){
   CoastalTerrain.verify();
@@ -100,5 +106,17 @@ public final class ReefTerrain{
   }
   c.setBlockState(p.set(12,51,4),Blocks.WATER.defaultBlockState(),false);
   if(place(c,12,4,50,63,2,0)!=0)throw new IllegalStateException("non-native water negative control");
+  var center=new BlockPos(6,112,6);var saved=new LinkedHashMap<BlockPos,BlockState>();
+  try{
+   saved.put(center,l.getBlockState(center));
+   for(var d:net.minecraft.core.Direction.values()){var q=center.relative(d);saved.put(q,l.getBlockState(q));l.setBlock(q,sea,2|16);}
+   for(var coral:CORALS){
+    var state=coral.defaultBlockState();l.setBlock(center,state,2|16);state.tick(l,center,l.random);
+    if(!l.getBlockState(center).is(coral))throw new IllegalStateException("living coral rejects native seawater "+coral);
+   }
+   for(var d:net.minecraft.core.Direction.values())l.setBlock(center.relative(d),Blocks.AIR.defaultBlockState(),2|16);
+   var state=CORALS[0].defaultBlockState();l.setBlock(center,state,2|16);state.tick(l,center,l.random);
+   if(l.getBlockState(center).is(CORALS[0]))throw new IllegalStateException("dry coral negative control");
+  }finally{saved.forEach((q,s)->l.setBlock(q,s,2|16));}
  }
 }

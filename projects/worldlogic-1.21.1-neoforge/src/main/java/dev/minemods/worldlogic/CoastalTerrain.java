@@ -71,7 +71,9 @@ public final class CoastalTerrain{
    case PATCH->2*GeoModel.smooth(.57,.85,p.variation);
    default->0;
   };
-  return (int)Math.round(GeoModel.clamp(amount,-2,Math.max(0,Math.min(6,depth-4))));
+  double warm=GeoModel.smooth(.30,.40,p.thermal);
+  double activation=(z==Zone.BARRIER||z==Zone.LAGOON)?GeoModel.smooth(.43,.50,p.variation):1;
+  return (int)Math.round(GeoModel.clamp(amount*warm*activation,-2,Math.max(0,Math.min(6,depth-4))));
  }
  public static void prepare(NoiseBasedChunkGenerator gen,RandomState state,RegistryAccess access,ChunkAccess c,long seed){
   if(!NaturalWaterGeneration.enabled(gen))return;
