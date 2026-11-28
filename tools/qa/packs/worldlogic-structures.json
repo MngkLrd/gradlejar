@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "id": "worldlogic-structures",
+  "description": "Exact Core and Structures production JARs in one fresh server; includes real seeded Core structure-start fixtures, not graphical certification.",
+  "targets": [
+    {
+      "id": "neoforge-mc1.21.1",
+      "minecraft": "1.21.1",
+      "loader": "neoforge",
+      "loader_version": "21.1.262",
+      "members": [
+        {
+          "project": "projects/worldlogic-1.21.1-neoforge",
+          "scenario": "tools/qa/scenarios/worldlogic-neoforge.json"
+        },
+        {
+          "project": "projects/worldlogic-structures-1.21.1-neoforge",
+          "scenario": "tools/qa/scenarios/worldlogic-structures.json"
+        }
+      ],
+      "dependencies": []
+    }
+  ]
+}

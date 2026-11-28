@@ -34,6 +34,9 @@ public final class StructuresMod {
    .then(Commands.literal("selftest").executes(c->{
     try{StructureChecks.run(c.getSource().getLevel());c.getSource().sendSuccess(()->Component.literal("STRUCTURES_CHECKS_PASSED designs=27 families=8"),false);return 1;}
     catch(RuntimeException e){c.getSource().sendFailure(Component.literal("STRUCTURES_CHECKS_FAILED "+e.getMessage()));return 0;}
+   })).then(Commands.literal("starts").executes(c->{
+    try{StructureChecks.starts(c.getSource().getLevel());c.getSource().sendSuccess(()->Component.literal("STRUCTURES_STARTS_PASSED seeds=2"),false);return 1;}
+    catch(RuntimeException e){c.getSource().sendFailure(Component.literal("STRUCTURES_STARTS_FAILED "+e.getMessage()));return 0;}
    })));
  }
 }
