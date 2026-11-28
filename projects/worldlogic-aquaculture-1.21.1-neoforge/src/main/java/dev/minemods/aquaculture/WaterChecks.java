@@ -39,13 +39,13 @@ final class WaterChecks {
        fish.moveTo(center.getX()+.5,center.getY()+.05,center.getZ()+.5,0,0);
        fish.setAirSupply(-19);
        float health=fish.getHealth();
-       require(FishWater.contact(fish)&&fish.isInWater()&&fish.isInWaterOrBubble(),"immersion "+id+" "+type);
+       require(FishWater.contact(fish)&&fish.isInWater()&&fish.isInWaterOrBubble(),"immersion "+id+" flowing="+flowing+" "+type+" contact="+FishWater.contact(fish)+" vanillaWet="+fish.isInWater()+" bubble="+fish.isInWaterOrBubble());
        for(int n=0;n<25;n++)fish.baseTick();
-       require(fish.getHealth()==health&&fish.getAirSupply()>0,"wet survival "+id+" "+type);
+       require(fish.getHealth()==health&&fish.getAirSupply()>0,"wet survival "+id+" flowing="+flowing+" "+type+" health="+fish.getHealth()+" initialHealth="+health+" air="+fish.getAirSupply());
        fish.moveTo(center.getX()+.5,center.getY()+6,center.getZ()+.5,0,0);
        fish.setAirSupply(-19);
        for(int n=0;n<25;n++)fish.baseTick();
-       require(!FishWater.contact(fish)&&!fish.isInWater()&&fish.getAirSupply()<=0,"dry breathing control "+id+" "+type);
+       require(!FishWater.contact(fish)&&!fish.isInWater()&&fish.getAirSupply()<=0,"dry breathing control "+id+" flowing="+flowing+" "+type+" contact="+FishWater.contact(fish)+" vanillaWet="+fish.isInWater()+" air="+fish.getAirSupply());
       }finally{fish.discard();}
      }
     }

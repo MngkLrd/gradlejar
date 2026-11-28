@@ -149,22 +149,27 @@ public final class Aquaculture {
   e.getDrops().removeIf(drop->drop.getItem().is(Items.COD)||drop.getItem().is(Items.COOKED_COD));
   e.getDrops().add(new ItemEntity(fish.level(),fish.getX(),fish.getY(),fish.getZ(),catchStack(fish,s)));
  }
+ private static int qaFailure(net.minecraft.commands.CommandSourceStack source,Throwable failure){
+  com.mojang.logging.LogUtils.getLogger().error("Aqua QA assertion failed",failure);
+  source.sendFailure(Component.literal("AQUA_QA_FAIL "+failure.getClass().getSimpleName()+": "+String.valueOf(failure.getMessage())));
+  return 0;
+ }
  private void commands(RegisterCommandsEvent e){
   e.getDispatcher().register(Commands.literal("aquaculture").requires(src->src.hasPermission(2))
    .then(Commands.literal("physical_selftest").executes(c->{
-    AquaPhysicalChecks.run(c.getSource().getLevel());c.getSource().sendSuccess(()->Component.literal("AQUA_PHYSICAL_PASS"),false);return Command.SINGLE_SUCCESS;
+    try{AquaPhysicalChecks.run(c.getSource().getLevel());}catch(RuntimeException|LinkageError failure){return qaFailure(c.getSource(),failure);}c.getSource().sendSuccess(()->Component.literal("AQUA_PHYSICAL_PASS"),false);return Command.SINGLE_SUCCESS;
    }))
    .then(Commands.literal("marine_selftest").executes(c->{
-    MarineChecks.run(c.getSource().getLevel());c.getSource().sendSuccess(()->Component.literal("AQUA_MARINE_PASS"),false);return Command.SINGLE_SUCCESS;
+    try{MarineChecks.run(c.getSource().getLevel());}catch(RuntimeException|LinkageError failure){return qaFailure(c.getSource(),failure);}c.getSource().sendSuccess(()->Component.literal("AQUA_MARINE_PASS"),false);return Command.SINGLE_SUCCESS;
    }))
    .then(Commands.literal("population_tick_prepare").executes(c->{
-    PopulationTickChecks.prepare(c.getSource().getLevel());c.getSource().sendSuccess(()->Component.literal("AQUA_POPULATION_TICK_READY"),false);return Command.SINGLE_SUCCESS;
+    try{PopulationTickChecks.prepare(c.getSource().getLevel());}catch(RuntimeException|LinkageError failure){return qaFailure(c.getSource(),failure);}c.getSource().sendSuccess(()->Component.literal("AQUA_POPULATION_TICK_READY"),false);return Command.SINGLE_SUCCESS;
    }))
    .then(Commands.literal("population_tick_verify").executes(c->{
-    PopulationTickChecks.verify(c.getSource().getLevel());c.getSource().sendSuccess(()->Component.literal("AQUA_POPULATION_NO_PLAYER_PASS"),false);return Command.SINGLE_SUCCESS;
+    try{PopulationTickChecks.verify(c.getSource().getLevel());}catch(RuntimeException|LinkageError failure){return qaFailure(c.getSource(),failure);}c.getSource().sendSuccess(()->Component.literal("AQUA_POPULATION_NO_PLAYER_PASS"),false);return Command.SINGLE_SUCCESS;
    }))
    .then(Commands.literal("population_selftest").executes(c->{
-    PopulationChecks.run(c.getSource().getLevel());
+    try{PopulationChecks.run(c.getSource().getLevel());}catch(RuntimeException|LinkageError failure){return qaFailure(c.getSource(),failure);}
     c.getSource().sendSuccess(()->Component.literal("AQUA_POPULATION_PASS"),false);
     return Command.SINGLE_SUCCESS;
    }))
@@ -175,7 +180,7 @@ public final class Aquaculture {
     c.getSource().sendSuccess(()->Component.literal("Aqua population (fish + reserved eggs): "+list),false);return Command.SINGLE_SUCCESS;
    }))
    .then(Commands.literal("ecology_selftest").executes(c->{
-    EcologyChecks.run(c.getSource().getLevel());
+    try{EcologyChecks.run(c.getSource().getLevel());}catch(RuntimeException|LinkageError failure){return qaFailure(c.getSource(),failure);}
     c.getSource().sendSuccess(()->Component.literal("AQUA_ECOLOGY_PASS"),false);
     return Command.SINGLE_SUCCESS;
    }))
@@ -187,12 +192,12 @@ public final class Aquaculture {
     return Command.SINGLE_SUCCESS;
    }))
    .then(Commands.literal("visual_selftest").executes(c->{
-    FishVisualChecks.run(c.getSource().getLevel());
+    try{FishVisualChecks.run(c.getSource().getLevel());}catch(RuntimeException|LinkageError failure){return qaFailure(c.getSource(),failure);}
     c.getSource().sendSuccess(()->Component.literal("AQUA_VISUAL_ASSETS_SIZE_36_PASS"),false);
     return Command.SINGLE_SUCCESS;
    }))
    .then(Commands.literal("spawn_selftest").executes(c->{
-    SpawnChecks.run(c.getSource().getLevel());
+    try{SpawnChecks.run(c.getSource().getLevel());}catch(RuntimeException|LinkageError failure){return qaFailure(c.getSource(),failure);}
     c.getSource().sendSuccess(()->Component.literal("AQUA_SPAWN_36_PASS"),false);
     return Command.SINGLE_SUCCESS;
    }))
@@ -205,12 +210,12 @@ public final class Aquaculture {
     return Command.SINGLE_SUCCESS;
    }))
    .then(Commands.literal("water_selftest").executes(c->{
-    WaterChecks.run(c.getSource().getLevel());
+    try{WaterChecks.run(c.getSource().getLevel());}catch(RuntimeException|LinkageError failure){return qaFailure(c.getSource(),failure);}
     c.getSource().sendSuccess(()->Component.literal("AQUA_NATIVE_FISH_WATER_PASS"),false);
     return Command.SINGLE_SUCCESS;
    }))
    .then(Commands.literal("feeding_selftest").executes(c->{
-    FeedingChecks.run(c.getSource().getLevel());
+    try{FeedingChecks.run(c.getSource().getLevel());}catch(RuntimeException|LinkageError failure){return qaFailure(c.getSource(),failure);}
     c.getSource().sendSuccess(()->Component.literal("AQUACULTURE_FEEDING_36_PASS"),false);
     return Command.SINGLE_SUCCESS;
    }))
