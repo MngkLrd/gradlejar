@@ -121,6 +121,31 @@ final class RoomChecks {
       require(Math.abs(RoomHeat.roomConductance(l,CENTER,now)-clayOnly)<1e-8,"burnout automatically invalidates cached room conductance");
      }finally{rule.set(previous,l.getServer());}
     }
+    case "snow_shelter" -> {
+     // Actual enclosed snow and ice shell, same interior geometry and no artificial heat source.
+     for(BlockPos b:old.keySet()){
+      if(Math.abs(b.getX()-CENTER.getX())==2||Math.abs(b.getY()-CENTER.getY())==2||Math.abs(b.getZ()-CENTER.getZ())==2)
+       l.setBlock(b,Blocks.SNOW_BLOCK.defaultBlockState(),2);
+     }
+     RoomHeat.invalidate(l);
+     double snow=RoomHeat.roomConductance(l,CENTER,now);
+     require(Double.isFinite(snow)&&run(l,-25,55,.8,now,0).volume()==27,"ordinary full snow blocks form a real enclosed room");
+     for(BlockPos b:old.keySet()){
+      if(l.getBlockState(b).is(Blocks.SNOW_BLOCK))l.setBlock(b,Blocks.PACKED_ICE.defaultBlockState(),2);
+     }
+     RoomHeat.invalidate(l);
+     double ice=RoomHeat.roomConductance(l,CENTER,now);
+     require(ice>snow,"real snow shell conducts less heat than ice");
+     require(RoomPhysics.occupantHeat(0)==0&&RoomPhysics.occupantHeat(1)>0&&RoomPhysics.occupantHeat(99)==RoomPhysics.occupantHeat(4),"bounded occupancy source");
+     var initial=RoomPhysics.initial(-25,55);
+     var unoccupied=RoomPhysics.step(initial,new RoomPhysics.Inputs(-25,55,.035,snow,.35,12,0,0,0),120);
+     var occupied=RoomPhysics.step(initial,new RoomPhysics.Inputs(-25,55,.035,snow,.35,12,RoomPhysics.occupantHeat(1),0,0),120);
+     var exposed=RoomPhysics.step(initial,new RoomPhysics.Inputs(-25,55,.85,snow,.35,12,RoomPhysics.occupantHeat(1),0,0),120);
+     var iceRoom=RoomPhysics.step(initial,new RoomPhysics.Inputs(-25,55,.035,ice,1.9,12,RoomPhysics.occupantHeat(1),0,0),120);
+     require(Math.abs(unoccupied.air()+25)<1e-8,"empty snow does not create heat");
+     require(occupied.air()>unoccupied.air()+3&&occupied.air()<0,"occupied compact snow shelter warms but is not magically comfortable");
+     require(occupied.air()>exposed.air()+2&&occupied.air()>iceRoom.air(),"snow and wind protection materially improve early survival");
+    }
     case "room_ventilation" -> {
      door(l,false);l.setBlock(WINDOW,Blocks.GLASS_PANE.defaultBlockState(),2);heater(l,true);
      var closed=run(l,10,50,.7,now,60);

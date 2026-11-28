@@ -1,11 +1,14 @@
 package dev.minemods.thermal;
 /** Bounded gameplay approximation: air and thermal mass in degrees C, vapor in g/m3.
- * No global weather mutation and no player-specific heat in the room state. */
+ * No global weather mutation. Occupants contribute bounded shared metabolic waste heat. */
 public final class RoomPhysics {
     private RoomPhysics(){}
     public record State(double air,double mass,double vapor){}
     public record Inputs(double outdoor,double humidity,double ventilation,double conductance,double massFactor,int volume,double heat,double cooling,double moisture){}
     private static double clamp(double x,double a,double b){return Math.max(a,Math.min(b,x));}
+    /** Dimensionless room-source units, calibrated against existing heaters, not watts.
+     * A living occupant produces a small source; the bound keeps crowded rooms stable. */
+    public static double occupantHeat(int occupants){return 10.0*Math.max(0,Math.min(4,occupants));}
     public static double saturation(double temperature){
         double t=clamp(temperature,-60,70);
         return 216.7*(6.112*Math.exp(17.62*t/(243.12+t)))/(273.15+t);

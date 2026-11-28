@@ -140,6 +140,10 @@ public final class RoomHeat {
  }
  /** Only a legacy gameplay fallback for old Core; RC53 unknown materials use a neutral estimate. */
  private static PhysicalBridge.Wall legacyWall(BlockState s){
+  // Legacy gameplay factors only. Known Core profiles replace these in wall().
+  // A full snow block is porous insulation, unlike dense ice.
+  if(s.is(Blocks.SNOW_BLOCK))return new PhysicalBridge.Wall(.35,.22);
+  if(s.is(Blocks.ICE)||s.is(Blocks.PACKED_ICE)||s.is(Blocks.BLUE_ICE))return new PhysicalBridge.Wall(1.9,.95);
   if(PhysicalBridge.advertised())return new PhysicalBridge.Wall(.85,.75);
   String material=WorldLogicApi.materialFamily(s).toLowerCase(Locale.ROOT);
   boolean stone=material.contains("stone")||s.is(Blocks.STONE)||s.is(Blocks.COBBLESTONE)||s.is(Blocks.BRICKS);
@@ -161,7 +165,13 @@ public final class RoomHeat {
   return Math.max(.02,Math.min(1,.035+openings*(.24+.36*Math.max(0,Math.min(1,wind)))/Math.sqrt(Math.max(.5,g.cells().size()/27.0))));
  }
  private static Sources sources(ServerLevel l,Geometry g,double air,double humidity,double wind){
-  double heat=0,cooling=0,moisture=0;
+  int occupants=0;
+  for(var player:l.players()){
+   if(player.isAlive()&&!player.isSpectator()&&!player.isCreative()&&g.cells().contains(player.blockPosition())){
+    if(++occupants>=4)break;
+   }
+  }
+  double heat=RoomPhysics.occupantHeat(occupants),cooling=0,moisture=0;
   for(BlockPos q:g.sourceCells()){
    if(!loaded(l,q))continue;
    BlockState s=l.getBlockState(q);var block=s.getBlock();

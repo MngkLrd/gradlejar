@@ -160,7 +160,7 @@
         "worldlogic:environment",
         "worldlogic:physical_materials"
       ],
-      "integration_review": "RC54 Core API 15 PhysicalMaterials thermalResistance is authoritative for series wall resistance. Thermal owns cladding placement, geometric thickness and room air evolution; API exposes the actual face query used by the solver. Straw uses vanilla hay fire hooks, clay is nonflammable; native block lifecycle invalidates actual room state, so no separate fire capability or duplicate material table is needed."
+      "integration_review": "RC54 Core API 15 PhysicalMaterials thermalResistance is authoritative for series wall resistance. Thermal owns cladding placement, geometric thickness and room air evolution; API exposes the actual face query used by the solver. Straw uses vanilla hay fire hooks, clay is nonflammable; native block lifecycle invalidates actual room state, so no separate fire capability or duplicate material table is needed. Enclosed air receives bounded waste heat from living noncreative nonspectator occupants, using Thermal's room solver and Core material profiles for snow/ice; no new resource deduction or global weather change."
     },
     {
       "id": "devices_and_clothing",

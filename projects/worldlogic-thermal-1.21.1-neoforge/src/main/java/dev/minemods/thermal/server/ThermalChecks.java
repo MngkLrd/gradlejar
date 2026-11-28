@@ -175,7 +175,7 @@ final class ThermalChecks {
                 case "frostbite" -> ClimateEvolutionChecks.frostbite(l,p);
                 case "nutrition" -> ClimateEvolutionChecks.nutrition(l,p);
                 case "room_inertia" -> ClimateEvolutionChecks.room(l,p);
-                case "room_ventilation","room_humidity","room_persistence","room_cache","wall_insulation","insulation_fire" -> RoomChecks.verify(l,p,name);
+                case "room_ventilation","room_humidity","room_persistence","room_cache","wall_insulation","insulation_fire","snow_shelter" -> RoomChecks.verify(l,p,name);
                 case "village_climate" -> ClimateEvolutionChecks.settlement(l,p);
                 case "integration" -> IntegrationChecks.verify(l,p);
                 case "water_exposure","room_response","hud_signals" -> StabilityChecks.verify(l,p,name);
