@@ -276,6 +276,7 @@ public final class PhysicalMaterials {
   if(p.equals("anvil")||p.endsWith("_anvil"))return single("iron",.28,Evidence.ESTIMATED);
   if(p.equals("chain"))return single("iron",.025,Evidence.ESTIMATED);
   if(p.equals("rail")||p.endsWith("_rail"))return part("iron",.014,"generic_wood",.04);
+  if(p.equals("redstone_torch")||p.equals("redstone_wall_torch"))return part("generic_wood",.004,"redstone",.001);
   if(p.equals("torch")||p.endsWith("_torch"))return part("generic_wood",.004,"coal",.001);
   if(p.equals("lantern")||p.equals("soul_lantern"))return part("iron",.003,"glass",.002);
   if(p.endsWith("_bed"))return part("generic_wood",.16,"wool",.20);
@@ -389,6 +390,37 @@ public final class PhysicalMaterials {
  /** Item payload only, not the frame or stand that supports it. */
  public static ObjectProfile displayedItem(net.minecraft.world.entity.decoration.ItemFrame frame){return stack(frame.getItem());}
  public static ObjectProfile droppedItem(net.minecraft.world.entity.item.ItemEntity entity){return stack(entity.getItem());}
+ private static final String STATE_KEY="worldlogic_physical_state";
+ /** Stored only when explicitly set by an addon. ItemStack components survive normal save/copy/drop/frame operations. */
+ public static Optional<State> storedItemState(ItemStack stack){
+  var data=stack.get(net.minecraft.core.component.DataComponents.CUSTOM_DATA);
+  if(data==null)return Optional.empty();
+  var tag=data.copyTag();
+  if(!tag.contains(STATE_KEY,net.minecraft.nbt.Tag.TAG_COMPOUND))return Optional.empty();
+  var physical=tag.getCompound(STATE_KEY);
+  double temp=physical.contains("temperature_c",net.minecraft.nbt.Tag.TAG_ANY_NUMERIC)?physical.getDouble("temperature_c"):N;
+  double moisture=physical.contains("moisture_kg_kg",net.minecraft.nbt.Tag.TAG_ANY_NUMERIC)?physical.getDouble("moisture_kg_kg"):N;
+  try{return Optional.of(new State(temp,moisture));}catch(IllegalArgumentException ex){return Optional.empty();}
+ }
+ /** Writes only the namespaced physical field, preserving unrelated custom item data. Caller owns state updates. */
+ public static void setItemState(ItemStack stack,State state){
+  if(stack.isEmpty())throw new IllegalArgumentException("empty stack");
+  var data=stack.get(net.minecraft.core.component.DataComponents.CUSTOM_DATA);
+  var tag=data==null?new net.minecraft.nbt.CompoundTag():data.copyTag();
+  if(state==null)tag.remove(STATE_KEY);
+  else{
+   var physical=new net.minecraft.nbt.CompoundTag();
+   if(Double.isFinite(state.temperatureC()))physical.putDouble("temperature_c",state.temperatureC());
+   if(Double.isFinite(state.moistureKgKg()))physical.putDouble("moisture_kg_kg",state.moistureKgKg());
+   tag.put(STATE_KEY,physical);
+  }
+  if(tag.isEmpty())stack.remove(net.minecraft.core.component.DataComponents.CUSTOM_DATA);
+  else stack.set(net.minecraft.core.component.DataComponents.CUSTOM_DATA,net.minecraft.world.item.component.CustomData.of(tag));
+ }
+ public static Result itemResult(ItemStack stack){return evaluate(item(stack),storedItemState(stack).orElse(State.reference()));}
+ public static Result stackResult(ItemStack stack){return evaluate(stack(stack),storedItemState(stack).orElse(State.reference()));}
+ public static Result displayedItemResult(net.minecraft.world.entity.decoration.ItemFrame frame){return stackResult(frame.getItem());}
+ public static Result droppedItemResult(net.minecraft.world.entity.item.ItemEntity entity){return stackResult(entity.getItem());}
  /** Pure aggregate. Heat capacity uses dry component mass plus absorbed water.
   * No averaging of strength, hardness or fracture limits across unrelated parts. */
  public static Result evaluate(ObjectProfile p,State state){
@@ -404,11 +436,14 @@ public final class PhysicalMaterials {
  }
  /** Loaded positions only. Waterlogged blocks do not silently include fluid; query fluidBlock separately.
   * Soil moisture is the existing Core cell estimate, not a new block-level storage or water budget. */
- public static Optional<Result> placed(ServerLevel level,BlockPos pos){
+ public static Optional<Result> placed(ServerLevel level,BlockPos pos){return placed(level,pos,null);}
+ /** Optional caller-provided object state; no per-block ticking or forced chunk loading. */
+ public static Optional<Result> placed(ServerLevel level,BlockPos pos,State supplied){
   if(!level.getServer().isSameThread())throw new IllegalStateException("server thread required");
   if(level.isOutsideBuildHeight(pos)||!level.hasChunkAt(pos))return Optional.empty();
   BlockState b=level.getBlockState(pos);
-  if(b.getBlock() instanceof net.minecraft.world.level.block.LiquidBlock)return Optional.of(evaluate(fluidBlock(b.getFluidState()),State.reference()));
+  if(b.getBlock() instanceof net.minecraft.world.level.block.LiquidBlock)return Optional.of(evaluate(fluidBlock(b.getFluidState()),supplied==null?State.reference():supplied));
+  if(supplied!=null)return Optional.of(evaluate(block(b),supplied));
   ObjectProfile p=block(b);double wet=N;
   if(p.components().size()==1){
    var m=MATERIALS.get(p.components().get(0).materialId());
