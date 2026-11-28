@@ -37,9 +37,10 @@ public final class AnalyticsSync{
  static void receive(State s){client=s;}public static State client(){return client;}public static void clear(){client=null;}
  private static String fmt(String key,String format,Object... values){return key+"|"+String.format(Locale.ROOT,format,values);}
  static void send(ServerPlayer p,AnalyticsState data){
-  var l=p.serverLevel();var pos=p.blockPosition();var c=data.cells.get(EnvironmentAnalytics.key(pos));var air=new ArrayList<String>();var water=new ArrayList<String>();var soil=new ArrayList<String>();var impact=new ArrayList<String>();var ecology=new ArrayList<String>();
+  var l=p.serverLevel();var pos=p.blockPosition();var c=data.cells.get(EnvironmentAnalytics.key(pos));var air=new ArrayList<String>();var water=new ArrayList<String>();var soil=new ArrayList<String>();var impact=new ArrayList<String>();var ecology=new ArrayList<String>();var seasons=new ArrayList<String>();
   air.add(fmt("biome_id","%s",l.getBiome(pos).unwrapKey().map(k->k.location().toString()).orElse("unknown")));
   WorldLogicApi.atmosphere(l,pos).ifPresent(a->{air.add(fmt("temperature","%.1f C",a.environment().ambientCelsiusEstimate()));air.add(fmt("humidity","%.0f %%",a.relativeHumidityPercent()));air.add(fmt("wind","%.1f m/s",a.outdoorWindSpeedMps()));air.add(fmt("solar","%.0f %%",a.environment().solarExposure()*100));air.add(fmt("precipitation","%s / %.0f %%",a.precipitation(),a.precipitationIntensity()*100));});
+  WorldLogicApi.season(l,pos).ifPresent(s->{seasons.add("season_"+s.kind().name().toLowerCase(Locale.ROOT)+"|");seasons.add(fmt("season_day","%d / %d",s.dayOfSeason(),s.daysPerSeason()));seasons.add(fmt("season_year","%.1f %%",s.yearProgress()*100));seasons.add(fmt("season_progress","%.1f %%",s.seasonProgress()*100));seasons.add(fmt("season_temp","%+.1f C",s.temperatureOffsetC()));seasons.add(fmt("season_solar","%.0f %%",s.solarFactor()*100));seasons.add(fmt("season_wet","%.0f %%",s.wetSeasonStrength()*100));});
   WorldLogicApi.localWeather(l,pos).ifPresent(w->{air.add(fmt("weather","%s",w.kind()));air.add(fmt("pressure","%.1f hPa",w.pressureHpa()));air.add(fmt("gust","%.1f m/s",w.gustMps()));});
   if(c!=null&&c.tick>=0){air.add(fmt("air_load","%.0f %%",c.air()*100));air.add(fmt("dust","%.0f %%",c.dust*100));air.add(fmt("combustion","%.0f %%",c.combustion*100));air.add(fmt("sources","%d",c.sources));soil.add(fmt("soil_load","%.0f %%",c.soil*100));}
   var hit=l.clip(new ClipContext(p.getEyePosition(),p.getEyePosition().add(p.getLookAngle().scale(6)),ClipContext.Block.OUTLINE,ClipContext.Fluid.ANY,p));
@@ -64,6 +65,6 @@ public final class AnalyticsSync{
   var nearby=new ArrayList<Cell>();var ch=p.chunkPosition();
   for(int dz=-1;dz<=1;dz++)for(int dx=-1;dx<=1;dx++){var n=data.cells.get(ChunkPos.asLong(ch.x+dx,ch.z+dz));if(n!=null&&n.tick>=0)nearby.add(new Cell(dx,dz,(float)n.air(),(float)n.soil));}
   var history=new ArrayList<Point>();if(c!=null)for(var h:c.history)history.add(new Point(h.tick(),(float)h.air(),(float)h.soil()));
-  PacketDistributor.sendToPlayer(p,new State(l.dimension().location().toString(),pos.getX(),pos.getY(),pos.getZ(),l.getGameTime(),List.of(List.copyOf(air),List.copyOf(water),List.copyOf(soil),List.copyOf(impact),List.copyOf(ecology)),List.copyOf(nearby),List.copyOf(history)));
+  PacketDistributor.sendToPlayer(p,new State(l.dimension().location().toString(),pos.getX(),pos.getY(),pos.getZ(),l.getGameTime(),List.of(List.copyOf(air),List.copyOf(water),List.copyOf(soil),List.copyOf(impact),List.copyOf(ecology),List.copyOf(seasons)),List.copyOf(nearby),List.copyOf(history)));
  }
 }

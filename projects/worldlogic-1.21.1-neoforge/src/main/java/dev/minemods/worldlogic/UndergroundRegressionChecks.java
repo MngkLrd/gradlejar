@@ -17,7 +17,13 @@ import net.minecraft.world.level.levelgen.*;
  * this is a bounded generated-column fixture, not a fully generated structure start. */
 final class UndergroundRegressionChecks{
  static void require(boolean value,String msg){if(!value)throw new IllegalStateException("underground regression: "+msg);}
- static void verify(ServerLevel l){
+ private static final Map<ServerLevel,Fixture> FIXTURES=new WeakHashMap<>();
+ private static final class Fixture{
+  final NoiseBasedChunkGenerator gen;final RandomState state;final LevelHeightAccessor bounds;final GeologyModel.Cave chosen;final BlockPos center;final ChunkPos ch;final ProtoChunk chunk;final int eligible;int next;
+  Fixture(NoiseBasedChunkGenerator gen,RandomState state,LevelHeightAccessor bounds,GeologyModel.Cave chosen,BlockPos center,ChunkPos ch,ProtoChunk chunk,int eligible){this.gen=gen;this.state=state;this.bounds=bounds;this.chosen=chosen;this.center=center;this.ch=ch;this.chunk=chunk;this.eligible=eligible;}
+ }
+ static void start(ServerLevel l){
+  FIXTURES.remove(l);
   var key=ResourceKey.create(Registries.WORLD_PRESET,ResourceLocation.fromNamespaceAndPath("worldlogic","realistic_unified"));
   var gen=(NoiseBasedChunkGenerator)l.registryAccess().lookupOrThrow(Registries.WORLD_PRESET).getOrThrow(key).value().createWorldDimensions().overworld();
   var state=RandomState.create(gen.generatorSettings().value(),l.registryAccess().lookupOrThrow(Registries.NOISE),42);
@@ -38,26 +44,50 @@ final class UndergroundRegressionChecks{
   }
   require(eligible==57&&gen.getBiomeSource().possibleBiomes().size()==58,"structure eligibility inventory after three approved biome merges");
   GeologyModel.Cave chosen=null;
-  outer:for(int gx=-10;gx<=10;gx++)for(int gz=-10;gz<=10;gz++){
-   var d=GeologyModel.district(42,gx,gz);
-   if(d.province()!=GeologyModel.Province.CARBONATE||!d.caves().get(0).shaft())continue;
-   var c=d.caves().get(0);int x=(int)Math.floor(c.x()),z=(int)Math.floor(c.z());
-   if(BiomeSurvey.modelY(state,x,z)<75)continue;
-   if(gen.getBaseHeight(x,z,Heightmap.Types.OCEAN_FLOOR_WG,bounds,state)>=72){chosen=c;break outer;}
+  // RC32 intentionally made entrances rarer. A small origin-only survey is
+  // not representative of the continent-scale terrain. Sample separated belts,
+  // using authoritative base height (not a climate-router height proxy).
+  int candidates=0,landCandidates=0;
+  outer:for(int ring=0;ring<=3;ring++)for(int az=-ring;az<=ring;az++)for(int ax=-ring;ax<=ring;ax++){
+   if(Math.max(Math.abs(ax),Math.abs(az))!=ring)continue;
+   int cx=ax*64,cz=az*64;
+   for(int gx=cx-12;gx<=cx+12;gx++)for(int gz=cz-12;gz<=cz+12;gz++){
+    var d=GeologyModel.district(42,gx,gz);
+    if(d.province()!=GeologyModel.Province.CARBONATE||!d.caves().get(0).shaft())continue;
+    var c=d.caves().get(0);int x=(int)Math.floor(c.x()),z=(int)Math.floor(c.z());
+    candidates++;
+    if(gen.getBaseHeight(x,z,Heightmap.Types.OCEAN_FLOOR_WG,bounds,state)<72)continue;
+    landCandidates++;chosen=c;break outer;
+   }
   }
-  require(chosen!=null,"real land karst candidate");
+  require(chosen!=null,"real land karst candidate; modeled shafts="+candidates+" land="+landCandidates);
+  org.slf4j.LoggerFactory.getLogger("WorldLogic").info("WORLDLOGIC_KARST_FIXTURE candidates={} x={} z={}",candidates,chosen.x(),chosen.z());
   var center=BlockPos.containing(chosen.x(),chosen.y(),chosen.z());var ch=new ChunkPos(center);
   var chunk=new ProtoChunk(ch,UpgradeData.EMPTY,bounds,l.registryAccess().registryOrThrow(Registries.BIOME),null);
+  FIXTURES.put(l,new Fixture(gen,state,bounds,chosen,center,ch,chunk,eligible));
+ }
+ // The shared RCON transport has a 15-second read timeout. Keep the full
+ // 256-column fixture, but bound each command to one row of 16 real columns.
+ static int columns(ServerLevel l,int row){
+  var f=FIXTURES.get(l);require(f!=null,"fixture not started");
+  require(row>=0&&row<16&&f.next==row*16,"out-of-order fixture row "+row);
   var p=new BlockPos.MutableBlockPos();
-  // Generate every actual base-noise column in one chunk (includes preexisting noise caves).
-  for(int x=ch.getMinBlockX();x<ch.getMinBlockX()+16;x++)for(int z=ch.getMinBlockZ();z<ch.getMinBlockZ()+16;z++){
-   var column=gen.getBaseColumn(x,z,bounds,state);
+  int x=f.ch.getMinBlockX()+row;
+  for(int z=f.ch.getMinBlockZ();z<f.ch.getMinBlockZ()+16;z++){
+   var column=f.gen.getBaseColumn(x,z,f.bounds,f.state);
    for(int y=-256;y<512;y++){
     var s=column.getBlock(y);
-    if(!s.isAir())chunk.setBlockState(p.set(x,y,z),s,false);
+    if(!s.isAir())f.chunk.setBlockState(p.set(x,y,z),s,false);
    }
-   chunk.setBlockState(p.set(x,-256,z),Blocks.BEDROCK.defaultBlockState(),false);
+   f.chunk.setBlockState(p.set(x,-256,z),Blocks.BEDROCK.defaultBlockState(),false);
+   f.next++;
   }
+  return f.next;
+ }
+ static void verify(ServerLevel l){
+  var f=FIXTURES.remove(l);require(f!=null&&f.next==256,"fixture must contain all 256 real columns");
+  var gen=f.gen;var state=f.state;var chosen=f.chosen;var center=f.center;var ch=f.ch;var chunk=f.chunk;int eligible=f.eligible;
+  var p=new BlockPos.MutableBlockPos();
   Heightmap.primeHeightmaps(chunk,EnumSet.of(Heightmap.Types.OCEAN_FLOOR_WG,Heightmap.Types.WORLD_SURFACE_WG));
   int surface=chunk.getHeight(Heightmap.Types.OCEAN_FLOOR_WG,center.getX()&15,center.getZ()&15);
   // Capture preexisting cavity blocks in the underground, then ensure the later stages cannot refill them.

@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "worldlogic:shale"
+  },
+  "result": {
+    "id": "worldlogic:shale_bricks",
+    "count": 1
+  }
+}

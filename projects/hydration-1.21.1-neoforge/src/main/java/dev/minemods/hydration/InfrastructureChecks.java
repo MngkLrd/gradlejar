@@ -58,6 +58,13 @@ public final class InfrastructureChecks {
     require(profile.kind().name().equals(k[1]),"native kind "+k[0]);
     var expected=WaterBottle.fromSource(profile);in.step(l);
     var actual=in.water();require(actual.ml()==250&&actual.origins().contains(k[1])&&actual.quality()==expected.quality()&&Math.abs(actual.salinity()-expected.salinity())<.00001&&Math.abs(actual.risk()-expected.risk())<.00001,"native intake profile "+k[0]);
+    var physical=WaterPhysics.batch(actual);
+    var core=dev.minemods.worldlogic.api.PhysicalMaterials.evaluate(
+      dev.minemods.worldlogic.api.PhysicalMaterials.fluidVolume(l.getFluidState(intake.above()).getType(),250),
+      dev.minemods.worldlogic.api.PhysicalMaterials.State.reference());
+    require(physical.known()&&Math.abs(physical.volumeM3()-.00025)<1e-12&&Math.abs(physical.massKg()-core.massKg())<1e-10
+      &&Math.abs(physical.densityKgM3()-core.bulkDensityKgM3())<1e-8&&physical.viscosityPaS()>0,"physical core match "+k[0]);
+    require(dev.minemods.hydration.api.HydrationApi.tankPhysics(l,intake).orElseThrow().equals(physical),"tank public physics "+k[0]);
    }
    l.setBlock(collector.above(),Blocks.GLASS.defaultBlockState(),Block.UPDATE_ALL);rain.step(l);
    require(rain.water().ml()==0,"covered collector stays empty");

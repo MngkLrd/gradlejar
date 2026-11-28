@@ -18,6 +18,10 @@ public final class NaturalFluidRendering{
     @Override public ResourceLocation getFlowingTexture(){return ResourceLocation.withDefaultNamespace("block/water_flow");}
     @Override public ResourceLocation getOverlayTexture(){return ResourceLocation.withDefaultNamespace("block/water_overlay");}
     @Override public int getTintColor(){return f.tint;}
+    @Override public int getTintColor(net.minecraft.world.level.material.FluidState state,net.minecraft.world.level.BlockAndTintGetter level,net.minecraft.core.BlockPos pos){
+     if(f.kind==dev.minemods.worldlogic.api.WorldLogicApi.WaterKind.SEA)return 0xff000000|net.minecraft.client.renderer.BiomeColors.getAverageWaterColor(level,pos);
+     return f.tint;
+    }
    },f.type.get());
   }
  }
@@ -25,6 +29,6 @@ public final class NaturalFluidRendering{
   e.enqueueWork(()->{for(var f:NaturalFluids.families()){
    ItemBlockRenderTypes.setRenderLayer(f.source.get(),RenderType.translucent());
    ItemBlockRenderTypes.setRenderLayer(f.flowing.get(),RenderType.translucent());
-  }});
+  }for(var b:dev.minemods.worldlogic.MarinePlants.blocks())ItemBlockRenderTypes.setRenderLayer(b,RenderType.cutout());});
  }
 }

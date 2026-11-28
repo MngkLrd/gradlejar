@@ -14,11 +14,15 @@ public abstract class GeologyDecorationMixin {
  private void worldlogic$marineBed(WorldGenLevel level,ChunkAccess chunk,StructureManager structures,CallbackInfo ci){
   var generator=(ChunkGenerator)(Object)this;
   if(GeologyGeneration.enabled(generator))dev.minemods.worldlogic.MarineTerrain.prepare(level.getSeed(),chunk,generator.getSeaLevel());
+  if(level instanceof net.minecraft.server.level.WorldGenRegion region&&generator instanceof net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator noise)
+   dev.minemods.worldlogic.GroundMaterials.decorate(noise,region.getLevel().getChunkSource().randomState(),region.registryAccess(),chunk,level.getSeed());
  }
  @Inject(method="applyBiomeDecoration",at=@At("RETURN"))
  private void worldlogic$deposits(WorldGenLevel level,ChunkAccess chunk,StructureManager structures,CallbackInfo ci){
   var generator=(ChunkGenerator)(Object)this;
   if(GeologyGeneration.enabled(generator))GeologyGeneration.mineralize(level.getSeed(),chunk);
   dev.minemods.worldlogic.NaturalWaterGeneration.convert(level,chunk,generator);
+  if(level instanceof net.minecraft.server.level.WorldGenRegion region&&generator instanceof net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator noise)
+   dev.minemods.worldlogic.ReefTerrain.decorate(noise,region.getLevel().getChunkSource().randomState(),region.registryAccess(),chunk,level.getSeed());
  }
 }

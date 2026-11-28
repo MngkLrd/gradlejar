@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "worldlogic:slate"
+  },
+  "result": {
+    "id": "worldlogic:slate_wall",
+    "count": 1
+  }
+}

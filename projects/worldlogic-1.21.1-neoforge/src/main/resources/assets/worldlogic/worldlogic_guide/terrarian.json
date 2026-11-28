@@ -127,12 +127,12 @@
         "ru": [
           "Камыш, рогоз, осока и калужница растут у пресных вод; солёные берега имеют другую растительность. Кувшинки и ряска плавают на поверхности источников воды.",
           "Глубина и солёность определяют пригодность места. Не все водные растения способны расти в любом виде воды.",
-          "Полноценная собственная подводная экология и универсальное водонаполнение блоков пока отложены; ядро временно возвращает ванильную морскую растительность."
+          "В морских биомах ядро сохраняет ламинарии и морскую траву в собственной морской воде; полноценная экология подводных растений и универсальное водонаполнение остальных блоков пока отложены."
         ],
         "en": [
           "Reeds, cattails, sedge and marsh marigold favor freshwater banks; salty shores differ. Water lilies and duckweed float on source water.",
           "Depth and salinity determine suitability. Not every aquatic plant grows in every water type.",
-          "Full custom underwater ecology and universal waterlogging are deferred; Core temporarily restores vanilla marine flora."
+          "In marine biomes Core keeps kelp and seagrass in native seawater; full underwater ecology and general multi-fluid waterlogging remain deferred."
         ]
       }
     }

@@ -4,10 +4,10 @@
   "order": 20,
   "requires": "worldlogic_thermal",
   "title": {
-    "ru": "Temperature · Климат тела",
-    "en": "Temperature · Body climate"
+    "ru": "Температура и одежда",
+    "en": "Temperature and clothing"
   },
-  "source": "Thermal 0.8.3-rc1",
+  "source": "Thermal 0.8.4-rc1",
   "pages": [
     {
       "id": "body",
@@ -130,6 +130,1380 @@
           "Charge warm items by right-clicking a lit furnace or campfire; charcoal warmer needs coal in the offhand. Cold items charge on ice; wet cloth at a water cauldron.",
           "Comfort works from the hotbar, does not stack and loses charge over time. Right-click a fan for a short cooling pulse.",
           "These are not substitutes for clothing or shelter; comfort is limited by body and felt temperature."
+        ]
+      }
+    },
+    {
+      "id": "solar_exposure",
+      "title": {
+        "ru": "Солнце, тень и ветер",
+        "en": "Sun, shade and wind"
+      },
+      "models": [
+        "worldlogic_thermal:sun_hat",
+        "worldlogic_thermal:woven_canopy"
+      ],
+      "body": {
+        "ru": [
+          "Солнечная радиация и укрытие влияют на ощущаемую среду. Навес блокирует прямое солнце до восьми блоков под ним. Воздух, ветер и влажность остаются отдельными параметрами.",
+          "Солнцезащитная одежда и навес помогают в жаре; солнце не является отдельным глобальным регулятором температуры."
+        ],
+        "en": [
+          "Solar exposure and shelter affect perceived conditions. A canopy removes direct solar exposure within eight blocks below it. Air, wind and humidity remain separate parameters.",
+          "Sun-protective clothing and shade help in heat without changing global climate."
+        ]
+      }
+    },
+    {
+      "id": "fiber_processing",
+      "title": {
+        "ru": "Обработка травы: пошагово",
+        "en": "Grass fiber processing"
+      },
+      "models": [
+        "worldlogic_thermal:raw_fiber_bundle",
+        "worldlogic_thermal:stone_scraper",
+        "worldlogic_thermal:plant_thread"
+      ],
+      "body": {
+        "ru": [
+          "Собери подходящую траву ПКМ пустой рукой. Положи сырой пучок на подходящую каменную поверхность ПКМ.",
+          "Обработай все 64 ячейки ЛКМ. Скребок обрабатывает крест из пяти ячеек; Shift+ЛКМ снимает незавершённый пучок. После завершения следующий клик даёт четыре волокна.",
+          "Из волокон сделай нить, затем ткань. Используй рецепты текущего мира; прялка и станок повышают выход."
+        ],
+        "en": [
+          "Collect eligible grass with empty-hand use; place the raw bundle on suitable stone.",
+          "Process all 64 cells. A scraper works a five-cell cross; sneak-left retrieves partial work. Click again after completion for four fibers.",
+          "Make thread and cloth; use live recipes. Spindle and loom improve yield."
+        ]
+      }
+    },
+    {
+      "id": "leather_processing",
+      "title": {
+        "ru": "Подготовка кожи",
+        "en": "Leather preparation"
+      },
+      "models": [
+        "minecraft:leather",
+        "worldlogic_thermal:fur_coat"
+      ],
+      "body": {
+        "ru": [
+          "Рама обработки кожи подготавливает ванильную кожу. Самостоятельная система добычи сырой шкуры животных пока не реализована.",
+          "Подготовленная кожа и войлок применяются в меховой одежде. Проверь рецепты и подсказки станка в текущей сборке."
+        ],
+        "en": [
+          "The hide frame prepares vanilla leather. Separate raw animal-hide drops are not implemented yet.",
+          "Prepared leather and felt are used in fur-lined clothing. Consult live recipes and station tooltips."
+        ]
+      }
+    },
+    {
+      "id": "first_clothes",
+      "title": {
+        "ru": "Первая одежда",
+        "en": "First clothing"
+      },
+      "models": [
+        "worldlogic_thermal:grass_coat",
+        "worldlogic_thermal:linen_clothes",
+        "worldlogic_thermal:fur_boots"
+      ],
+      "body": {
+        "ru": [
+          "Начни с растительного волокна и ранней травяной одежды. Используй слот брони; климатические вещи не дают боевой защиты.",
+          "Дальше переходи к ткани, летней одежде, меху и обуви в зависимости от условий. Отдельных слоёв нижнего белья пока нет."
+        ],
+        "en": [
+          "Start with plant fiber and early grass clothes. Equip in armor slots; climate clothes offer no combat defense.",
+          "Progress to woven fabric, summer clothing, fur and footwear according to conditions. Separate underwear layers are not implemented."
+        ]
+      }
+    },
+    {
+      "id": "stat_air",
+      "title": {
+        "ru": "Температура воздуха",
+        "en": "Air temperature"
+      },
+      "models": [
+        "minecraft:campfire"
+      ],
+      "body": {
+        "ru": [
+          "Температура воздуха в этой точке, без учёта вашей одежды и местных обогревателей."
+        ],
+        "en": [
+          "Outside air temperature at your location, before your clothing and local heat sources."
+        ]
+      }
+    },
+    {
+      "id": "stat_felt",
+      "title": {
+        "ru": "Ощущается как",
+        "en": "Feels like"
+      },
+      "models": [
+        "minecraft:campfire"
+      ],
+      "body": {
+        "ru": [
+          "Какую температуру испытывает тело с учётом ветра, влаги, нагрева и охлаждения."
+        ],
+        "en": [
+          "What the body is exposed to after wind, wetness, heat and cooling."
+        ]
+      }
+    },
+    {
+      "id": "stat_wet",
+      "title": {
+        "ru": "Влажность тела",
+        "en": "Skin wetness"
+      },
+      "models": [
+        "minecraft:campfire"
+      ],
+      "body": {
+        "ru": [
+          "Насколько намокло тело. Влага ускоряет охлаждение и ослабляет утепление."
+        ],
+        "en": [
+          "How wet your body is. Wetness accelerates cooling and reduces insulation."
+        ]
+      }
+    },
+    {
+      "id": "stat_insulation",
+      "title": {
+        "ru": "Теплоизоляция",
+        "en": "Insulation"
+      },
+      "models": [
+        "minecraft:campfire"
+      ],
+      "body": {
+        "ru": [
+          "Защита одежды от холода. Избыток утепления мешает в жару."
+        ],
+        "en": [
+          "Clothing protection against cold. Excess insulation can worsen heat."
+        ]
+      }
+    },
+    {
+      "id": "stat_heat",
+      "title": {
+        "ru": "Лучистое тепло",
+        "en": "Radiant heat"
+      },
+      "models": [
+        "minecraft:campfire"
+      ],
+      "body": {
+        "ru": [
+          "Тепло от ближайших источников и переносных грелок."
+        ],
+        "en": [
+          "Immediate warmth from nearby sources and portable heating."
+        ]
+      }
+    },
+    {
+      "id": "stat_trend",
+      "title": {
+        "ru": "Изменение температуры",
+        "en": "Body trend"
+      },
+      "models": [
+        "minecraft:campfire"
+      ],
+      "body": {
+        "ru": [
+          "Скорость изменения температуры тела при текущих условиях, в градусах за минуту."
+        ],
+        "en": [
+          "Expected body temperature change per minute at the present conditions."
+        ]
+      }
+    },
+    {
+      "id": "stat_adaptation",
+      "title": {
+        "ru": "Адаптация (холод / жара)",
+        "en": "Adaptation (cold / heat)"
+      },
+      "models": [
+        "minecraft:campfire"
+      ],
+      "body": {
+        "ru": [
+          "Привыкание к холоду и жаре, отдельно в процентах. Длительное умеренное воздействие повышает устойчивость, а в другом климате она постепенно падает. Компенсация нагрузки до 3°C."
+        ],
+        "en": [
+          "Cold and heat tolerance. Long moderate exposure builds separate adaptation; it fades away from that climate. Up to 3°C of stress compensation."
+        ]
+      }
+    },
+    {
+      "id": "stat_nutrition",
+      "title": {
+        "ru": "Запас питания",
+        "en": "Nutrition reserve"
+      },
+      "models": [
+        "minecraft:campfire"
+      ],
+      "body": {
+        "ru": [
+          "Запас сытости и насыщения. Голод мешает согреваться; после еды организм ненадолго лучше удерживает тепло."
+        ],
+        "en": [
+          "Food and saturation reserve. Low nutrition makes it harder to stay warm; meals give brief metabolic support."
+        ]
+      }
+    },
+    {
+      "id": "stat_room_heat",
+      "title": {
+        "ru": "Тепло помещения",
+        "en": "Retained room heat"
+      },
+      "models": [
+        "minecraft:campfire"
+      ],
+      "body": {
+        "ru": [
+          "Тепло или прохлада, постепенно накопленные в закрытом помещении. На открытом воздухе этого эффекта нет."
+        ],
+        "en": [
+          "Slowly retained warmth or cooling in a bounded enclosed room. Open spaces do not store this bonus."
+        ]
+      }
+    },
+    {
+      "id": "stat_condition",
+      "title": {
+        "ru": "Температурные нарушения",
+        "en": "condition"
+      },
+      "models": [
+        "minecraft:campfire"
+      ],
+      "body": {
+        "ru": [
+          "Острое температурное нарушение. Обморожения отдельных конечностей фиксирует Trauma, если установлен."
+        ],
+        "en": [
+          "Acute temperature illness. Local frostbite is recorded by Trauma, when installed."
+        ]
+      }
+    },
+    {
+      "id": "stat_humidity",
+      "title": {
+        "ru": "Влажность воздуха",
+        "en": "Relative humidity"
+      },
+      "models": [
+        "minecraft:campfire"
+      ],
+      "body": {
+        "ru": [
+          "Относительная влажность воздуха. В сыром воздухе влага испаряется медленнее."
+        ],
+        "en": [
+          "Relative humidity. Moist air slows evaporation and drying."
+        ]
+      }
+    },
+    {
+      "id": "stat_wind",
+      "title": {
+        "ru": "Ветер снаружи",
+        "en": "Outdoor wind"
+      },
+      "models": [
+        "minecraft:campfire"
+      ],
+      "body": {
+        "ru": [
+          "Расчётный ветер на открытом воздухе. Укрытие и одежда ослабляют его влияние."
+        ],
+        "en": [
+          "Estimated outdoor wind; shelter and clothing reduce its effect."
+        ]
+      }
+    },
+    {
+      "id": "stat_precip",
+      "title": {
+        "ru": "Осадки",
+        "en": "Precipitation"
+      },
+      "models": [
+        "minecraft:campfire"
+      ],
+      "body": {
+        "ru": [
+          "Осадки и их интенсивность. Дождь мочит открытое тело."
+        ],
+        "en": [
+          "Precipitation and intensity. Rain wets exposed skin."
+        ]
+      }
+    },
+    {
+      "id": "stat_solar",
+      "title": {
+        "ru": "Солнечная нагрузка",
+        "en": "Solar exposure"
+      },
+      "models": [
+        "minecraft:campfire"
+      ],
+      "body": {
+        "ru": [
+          "Воздействие солнечных лучей. Тень снижает нагрев и риск солнечного удара."
+        ],
+        "en": [
+          "Direct solar exposure. Shade reduces heat and sunstroke risk."
+        ]
+      }
+    },
+    {
+      "id": "stat_pressure",
+      "title": {
+        "ru": "Давление воздуха",
+        "en": "Air pressure"
+      },
+      "models": [
+        "minecraft:campfire"
+      ],
+      "body": {
+        "ru": [
+          "Расчётное давление воздуха. Показывается для информации, не изменяет температуру повторно."
+        ],
+        "en": [
+          "Modeled atmospheric pressure. Display only; it is not a second temperature modifier."
+        ]
+      }
+    },
+    {
+      "id": "stat_gust",
+      "title": {
+        "ru": "Порывы ветра",
+        "en": "Wind gusts"
+      },
+      "models": [
+        "minecraft:campfire"
+      ],
+      "body": {
+        "ru": [
+          "Краткие усиления ветра. На открытом месте они ускоряют охлаждение."
+        ],
+        "en": [
+          "Short bursts of stronger wind. In exposed locations they increase cooling."
+        ]
+      }
+    },
+    {
+      "id": "stat_shelter",
+      "title": {
+        "ru": "Над вами есть укрытие от неба",
+        "en": "shelter"
+      },
+      "models": [
+        "minecraft:campfire"
+      ],
+      "body": {
+        "ru": [
+          "Над вами есть укрытие от неба. Одна крыша ещё не гарантирует тёплое помещение."
+        ],
+        "en": [
+          "No direct view of the sky. A roof alone does not guarantee a warm room."
+        ]
+      }
+    },
+    {
+      "id": "item_dry_fiber",
+      "title": {
+        "ru": "Сухое растительное волокно",
+        "en": "Dry plant fiber"
+      },
+      "models": [
+        "worldlogic_thermal:dry_fiber"
+      ],
+      "body": {
+        "ru": [
+          "Материал для прядения растительной нити.",
+          "Рецепты доступны в разделе «Рецепты», если присутствуют в текущей сборке."
+        ],
+        "en": [
+          "Material for spinning plant thread.",
+          "See Recipes for recipes available in the installed pack."
+        ]
+      }
+    },
+    {
+      "id": "item_grass_hood",
+      "title": {
+        "ru": "Травяной капюшон",
+        "en": "Woven grass hood"
+      },
+      "models": [
+        "worldlogic_thermal:grass_hood"
+      ],
+      "body": {
+        "ru": [
+          "Теплоизоляция 25%, ранняя одежда.",
+          "Климатическая одежда не даёт боевой защиты. Смотри актуальные свойства в подсказке предмета."
+        ],
+        "en": [
+          "25% insulation, early clothing.",
+          "Climate clothing offers no combat defense. Inspect live item tooltip for properties."
+        ]
+      }
+    },
+    {
+      "id": "item_grass_coat",
+      "title": {
+        "ru": "Плетёная травяная накидка",
+        "en": "Woven grass coat"
+      },
+      "models": [
+        "worldlogic_thermal:grass_coat"
+      ],
+      "body": {
+        "ru": [
+          "Теплоизоляция 25%, ранняя одежда.",
+          "Климатическая одежда не даёт боевой защиты. Смотри актуальные свойства в подсказке предмета."
+        ],
+        "en": [
+          "25% insulation, early clothing.",
+          "Climate clothing offers no combat defense. Inspect live item tooltip for properties."
+        ]
+      }
+    },
+    {
+      "id": "item_grass_leggings",
+      "title": {
+        "ru": "Травяные поножи",
+        "en": "Woven grass leggings"
+      },
+      "models": [
+        "worldlogic_thermal:grass_leggings"
+      ],
+      "body": {
+        "ru": [
+          "Теплоизоляция 25%, ранняя одежда.",
+          "Климатическая одежда не даёт боевой защиты. Смотри актуальные свойства в подсказке предмета."
+        ],
+        "en": [
+          "25% insulation, early clothing.",
+          "Climate clothing offers no combat defense. Inspect live item tooltip for properties."
+        ]
+      }
+    },
+    {
+      "id": "item_grass_boots",
+      "title": {
+        "ru": "Травяные обмотки",
+        "en": "Grass-lined boots"
+      },
+      "models": [
+        "worldlogic_thermal:grass_boots"
+      ],
+      "body": {
+        "ru": [
+          "Теплоизоляция 25%, защита ног.",
+          "Климатическая одежда не даёт боевой защиты. Смотри актуальные свойства в подсказке предмета."
+        ],
+        "en": [
+          "25% insulation, foot protection.",
+          "Climate clothing offers no combat defense. Inspect live item tooltip for properties."
+        ]
+      }
+    },
+    {
+      "id": "item_sun_hat",
+      "title": {
+        "ru": "Плетёная шляпа",
+        "en": "Woven sun hat"
+      },
+      "models": [
+        "worldlogic_thermal:sun_hat"
+      ],
+      "body": {
+        "ru": [
+          "Лёгкая защита от жары.",
+          "Климатическая одежда не даёт боевой защиты. Смотри актуальные свойства в подсказке предмета."
+        ],
+        "en": [
+          "Light heat protection.",
+          "Climate clothing offers no combat defense. Inspect live item tooltip for properties."
+        ]
+      }
+    },
+    {
+      "id": "item_light_tunic",
+      "title": {
+        "ru": "Лёгкая туника",
+        "en": "Light tunic"
+      },
+      "models": [
+        "worldlogic_thermal:light_tunic"
+      ],
+      "body": {
+        "ru": [
+          "Лёгкая одежда для жары.",
+          "Климатическая одежда не даёт боевой защиты. Смотри актуальные свойства в подсказке предмета."
+        ],
+        "en": [
+          "Light clothes for heat.",
+          "Climate clothing offers no combat defense. Inspect live item tooltip for properties."
+        ]
+      }
+    },
+    {
+      "id": "item_clay_hearth",
+      "title": {
+        "ru": "Глиняный очаг",
+        "en": "Clay hearth"
+      },
+      "models": [
+        "worldlogic_thermal:clay_hearth"
+      ],
+      "body": {
+        "ru": [
+          "Обогревает рядом и накапливает тепло в закрытом помещении. ПКМ углём.",
+          "Рецепты доступны в разделе «Рецепты», если присутствуют в текущей сборке."
+        ],
+        "en": [
+          "Heats nearby and stores warmth in enclosed rooms. Right-click with coal.",
+          "See Recipes for recipes available in the installed pack."
+        ]
+      }
+    },
+    {
+      "id": "item_evaporative_cooler",
+      "title": {
+        "ru": "Испарительный охладитель",
+        "en": "Evaporative cooler"
+      },
+      "models": [
+        "worldlogic_thermal:evaporative_cooler"
+      ],
+      "body": {
+        "ru": [
+          "Охлаждает тёплый воздух испарением; эффективнее в сухом укрытии. ПКМ ведром воды.",
+          "Рецепты доступны в разделе «Рецепты», если присутствуют в текущей сборке."
+        ],
+        "en": [
+          "Cools warm air by evaporation, best in a dry shelter. Right-click with a water bucket.",
+          "See Recipes for recipes available in the installed pack."
+        ]
+      }
+    },
+    {
+      "id": "item_raw_fiber_bundle",
+      "title": {
+        "ru": "Пучок растительного сырья",
+        "en": "Raw plant bundle"
+      },
+      "models": [
+        "worldlogic_thermal:raw_fiber_bundle"
+      ],
+      "body": {
+        "ru": [
+          "Сырьё для очистки на камне каменным скребком.",
+          "Рецепты доступны в разделе «Рецепты», если присутствуют в текущей сборке."
+        ],
+        "en": [
+          "Raw material for processing on stone with a scraper.",
+          "See Recipes for recipes available in the installed pack."
+        ]
+      }
+    },
+    {
+      "id": "item_plant_thread",
+      "title": {
+        "ru": "Растительная нить",
+        "en": "Plant thread"
+      },
+      "models": [
+        "worldlogic_thermal:plant_thread"
+      ],
+      "body": {
+        "ru": [
+          "Ткачество, шитьё и ремонт одежды.",
+          "Рецепты доступны в разделе «Рецепты», если присутствуют в текущей сборке."
+        ],
+        "en": [
+          "Weaving, sewing and garment repair.",
+          "See Recipes for recipes available in the installed pack."
+        ]
+      }
+    },
+    {
+      "id": "item_woven_fiber",
+      "title": {
+        "ru": "Плетёное полотно",
+        "en": "Woven plant cloth"
+      },
+      "models": [
+        "worldlogic_thermal:woven_fiber"
+      ],
+      "body": {
+        "ru": [
+          "Плетёное полотно для одежды и навесов.",
+          "Рецепты доступны в разделе «Рецепты», если присутствуют в текущей сборке."
+        ],
+        "en": [
+          "Woven fabric for clothing and canopies.",
+          "See Recipes for recipes available in the installed pack."
+        ]
+      }
+    },
+    {
+      "id": "item_stone_scraper",
+      "title": {
+        "ru": "Каменный скребок",
+        "en": "Stone scraper"
+      },
+      "models": [
+        "worldlogic_thermal:stone_scraper"
+      ],
+      "body": {
+        "ru": [
+          "Очищает растительное сырьё на рабочей поверхности.",
+          "Рецепты доступны в разделе «Рецепты», если присутствуют в текущей сборке."
+        ],
+        "en": [
+          "Scrapes plant material on the work surface.",
+          "See Recipes for recipes available in the installed pack."
+        ]
+      }
+    },
+    {
+      "id": "item_fur_hat",
+      "title": {
+        "ru": "Меховая шапка",
+        "en": "Fur-lined hat"
+      },
+      "models": [
+        "worldlogic_thermal:fur_hat"
+      ],
+      "body": {
+        "ru": [
+          "Меховая теплоизоляция головы.",
+          "Климатическая одежда не даёт боевой защиты. Смотри актуальные свойства в подсказке предмета."
+        ],
+        "en": [
+          "Fur insulation for head.",
+          "Climate clothing offers no combat defense. Inspect live item tooltip for properties."
+        ]
+      }
+    },
+    {
+      "id": "item_fur_coat",
+      "title": {
+        "ru": "Меховой тулуп",
+        "en": "Fur-lined coat"
+      },
+      "models": [
+        "worldlogic_thermal:fur_coat"
+      ],
+      "body": {
+        "ru": [
+          "Меховое утепление корпуса.",
+          "Климатическая одежда не даёт боевой защиты. Смотри актуальные свойства в подсказке предмета."
+        ],
+        "en": [
+          "Fur insulation for torso.",
+          "Climate clothing offers no combat defense. Inspect live item tooltip for properties."
+        ]
+      }
+    },
+    {
+      "id": "item_fur_boots",
+      "title": {
+        "ru": "Меховые сапоги",
+        "en": "Fur-lined boots"
+      },
+      "models": [
+        "worldlogic_thermal:fur_boots"
+      ],
+      "body": {
+        "ru": [
+          "Утепление ног и защита от холодного грунта.",
+          "Климатическая одежда не даёт боевой защиты. Смотри актуальные свойства в подсказке предмета."
+        ],
+        "en": [
+          "Foot insulation and cold-ground protection.",
+          "Climate clothing offers no combat defense. Inspect live item tooltip for properties."
+        ]
+      }
+    },
+    {
+      "id": "item_wool_underwear",
+      "title": {
+        "ru": "Шерстяное бельё",
+        "en": "Wool underlayer"
+      },
+      "models": [
+        "worldlogic_thermal:wool_underwear"
+      ],
+      "body": {
+        "ru": [
+          "Шерстяное утепление в слоте поножей, не отдельный слой.",
+          "Климатическая одежда не даёт боевой защиты. Смотри актуальные свойства в подсказке предмета."
+        ],
+        "en": [
+          "Wool insulation in leggings slot, not a separate layer.",
+          "Climate clothing offers no combat defense. Inspect live item tooltip for properties."
+        ]
+      }
+    },
+    {
+      "id": "item_waxed_cloak",
+      "title": {
+        "ru": "Вощёный плащ",
+        "en": "Waxed cloak"
+      },
+      "models": [
+        "worldlogic_thermal:waxed_cloak"
+      ],
+      "body": {
+        "ru": [
+          "Защита от влаги и ветра.",
+          "Климатическая одежда не даёт боевой защиты. Смотри актуальные свойства в подсказке предмета."
+        ],
+        "en": [
+          "Moisture and wind protection.",
+          "Climate clothing offers no combat defense. Inspect live item tooltip for properties."
+        ]
+      }
+    },
+    {
+      "id": "item_leather_face_mask",
+      "title": {
+        "ru": "Кожаная маска",
+        "en": "Leather face mask"
+      },
+      "models": [
+        "worldlogic_thermal:leather_face_mask"
+      ],
+      "body": {
+        "ru": [
+          "Защита головы от ветра.",
+          "Климатическая одежда не даёт боевой защиты. Смотри актуальные свойства в подсказке предмета."
+        ],
+        "en": [
+          "Head wind protection.",
+          "Climate clothing offers no combat defense. Inspect live item tooltip for properties."
+        ]
+      }
+    },
+    {
+      "id": "item_linen_clothes",
+      "title": {
+        "ru": "Лёгкая полотняная одежда",
+        "en": "Woven summer clothes"
+      },
+      "models": [
+        "worldlogic_thermal:linen_clothes"
+      ],
+      "body": {
+        "ru": [
+          "Лёгкая одежда для жары.",
+          "Климатическая одежда не даёт боевой защиты. Смотри актуальные свойства в подсказке предмета."
+        ],
+        "en": [
+          "Light summer clothing.",
+          "Climate clothing offers no combat defense. Inspect live item tooltip for properties."
+        ]
+      }
+    },
+    {
+      "id": "item_desert_headwear",
+      "title": {
+        "ru": "Пустынный головной убор",
+        "en": "Desert head wrap"
+      },
+      "models": [
+        "worldlogic_thermal:desert_headwear"
+      ],
+      "body": {
+        "ru": [
+          "Защита от жары и солнца.",
+          "Климатическая одежда не даёт боевой защиты. Смотри актуальные свойства в подсказке предмета."
+        ],
+        "en": [
+          "Heat and solar protection.",
+          "Climate clothing offers no combat defense. Inspect live item tooltip for properties."
+        ]
+      }
+    },
+    {
+      "id": "item_straw_cape",
+      "title": {
+        "ru": "Соломенная накидка",
+        "en": "Straw cape"
+      },
+      "models": [
+        "worldlogic_thermal:straw_cape"
+      ],
+      "body": {
+        "ru": [
+          "Лёгкая накидка от солнца и влаги.",
+          "Климатическая одежда не даёт боевой защиты. Смотри актуальные свойства в подсказке предмета."
+        ],
+        "en": [
+          "Light cape against sun and moisture.",
+          "Climate clothing offers no combat defense. Inspect live item tooltip for properties."
+        ]
+      }
+    },
+    {
+      "id": "item_hot_stone",
+      "title": {
+        "ru": "Нагреваемый камень",
+        "en": "Thermal stone"
+      },
+      "models": [
+        "worldlogic_thermal:hot_stone"
+      ],
+      "body": {
+        "ru": [
+          "Нагревается у горящего костра или печи.",
+          "Эффект из хотбара, одинаковые эффекты не складываются; заряд постепенно иссякает."
+        ],
+        "en": [
+          "Charge at a lit campfire or furnace.",
+          "Works from hotbar; equal effects do not stack and charge decays."
+        ]
+      }
+    },
+    {
+      "id": "item_leather_warmer",
+      "title": {
+        "ru": "Кожаная грелка",
+        "en": "Leather thermal pouch"
+      },
+      "models": [
+        "worldlogic_thermal:leather_warmer"
+      ],
+      "body": {
+        "ru": [
+          "Переносная грелка; заряжается у источника тепла.",
+          "Эффект из хотбара, одинаковые эффекты не складываются; заряд постепенно иссякает."
+        ],
+        "en": [
+          "Portable warmer; charge at heat source.",
+          "Works from hotbar; equal effects do not stack and charge decays."
+        ]
+      }
+    },
+    {
+      "id": "item_charcoal_warmer",
+      "title": {
+        "ru": "Угольная грелка",
+        "en": "Charcoal warmer"
+      },
+      "models": [
+        "worldlogic_thermal:charcoal_warmer"
+      ],
+      "body": {
+        "ru": [
+          "Нагрев требует уголь во второй руке.",
+          "Эффект из хотбара, одинаковые эффекты не складываются; заряд постепенно иссякает."
+        ],
+        "en": [
+          "Heating requires coal in offhand.",
+          "Works from hotbar; equal effects do not stack and charge decays."
+        ]
+      }
+    },
+    {
+      "id": "item_hand_fan",
+      "title": {
+        "ru": "Ручной веер",
+        "en": "Hand fan"
+      },
+      "models": [
+        "worldlogic_thermal:hand_fan"
+      ],
+      "body": {
+        "ru": [
+          "ПКМ даёт короткий импульс охлаждения.",
+          "Эффект из хотбара, одинаковые эффекты не складываются; заряд постепенно иссякает."
+        ],
+        "en": [
+          "Right-click gives a short cooling pulse.",
+          "Works from hotbar; equal effects do not stack and charge decays."
+        ]
+      }
+    },
+    {
+      "id": "item_wet_cloth",
+      "title": {
+        "ru": "Охлаждающая ткань",
+        "en": "Cooling cloth"
+      },
+      "models": [
+        "worldlogic_thermal:wet_cloth"
+      ],
+      "body": {
+        "ru": [
+          "Заряжается от водяного котла.",
+          "Эффект из хотбара, одинаковые эффекты не складываются; заряд постепенно иссякает."
+        ],
+        "en": [
+          "Charge at a water cauldron.",
+          "Works from hotbar; equal effects do not stack and charge decays."
+        ]
+      }
+    },
+    {
+      "id": "item_insulated_flask",
+      "title": {
+        "ru": "Термоизолированный бурдюк",
+        "en": "Insulated flask"
+      },
+      "models": [
+        "worldlogic_thermal:insulated_flask"
+      ],
+      "body": {
+        "ru": [
+          "Переносной термопредмет; проверяй заряд и подсказку.",
+          "Эффект из хотбара, одинаковые эффекты не складываются; заряд постепенно иссякает."
+        ],
+        "en": [
+          "Portable thermal item; check charge and tooltip.",
+          "Works from hotbar; equal effects do not stack and charge decays."
+        ]
+      }
+    },
+    {
+      "id": "item_plant_oil",
+      "title": {
+        "ru": "Растительное масло",
+        "en": "Plant oil"
+      },
+      "models": [
+        "worldlogic_thermal:plant_oil"
+      ],
+      "body": {
+        "ru": [
+          "Топливо масляной лампы.",
+          "Рецепты доступны в разделе «Рецепты», если присутствуют в текущей сборке."
+        ],
+        "en": [
+          "Fuel for the oil lamp.",
+          "See Recipes for recipes available in the installed pack."
+        ]
+      }
+    },
+    {
+      "id": "item_combed_wool",
+      "title": {
+        "ru": "Чёсаная шерсть",
+        "en": "Combed wool"
+      },
+      "models": [
+        "worldlogic_thermal:combed_wool"
+      ],
+      "body": {
+        "ru": [
+          "Подготовленная шерсть для валяния.",
+          "Рецепты доступны в разделе «Рецепты», если присутствуют в текущей сборке."
+        ],
+        "en": [
+          "Prepared wool for felting.",
+          "See Recipes for recipes available in the installed pack."
+        ]
+      }
+    },
+    {
+      "id": "item_prepared_hide",
+      "title": {
+        "ru": "Подготовленная кожа",
+        "en": "Prepared hide"
+      },
+      "models": [
+        "worldlogic_thermal:prepared_hide"
+      ],
+      "body": {
+        "ru": [
+          "Материал для кожаной климатической экипировки.",
+          "Рецепты доступны в разделе «Рецепты», если присутствуют в текущей сборке."
+        ],
+        "en": [
+          "Material for leather climate equipment.",
+          "See Recipes for recipes available in the installed pack."
+        ]
+      }
+    },
+    {
+      "id": "item_felt",
+      "title": {
+        "ru": "Войлок",
+        "en": "Felt"
+      },
+      "models": [
+        "worldlogic_thermal:felt"
+      ],
+      "body": {
+        "ru": [
+          "Утепляющий материал для одежды.",
+          "Рецепты доступны в разделе «Рецепты», если присутствуют в текущей сборке."
+        ],
+        "en": [
+          "Insulating material for garments.",
+          "See Recipes for recipes available in the installed pack."
+        ]
+      }
+    },
+    {
+      "id": "item_spindle",
+      "title": {
+        "ru": "Веретено",
+        "en": "Spindle"
+      },
+      "models": [
+        "worldlogic_thermal:spindle"
+      ],
+      "body": {
+        "ru": [
+          "ПКМ: 2 сухих волокна во второй руке → 4 нити.",
+          "Рецепты доступны в разделе «Рецепты», если присутствуют в текущей сборке."
+        ],
+        "en": [
+          "Right-click: 2 dry fibers in offhand → 4 thread.",
+          "See Recipes for recipes available in the installed pack."
+        ]
+      }
+    },
+    {
+      "id": "item_bone_needle",
+      "title": {
+        "ru": "Костяная игла",
+        "en": "Bone needle"
+      },
+      "models": [
+        "worldlogic_thermal:bone_needle"
+      ],
+      "body": {
+        "ru": [
+          "ПКМ: повреждённая одежда во второй руке и 1 нить; ремонт 25% прочности.",
+          "Рецепты доступны в разделе «Рецепты», если присутствуют в текущей сборке."
+        ],
+        "en": [
+          "Right-click with damaged garment in offhand and 1 thread; repairs 25% durability.",
+          "See Recipes for recipes available in the installed pack."
+        ]
+      }
+    },
+    {
+      "id": "item_wool_comb",
+      "title": {
+        "ru": "Шерстяной гребень",
+        "en": "Wool comb"
+      },
+      "models": [
+        "worldlogic_thermal:wool_comb"
+      ],
+      "body": {
+        "ru": [
+          "ПКМ: 1 блок шерсти во второй руке → 2 чёсаной шерсти.",
+          "Рецепты доступны в разделе «Рецепты», если присутствуют в текущей сборке."
+        ],
+        "en": [
+          "Right-click: 1 wool block in offhand → 2 combed wool.",
+          "See Recipes for recipes available in the installed pack."
+        ]
+      }
+    },
+    {
+      "id": "item_oil_lamp",
+      "title": {
+        "ru": "Масляная лампа",
+        "en": "Oil lamp"
+      },
+      "models": [
+        "worldlogic_thermal:oil_lamp"
+      ],
+      "body": {
+        "ru": [
+          "Свет и слабое тепло. ПКМ растительным маслом.",
+          "Рецепты доступны в разделе «Рецепты», если присутствуют в текущей сборке."
+        ],
+        "en": [
+          "Light and mild warmth. Right-click with plant oil.",
+          "See Recipes for recipes available in the installed pack."
+        ]
+      }
+    },
+    {
+      "id": "item_clay_brazier",
+      "title": {
+        "ru": "Глиняная жаровня",
+        "en": "Clay brazier"
+      },
+      "models": [
+        "worldlogic_thermal:clay_brazier"
+      ],
+      "body": {
+        "ru": [
+          "Локальный источник тепла. ПКМ углём.",
+          "Рецепты доступны в разделе «Рецепты», если присутствуют в текущей сборке."
+        ],
+        "en": [
+          "Local heat source. Right-click with coal.",
+          "See Recipes for recipes available in the installed pack."
+        ]
+      }
+    },
+    {
+      "id": "item_stone_stove",
+      "title": {
+        "ru": "Каменная печь",
+        "en": "Stone stove"
+      },
+      "models": [
+        "worldlogic_thermal:stone_stove"
+      ],
+      "body": {
+        "ru": [
+          "Обогрев с остаточным теплом после выгорания. ПКМ углём.",
+          "Рецепты доступны в разделе «Рецепты», если присутствуют в текущей сборке."
+        ],
+        "en": [
+          "Heating with residual warmth after fuel burns out. Right-click with coal.",
+          "See Recipes for recipes available in the installed pack."
+        ]
+      }
+    },
+    {
+      "id": "item_brick_fireplace",
+      "title": {
+        "ru": "Кирпичный камин",
+        "en": "Brick fireplace"
+      },
+      "models": [
+        "worldlogic_thermal:brick_fireplace"
+      ],
+      "body": {
+        "ru": [
+          "Мощный источник тепла с остаточным нагревом. ПКМ углём.",
+          "Рецепты доступны в разделе «Рецепты», если присутствуют в текущей сборке."
+        ],
+        "en": [
+          "Strong heat source with residual warmth. Right-click with coal.",
+          "See Recipes for recipes available in the installed pack."
+        ]
+      }
+    },
+    {
+      "id": "item_evaporative_wall",
+      "title": {
+        "ru": "Испарительная стена",
+        "en": "Evaporative wall"
+      },
+      "models": [
+        "worldlogic_thermal:evaporative_wall"
+      ],
+      "body": {
+        "ru": [
+          "Охлаждает испарением; влажный воздух снижает эффект. ПКМ ведром воды.",
+          "Рецепты доступны в разделе «Рецепты», если присутствуют в текущей сборке."
+        ],
+        "en": [
+          "Evaporative cooling; humid air reduces effect. Right-click with a water bucket.",
+          "See Recipes for recipes available in the installed pack."
+        ]
+      }
+    },
+    {
+      "id": "item_ice_cooler",
+      "title": {
+        "ru": "Ледяной охладитель",
+        "en": "Ice cooler"
+      },
+      "models": [
+        "worldlogic_thermal:ice_cooler"
+      ],
+      "body": {
+        "ru": [
+          "ПКМ льдом, плотным или синим льдом. Охлаждает при температуре выше 24 °C независимо от влажности.",
+          "Рецепты доступны в разделе «Рецепты», если присутствуют в текущей сборке."
+        ],
+        "en": [
+          "Right-click with ice, packed ice or blue ice. Cools above 24 °C regardless of humidity.",
+          "See Recipes for recipes available in the installed pack."
+        ]
+      }
+    },
+    {
+      "id": "item_wind_tower",
+      "title": {
+        "ru": "Ветровая башня",
+        "en": "Wind tower"
+      },
+      "models": [
+        "worldlogic_thermal:wind_tower"
+      ],
+      "body": {
+        "ru": [
+          "Пассивно охлаждает в жару при ветре и открытом небе над башней.",
+          "Рецепты доступны в разделе «Рецепты», если присутствуют в текущей сборке."
+        ],
+        "en": [
+          "Passively cools in hot weather with wind and open sky above the tower.",
+          "See Recipes for recipes available in the installed pack."
+        ]
+      }
+    },
+    {
+      "id": "item_chimney",
+      "title": {
+        "ru": "Дымоход",
+        "en": "Chimney"
+      },
+      "models": [
+        "worldlogic_thermal:chimney"
+      ],
+      "body": {
+        "ru": [
+          "Установите над климатическим обогревателем. При открытом выходе увеличивает мощность на 15%.",
+          "Рецепты доступны в разделе «Рецепты», если присутствуют в текущей сборке."
+        ],
+        "en": [
+          "Place above a climate heater. An open outlet increases heat output by 15%.",
+          "See Recipes for recipes available in the installed pack."
+        ]
+      }
+    },
+    {
+      "id": "item_thermal_damper",
+      "title": {
+        "ru": "Тепловая заслонка",
+        "en": "Thermal damper"
+      },
+      "models": [
+        "worldlogic_thermal:thermal_damper"
+      ],
+      "body": {
+        "ru": [
+          "ПКМ переключает заслонку. Закрытая рядом с обогревателем снижает его мощность на 55%.",
+          "Рецепты доступны в разделе «Рецепты», если присутствуют в текущей сборке."
+        ],
+        "en": [
+          "Right-click to toggle. Closed beside a climate heater, reduces its output by 55%.",
+          "See Recipes for recipes available in the installed pack."
+        ]
+      }
+    },
+    {
+      "id": "item_woven_canopy",
+      "title": {
+        "ru": "Плетёный навес",
+        "en": "Woven canopy"
+      },
+      "models": [
+        "worldlogic_thermal:woven_canopy"
+      ],
+      "body": {
+        "ru": [
+          "Тень под навесом: убирает прямую солнечную нагрузку до 8 блоков вниз. Не заменяет закрытую комнату.",
+          "Рецепты доступны в разделе «Рецепты», если присутствуют в текущей сборке."
+        ],
+        "en": [
+          "Shade beneath the canopy: removes direct solar exposure up to 8 blocks below. Not an enclosed room.",
+          "See Recipes for recipes available in the installed pack."
+        ]
+      }
+    },
+    {
+      "id": "item_textile_loom",
+      "title": {
+        "ru": "Ткацкий станок",
+        "en": "Textile loom"
+      },
+      "models": [
+        "worldlogic_thermal:textile_loom"
+      ],
+      "body": {
+        "ru": [
+          "ПКМ нитью; готовое полотно забирается пустой рукой.",
+          "Рецепты доступны в разделе «Рецепты», если присутствуют в текущей сборке."
+        ],
+        "en": [
+          "Right-click with thread; collect woven fabric with an empty hand.",
+          "See Recipes for recipes available in the installed pack."
+        ]
+      }
+    },
+    {
+      "id": "item_drying_rack",
+      "title": {
+        "ru": "Сушильная рама",
+        "en": "Drying rack"
+      },
+      "models": [
+        "worldlogic_thermal:drying_rack"
+      ],
+      "body": {
+        "ru": [
+          "ПКМ заряженной мокрой тканью; заберите после сушки.",
+          "Рецепты доступны в разделе «Рецепты», если присутствуют в текущей сборке."
+        ],
+        "en": [
+          "Right-click with charged wet cloth; collect after drying.",
+          "See Recipes for recipes available in the installed pack."
+        ]
+      }
+    },
+    {
+      "id": "item_hide_frame",
+      "title": {
+        "ru": "Рама для подготовки кожи",
+        "en": "Hide frame"
+      },
+      "models": [
+        "worldlogic_thermal:hide_frame"
+      ],
+      "body": {
+        "ru": [
+          "ПКМ кожей; заберите подготовленную кожу пустой рукой.",
+          "Рецепты доступны в разделе «Рецепты», если присутствуют в текущей сборке."
+        ],
+        "en": [
+          "Right-click with leather; collect prepared hide with an empty hand.",
+          "See Recipes for recipes available in the installed pack."
+        ]
+      }
+    },
+    {
+      "id": "item_felting_board",
+      "title": {
+        "ru": "Валяльная доска",
+        "en": "Felting board"
+      },
+      "models": [
+        "worldlogic_thermal:felting_board"
+      ],
+      "body": {
+        "ru": [
+          "ПКМ чёсаной шерстью; заберите войлок пустой рукой.",
+          "Рецепты доступны в разделе «Рецепты», если присутствуют в текущей сборке."
+        ],
+        "en": [
+          "Right-click with combed wool; collect felt with an empty hand.",
+          "See Recipes for recipes available in the installed pack."
         ]
       }
     }

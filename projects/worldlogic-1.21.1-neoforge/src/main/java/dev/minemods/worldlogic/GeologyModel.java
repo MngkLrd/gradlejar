@@ -31,7 +31,7 @@ public final class GeologyModel {
   public boolean shaftAt(int px,int py,int pz,int surface){
    if(!shaft||surface<67||py<y||py>surface+1)return false;
    double distance=Math.hypot(px-x,pz-z);
-   double radius=2.2+Math.max(0,Math.min(1,(py-(surface-12))/12.0))*7;
+   double radius=1.6+Math.max(0,Math.min(1,(py-(surface-6))/6.0))*1.6;
    return distance<radius;
   }
  }
@@ -119,7 +119,7 @@ public final class GeologyModel {
   if(r.nextDouble()<.65)ores.add(body(r,Ore.REDSTONE,x,r.nextDouble(-205,-125),z,30,10,8,a,.1,.35));
   if(p==Province.CARBONATE){
    double y=r.nextDouble(-42,15);int water=(int)Math.floor(y-4);
-   caves.add(new Cave(x,y,z,82,5,4,a,.12,water,r.nextDouble()<.45));
+   caves.add(new Cave(x,y,z,82,5,4,a,.12,water,r.nextDouble()<.08));
    caves.add(new Cave(x,y,z,60,4,6,a+Math.PI*.48,-.10,water,false));
    // Chamber straddles the shared static water horizon. A lateral connected lake
    // extends away from the intersection; not every cave is a giant cavern.
@@ -127,7 +127,7 @@ public final class GeologyModel {
    double lx=x+28*Math.cos(a),lz=z+28*Math.sin(a);
    caves.add(new Cave(lx,y-5,lz,25,15,9,a,.02,water,false));
   }else if(p==Province.METAMORPHIC||p==Province.INTRUSIVE){
-   caves.add(new Cave(x,r.nextDouble(-82,-15),z,64,3,13,a,.24,-100,r.nextDouble()<.13));
+   caves.add(new Cave(x,r.nextDouble(-82,-15),z,64,3,13,a,.24,-100,r.nextDouble()<.02));
   }else caves.add(new Cave(x,r.nextDouble(-120,-40),z,42,3,3,a,.12,-160,false));
   return new District(p,List.copyOf(ores),List.copyOf(caves));
  }

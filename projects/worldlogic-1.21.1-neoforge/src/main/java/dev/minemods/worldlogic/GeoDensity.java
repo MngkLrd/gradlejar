@@ -28,7 +28,7 @@ public final class GeoDensity implements DensityFunction {
   GeoModel value=new GeoModel(c,t,d,m);MODELS.put(k,value);return value;
  }
  public GeoDensity(String field,NoiseHolder continental,NoiseHolder tectonic,NoiseHolder detail,NoiseHolder moisture){
-  if(!Set.of("offset","continents","biome_continents","erosion","ridges","temperature","humidity","climate_temperature","climate_humidity","extended_climate_temperature").contains(field))throw new IllegalArgumentException("Unknown geography field: "+field);
+  if(!Set.of("offset","continents","biome_continents","erosion","ridges","temperature","humidity","climate_temperature","climate_humidity","extended_climate_temperature","regional_biome_temperature","regional_biome_humidity").contains(field))throw new IllegalArgumentException("Unknown geography field: "+field);
   this.field=field;this.continental=continental;this.tectonic=tectonic;this.detail=detail;this.moisture=moisture;this.model=model(continental,tectonic,detail,moisture);
  }
  /** Internal server adapter for the public API; uses the exact existing seeded noise instances. */
@@ -62,6 +62,11 @@ public final class GeoDensity implements DensityFunction {
     noise.apply(net.minecraft.world.level.levelgen.Noises.EROSION),noise.apply(net.minecraft.world.level.levelgen.Noises.VEGETATION));
   boolean extended=id.getPath().equals("earthlike_extended");
   return java.util.Optional.of((pos,biome,ground)->WorldgenEcology.sample(m.site(pos.getX(),pos.getZ(),extended),pos,biome,ground));
+ }
+ static GeoModel riverModel(net.minecraft.world.level.levelgen.RandomState state,net.minecraft.core.RegistryAccess access){
+  var registry=access.lookupOrThrow(Registries.NOISE);
+  java.util.function.Function<net.minecraft.resources.ResourceKey<net.minecraft.world.level.levelgen.synth.NormalNoise.NoiseParameters>,NoiseHolder> noise=k->new NoiseHolder(registry.getOrThrow(k),state.getOrCreateNoise(k));
+  return model(noise.apply(net.minecraft.world.level.levelgen.Noises.CONTINENTALNESS),noise.apply(net.minecraft.world.level.levelgen.Noises.RIDGE),noise.apply(net.minecraft.world.level.levelgen.Noises.EROSION),noise.apply(net.minecraft.world.level.levelgen.Noises.VEGETATION));
  }
  private static dev.minemods.worldlogic.api.WorldLogicApi.RegionalClimate extended(dev.minemods.worldlogic.api.WorldLogicApi.RegionalClimate r){
   double old=r.modeledSurfaceY(),surface=old<=110?old:110+(old-110)*1.6;

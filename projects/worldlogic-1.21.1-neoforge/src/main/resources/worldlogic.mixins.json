@@ -18,7 +18,12 @@
     "GeologyCarverMixin",
     "GeologyDecorationMixin",
     "GeologyOreMixin",
-    "GeologyScatteredOreMixin"
+    "GeologyScatteredOreMixin",
+    "ShipwreckTerrainMixin",
+    "MarinePlantPlacementMixin",
+    "NativeWaterEntityMixin",
+    "SoilFarmlandMixin",
+    "RockHardnessMixin"
   ],
   "injectors": {
     "defaultRequire": 1
