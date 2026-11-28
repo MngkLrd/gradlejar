@@ -107,6 +107,8 @@ public final class WorldLogic {
   bus.addListener(Body::logout);
   bus.addListener(Weather::tick);
   bus.addListener(WeatherController::tick);
+  bus.addListener(LocalWeatherRuntime::tick);
+  bus.addListener(LocalWeatherRuntime::playerTick);
   bus.addListener(Ecology::crop);
   bus.addListener(Ecology::hurt);
   bus.addListener(Ecology::tick);
