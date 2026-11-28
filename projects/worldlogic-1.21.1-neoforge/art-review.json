@@ -1634,7 +1634,8 @@
         "reference_limit": "Vanilla book is leather brown, not a green expedition notebook; no claim of official client rendering.",
         "native_view": "At 16px the ivory lower edge and green cover distinguish the guide from vanilla.",
         "context_view": "Compared the native item silhouettes side by side and at nearest-neighbor 10x; graphical inventory context not run.",
-        "context_type": "icon_family"
+        "context_type": "icon_family",
+        "reference_source": "https://github.com/misode/mcmeta/blob/1.21.1-assets/assets/minecraft/textures/item/book.png ; target archive decoded PNG inspected and SHA-256 calculated; official client not independently checked."
       }
     }
   }
