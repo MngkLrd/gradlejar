@@ -14,7 +14,12 @@
     "DoorPhysicsMixin",
     "FurnaceMenuMixin",
     "CampfireFuelMixin",
-    "FoodRecoveryMixin"
+    "FoodRecoveryMixin",
+    "GeologyCarverMixin",
+    "GeologyDecorationMixin",
+    "GeologyOreMixin",
+    "GeologyScatteredOreMixin",
+    "ShipwreckTerrainMixin"
   ],
   "injectors": {
     "defaultRequire": 1

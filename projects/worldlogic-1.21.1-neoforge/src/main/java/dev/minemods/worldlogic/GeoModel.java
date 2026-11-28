@@ -155,6 +155,36 @@ public final class GeoModel {
   Surface b=local(lx,rz,gx,gz);if(lx!=rx)b=mix(b,local(rx,rz,gx,gz),wx);
   return mix(a,b,wz);
  }
+ /** Directed river centerlines on the original globally aligned D8 grid.
+  * The original raw relief and drainage tile remain unchanged. */
+ record RiverSegment(int x,int z,int endX,int endZ,double discharge,double radius){
+  double fraction(double px,double pz){
+   double dx=endX-x,dz=endZ-z;return clamp(((px-x)*dx+(pz-z)*dz)/(dx*dx+dz*dz),0,1);
+  }
+  double distance(double px,double pz){double u=fraction(px,pz);return Math.hypot(px-lerp(x,endX,u),pz-lerp(z,endZ,u));}
+ }
+ List<RiverSegment> rivers(int minX,int minZ,int maxX,int maxZ){
+  var out=new ArrayList<RiverSegment>();
+  for(int gz=Math.floorDiv(minZ,STEP)-1;gz<=Math.floorDiv(maxZ,STEP)+1;gz++)
+   for(int gx=Math.floorDiv(minX,STEP)-1;gx<=Math.floorDiv(maxX,STEP)+1;gx++){
+    int x=gx*STEP,z=gz*STEP;double high=raw(x,z);
+    if(high<63.5)continue;
+    double discharge=surface(x,z).flow;
+    // The small-stream threshold is deliberately lower than the old riverbank indicator.
+    if(discharge<12)continue;
+    int ex=x,ez=z;double best=0;
+    for(int dz=-1;dz<=1;dz++)for(int dx=-1;dx<=1;dx++){
+     if(dx==0&&dz==0)continue;
+     int nx=x+dx*STEP,nz=z+dz*STEP;
+     double slope=(high-raw(nx,nz))/Math.hypot(dx,dz);
+     if(slope>best+1e-8){best=slope;ex=nx;ez=nz;}
+    }
+    if(ex==x&&ez==z)continue;
+    double radius=clamp(1.7+Math.log1p(discharge/12)*1.15,2.4,5.5);
+    out.add(new RiverSegment(x,z,ex,ez,discharge,radius));
+   }
+  return List.copyOf(out);
+ }
  // RC19 only. Climate calculations must not change the legacy drainage or terrain.
  static double biomeTemperature(double thermal,double humidity,double height){
   // The vanilla hottest land row is desert at ALL humidity levels.
@@ -185,6 +215,21 @@ public final class GeoModel {
   Surface s=surface(x,z);ClimateSample c=climate(x,z,s.height);
   return new dev.minemods.worldlogic.api.WorldLogicApi.RegionalClimate(c.thermal,(c.humidity+1)*.5,c.latitude*90,c.windX,c.windZ,s.height);
  }
+ /** Immutable terrain-only sample. Existing RC22 density, drainage and climate are unchanged. */
+ WorldgenSite site(int x,int z,boolean extended){
+  Surface s=surface(x,z);var regional=regional(x,z);
+  double h=height(s.height,extended);
+  double dx=(height(surface(x+16,z).height,extended)-height(surface(x-16,z).height,extended))/32;
+  double dz=(height(surface(x,z+16).height,extended)-height(surface(x,z-16).height,extended))/32;
+  double slope=Math.toDegrees(Math.atan(Math.hypot(dx,dz)));
+  double wx=regional.prevailingWindX(),wz=regional.prevailingWindZ();
+  double up=height(raw(x-wx*192,z-wz*192),extended);
+  double exposure=clamp(.52+(h-up)*.012+.25*(dx*wx+dz*wz),0,1);
+  double thermal=clamp(regional.thermalIndex()-(h-s.height)*.065/28,-1,1);
+  return new WorldgenSite(h,thermal,regional.moistureIndex(),s.flow,slope,exposure,wx,wz);
+ }
+ private static double height(double y,boolean extended){return extended&&y>110?110+(y-110)*1.6:y;}
+ record WorldgenSite(double height,double thermal,double moisture,double drainage,double slope,double exposure,double windX,double windZ){}
  double value(String field,int x,int z){
   Sample previous=lastSample.get();
   Surface s;if(previous!=null&&previous.x==x&&previous.z==z)s=previous.surface;
@@ -193,6 +238,9 @@ public final class GeoModel {
   return switch(field){
    case "offset" -> (h-128)/128;
    case "continents" -> h<63?clamp(-.18-(63-h)*.014,-1.15,-.18):clamp(-.10+(h-63)*.013,-.10,.85);
+   // Only the biome router uses this field. Classify the shallow transitional shelf as coast,
+   // so quantized 4-block climate sampling and the physical surface offset cannot label inland flats ocean.
+   case "biome_continents" -> h<59?clamp(-.25-(59-h)*.014,-1.15,-.25):clamp(-.17+(h-59)*.018,-.17,.85);
    case "erosion" -> clamp(.58-Math.max(0,h-75)*.011+d(x,z,.12)*.18,-.9,.85);
    case "ridges" -> h<78&&s.flow>30?0:clamp(t(x,z)*1.25,-1,1);
    case "climate_temperature" -> climate(x,z,h).biomeTemperature;

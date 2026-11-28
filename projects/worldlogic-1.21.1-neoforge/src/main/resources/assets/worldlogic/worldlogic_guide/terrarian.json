@@ -1,0 +1,140 @@
+{
+  "schema": 1,
+  "id": "terrarian",
+  "order": 40,
+  "requires": "worldlogicterrain",
+  "title": {
+    "ru": "Terrarian · Растения",
+    "en": "Terrarian · Plants"
+  },
+  "source": "Terrarian 1.2.3-rc1",
+  "pages": [
+    {
+      "id": "habitats",
+      "title": {
+        "ru": "Растительность и местность",
+        "en": "Vegetation and habitats"
+      },
+      "models": [
+        "worldlogicterrain:meadow_grass",
+        "worldlogicterrain:frosted_grass",
+        "worldlogicterrain:desert_shrub",
+        "worldlogicterrain:cattail"
+      ],
+      "body": {
+        "ru": [
+          "Растительность зависит от биома, почвы, влажности, ветра и уклона. Ищи луговые растения на открытой местности, кусты в лесах, сухую траву в засушливых областях и камыши у воды.",
+          "Terrarian меняет сопротивление поверхности при движении. Ядро по-прежнему отвечает за физику, риск падения и климат.",
+          "Новые растения появляются в новых чанках. Существующие участки не пересоздаются автоматически."
+        ],
+        "en": [
+          "Vegetation depends on biome, ground, moisture, wind and slope. Search open meadows, forest shrubs, dry grass in arid regions and reeds near water.",
+          "Terrarian changes continuous surface movement resistance. Core still owns physics, fall risk and climate.",
+          "New plants appear in new chunks. Existing areas are not regenerated automatically."
+        ]
+      }
+    },
+    {
+      "id": "forage",
+      "title": {
+        "ru": "Собирательство и семена",
+        "en": "Foraging and seeds"
+      },
+      "models": [
+        "worldlogicterrain:strawberry",
+        "worldlogicterrain:blueberry",
+        "worldlogicterrain:raspberry",
+        "worldlogicterrain:grape"
+      ],
+      "body": {
+        "ru": [
+          "Дикие съедобные растения дают пищу, часть фруктов также восстанавливает немного энергии при обычной еде.",
+          "Зрелые ягодные кусты можно собирать ПКМ. После сбора куст становится незрелым и постепенно восстанавливается при достаточном освещении. Не ломай его без необходимости.",
+          "Семена пяти ягодных кустов можно посадить; остальные семена пока коллекционные до полноценного земледелия."
+        ],
+        "en": [
+          "Wild edible plants provide food; some fruit also recovers a little stamina when eaten.",
+          "Right-click ripe berry bushes. Harvest makes the bush unripe; it regrows with enough light. Avoid breaking it unnecessarily.",
+          "Five berry bush seeds can be planted; other seeds are collectible until full agriculture arrives."
+        ]
+      }
+    },
+    {
+      "id": "forest",
+      "title": {
+        "ru": "Леса и новые породы",
+        "en": "Forests and new species"
+      },
+      "models": [
+        "worldlogicterrain:willow_log",
+        "worldlogicterrain:larch_log",
+        "worldlogicterrain:pine_log",
+        "worldlogicterrain:maple_log",
+        "worldlogicterrain:cedar_log"
+      ],
+      "body": {
+        "ru": [
+          "Деревья отличаются формой ствола, кроны, ветвей и возрастом. Ива, лиственница, сосна, пихта, кедр, клён, бук и ольха имеют собственные брёвна, доски, листву и саженцы.",
+          "Лиственница встречается в холодных лесных условиях; выбор формы зависит от климата и открытости ветру. Ищи естественные группы деревьев, а не ровную сетку.",
+          "Саженцы растут по игровой механике. Полный цикл разложения древесины и смены поколений леса пока не завершён."
+        ],
+        "en": [
+          "Trees vary in trunk, crown, branches and age. Willow, larch, pine, fir, cedar, maple, beech and alder have their own logs, planks, leaves and saplings.",
+          "Larch occurs in cold forest habitats; climate and wind exposure influence forms. Look for natural groves rather than uniform spacing.",
+          "Saplings use game growth. Full decomposition and forest succession are not implemented."
+        ]
+      }
+    },
+    {
+      "id": "tropical",
+      "title": {
+        "ru": "Пальмы, баобабы и ценная древесина",
+        "en": "Palms, baobabs and tropical wood"
+      },
+      "models": [
+        "worldlogicterrain:palm_log",
+        "worldlogicterrain:date_palm_log",
+        "worldlogicterrain:baobab_log",
+        "worldlogicterrain:ebony_planks",
+        "worldlogicterrain:mahogany_planks"
+      ],
+      "body": {
+        "ru": [
+          "Кокосовая и финиковая пальмы разнообразят тёплые побережья. Баобабы имеют молодые и крупные формы. Эбен и махагони относятся к тропическим лесам.",
+          "Эбеновые доски тёмные, махагони красноватые. Все 13 новых пород имеют собственные брёвна, доски, листву и саженцы.",
+          "Новые деревья требуют новых чанков. Распределение зависит от реальной пригодности климата, почвы и доступного пространства."
+        ],
+        "en": [
+          "Coconut and date palms diversify warm shores. Baobabs have young and large forms. Ebony and mahogany belong to tropical forest habitats.",
+          "Ebony planks are dark; mahogany planks reddish. All 13 addon species have their own logs, planks, leaves and saplings.",
+          "New trees require new chunks. Distribution depends on suitable climate, ground and available space."
+        ]
+      }
+    },
+    {
+      "id": "aquatic",
+      "title": {
+        "ru": "Растения у воды",
+        "en": "Aquatic and shore plants"
+      },
+      "models": [
+        "worldlogicterrain:reed",
+        "worldlogicterrain:cattail",
+        "worldlogicterrain:water_lily",
+        "worldlogicterrain:duckweed"
+      ],
+      "body": {
+        "ru": [
+          "Камыш, рогоз, осока и калужница растут у пресных вод; солёные берега имеют другую растительность. Кувшинки и ряска плавают на поверхности источников воды.",
+          "Глубина и солёность определяют пригодность места. Не все водные растения способны расти в любом виде воды.",
+          "Полноценная собственная подводная экология и универсальное водонаполнение блоков пока отложены; ядро временно возвращает ванильную морскую растительность."
+        ],
+        "en": [
+          "Reeds, cattails, sedge and marsh marigold favor freshwater banks; salty shores differ. Water lilies and duckweed float on source water.",
+          "Depth and salinity determine suitability. Not every aquatic plant grows in every water type.",
+          "Full custom underwater ecology and universal waterlogging are deferred; Core temporarily restores vanilla marine flora."
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,113 @@
+{
+  "schema": 1,
+  "id": "hydration",
+  "order": 10,
+  "requires": "hydration",
+  "title": {
+    "ru": "Hydration · Вода",
+    "en": "Hydration · Water"
+  },
+  "source": "Hydration 0.4.3",
+  "pages": [
+    {
+      "id": "drink",
+      "title": {
+        "ru": "Питьё и ёмкости",
+        "en": "Drinking and vessels"
+      },
+      "models": [
+        "hydration:wooden_cup",
+        "hydration:waterskin",
+        "hydration:clay_jug",
+        "hydration:copper_canteen"
+      ],
+      "body": {
+        "ru": [
+          "Чтобы пить из источника, нажми ПКМ с пустыми руками. Порция — 250 мБ. С ёмкостью в основной руке ПКМ по источнику наполняет её; удержание ПКМ вне источника позволяет пить.",
+          "Присядь и нажми ПКМ, держа вторую ёмкость в другой руке, чтобы перелить воду из основной во вторую. 1000 мБ равны одному ведру.",
+          "Качество источника важнее его внешнего вида. Не путай питьевую воду с морской."
+        ],
+        "en": [
+          "Right-click a water source with both hands empty to drink 250 mB. Right-click a source with a vessel in your main hand to fill it; hold right-click away from a source to drink.",
+          "Sneak-right-click with another vessel in the offhand to transfer from main to offhand. 1000 mB equals one bucket.",
+          "Source quality matters more than appearance. Do not mistake seawater for drinking water."
+        ]
+      }
+    },
+    {
+      "id": "treat",
+      "title": {
+        "ru": "Очистка и опреснение",
+        "en": "Treatment and desalination"
+      },
+      "models": [
+        "hydration:charcoal_filter",
+        "hydration:copper_condenser",
+        "minecraft:campfire",
+        "hydration:clay_jug"
+      ],
+      "body": {
+        "ru": [
+          "Угольный фильтр во второй руке + присесть и ПКМ с сосудом: обработка до 3000 мБ расходует один фильтр.",
+          "Для кипячения держи термостойкий сосуд и нажми ПКМ с приседанием по горящему костру. Не уходи дальше четырёх блоков и не меняй сосуд; прерванная обработка не даёт результата.",
+          "Кипячение теряет 5% объёма, но не убирает соль. Медный конденсатор во второй руке выбирает дистилляцию с выходом 70%."
+        ],
+        "en": [
+          "Sneak-right-click with a charcoal filter in the offhand and vessel in the main hand: one filter treats up to 3000 mB.",
+          "Sneak-right-click a lit campfire with a heatproof vessel to boil. Stay within four blocks and keep the vessel unchanged; interruptions yield no result.",
+          "Boiling loses 5% of volume but preserves salt. A copper condenser in the offhand selects distillation with a 70% yield."
+        ]
+      }
+    },
+    {
+      "id": "storage",
+      "title": {
+        "ru": "Накопление воды",
+        "en": "Water storage"
+      },
+      "models": [
+        "hydration:clay_basin",
+        "hydration:water_barrel",
+        "hydration:rain_collector",
+        "hydration:stationary_filter"
+      ],
+      "body": {
+        "ru": [
+          "Глиняный таз вмещает 3000 мБ, бочка 16000, дождесборник 8000, стационарный фильтр 6000. ПКМ сосудом забирает воду; с приседанием переливает в резервуар.",
+          "Пустая рука показывает состояние резервуара, с приседанием позволяет пить. Дождесборник работает при открытом небе и дожде, но не при снеге.",
+          "Разрушение ёмкости проливает содержимое и даёт пустой блок. Учитывай это перед переносом запасов."
+        ],
+        "en": [
+          "Clay basin holds 3000 mB, barrel 16000, rain collector 8000 and stationary filter 6000. Right-click with a vessel withdraws; sneak-right-click deposits.",
+          "Empty hand shows status; sneaking drinks. The collector needs rain and sky exposure, not snow.",
+          "Breaking a tank spills its contents and drops an empty block."
+        ]
+      }
+    },
+    {
+      "id": "pipes",
+      "title": {
+        "ru": "Трубы и водозабор",
+        "en": "Pipes and intake"
+      },
+      "models": [
+        "hydration:water_intake",
+        "hydration:clay_pipe",
+        "hydration:water_barrel",
+        "hydration:stationary_filter"
+      ],
+      "body": {
+        "ru": [
+          "Водозабор берёт воду из источника непосредственно над ним. Глиняные трубы направлены: сторона крепления — вход, направление взгляда — выход. Соединения должны совпадать.",
+          "Вода идёт только к более низкой ёмкости; до 24 труб на маршрут, до 250 мБ/с на источник. Редстоун перекрывает поток.",
+          "Фильтру нужен картридж. Один даёт 12000 мБ пропускной способности, накопить можно до 24000 мБ. Насосов и физического истощения озёр пока нет."
+        ],
+        "en": [
+          "An intake draws a source immediately above it. Clay pipes are directional: attachment face is inlet, look direction is outlet. Connections must match.",
+          "Water flows only toward a lower destination; up to 24 pipes per route, 250 mB/s per source. Redstone blocks flow.",
+          "A stationary filter needs a cartridge. One provides 12000 mB throughput, up to 24000 mB stored charge. Pumps and physical lake depletion are not implemented."
+        ]
+      }
+    }
+  ]
+}
