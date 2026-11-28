@@ -1,0 +1,57 @@
+{
+  "core": {
+    "run": 46127333373,
+    "head": "4bf55ef6bab14b4dc335d3e409a548cf57ed99ae",
+    "jar": "worldlogic-neoforge-mc1.21.1-1.5.2.jar"
+  },
+  "peers": [
+    {
+      "module": "terrarian",
+      "id": 15255520963,
+      "head": "fb5b4c9fc96a04f3c4f06eeefb51f3c90ea96201",
+      "zip_sha256": "a8a84dcacb446002c3e5987152c741e8878cd63b28c261eada14269182de8153",
+      "jar": "worldlogicterrain-neoforge-mc1.21.1-1.8.0.jar"
+    },
+    {
+      "module": "hydration",
+      "id": 15254782680,
+      "head": "ef26de23814f0b890ff64ea215d5efa3204bbc44",
+      "zip_sha256": "b6c41aa5cba7c5032b098d3b7fc31d2af9345c71bc66ddf2fe5d77c8238e7966",
+      "jar": "hydration-neoforge-mc1.21.1-0.6.0.jar"
+    },
+    {
+      "module": "thermal",
+      "id": 15254413876,
+      "head": "e9a9d3738804272bab43e02695a835e9f2001ba1",
+      "zip_sha256": "c3f9fbca506bfa3e365c0acdb6f0ab09de671aff31b112aab08384fc1f038001",
+      "jar": "worldlogic_thermal-neoforge-mc1.21.1-0.12.1.jar"
+    },
+    {
+      "module": "trauma",
+      "id": 15255216680,
+      "head": "05452b3dd3cd4e6834dc5f81b9376a83d430aa77",
+      "zip_sha256": "9de802f3de579b37baa091e9489f112451fea0d51d3bb2d390d2594c25436392",
+      "jar": "worldlogic_trauma-neoforge-mc1.21.1-0.8.13.jar"
+    },
+    {
+      "module": "metabolism",
+      "id": 15254462839,
+      "head": "e2b1d898c9e676024e097ff6f1e7b426ac3c5bb3",
+      "zip_sha256": "34bc454e04030de547c58a2ee22e8819fde793f21db83fbe0032dc5a7f43cd1e",
+      "jar": "metabolism-neoforge-mc1.21.1-0.9.4.jar"
+    },
+    {
+      "module": "treechopper",
+      "id": 15254758304,
+      "head": "597ec3ab2acfdeab9292e804c900ca6b84f7b2db",
+      "zip_sha256": "a6c01c1b5ce0a1a33cd4f219212264aaa31dc012d6bf434e7dc70da03ba76687",
+      "jar": "wl_treechopper-neoforge-mc1.21.1-0.9.3.jar"
+    }
+  ],
+  "excluded": {
+    "aqua": "Latest commit 7ccbba29001d1be42f28a13c152a72463abaad8e failed compile; no binary",
+    "fauna": "owner excluded",
+    "structures": "owner excluded",
+    "excavation": "owner excluded"
+  }
+}

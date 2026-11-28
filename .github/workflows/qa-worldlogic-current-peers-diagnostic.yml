@@ -1,0 +1,36 @@
+name: WorldLogic active-peer exact-binary diagnostic (NOT RELEASE)
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/qa-worldlogic-current-peers-diagnostic.yml'
+      - 'tools/qa/active-peer-diagnostic-pins.json'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  diagnostic:
+    if: github.event.pull_request.head.ref == 'worldlogic-core6-active-pack-diagnostic'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Run existing production-server QA with exact six current peer binaries
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 -m tools.qa.active_peer_diagnostic
+      - name: Upload diagnostic evidence (never release)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: worldlogic-current-six-peers-NOT-RELEASE
+          path: |
+            active-peer-report.json
+            active-peer-runtime/logs/
+          if-no-files-found: warn
+          retention-days: 7
