@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public final class WorldLogicApi {
  public static final int API_VERSION=1;
  /** RC22 adds a regional weather preview; existing v1 signatures and live environment semantics unchanged. */
- public static final int API_REVISION=13;
+ public static final int API_REVISION=14;
  private WorldLogicApi(){}
  /** Thermal and moisture indices are modeled values, not biome selection temperature or relative humidity.
   * Wind is prevailing horizontal direction (not a measured wind speed). Latitude is absolute 0..90.
@@ -309,6 +309,13 @@ public final class WorldLogicApi {
  }
  /** Local client only: synchronized integer percentage, empty until sync/when disabled. */
  public static OptionalInt clientFatiguePercent(){return RuleSync.clientFatiguePercent();}
+ /** RC53 physical profiles in SI. Does not alter legacy relative gameplay weight or mass.
+  * For registration, component properties, item state and explicit liquid volumes use PhysicalMaterials. */
+ public static PhysicalMaterials.ObjectProfile physicalBlock(BlockState state){return PhysicalMaterials.block(state);}
+ public static PhysicalMaterials.Result physicalItem(ItemStack stack){return PhysicalMaterials.itemResult(stack);}
+ public static PhysicalMaterials.Result physicalStack(ItemStack stack){return PhysicalMaterials.stackResult(stack);}
+ public static PhysicalMaterials.ObjectProfile physicalFluid(net.minecraft.world.level.material.Fluid fluid){return PhysicalMaterials.fluid(fluid);}
+ public static Optional<PhysicalMaterials.Result> physicalPlaced(ServerLevel level,BlockPos pos){return PhysicalMaterials.placed(level,pos);}
  /** Relative gameplay weight and mass, not SI kilograms. */
  public static double itemWeight(ItemStack stack){return Material.weight(stack);}
  public static double entityMass(Entity entity){return Material.mass(entity);}
