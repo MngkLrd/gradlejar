@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "worldlogic:polished_limestone"
+  },
+  "result": {
+    "id": "worldlogic:polished_limestone_wall",
+    "count": 1
+  }
+}

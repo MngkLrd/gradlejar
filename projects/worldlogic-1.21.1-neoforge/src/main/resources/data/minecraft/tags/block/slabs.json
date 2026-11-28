@@ -1,0 +1,20 @@
+{
+  "replace": false,
+  "values": [
+    "worldlogic:limestone_slab",
+    "worldlogic:polished_limestone_slab",
+    "worldlogic:limestone_bricks_slab",
+    "worldlogic:shale_slab",
+    "worldlogic:polished_shale_slab",
+    "worldlogic:shale_bricks_slab",
+    "worldlogic:slate_slab",
+    "worldlogic:polished_slate_slab",
+    "worldlogic:slate_bricks_slab",
+    "worldlogic:gneiss_slab",
+    "worldlogic:polished_gneiss_slab",
+    "worldlogic:gneiss_bricks_slab",
+    "worldlogic:volcanic_tuff_slab",
+    "worldlogic:polished_volcanic_tuff_slab",
+    "worldlogic:volcanic_tuff_bricks_slab"
+  ]
+}
