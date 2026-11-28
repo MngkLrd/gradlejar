@@ -1,3 +1,9 @@
+# World Logic 1.2.0 development candidate / RC53 — NeoForge 1.21.1
+
+Core-owned SI physical material and object registry, constituent profiles, opt-in item state, loaded world queries and addon API revision 14. See API.md for units, ownership and limitations. No new encumbrance, movement penalties or gameplay effects. Internal CI archive: `worldlogic-neoforge-mc1.21.1-1.2.0.jar`; eligible public delivery name: `worldlogic_core_1.2.0_1.21.1_neoforge.jar`. Version increments 1.1.0 (RC52) to 1.2.0 for the new subsystem; RC53 is development provenance only. Existing RC22 macro geography and legacy gameplay coefficient behavior unchanged.
+
+## Historical notes
+
 # World Logic 1.0.0-rc33 — NeoForge 1.21.1
 Java 21, official mappings, NeoForge ModDevGradle 2.0.148, Gradle 9.2.1, compile/test loader 21.1.262.
 Build: gradle --no-daemon clean build
