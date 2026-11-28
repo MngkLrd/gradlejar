@@ -3,7 +3,7 @@ loaderVersion="[1,)"
 license="All Rights Reserved"
 [[mods]]
 modId="wl_treechopper"
-version="0.6.1"
+version="0.6.2"
 displayName="WorldLogic TreeChopper"
 description="Directional geometric axe cuts and animated tree felling."
 [[dependencies.wl_treechopper]]

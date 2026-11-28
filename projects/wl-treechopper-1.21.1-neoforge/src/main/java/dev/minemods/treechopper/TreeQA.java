@@ -83,6 +83,59 @@ final class TreeQA {
             if(axe.getDamageValue()!=expected){c.getSource().sendFailure(Component.literal("TreeChopper multi-root wear FAILED: "+axe.getDamageValue()+" expected "+expected));return 0;}
             c.getSource().sendSuccess(()->Component.literal("TreeChopper multi-root PASS"),false);return 1;
           }))))
+          .then(Commands.literal("qa_balance_math").executes(c->{
+            int[] deep={620,0,0,0};int guide=FallBalance.guideForStrike(deep,1,-1);
+            int back=FallBalance.counterWork(deep,1,guide,400);
+            int[] result={620,back,0,0};
+            double[] v=FallBalance.cutVector(result,guide);
+            double[] plain=FallBalance.cutVector(new int[]{1000,0,0,0},-1);
+            if(guide!=0||back!=130||!FallBalance.validGuide(result,guide)||!ChopEffort.severed(result)
+                ||FallBalance.guideForStrike(new int[]{250,0,0,0},1,-1)!=-1
+                ||FallBalance.guideForStrike(deep,0,-1)!=-1
+                ||FallBalance.choose(v[0],v[1],0,0,0,0,Direction.SOUTH)!=Direction.NORTH
+                ||FallBalance.choose(plain[0],plain[1],0,0,0,0,Direction.SOUTH)!=Direction.NORTH
+                ||FallBalance.choose(plain[0],plain[1],3,0,1,0,Direction.NORTH)!=Direction.EAST
+                ||FallBalance.choose(0,0,0,0,0,-3,Direction.SOUTH)!=Direction.NORTH
+                ||FallBalance.mass(true,Direction.Axis.X)<=FallBalance.mass(false,Direction.Axis.Y)){
+                c.getSource().sendFailure(Component.literal("TreeChopper directional balance FAILED"));return 0;
+            }
+            c.getSource().sendSuccess(()->Component.literal("TreeChopper directional balance PASS"),false);return 1;
+          }))
+          .then(Commands.literal("qa_guide").then(Commands.argument("pos",BlockPosArgument.blockPos()).executes(c->{
+            ServerLevel l=c.getSource().getLevel();BlockPos p=BlockPosArgument.getLoadedBlockPos(c,"pos");
+            var fake=FakePlayerFactory.getMinecraft(l);fake.setPos(p.getX()+.5,p.getY(),p.getZ()-2);
+            ItemStack axe=new ItemStack(Items.IRON_AXE);fake.setItemSlot(EquipmentSlot.MAINHAND,axe);
+            int count=0;
+            while(CutProgress.read(l,p,l.getBlockState(p))[0]<500&&count++<5){
+                TreeChopper.qaResetCooldown(fake);
+                NeoForge.EVENT_BUS.post(new PlayerInteractEvent.LeftClickBlock(fake,p,Direction.NORTH,PlayerInteractEvent.LeftClickBlock.Action.START));
+            }
+            var before=l.getBlockState(p);int[] work=CutProgress.read(l,p,before);
+            if(!(before.getBlock() instanceof CutBlock)||CutBlock.depth(before,Direction.NORTH)<2||work[1]!=0||CutProgress.guide(l,p)!=-1){
+                c.getSource().sendFailure(Component.literal("TreeChopper initial directional notch FAILED"));return 0;
+            }
+            fake.setPos(p.getX()+.5,p.getY(),p.getZ()+2);
+            for(int i=0;i<4&&!(l.getBlockState(p).getBlock() instanceof StumpBlock);i++){
+                TreeChopper.qaResetCooldown(fake);
+                NeoForge.EVENT_BUS.post(new PlayerInteractEvent.LeftClickBlock(fake,p,Direction.SOUTH,PlayerInteractEvent.LeftClickBlock.Action.START));
+            }
+            var list=l.getEntitiesOfClass(net.minecraft.world.entity.Display.BlockDisplay.class,new net.minecraft.world.phys.AABB(p).inflate(2),d->d.getPersistentData().getCompound(TreeChopper.FALL).getBoolean("coordinator"));
+            if(!(l.getBlockState(p).getBlock() instanceof StumpBlock)||list.size()!=1){
+                c.getSource().sendFailure(Component.literal("TreeChopper guided fall FAILED"));return 0;
+            }
+            var f=list.get(0).getPersistentData().getCompound(TreeChopper.FALL);
+            if(!f.getString("direction").equals("north")||f.getInt("guides")!=1){
+                c.getSource().sendFailure(Component.literal("TreeChopper guided direction FAILED"));return 0;
+            }
+            c.getSource().sendSuccess(()->Component.literal("TreeChopper guided fall PASS"),false);return 1;
+          })))
+          .then(Commands.literal("qa_mass").then(Commands.argument("pos",BlockPosArgument.blockPos()).then(Commands.argument("expected",StringArgumentType.word()).executes(c->{
+            ServerLevel l=c.getSource().getLevel();BlockPos p=BlockPosArgument.getLoadedBlockPos(c,"pos");
+            Direction expected=Direction.byName(StringArgumentType.getString(c,"expected"));
+            Direction found=TreeChopper.qaBalance(l,p,"oak",Direction.NORTH);
+            if(found!=expected){c.getSource().sendFailure(Component.literal("TreeChopper world mass direction FAILED: "+found));return 0;}
+            c.getSource().sendSuccess(()->Component.literal("TreeChopper world mass direction PASS"),false);return 1;
+          }))))
           .then(Commands.literal("qa_effort").executes(c->{
             double full=ChopEffort.power(1,1,1), tired=ChopEffort.power(.1,1,1);
             double oneArm=ChopEffort.power(1,1,0), disabled=ChopEffort.power(1,0,1);

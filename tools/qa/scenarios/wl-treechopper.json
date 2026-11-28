@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "WorldLogic TreeChopper 0.6.1 server regression (NeoForge FakePlayer event backend)",
+  "name": "WorldLogic TreeChopper 0.6.2 server regression (NeoForge FakePlayer event backend)",
   "steps": [
     {
       "command": "forceload add 992 992 1055 1055",
@@ -1029,6 +1029,91 @@
       "command": "execute if block 1026 200 1036 minecraft:stone",
       "expect": "Test passed",
       "assertion": true
+    },
+    {
+      "command": "wltreechopper qa_balance_math",
+      "expect": "TreeChopper directional balance PASS",
+      "assertion": true,
+      "name": "direction-math"
+    },
+    {
+      "command": "setblock 1000 199 1038 minecraft:dirt",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 1000 200 1038 1000 203 1038 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1000 204 1038 minecraft:oak_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_guide 1000 200 1038",
+      "expect": "TreeChopper guided fall PASS",
+      "assertion": true,
+      "name": "guided-actual-fall"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "command": "execute if block 1000 200 1036 wl_treechopper:fallen_oak",
+      "expect": "Test passed",
+      "assertion": true,
+      "name": "guided-landing"
+    },
+    {
+      "command": "setblock 1010 199 1038 minecraft:dirt",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 1010 200 1038 1010 204 1038 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 1011 204 1038 1016 204 1038 minecraft:oak_log[axis=x]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 1014 205 1038 1016 205 1038 minecraft:oak_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1010 200 1038 wl_treechopper:cut_oak[north=3,south=0,east=0,west=0]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_mass 1010 200 1038 east",
+      "expect": "TreeChopper world mass direction PASS",
+      "assertion": true,
+      "name": "heavy-branch-direction"
+    },
+    {
+      "command": "setblock 1010 199 1024 minecraft:dirt",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 1010 200 1024 1010 202 1024 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 1011 203 1024 1011 204 1024 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "fill 1012 205 1024 1012 207 1024 minecraft:oak_log",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "setblock 1012 208 1024 minecraft:oak_leaves[distance=1,persistent=false]",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wltreechopper qa_mass 1010 200 1024 east",
+      "expect": "TreeChopper world mass direction PASS",
+      "assertion": true,
+      "name": "leaning-direction"
     }
   ],
   "coverage": [
@@ -2041,6 +2126,61 @@
         {
           "backend": "server",
           "name": "inclined-obstacle-kept"
+        }
+      ]
+    },
+    {
+      "id": "direction-math",
+      "kind": "mechanic",
+      "subject": "Guided opposing strike shallow, normal one-face unguided, natural lean and branch mass can override ordinary cut",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "direction-math"
+        }
+      ]
+    },
+    {
+      "id": "guided-actual-fall",
+      "kind": "mechanic",
+      "subject": "Actual FakePlayer cuts deep north then shallow south, coordinator falls north with one recorded guide",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "guided-actual-fall"
+        }
+      ]
+    },
+    {
+      "id": "guided-landing",
+      "kind": "mechanic",
+      "subject": "Directed fall produces actual timber on north side",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "guided-landing"
+        }
+      ]
+    },
+    {
+      "id": "heavy-branch-direction",
+      "kind": "mechanic",
+      "subject": "Actual scanned asymmetric log mass biases an otherwise north cut to east",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "heavy-branch-direction"
+        }
+      ]
+    },
+    {
+      "id": "leaning-direction",
+      "kind": "mechanic",
+      "subject": "Actual stepped vertical trunk geometry biases east without a guide",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "leaning-direction"
         }
       ]
     }
