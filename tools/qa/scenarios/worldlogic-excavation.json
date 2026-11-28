@@ -1,0 +1,1674 @@
+{
+  "schema": 1,
+  "name": "WorldLogic Excavation 0.2.1 server regression and exact Core rev21 arbitration",
+  "coverage": [
+    {
+      "id": "wrong-tier",
+      "kind": "mechanic",
+      "subject": "Wooden pickaxe must not change iron ore or yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "wrong-tier"
+        }
+      ]
+    },
+    {
+      "id": "iron-five-hits",
+      "kind": "mechanic",
+      "subject": "Iron pickaxe, five hits and exactly nine mineral units.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "iron-five-hits"
+        }
+      ]
+    },
+    {
+      "id": "diamond-three-hits",
+      "kind": "mechanic",
+      "subject": "Diamond pickaxe, three hits and exactly nine mineral units.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "diamond-three-hits"
+        }
+      ]
+    },
+    {
+      "id": "switch-tools-and-faces",
+      "kind": "mechanic",
+      "subject": "Switch tools and faces without reserve reset; bounded geometry, cooldown and no vanilla bypass.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "switch-tools-and-faces"
+        }
+      ]
+    },
+    {
+      "id": "family-minecraft-stone",
+      "kind": "mechanic",
+      "subject": "Registered source minecraft:stone: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-minecraft-stone"
+        }
+      ]
+    },
+    {
+      "id": "family-minecraft-deepslate",
+      "kind": "mechanic",
+      "subject": "Registered source minecraft:deepslate: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-minecraft-deepslate"
+        }
+      ]
+    },
+    {
+      "id": "family-minecraft-granite",
+      "kind": "mechanic",
+      "subject": "Registered source minecraft:granite: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-minecraft-granite"
+        }
+      ]
+    },
+    {
+      "id": "family-minecraft-diorite",
+      "kind": "mechanic",
+      "subject": "Registered source minecraft:diorite: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-minecraft-diorite"
+        }
+      ]
+    },
+    {
+      "id": "family-minecraft-andesite",
+      "kind": "mechanic",
+      "subject": "Registered source minecraft:andesite: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-minecraft-andesite"
+        }
+      ]
+    },
+    {
+      "id": "family-minecraft-tuff",
+      "kind": "mechanic",
+      "subject": "Registered source minecraft:tuff: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-minecraft-tuff"
+        }
+      ]
+    },
+    {
+      "id": "family-minecraft-calcite",
+      "kind": "mechanic",
+      "subject": "Registered source minecraft:calcite: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-minecraft-calcite"
+        }
+      ]
+    },
+    {
+      "id": "family-minecraft-blackstone",
+      "kind": "mechanic",
+      "subject": "Registered source minecraft:blackstone: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-minecraft-blackstone"
+        }
+      ]
+    },
+    {
+      "id": "family-minecraft-basalt",
+      "kind": "mechanic",
+      "subject": "Registered source minecraft:basalt: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-minecraft-basalt"
+        }
+      ]
+    },
+    {
+      "id": "family-minecraft-end-stone",
+      "kind": "mechanic",
+      "subject": "Registered source minecraft:end_stone: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-minecraft-end-stone"
+        }
+      ]
+    },
+    {
+      "id": "family-minecraft-netherrack",
+      "kind": "mechanic",
+      "subject": "Registered source minecraft:netherrack: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-minecraft-netherrack"
+        }
+      ]
+    },
+    {
+      "id": "family-minecraft-obsidian",
+      "kind": "mechanic",
+      "subject": "Registered source minecraft:obsidian: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-minecraft-obsidian"
+        }
+      ]
+    },
+    {
+      "id": "family-worldlogic-limestone",
+      "kind": "mechanic",
+      "subject": "Registered source worldlogic:limestone: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-worldlogic-limestone"
+        }
+      ]
+    },
+    {
+      "id": "family-worldlogic-shale",
+      "kind": "mechanic",
+      "subject": "Registered source worldlogic:shale: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-worldlogic-shale"
+        }
+      ]
+    },
+    {
+      "id": "family-worldlogic-slate",
+      "kind": "mechanic",
+      "subject": "Registered source worldlogic:slate: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-worldlogic-slate"
+        }
+      ]
+    },
+    {
+      "id": "family-worldlogic-gneiss",
+      "kind": "mechanic",
+      "subject": "Registered source worldlogic:gneiss: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-worldlogic-gneiss"
+        }
+      ]
+    },
+    {
+      "id": "family-worldlogic-volcanic-tuff",
+      "kind": "mechanic",
+      "subject": "Registered source worldlogic:volcanic_tuff: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-worldlogic-volcanic-tuff"
+        }
+      ]
+    },
+    {
+      "id": "family-minecraft-iron-ore",
+      "kind": "mechanic",
+      "subject": "Registered source minecraft:iron_ore: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-minecraft-iron-ore"
+        }
+      ]
+    },
+    {
+      "id": "family-minecraft-deepslate-iron-ore",
+      "kind": "mechanic",
+      "subject": "Registered source minecraft:deepslate_iron_ore: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-minecraft-deepslate-iron-ore"
+        }
+      ]
+    },
+    {
+      "id": "family-minecraft-gold-ore",
+      "kind": "mechanic",
+      "subject": "Registered source minecraft:gold_ore: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-minecraft-gold-ore"
+        }
+      ]
+    },
+    {
+      "id": "family-minecraft-deepslate-gold-ore",
+      "kind": "mechanic",
+      "subject": "Registered source minecraft:deepslate_gold_ore: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-minecraft-deepslate-gold-ore"
+        }
+      ]
+    },
+    {
+      "id": "family-minecraft-nether-gold-ore",
+      "kind": "mechanic",
+      "subject": "Registered source minecraft:nether_gold_ore: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-minecraft-nether-gold-ore"
+        }
+      ]
+    },
+    {
+      "id": "family-minecraft-copper-ore",
+      "kind": "mechanic",
+      "subject": "Registered source minecraft:copper_ore: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-minecraft-copper-ore"
+        }
+      ]
+    },
+    {
+      "id": "family-minecraft-deepslate-copper-ore",
+      "kind": "mechanic",
+      "subject": "Registered source minecraft:deepslate_copper_ore: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-minecraft-deepslate-copper-ore"
+        }
+      ]
+    },
+    {
+      "id": "family-minecraft-coal-ore",
+      "kind": "mechanic",
+      "subject": "Registered source minecraft:coal_ore: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-minecraft-coal-ore"
+        }
+      ]
+    },
+    {
+      "id": "family-minecraft-deepslate-coal-ore",
+      "kind": "mechanic",
+      "subject": "Registered source minecraft:deepslate_coal_ore: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-minecraft-deepslate-coal-ore"
+        }
+      ]
+    },
+    {
+      "id": "family-minecraft-diamond-ore",
+      "kind": "mechanic",
+      "subject": "Registered source minecraft:diamond_ore: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-minecraft-diamond-ore"
+        }
+      ]
+    },
+    {
+      "id": "family-minecraft-deepslate-diamond-ore",
+      "kind": "mechanic",
+      "subject": "Registered source minecraft:deepslate_diamond_ore: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-minecraft-deepslate-diamond-ore"
+        }
+      ]
+    },
+    {
+      "id": "family-minecraft-emerald-ore",
+      "kind": "mechanic",
+      "subject": "Registered source minecraft:emerald_ore: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-minecraft-emerald-ore"
+        }
+      ]
+    },
+    {
+      "id": "family-minecraft-deepslate-emerald-ore",
+      "kind": "mechanic",
+      "subject": "Registered source minecraft:deepslate_emerald_ore: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-minecraft-deepslate-emerald-ore"
+        }
+      ]
+    },
+    {
+      "id": "family-minecraft-lapis-ore",
+      "kind": "mechanic",
+      "subject": "Registered source minecraft:lapis_ore: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-minecraft-lapis-ore"
+        }
+      ]
+    },
+    {
+      "id": "family-minecraft-deepslate-lapis-ore",
+      "kind": "mechanic",
+      "subject": "Registered source minecraft:deepslate_lapis_ore: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-minecraft-deepslate-lapis-ore"
+        }
+      ]
+    },
+    {
+      "id": "family-minecraft-redstone-ore",
+      "kind": "mechanic",
+      "subject": "Registered source minecraft:redstone_ore: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-minecraft-redstone-ore"
+        }
+      ]
+    },
+    {
+      "id": "family-minecraft-deepslate-redstone-ore",
+      "kind": "mechanic",
+      "subject": "Registered source minecraft:deepslate_redstone_ore: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-minecraft-deepslate-redstone-ore"
+        }
+      ]
+    },
+    {
+      "id": "family-minecraft-nether-quartz-ore",
+      "kind": "mechanic",
+      "subject": "Registered source minecraft:nether_quartz_ore: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-minecraft-nether-quartz-ore"
+        }
+      ]
+    },
+    {
+      "id": "family-minecraft-ancient-debris",
+      "kind": "mechanic",
+      "subject": "Registered source minecraft:ancient_debris: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-minecraft-ancient-debris"
+        }
+      ]
+    },
+    {
+      "id": "family-worldlogic-hematite-ore",
+      "kind": "mechanic",
+      "subject": "Registered source worldlogic:hematite_ore: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-worldlogic-hematite-ore"
+        }
+      ]
+    },
+    {
+      "id": "family-worldlogic-deepslate-hematite-ore",
+      "kind": "mechanic",
+      "subject": "Registered source worldlogic:deepslate_hematite_ore: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-worldlogic-deepslate-hematite-ore"
+        }
+      ]
+    },
+    {
+      "id": "family-worldlogic-magnetite-ore",
+      "kind": "mechanic",
+      "subject": "Registered source worldlogic:magnetite_ore: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-worldlogic-magnetite-ore"
+        }
+      ]
+    },
+    {
+      "id": "family-worldlogic-deepslate-magnetite-ore",
+      "kind": "mechanic",
+      "subject": "Registered source worldlogic:deepslate_magnetite_ore: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-worldlogic-deepslate-magnetite-ore"
+        }
+      ]
+    },
+    {
+      "id": "family-worldlogic-cassiterite-ore",
+      "kind": "mechanic",
+      "subject": "Registered source worldlogic:cassiterite_ore: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-worldlogic-cassiterite-ore"
+        }
+      ]
+    },
+    {
+      "id": "family-worldlogic-deepslate-cassiterite-ore",
+      "kind": "mechanic",
+      "subject": "Registered source worldlogic:deepslate_cassiterite_ore: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-worldlogic-deepslate-cassiterite-ore"
+        }
+      ]
+    },
+    {
+      "id": "family-worldlogic-galena-ore",
+      "kind": "mechanic",
+      "subject": "Registered source worldlogic:galena_ore: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-worldlogic-galena-ore"
+        }
+      ]
+    },
+    {
+      "id": "family-worldlogic-deepslate-galena-ore",
+      "kind": "mechanic",
+      "subject": "Registered source worldlogic:deepslate_galena_ore: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-worldlogic-deepslate-galena-ore"
+        }
+      ]
+    },
+    {
+      "id": "family-worldlogic-sphalerite-ore",
+      "kind": "mechanic",
+      "subject": "Registered source worldlogic:sphalerite_ore: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-worldlogic-sphalerite-ore"
+        }
+      ]
+    },
+    {
+      "id": "family-worldlogic-deepslate-sphalerite-ore",
+      "kind": "mechanic",
+      "subject": "Registered source worldlogic:deepslate_sphalerite_ore: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-worldlogic-deepslate-sphalerite-ore"
+        }
+      ]
+    },
+    {
+      "id": "family-worldlogic-pyrite-ore",
+      "kind": "mechanic",
+      "subject": "Registered source worldlogic:pyrite_ore: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-worldlogic-pyrite-ore"
+        }
+      ]
+    },
+    {
+      "id": "family-worldlogic-deepslate-pyrite-ore",
+      "kind": "mechanic",
+      "subject": "Registered source worldlogic:deepslate_pyrite_ore: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-worldlogic-deepslate-pyrite-ore"
+        }
+      ]
+    },
+    {
+      "id": "family-worldlogic-malachite-ore",
+      "kind": "mechanic",
+      "subject": "Registered source worldlogic:malachite_ore: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-worldlogic-malachite-ore"
+        }
+      ]
+    },
+    {
+      "id": "family-worldlogic-deepslate-malachite-ore",
+      "kind": "mechanic",
+      "subject": "Registered source worldlogic:deepslate_malachite_ore: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-worldlogic-deepslate-malachite-ore"
+        }
+      ]
+    },
+    {
+      "id": "family-worldlogic-bauxite-ore",
+      "kind": "mechanic",
+      "subject": "Registered source worldlogic:bauxite_ore: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-worldlogic-bauxite-ore"
+        }
+      ]
+    },
+    {
+      "id": "family-worldlogic-deepslate-bauxite-ore",
+      "kind": "mechanic",
+      "subject": "Registered source worldlogic:deepslate_bauxite_ore: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-worldlogic-deepslate-bauxite-ore"
+        }
+      ]
+    },
+    {
+      "id": "family-worldlogic-fluorite-ore",
+      "kind": "mechanic",
+      "subject": "Registered source worldlogic:fluorite_ore: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-worldlogic-fluorite-ore"
+        }
+      ]
+    },
+    {
+      "id": "family-worldlogic-deepslate-fluorite-ore",
+      "kind": "mechanic",
+      "subject": "Registered source worldlogic:deepslate_fluorite_ore: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-worldlogic-deepslate-fluorite-ore"
+        }
+      ]
+    },
+    {
+      "id": "family-worldlogic-cinnabar-ore",
+      "kind": "mechanic",
+      "subject": "Registered source worldlogic:cinnabar_ore: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-worldlogic-cinnabar-ore"
+        }
+      ]
+    },
+    {
+      "id": "family-worldlogic-deepslate-cinnabar-ore",
+      "kind": "mechanic",
+      "subject": "Registered source worldlogic:deepslate_cinnabar_ore: actual validated strike path, durability, geometry, conserved final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "family-worldlogic-deepslate-cinnabar-ore"
+        }
+      ]
+    },
+    {
+      "id": "soil-minecraft-dirt",
+      "kind": "mechanic",
+      "subject": "Compact soil geometry, vanilla timing ×1.5, native final yield minecraft:dirt",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "soil-minecraft-dirt"
+        }
+      ]
+    },
+    {
+      "id": "soil-minecraft-grass-block",
+      "kind": "mechanic",
+      "subject": "Compact soil geometry, vanilla timing ×1.5, native final yield minecraft:grass_block",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "soil-minecraft-grass-block"
+        }
+      ]
+    },
+    {
+      "id": "soil-minecraft-coarse-dirt",
+      "kind": "mechanic",
+      "subject": "Compact soil geometry, vanilla timing ×1.5, native final yield minecraft:coarse_dirt",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "soil-minecraft-coarse-dirt"
+        }
+      ]
+    },
+    {
+      "id": "soil-minecraft-rooted-dirt",
+      "kind": "mechanic",
+      "subject": "Compact soil geometry, vanilla timing ×1.5, native final yield minecraft:rooted_dirt",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "soil-minecraft-rooted-dirt"
+        }
+      ]
+    },
+    {
+      "id": "soil-minecraft-podzol",
+      "kind": "mechanic",
+      "subject": "Compact soil geometry, vanilla timing ×1.5, native final yield minecraft:podzol",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "soil-minecraft-podzol"
+        }
+      ]
+    },
+    {
+      "id": "soil-minecraft-mycelium",
+      "kind": "mechanic",
+      "subject": "Compact soil geometry, vanilla timing ×1.5, native final yield minecraft:mycelium",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "soil-minecraft-mycelium"
+        }
+      ]
+    },
+    {
+      "id": "soil-minecraft-mud",
+      "kind": "mechanic",
+      "subject": "Compact soil geometry, vanilla timing ×1.5, native final yield minecraft:mud",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "soil-minecraft-mud"
+        }
+      ]
+    },
+    {
+      "id": "soil-minecraft-clay",
+      "kind": "mechanic",
+      "subject": "Compact soil geometry, vanilla timing ×1.5, native final yield minecraft:clay",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "soil-minecraft-clay"
+        }
+      ]
+    },
+    {
+      "id": "soil-worldlogic-humus",
+      "kind": "mechanic",
+      "subject": "Compact soil geometry, vanilla timing ×1.5, native final yield worldlogic:humus",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "soil-worldlogic-humus"
+        }
+      ]
+    },
+    {
+      "id": "soil-worldlogic-loam",
+      "kind": "mechanic",
+      "subject": "Compact soil geometry, vanilla timing ×1.5, native final yield worldlogic:loam",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "soil-worldlogic-loam"
+        }
+      ]
+    },
+    {
+      "id": "soil-worldlogic-peat",
+      "kind": "mechanic",
+      "subject": "Compact soil geometry, vanilla timing ×1.5, native final yield worldlogic:peat",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "soil-worldlogic-peat"
+        }
+      ]
+    },
+    {
+      "id": "soil-worldlogic-alluvial-silt",
+      "kind": "mechanic",
+      "subject": "Compact soil geometry, vanilla timing ×1.5, native final yield worldlogic:alluvial_silt",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "soil-worldlogic-alluvial-silt"
+        }
+      ]
+    },
+    {
+      "id": "soil-worldlogic-frozen-soil",
+      "kind": "mechanic",
+      "subject": "Compact soil geometry, vanilla timing ×1.5, native final yield worldlogic:frozen_soil",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "soil-worldlogic-frozen-soil"
+        }
+      ]
+    },
+    {
+      "id": "soil-worldlogic-chernozem",
+      "kind": "mechanic",
+      "subject": "Compact soil geometry, vanilla timing ×1.5, native final yield worldlogic:chernozem",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "soil-worldlogic-chernozem"
+        }
+      ]
+    },
+    {
+      "id": "soil-worldlogic-sandy-loam",
+      "kind": "mechanic",
+      "subject": "Compact soil geometry, vanilla timing ×1.5, native final yield worldlogic:sandy_loam",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "soil-worldlogic-sandy-loam"
+        }
+      ]
+    },
+    {
+      "id": "soil-worldlogic-laterite",
+      "kind": "mechanic",
+      "subject": "Compact soil geometry, vanilla timing ×1.5, native final yield worldlogic:laterite",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "soil-worldlogic-laterite"
+        }
+      ]
+    },
+    {
+      "id": "soil-bare-hands",
+      "kind": "mechanic",
+      "subject": "Bare hands remain valid for slow soil excavation.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "soil-bare-hands"
+        }
+      ]
+    },
+    {
+      "id": "soil-fast-tool",
+      "kind": "mechanic",
+      "subject": "Fast shovel uses feasible reduced hit count and native final yield.",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "soil-fast-tool"
+        }
+      ]
+    },
+    {
+      "id": "core-rev21-arbitration",
+      "kind": "mechanic",
+      "subject": "Core late denial zero debit, original proxy composition, canonical mineral recipe mappings, accepted intermediate effort and once-only final debit",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "core-rev21-arbitration"
+        }
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "command": "forceload add 992 992 1055 1055",
+      "expect": "force loaded|force-loaded|Marked"
+    },
+    {
+      "wait": 3
+    },
+    {
+      "command": "setblock 996 200 996 minecraft:iron_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 996 200 996 bad",
+      "expect": "Excavation QA PASS bad",
+      "assertion": true,
+      "name": "wrong-tier"
+    },
+    {
+      "command": "setblock 1002 200 996 minecraft:iron_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1002 200 996 iron",
+      "expect": "Excavation QA PASS iron",
+      "assertion": true,
+      "name": "iron-five-hits"
+    },
+    {
+      "command": "setblock 1008 200 996 minecraft:iron_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1008 200 996 diamond",
+      "expect": "Excavation QA PASS diamond",
+      "assertion": true,
+      "name": "diamond-three-hits"
+    },
+    {
+      "command": "setblock 1014 200 996 minecraft:iron_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1014 200 996 switch",
+      "expect": "Excavation QA PASS switch",
+      "assertion": true,
+      "name": "switch-tools-and-faces"
+    },
+    {
+      "command": "setblock 1020 200 996 minecraft:stone",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1020 200 996 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-minecraft-stone"
+    },
+    {
+      "command": "setblock 1026 200 996 minecraft:deepslate",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1026 200 996 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-minecraft-deepslate"
+    },
+    {
+      "command": "setblock 1032 200 996 minecraft:granite",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1032 200 996 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-minecraft-granite"
+    },
+    {
+      "command": "setblock 1038 200 996 minecraft:diorite",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1038 200 996 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-minecraft-diorite"
+    },
+    {
+      "command": "setblock 1044 200 996 minecraft:andesite",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1044 200 996 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-minecraft-andesite"
+    },
+    {
+      "command": "setblock 1050 200 996 minecraft:tuff",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1050 200 996 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-minecraft-tuff"
+    },
+    {
+      "command": "setblock 996 200 1002 minecraft:calcite",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 996 200 1002 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-minecraft-calcite"
+    },
+    {
+      "command": "setblock 1002 200 1002 minecraft:blackstone",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1002 200 1002 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-minecraft-blackstone"
+    },
+    {
+      "command": "setblock 1008 200 1002 minecraft:basalt",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1008 200 1002 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-minecraft-basalt"
+    },
+    {
+      "command": "setblock 1014 200 1002 minecraft:end_stone",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1014 200 1002 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-minecraft-end-stone"
+    },
+    {
+      "command": "setblock 1020 200 1002 minecraft:netherrack",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1020 200 1002 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-minecraft-netherrack"
+    },
+    {
+      "command": "setblock 1026 200 1002 minecraft:obsidian",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1026 200 1002 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-minecraft-obsidian"
+    },
+    {
+      "command": "setblock 1032 200 1002 worldlogic:limestone",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1032 200 1002 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-worldlogic-limestone"
+    },
+    {
+      "command": "setblock 1038 200 1002 worldlogic:shale",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1038 200 1002 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-worldlogic-shale"
+    },
+    {
+      "command": "setblock 1044 200 1002 worldlogic:slate",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1044 200 1002 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-worldlogic-slate"
+    },
+    {
+      "command": "setblock 1050 200 1002 worldlogic:gneiss",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1050 200 1002 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-worldlogic-gneiss"
+    },
+    {
+      "command": "setblock 996 200 1008 worldlogic:volcanic_tuff",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 996 200 1008 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-worldlogic-volcanic-tuff"
+    },
+    {
+      "command": "setblock 1002 200 1008 minecraft:iron_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1002 200 1008 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-minecraft-iron-ore"
+    },
+    {
+      "command": "setblock 1008 200 1008 minecraft:deepslate_iron_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1008 200 1008 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-minecraft-deepslate-iron-ore"
+    },
+    {
+      "command": "setblock 1014 200 1008 minecraft:gold_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1014 200 1008 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-minecraft-gold-ore"
+    },
+    {
+      "command": "setblock 1020 200 1008 minecraft:deepslate_gold_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1020 200 1008 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-minecraft-deepslate-gold-ore"
+    },
+    {
+      "command": "setblock 1026 200 1008 minecraft:nether_gold_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1026 200 1008 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-minecraft-nether-gold-ore"
+    },
+    {
+      "command": "setblock 1032 200 1008 minecraft:copper_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1032 200 1008 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-minecraft-copper-ore"
+    },
+    {
+      "command": "setblock 1038 200 1008 minecraft:deepslate_copper_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1038 200 1008 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-minecraft-deepslate-copper-ore"
+    },
+    {
+      "command": "setblock 1044 200 1008 minecraft:coal_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1044 200 1008 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-minecraft-coal-ore"
+    },
+    {
+      "command": "setblock 1050 200 1008 minecraft:deepslate_coal_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1050 200 1008 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-minecraft-deepslate-coal-ore"
+    },
+    {
+      "command": "setblock 996 200 1014 minecraft:diamond_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 996 200 1014 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-minecraft-diamond-ore"
+    },
+    {
+      "command": "setblock 1002 200 1014 minecraft:deepslate_diamond_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1002 200 1014 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-minecraft-deepslate-diamond-ore"
+    },
+    {
+      "command": "setblock 1008 200 1014 minecraft:emerald_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1008 200 1014 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-minecraft-emerald-ore"
+    },
+    {
+      "command": "setblock 1014 200 1014 minecraft:deepslate_emerald_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1014 200 1014 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-minecraft-deepslate-emerald-ore"
+    },
+    {
+      "command": "setblock 1020 200 1014 minecraft:lapis_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1020 200 1014 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-minecraft-lapis-ore"
+    },
+    {
+      "command": "setblock 1026 200 1014 minecraft:deepslate_lapis_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1026 200 1014 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-minecraft-deepslate-lapis-ore"
+    },
+    {
+      "command": "setblock 1032 200 1014 minecraft:redstone_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1032 200 1014 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-minecraft-redstone-ore"
+    },
+    {
+      "command": "setblock 1038 200 1014 minecraft:deepslate_redstone_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1038 200 1014 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-minecraft-deepslate-redstone-ore"
+    },
+    {
+      "command": "setblock 1044 200 1014 minecraft:nether_quartz_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1044 200 1014 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-minecraft-nether-quartz-ore"
+    },
+    {
+      "command": "setblock 1050 200 1014 minecraft:ancient_debris",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1050 200 1014 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-minecraft-ancient-debris"
+    },
+    {
+      "command": "setblock 996 200 1020 worldlogic:hematite_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 996 200 1020 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-worldlogic-hematite-ore"
+    },
+    {
+      "command": "setblock 1002 200 1020 worldlogic:deepslate_hematite_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1002 200 1020 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-worldlogic-deepslate-hematite-ore"
+    },
+    {
+      "command": "setblock 1008 200 1020 worldlogic:magnetite_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1008 200 1020 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-worldlogic-magnetite-ore"
+    },
+    {
+      "command": "setblock 1014 200 1020 worldlogic:deepslate_magnetite_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1014 200 1020 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-worldlogic-deepslate-magnetite-ore"
+    },
+    {
+      "command": "setblock 1020 200 1020 worldlogic:cassiterite_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1020 200 1020 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-worldlogic-cassiterite-ore"
+    },
+    {
+      "command": "setblock 1026 200 1020 worldlogic:deepslate_cassiterite_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1026 200 1020 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-worldlogic-deepslate-cassiterite-ore"
+    },
+    {
+      "command": "setblock 1032 200 1020 worldlogic:galena_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1032 200 1020 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-worldlogic-galena-ore"
+    },
+    {
+      "command": "setblock 1038 200 1020 worldlogic:deepslate_galena_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1038 200 1020 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-worldlogic-deepslate-galena-ore"
+    },
+    {
+      "command": "setblock 1044 200 1020 worldlogic:sphalerite_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1044 200 1020 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-worldlogic-sphalerite-ore"
+    },
+    {
+      "command": "setblock 1050 200 1020 worldlogic:deepslate_sphalerite_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1050 200 1020 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-worldlogic-deepslate-sphalerite-ore"
+    },
+    {
+      "command": "setblock 996 200 1026 worldlogic:pyrite_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 996 200 1026 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-worldlogic-pyrite-ore"
+    },
+    {
+      "command": "setblock 1002 200 1026 worldlogic:deepslate_pyrite_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1002 200 1026 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-worldlogic-deepslate-pyrite-ore"
+    },
+    {
+      "command": "setblock 1008 200 1026 worldlogic:malachite_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1008 200 1026 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-worldlogic-malachite-ore"
+    },
+    {
+      "command": "setblock 1014 200 1026 worldlogic:deepslate_malachite_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1014 200 1026 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-worldlogic-deepslate-malachite-ore"
+    },
+    {
+      "command": "setblock 1020 200 1026 worldlogic:bauxite_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1020 200 1026 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-worldlogic-bauxite-ore"
+    },
+    {
+      "command": "setblock 1026 200 1026 worldlogic:deepslate_bauxite_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1026 200 1026 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-worldlogic-deepslate-bauxite-ore"
+    },
+    {
+      "command": "setblock 1032 200 1026 worldlogic:fluorite_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1032 200 1026 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-worldlogic-fluorite-ore"
+    },
+    {
+      "command": "setblock 1038 200 1026 worldlogic:deepslate_fluorite_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1038 200 1026 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-worldlogic-deepslate-fluorite-ore"
+    },
+    {
+      "command": "setblock 1044 200 1026 worldlogic:cinnabar_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1044 200 1026 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-worldlogic-cinnabar-ore"
+    },
+    {
+      "command": "setblock 1050 200 1026 worldlogic:deepslate_cinnabar_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1050 200 1026 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "family-worldlogic-deepslate-cinnabar-ore"
+    },
+    {
+      "command": "setblock 996 200 1032 minecraft:dirt",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 996 200 1032 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "soil-minecraft-dirt"
+    },
+    {
+      "command": "setblock 1002 200 1032 minecraft:grass_block",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1002 200 1032 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "soil-minecraft-grass-block"
+    },
+    {
+      "command": "setblock 1008 200 1032 minecraft:coarse_dirt",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1008 200 1032 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "soil-minecraft-coarse-dirt"
+    },
+    {
+      "command": "setblock 1014 200 1032 minecraft:rooted_dirt",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1014 200 1032 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "soil-minecraft-rooted-dirt"
+    },
+    {
+      "command": "setblock 1020 200 1032 minecraft:podzol",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1020 200 1032 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "soil-minecraft-podzol"
+    },
+    {
+      "command": "setblock 1026 200 1032 minecraft:mycelium",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1026 200 1032 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "soil-minecraft-mycelium"
+    },
+    {
+      "command": "setblock 1032 200 1032 minecraft:mud",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1032 200 1032 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "soil-minecraft-mud"
+    },
+    {
+      "command": "setblock 1038 200 1032 minecraft:clay",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1038 200 1032 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "soil-minecraft-clay"
+    },
+    {
+      "command": "setblock 1044 200 1032 worldlogic:humus",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1044 200 1032 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "soil-worldlogic-humus"
+    },
+    {
+      "command": "setblock 1050 200 1032 worldlogic:loam",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1050 200 1032 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "soil-worldlogic-loam"
+    },
+    {
+      "command": "setblock 996 200 1038 worldlogic:peat",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 996 200 1038 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "soil-worldlogic-peat"
+    },
+    {
+      "command": "setblock 1002 200 1038 worldlogic:alluvial_silt",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1002 200 1038 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "soil-worldlogic-alluvial-silt"
+    },
+    {
+      "command": "setblock 1008 200 1038 worldlogic:frozen_soil",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1008 200 1038 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "soil-worldlogic-frozen-soil"
+    },
+    {
+      "command": "setblock 1014 200 1038 worldlogic:chernozem",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1014 200 1038 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "soil-worldlogic-chernozem"
+    },
+    {
+      "command": "setblock 1020 200 1038 worldlogic:sandy_loam",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1020 200 1038 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "soil-worldlogic-sandy-loam"
+    },
+    {
+      "command": "setblock 1026 200 1038 worldlogic:laterite",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1026 200 1038 family",
+      "expect": "Excavation QA PASS family",
+      "assertion": true,
+      "name": "soil-worldlogic-laterite"
+    },
+    {
+      "command": "setblock 1032 200 1038 minecraft:dirt",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1032 200 1038 hands",
+      "expect": "Excavation QA PASS hands",
+      "assertion": true,
+      "name": "soil-bare-hands"
+    },
+    {
+      "command": "setblock 1038 200 1038 minecraft:dirt",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1038 200 1038 soilfast",
+      "expect": "Excavation QA PASS soilfast",
+      "assertion": true,
+      "name": "soil-fast-tool"
+    },
+    {
+      "command": "setblock 1044 200 1038 minecraft:iron_ore",
+      "expect": "Changed the block|Successfully filled|Filled"
+    },
+    {
+      "command": "wlexcavation qa 1044 200 1038 integration",
+      "expect": "Excavation QA PASS integration",
+      "assertion": true,
+      "name": "core-rev21-arbitration"
+    }
+  ]
+}

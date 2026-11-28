@@ -1,0 +1,186 @@
+{
+  "schema": 2,
+  "ecosystem": "worldlogic",
+  "module": "worldlogicexcavation",
+  "role": "addon",
+  "core_module": "worldlogic",
+  "target": {
+    "minecraft": "1.21.1",
+    "loader": "neoforge"
+  },
+  "provides": [
+    {
+      "id": "worldlogic:rock_fracture",
+      "version": 1,
+      "revision": 1,
+      "domains": [
+        "discrete_rock_fracture"
+      ],
+      "entrypoints": [
+        "dev.minemods.excavation.ExcavationApi"
+      ],
+      "documentation": "projects/worldlogic-excavation-1.21.1-neoforge/API.md",
+      "source_paths": [
+        "projects/worldlogic-excavation-1.21.1-neoforge/src/main/java/dev/minemods/excavation/ExcavationApi.java",
+        "projects/worldlogic-excavation-1.21.1-neoforge/src/main/java/dev/minemods/excavation/Excavation.java",
+        "projects/worldlogic-excavation-1.21.1-neoforge/src/main/java/dev/minemods/excavation/ChipProgress.java",
+        "projects/worldlogic-excavation-1.21.1-neoforge/src/main/java/dev/minemods/excavation/FractureMath.java"
+      ],
+      "operations": [
+        {
+          "id": "inspect",
+          "kind": "query",
+          "entrypoint": "dev.minemods.excavation.ExcavationApi",
+          "semantics": "Read exact loaded fracture work, face depths and remaining ore units."
+        },
+        {
+          "id": "strike",
+          "kind": "command",
+          "entrypoint": "dev.minemods.excavation.ExcavationApi",
+          "semantics": "Server-authoritative aimed discrete strike with tool, reach, cooldown and permission validation."
+        },
+        {
+          "id": "timing",
+          "kind": "query",
+          "entrypoint": "dev.minemods.excavation.ExcavationApi",
+          "semantics": "Return vanilla baseline ticks, category target ticks and feasible click cadence for actual held tool and loaded source."
+        }
+      ],
+      "runtime_id": "worldlogicexcavation:fracture"
+    }
+  ],
+  "consumes": [
+    {
+      "id": "worldlogic:excavation",
+      "version": 1,
+      "min_revision": 1,
+      "required": true,
+      "status": "implemented",
+      "fallback": "Required Core excavation v1 rev1; no raw synthetic BreakEvent or private NBT fallback."
+    },
+    {
+      "id": "worldlogic:material_properties",
+      "version": 1,
+      "min_revision": 2,
+      "required": true,
+      "status": "implemented",
+      "fallback": "Unknown physical contact stays absent; no invented material profiles."
+    },
+    {
+      "id": "worldlogic:survival_physics",
+      "version": 1,
+      "min_revision": 19,
+      "required": true,
+      "status": "implemented",
+      "fallback": "Core 1.5.1+ required; accepted intermediate exertion only, successful final destroyBlock handled by Core."
+    }
+  ],
+  "features": [
+    {
+      "id": "discrete_strikes",
+      "source_paths": [
+        "projects/worldlogic-excavation-1.21.1-neoforge/src/main/java/dev/minemods/excavation/Excavation.java",
+        "projects/worldlogic-excavation-1.21.1-neoforge/src/main/java/dev/minemods/excavation/StrikeNetwork.java",
+        "projects/worldlogic-excavation-1.21.1-neoforge/src/main/java/dev/minemods/excavation/StrikeClient.java",
+        "projects/worldlogic-excavation-1.21.1-neoforge/src/main/java/dev/minemods/excavation/FractureMath.java"
+      ],
+      "provides": [
+        "worldlogic:rock_fracture"
+      ],
+      "consumes": [
+        "worldlogic:excavation",
+        "worldlogic:material_properties",
+        "worldlogic:survival_physics"
+      ],
+      "integration_review": "Core #270/#275: typed inspectOriginal and scoped checkProtection; addExertion only after accepted intermediate mutation; Core charges final destruction once."
+    },
+    {
+      "id": "persistent_multiface_notches",
+      "source_paths": [
+        "projects/worldlogic-excavation-1.21.1-neoforge/src/main/java/dev/minemods/excavation/ChipProgress.java",
+        "projects/worldlogic-excavation-1.21.1-neoforge/src/main/java/dev/minemods/excavation/ChipBlock.java",
+        "projects/worldlogic-excavation-1.21.1-neoforge/src/main/java/dev/minemods/excavation/NotchGeometry.java",
+        "projects/worldlogic-excavation-1.21.1-neoforge/src/main/java/dev/minemods/excavation/ChipModel.java"
+      ],
+      "provides": [
+        "worldlogic:rock_fracture"
+      ],
+      "consumes": [],
+      "integration_review": "Store only damaged blocks; chunk-baked geometry, bounded caches, no per-tick entities."
+    },
+    {
+      "id": "ore_reserve",
+      "source_paths": [
+        "projects/worldlogic-excavation-1.21.1-neoforge/src/main/java/dev/minemods/excavation/Catalog.java",
+        "projects/worldlogic-excavation-1.21.1-neoforge/src/main/java/dev/minemods/excavation/FractureMath.java",
+        "projects/worldlogic-excavation-1.21.1-neoforge/src/main/java/dev/minemods/excavation/Excavation.java",
+        "projects/worldlogic-excavation-1.21.1-neoforge/assets.gradle"
+      ],
+      "provides": [
+        "worldlogic:rock_fracture"
+      ],
+      "consumes": [
+        "worldlogic:material_properties"
+      ],
+      "integration_review": "Core canonical mineralProduct checked for every Core ore recipe; seven retain specimen pending metallurgy."
+    },
+    {
+      "id": "timed_soil_excavation",
+      "source_paths": [
+        "projects/worldlogic-excavation-1.21.1-neoforge/src/main/java/dev/minemods/excavation/Excavation.java",
+        "projects/worldlogic-excavation-1.21.1-neoforge/src/main/java/dev/minemods/excavation/FractureMath.java",
+        "projects/worldlogic-excavation-1.21.1-neoforge/src/main/java/dev/minemods/excavation/Catalog.java",
+        "projects/worldlogic-excavation-1.21.1-neoforge/src/main/java/dev/minemods/excavation/ChipModel.java",
+        "projects/worldlogic-excavation-1.21.1-neoforge/src/main/java/dev/minemods/excavation/ExcavationQA.java"
+      ],
+      "provides": [
+        "worldlogic:rock_fracture"
+      ],
+      "consumes": [
+        "worldlogic:excavation",
+        "worldlogic:survival_physics"
+      ],
+      "integration_review": "Core SOIL role and current player vanilla break progress; compact soil notches preserve native final loot, no parallel fatigue pool."
+    }
+  ],
+  "tests": [
+    {
+      "id": "excavation.strike_and_reserve",
+      "capabilities": [
+        "worldlogic:rock_fracture",
+        "worldlogic:excavation"
+      ],
+      "ref": "tools/qa/scenarios/worldlogic-excavation.json",
+      "status": "implemented"
+    },
+    {
+      "id": "excavation.contact_and_geometry",
+      "capabilities": [
+        "worldlogic:rock_fracture",
+        "worldlogic:material_properties"
+      ],
+      "ref": "tools/qa/scenarios/worldlogic-excavation.json",
+      "status": "implemented"
+    },
+    {
+      "id": "excavation.timing_and_soil",
+      "capabilities": [
+        "worldlogic:rock_fracture",
+        "worldlogic:excavation"
+      ],
+      "ref": "tools/qa/scenarios/worldlogic-excavation.json",
+      "status": "implemented"
+    },
+    {
+      "id": "excavation.core_rev21_arbitration",
+      "capabilities": [
+        "worldlogic:rock_fracture",
+        "worldlogic:excavation",
+        "worldlogic:survival_physics"
+      ],
+      "ref": "tools/qa/scenarios/worldlogic-excavation.json",
+      "status": "implemented"
+    }
+  ],
+  "parent_module": "worldlogic"
+}

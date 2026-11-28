@@ -1,0 +1,29 @@
+{
+  "slug": "worldlogicexcavation",
+  "version": "0.2.1",
+  "minecraft": "1.21.1",
+  "loader": "neoforge",
+  "java": "21",
+  "gradle": "9.2.1",
+  "jar_glob": "worldlogicexcavation-neoforge-mc1.21.1-0.2.1.jar",
+  "minimum_loader_version": "21.1.262",
+  "compile_loader_version": "21.1.262",
+  "qa": {
+    "mode": "server",
+    "loader_version": "21.1.262",
+    "scenario": "tools/qa/scenarios/worldlogic-excavation.json",
+    "release_targets": [
+      "neoforge-mc1.21.1"
+    ],
+    "watch_paths": [
+      "projects/worldlogic-1.21.1-neoforge",
+      "tools/qa/scenarios/worldlogic-excavation.json"
+    ]
+  },
+  "ecosystem_membership": {
+    "ecosystem": "worldlogic",
+    "module": "worldlogicexcavation",
+    "role": "addon",
+    "core_module": "worldlogic"
+  }
+}

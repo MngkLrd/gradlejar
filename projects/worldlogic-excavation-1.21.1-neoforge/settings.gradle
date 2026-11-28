@@ -1,0 +1,5 @@
+pluginManagement { repositories { maven { url='https://maven.neoforged.net/releases' }; gradlePluginPortal(); mavenCentral() } }
+rootProject.name='worldlogic-excavation-neoforge-mc1.21.1'
+includeBuild('../worldlogic-1.21.1-neoforge') {
+ dependencySubstitution { substitute(module('dev.minemods.worldlogic:worldlogic-neoforge-mc1.21.1')).using(project(':')) }
+}
