@@ -234,6 +234,9 @@ final class TreeQA {
             clone.loadAdditional(nbt,l.registryAccess());
             if(!java.util.Arrays.equals(nbt.getIntArray("work"),work)||!java.util.Arrays.equals(clone.saveWithoutMetadata(l.registryAccess()).getIntArray("work"),work)
                 ||clone.getUpdateTag(l.registryAccess()).getInt("depthKey")!=CutGeometry.key(work))return 0;
+            var packetClone=new CutProgress(fixture,state);
+            packetClone.handleUpdateTag(stored.getUpdateTag(l.registryAccess()),l.registryAccess());
+            if(!java.util.Objects.equals(packetClone.getModelData().get(CutProgress.DEPTHS),CutGeometry.key(work)))return 0;
             var previous=stored.getUpdateTag(l.registryAccess()).getInt("depthKey");
             stored.write(new int[]{760,130,0,0},0);
             if(previous==stored.getUpdateTag(l.registryAccess()).getInt("depthKey")||state.getCollisionShape(l,fixture)==expected.shape())return 0;

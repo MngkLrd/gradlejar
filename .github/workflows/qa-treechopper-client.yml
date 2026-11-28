@@ -1,0 +1,69 @@
+name: TreeChopper client loading diagnostic
+on:
+  pull_request:
+    paths:
+      - 'projects/wl-treechopper-1.21.1-neoforge/**'
+      - '.github/workflows/qa-treechopper-client.yml'
+permissions:
+  contents: read
+jobs:
+  client:
+    if: github.event.pull_request.head.ref == 'worldlogic-treechopper-0.5.0'
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.2.1'
+          cache-read-only: true
+      - name: Install software graphics
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends xvfb xauth xdotool imagemagick libgl1-mesa-dri libglx-mesa0 libegl-mesa0 libopenal1 mesa-utils
+      - name: Verify actual client startup, not just a loading window
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+          ALSOFT_DRIVERS: 'null'
+          JAVA_TOOL_OPTIONS: '-Dwl.treechopper.clientQa=true'
+        run: |
+          mkdir -p client-evidence
+          xvfb-run --auto-servernum --server-args="-screen 0 1280x720x24 +extension GLX +render -noreset" python3 - <<'PY'
+          import os, pathlib, signal, subprocess, time
+          out=pathlib.Path('client-evidence').resolve()
+          with (out/'client.log').open('w') as log:
+              p=subprocess.Popen(['gradle','--no-daemon','runClient'],cwd='projects/wl-treechopper-1.21.1-neoforge',stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
+              try:
+                  deadline=time.monotonic()+720
+                  while time.monotonic()<deadline:
+                      data=(out/'client.log').read_text(errors='replace')
+                      if 'TREECHOPPER_CLIENT_QA_FAILED:' in data or p.poll() is not None:
+                          raise RuntimeError('Client/model check failed; see retained log')
+                      if 'TREECHOPPER_CLIENT_QA_PASS:' in data:
+                          print(next(line for line in data.splitlines() if 'TREECHOPPER_CLIENT_QA_PASS:' in line))
+                          subprocess.run(['import','-window','root',str(out/'title.png')],check=True,timeout=20)
+                          (out/'status.txt').write_text('PASS: dev client reached title screen; model and cache smoke tests passed. Not QA-5.')
+                          break
+                      time.sleep(2)
+                  else:
+                      raise TimeoutError('Client did not reach ready title screen within 720 seconds')
+              finally:
+                  if p.poll() is None:
+                      os.killpg(p.pid,signal.SIGTERM)
+                      try:p.wait(timeout=20)
+                      except subprocess.TimeoutExpired:os.killpg(p.pid,signal.SIGKILL);p.wait()
+                  print((out/'client.log').read_text(errors='replace')[-16000:])
+          PY
+      - name: Retain separate client evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: treechopper-client-diagnostic
+          path: client-evidence/
+          if-no-files-found: warn

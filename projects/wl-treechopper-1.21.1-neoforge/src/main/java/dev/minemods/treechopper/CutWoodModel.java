@@ -27,6 +27,43 @@ public final class CutWoodModel {
     @SubscribeEvent public static void register(ModelEvent.RegisterGeometryLoaders event){
         event.register(ResourceLocation.fromNamespaceAndPath(TreeChopper.ID,"dynamic_cut"),new Loader());
     }
+    // Opt-in diagnostic only, never runs during ordinary player sessions.
+    @EventBusSubscriber(modid=TreeChopper.ID,value=Dist.CLIENT)
+    public static final class ClientProbe {
+        private static int readyTicks;
+        private static boolean done;
+        @SubscribeEvent public static void tick(net.neoforged.neoforge.client.event.ClientTickEvent.Post event){
+            if(done||!Boolean.getBoolean("wl.treechopper.clientQa"))return;
+            var client=net.minecraft.client.Minecraft.getInstance();
+            if(!(client.screen instanceof net.minecraft.client.gui.screens.TitleScreen)||client.getOverlay()!=null){readyTicks=0;return;}
+            if(++readyTicks<20)return;
+            done=true;
+            try{
+                int count=0;
+                for(var block:net.minecraft.core.registries.BuiltInRegistries.BLOCK){
+                    if(!(block instanceof CutBlock))continue;
+                    var state=block.defaultBlockState();
+                    var model=client.getBlockRenderer().getBlockModel(state);
+                    if(!(model instanceof Wood woodModel))throw new IllegalStateException("Dynamic cut model not installed: "+block);
+                    var empty=woodModel.quads(0);
+                    var key=CutGeometry.key(new int[]{500,125,250,0});
+                    var cut=woodModel.quads(key);
+                    if(empty.isEmpty()||cut.isEmpty()||empty.equals(cut)||cut!=woodModel.quads(key)||!woodModel.getQuads(state,Direction.NORTH,RandomSource.create(0),ModelData.EMPTY,null).isEmpty())throw new IllegalStateException("Model geometry/cache failed: "+block);
+                    var data=ModelData.builder().with(CutProgress.DEPTHS,key).build();
+                    if(woodModel.getQuads(state,null,RandomSource.create(0),data,RenderType.solid())!=cut)throw new IllegalStateException("ModelData lookup failed: "+block);
+                    if(++count==1){
+                        for(int n=0;n<9;n++)for(int s=0;s<9;s++)for(int w=0;w<9;w++)woodModel.quads(n|(s<<4)|(w<<8));
+                        if(woodModel.cache.size()>Wood.LIMIT)throw new IllegalStateException("Unbounded model cache");
+                    }
+                }
+                if(count!=21)throw new IllegalStateException("Expected 21 cut models, found "+count);
+                System.out.println("TREECHOPPER_CLIENT_QA_PASS: title screen, 21 dynamic models, ModelData and bounded quad cache");
+            }catch(RuntimeException failure){
+                System.err.println("TREECHOPPER_CLIENT_QA_FAILED: "+failure);
+                throw failure;
+            }
+        }
+    }
     private static final class Loader implements IGeometryLoader<Geometry>{
         @Override public Geometry read(JsonObject json,JsonDeserializationContext context){return new Geometry();}
     }
