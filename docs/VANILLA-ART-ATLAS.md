@@ -1,6 +1,6 @@
 # Vanilla art reference atlas — working research notes
 
-Under [Visual QA](VISUAL-QA.md) and [research evidence](VANILLA-RESEARCH.md). Official Minecraft Java 1.21.1, client SHA-1 30c73b1c5da787909b2f73340419fdf13b9def88. Current R9 catalog: 57 directly inspected source PNGs, all 57 official-client hashes confirmed by [research CI](https://github.com/MngkLrd/gradlejar/actions/runs/46029695582), and 28 executable material/role rules. Its use is mandatory in applicable texture review; the historical initial sample described below is not the current coverage. This is a practical interpretation of observed art, not official Mojang instructions, a universal drawing algorithm or an automatic review.
+Under [Visual QA](VISUAL-QA.md) and [research evidence](VANILLA-RESEARCH.md). Official Minecraft Java 1.21.1, client SHA-1 30c73b1c5da787909b2f73340419fdf13b9def88. Original R9 catalog: 57 directly inspected source PNGs, all 57 official-client hashes confirmed by [research CI](https://github.com/MngkLrd/gradlejar/actions/runs/46029695582), and 28 executable material/role rules. R11 adds 43 reference IDs and 16 role-specific rules for items and equipment; official-client verification of the extension is part of research CI. Its use is mandatory in applicable texture review; the historical initial sample described below is not the current coverage. This is a practical interpretation of observed art, not official Mojang instructions, a universal drawing algorithm or an automatic review.
 
 Use texture IDs relative to assets/minecraft/textures. Open actual verified PNGs at 1x and nearest-neighbor enlargement before drawing. Use the existing art_compare tool, official local client or version-pinned mirror verified against the official client. Do not redistribute vanilla PNGs. For tint/overlay art inspect the actual rendered reference when necessary; base grayscale and in-game color are different evidence.
 
@@ -27,7 +27,7 @@ Reference scope of the initial table: these are observations of 28 images, not e
 
 ## R9 additional material observations and mandatory rule index
 
-24 further PNGs opened at native size and 8x, block surfaces also inspected as 3x3 tiles; all exact bytes checked against the official corpus SHA-256 in R7 artifact 15212406511. Together with the previous 33, the direct sample is now 57. The canonical executable rule IDs, supported material profiles, exact references and limitations are in `tools/qa/research/vanilla-art-rules.json`. Apply its actual applicable row during drawing and review as required by [Visual QA](VISUAL-QA.md).
+24 further PNGs opened at native size and 8x, block surfaces also inspected as 3x3 tiles; all exact bytes checked against the official corpus SHA-256 in R7 artifact 15212406511. Together with the previous 33, the R9 direct sample reached 57. The canonical executable rule IDs, supported material profiles, exact references and limitations are in `tools/qa/research/vanilla-art-rules.json`. Apply its actual applicable row during drawing and review as required by [Visual QA](VISUAL-QA.md).
 
 | Added family | Actual viewed examples | Observations and exceptions |
 | --- | --- | --- |
