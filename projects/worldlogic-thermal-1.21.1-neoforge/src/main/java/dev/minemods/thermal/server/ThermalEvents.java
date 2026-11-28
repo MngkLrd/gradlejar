@@ -97,6 +97,11 @@ public final class ThermalEvents {
         n.putDouble("mealWarmth",Math.min(1,Math.max(n.getDouble("mealWarmth"),food.nutrition()/8.0)));
         root.put(KEY,n);
     }
+    /** Covers fire, explosions, commands, support loss and other non-player block changes. */
+    public static void insulationChanged(net.minecraft.server.level.ServerLevel level,net.minecraft.core.BlockPos pos){
+        RoomHeat.markDirty(level,pos);
+        EnvironmentSampler.invalidateLocal(level,pos);
+    }
     public static void blockChanged(net.neoforged.neoforge.event.level.BlockEvent event){
         if(event.getLevel() instanceof net.minecraft.server.level.ServerLevel level){
             RoomHeat.markDirty(level,event.getPos());EnvironmentSampler.invalidateLocal(level,event.getPos());
@@ -104,7 +109,7 @@ public final class ThermalEvents {
     }
     public static void registerCommands(RegisterCommandsEvent event) {
         var qa=Commands.literal("qa").requires(s->s.hasPermission(2));
-        for(String name:new String[]{"climate","dry","heat","blocked","armor","effects","conditions","weather","history","comfort","fixtures","clothing","fiber_work","creative_tab","portable","advanced_clothes","devices","textile","adaptation","frostbite","nutrition","room_inertia","room_ventilation","room_humidity","room_persistence","room_cache","village_climate","integration","water_exposure","room_response","hud_signals","physical_materials","wall_insulation"}) {
+        for(String name:new String[]{"climate","dry","heat","blocked","armor","effects","conditions","weather","history","comfort","fixtures","clothing","fiber_work","creative_tab","portable","advanced_clothes","devices","textile","adaptation","frostbite","nutrition","room_inertia","room_ventilation","room_humidity","room_persistence","room_cache","village_climate","integration","water_exposure","room_response","hud_signals","physical_materials","wall_insulation","insulation_fire"}) {
             qa.then(Commands.literal(name).executes(c->{
                 ThermalChecks.verify(c.getSource().getLevel(),name);
                 c.getSource().sendSuccess(()->Component.literal("THERMAL_QA_"+name+"_PASS"),false);

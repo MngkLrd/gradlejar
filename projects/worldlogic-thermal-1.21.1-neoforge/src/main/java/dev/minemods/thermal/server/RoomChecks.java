@@ -85,6 +85,42 @@ final class RoomChecks {
      l.setBlock(outer,straw,3);l.setBlock(support,Blocks.AIR.defaultBlockState(),3);
      require(!straw.canSurvive(l,outer)&&l.getBlockState(outer).isAir(),"unsupported panel detaches through neighbor update");
     }
+    case "insulation_fire" -> {
+     // Actual vanilla FireBlock ticks in a bounded high-altitude test fixture.
+     BlockPos support=CENTER.east(2),strawPos=support.east(),fire=strawPos.south(),clayPos=fire.south();
+     for(BlockPos b:BlockPos.betweenClosed(strawPos.offset(0,-2,-2),strawPos.offset(2,3,4))){
+      BlockPos q=b.immutable();old.putIfAbsent(q,l.getBlockState(q));l.setBlock(q,Blocks.AIR.defaultBlockState(),2);
+     }
+     l.setBlock(fire.below(),Blocks.NETHERRACK.defaultBlockState(),3);
+     var straw=ThermalContent.STRAW_INSULATION.get().defaultBlockState().setValue(WallInsulationBlock.FACING,Direction.EAST);
+     var clay=ThermalContent.CLAY_INSULATION.get().defaultBlockState().setValue(WallInsulationBlock.FACING,Direction.EAST);
+     require(straw.canSurvive(l,strawPos)&&clay.canSurvive(l,clayPos),"supported exterior fire fixture");
+     l.setBlock(clayPos,clay,3);
+     double clayOnly=RoomHeat.roomConductance(l,CENTER,now);
+     l.setBlock(strawPos,straw,3);
+     double both=RoomHeat.roomConductance(l,CENTER,now);
+     require(both<clayOnly,"placement automatically updates room insulation");
+     for(Direction face:Direction.values()){
+      var hay=Blocks.HAY_BLOCK.defaultBlockState();
+      require(straw.isFlammable(l,strawPos,face)&&straw.getFlammability(l,strawPos,face)==hay.getFlammability(l,strawPos,face)
+          &&straw.getFireSpreadSpeed(l,strawPos,face)==hay.getFireSpreadSpeed(l,strawPos,face)&&straw.getFireSpreadSpeed(l,strawPos,face)>0,"straw inherits vanilla hay fire behavior");
+      require(!clay.isFlammable(l,clayPos,face)&&clay.getFlammability(l,clayPos,face)==0&&clay.getFireSpreadSpeed(l,clayPos,face)==0,"unfired clay does not burn");
+     }
+     var rule=l.getGameRules().getRule(net.minecraft.world.level.GameRules.RULE_DOFIRETICK);
+     boolean previous=rule.get();
+     try{
+      rule.set(true,l.getServer());
+      var random=net.minecraft.util.RandomSource.create(731L);
+      for(int i=0;i<256&&l.getBlockState(strawPos).is(straw.getBlock());i++){
+       l.setBlock(fire,Blocks.FIRE.defaultBlockState(),3);
+       l.getBlockState(fire).tick(l,fire,random);
+      }
+      require(!l.getBlockState(strawPos).is(straw.getBlock()),"real vanilla fire consumes straw");
+      require(l.getBlockState(clayPos).is(clay.getBlock()),"clay survives adjacent fire");
+      require(dev.minemods.thermal.api.ThermalApi.wallInsulation(l,support,Direction.EAST).isEmpty(),"burned straw no longer insulates");
+      require(Math.abs(RoomHeat.roomConductance(l,CENTER,now)-clayOnly)<1e-8,"burnout automatically invalidates cached room conductance");
+     }finally{rule.set(previous,l.getServer());}
+    }
     case "room_ventilation" -> {
      door(l,false);l.setBlock(WINDOW,Blocks.GLASS_PANE.defaultBlockState(),2);heater(l,true);
      var closed=run(l,10,50,.7,now,60);

@@ -230,6 +230,12 @@
       "command": "thermal qa wall_insulation",
       "expect": "THERMAL_QA_wall_insulation_PASS",
       "assertion": true
+    },
+    {
+      "name": "Vanilla fire consumes straw cladding, clay survives and room cache loses insulation",
+      "command": "thermal qa insulation_fire",
+      "expect": "THERMAL_QA_insulation_fire_PASS",
+      "assertion": true
     }
   ],
   "coverage": [
@@ -604,6 +610,17 @@
         {
           "backend": "server",
           "name": "Exterior clay and straw cladding, face-specific room conductance and support removal"
+        }
+      ]
+    },
+    {
+      "id": "insulation-fire",
+      "kind": "mechanic",
+      "subject": "Vanilla fire consumes straw cladding, clay survives and room cache loses insulation",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Vanilla fire consumes straw cladding, clay survives and room cache loses insulation"
         }
       ]
     }

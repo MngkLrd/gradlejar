@@ -5,6 +5,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
+import dev.minemods.thermal.server.ThermalEvents;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -52,6 +55,21 @@ public final class WallInsulationBlock extends Block {
     @Override protected BlockState updateShape(BlockState s,Direction direction,BlockState neighbor,LevelAccessor level,BlockPos pos,BlockPos neighborPos){
         if(direction==s.getValue(FACING).getOpposite()&&!s.canSurvive(level,pos))return Blocks.AIR.defaultBlockState();
         return super.updateShape(s,direction,neighbor,level,pos,neighborPos);
+    }
+    // Reuse vanilla hay combustion rather than maintaining a second fire-rate table.
+    @Override public int getFlammability(BlockState state,BlockGetter level,BlockPos pos,Direction face){
+        return kind==Kind.STRAW?Blocks.HAY_BLOCK.defaultBlockState().getFlammability(level,pos,face):0;
+    }
+    @Override public int getFireSpreadSpeed(BlockState state,BlockGetter level,BlockPos pos,Direction face){
+        return kind==Kind.STRAW?Blocks.HAY_BLOCK.defaultBlockState().getFireSpreadSpeed(level,pos,face):0;
+    }
+    @Override protected void onPlace(BlockState state,Level level,BlockPos pos,BlockState old,boolean moving){
+        super.onPlace(state,level,pos,old,moving);
+        if(level instanceof ServerLevel server&&!state.equals(old))ThermalEvents.insulationChanged(server,pos);
+    }
+    @Override protected void onRemove(BlockState old,Level level,BlockPos pos,BlockState next,boolean moving){
+        super.onRemove(old,level,pos,next,moving);
+        if(level instanceof ServerLevel server&&!old.is(next.getBlock()))ThermalEvents.insulationChanged(server,pos);
     }
     @Override protected VoxelShape getShape(BlockState s,BlockGetter level,BlockPos pos,CollisionContext ctx){
         double t=kind.pixels;

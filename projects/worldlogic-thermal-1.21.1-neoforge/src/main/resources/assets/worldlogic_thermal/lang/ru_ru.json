@@ -231,7 +231,7 @@
   "hud.worldlogic_thermal.rate": "Темп",
   "hud.worldlogic_thermal.state": "Статус",
   "block.worldlogic_thermal.clay_insulation": "Глиняная обмазка",
-  "block.worldlogic_thermal.clay_insulation.info": "Нанесите на наружную грань стены. Снижает теплопотери.",
+  "block.worldlogic_thermal.clay_insulation.info": "Необожжённая глиняная обмазка. Наносится снаружи, не горит.",
   "block.worldlogic_thermal.straw_insulation": "Соломенная обшивка",
-  "block.worldlogic_thermal.straw_insulation.info": "Закрепите на наружной грани стены. Эффективно удерживает тепло."
+  "block.worldlogic_thermal.straw_insulation.info": "Закрепите снаружи стены. Удерживает тепло, но легко горит."
 }
