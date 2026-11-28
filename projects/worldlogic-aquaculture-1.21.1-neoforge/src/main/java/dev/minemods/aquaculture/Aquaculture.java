@@ -69,6 +69,7 @@ public final class Aquaculture {
    tag.putString("wl_fish_species",s.id());
    tag.putDouble("wl_fish_health",1);
   }
+  fish.syncVisualLength(s,tag);
   return tag;
  }
  public static boolean water(ServerLevel level,BlockPos pos){
@@ -163,6 +164,11 @@ public final class Aquaculture {
  }
  private void commands(RegisterCommandsEvent e){
   e.getDispatcher().register(Commands.literal("aquaculture").requires(src->src.hasPermission(2))
+   .then(Commands.literal("visual_selftest").executes(c->{
+    FishVisualChecks.run(c.getSource().getLevel());
+    c.getSource().sendSuccess(()->Component.literal("AQUA_VISUAL_ASSETS_SIZE_36_PASS"),false);
+    return Command.SINGLE_SUCCESS;
+   }))
    .then(Commands.literal("spawn_selftest").executes(c->{
     SpawnChecks.run(c.getSource().getLevel());
     c.getSource().sendSuccess(()->Component.literal("AQUA_SPAWN_36_PASS"),false);

@@ -1,5 +1,9 @@
 package dev.minemods.aquaculture;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.animal.Cod;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.InteractionHand;
@@ -9,6 +13,18 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 
 public final class Fish extends Cod {
+ private static final EntityDataAccessor<Float> VISUAL_LENGTH=SynchedEntityData.defineId(Fish.class,EntityDataSerializers.FLOAT);
+ @Override protected void defineSynchedData(SynchedEntityData.Builder builder){
+  super.defineSynchedData(builder);builder.define(VISUAL_LENGTH,0f);
+ }
+ public static float visualLengthOf(Species s,double length){
+  double value=Double.isFinite(length)&&length>0?length:s.adultLength()*.8;
+  return (float)Math.max(.16,Math.min(3.5,value));
+ }
+ public float visualLength(Species s){return visualLengthOf(s,entityData.get(VISUAL_LENGTH));}
+ public void syncVisualLength(Species s,CompoundTag traits){
+  if(!level().isClientSide)entityData.set(VISUAL_LENGTH,visualLengthOf(s,traits.getDouble("wl_fish_length_m")));
+ }
  public Fish(EntityType<? extends Cod> type,Level level){super(type,level);}
  @Override protected InteractionResult mobInteract(Player player,InteractionHand hand){
   // Transport is not implemented; prevent vanilla cod bucket identity conversion.

@@ -1,0 +1,1337 @@
+{
+  "schema": 1,
+  "assets": {
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/fish/pike.png": {
+      "sha256": "b8d7eb82313cf51587dcc3cac5a8b284fcfd766cd11ec40d989272e478764cd9",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/fish/cod",
+          "minecraft": "1.21.1",
+          "sha256": "4ba0d2d3fc0ee46e4c310b0a9ed9891ed64a3c3263ad562a33d985be18b07345"
+        }
+      ],
+      "comparison": "Compared with vanilla cod beige blocky body, pike has long narrow snout and rear-set dorsal; spaced light olive marks identify the species. Static UV and assembled orthographic review only.",
+      "findings": {
+        "silhouette": "long narrow snout and rear-set dorsal visible in assembled preview.",
+        "cluster_structure": "spaced light olive marks form bounded regions on the flank rather than random noise.",
+        "micro_contrast": "spaced light olive marks remain distinct against green olive flank.",
+        "light_and_volume": "Top/back and underside UVs intentionally use fish countershading; green olive flank.",
+        "material_continuity": "Head, body and rear use a coordinated green olive flank; fin colors stay on their own UVs.",
+        "edge_variation": "small rear dorsal and fork use cutout fin edges and distinct attachment points.",
+        "variant_identity": "long narrow snout and rear-set dorsal and spaced light olive marks distinguish this species in the 36-fish contact sheet.",
+        "vanilla_comparison": "Reference vanilla cod beige blocky body was inspected at native size; species-specific geometry differs.",
+        "functional_material_cues": "small rear dorsal and fork convey the anatomy; eyes and gill region are on the head, not scattered across body."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/fish/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Fish entity UV sheets have no dedicated comparator in the block/item atlas; model-part texture layout is the appropriate comparison.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 mirror, actual decoded PNG and SHA-256; official client SHA-1 could not independently be checked.",
+        "applied_pattern": "Face-specific pixel clusters, sharp silhouettes and restrained Minecraft-like shading; no copied vanilla texture.",
+        "reference_limit": "Reference is a different species and 32x32; this is a 64x64 multi-part atlas, not a block tile.",
+        "native_view": "Actual UV sheet inspected at native and nearest-neighbor enlarged scale.",
+        "context_view": "Assembled side/top orthographic preview inspected; in-game client render not run.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/fish/perch.png": {
+      "sha256": "f52041317a9ce2637633a355ec514af7178d85747af0da4ff47c649658b62e99",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/fish/tropical_b",
+          "minecraft": "1.21.1",
+          "sha256": "3691a0e3f3247b37b55673312818066629d36e2c33ac7b452431c0b36a9f2d00"
+        }
+      ],
+      "comparison": "Compared with vanilla tropical B compact grayscale planes, perch has deep compact body and double dorsal; dark vertical bars identify the species. Static UV and assembled orthographic review only.",
+      "findings": {
+        "silhouette": "deep compact body and double dorsal visible in assembled preview.",
+        "cluster_structure": "dark vertical bars form bounded regions on the flank rather than random noise.",
+        "micro_contrast": "dark vertical bars remain distinct against olive side and amber-orange fins.",
+        "light_and_volume": "Top/back and underside UVs intentionally use fish countershading; olive side and amber-orange fins.",
+        "material_continuity": "Head, body and rear use a coordinated olive side and amber-orange fins; fin colors stay on their own UVs.",
+        "edge_variation": "two separate dorsal fans use cutout fin edges and distinct attachment points.",
+        "variant_identity": "deep compact body and double dorsal and dark vertical bars distinguish this species in the 36-fish contact sheet.",
+        "vanilla_comparison": "Reference vanilla tropical B compact grayscale planes was inspected at native size; species-specific geometry differs.",
+        "functional_material_cues": "two separate dorsal fans convey the anatomy; eyes and gill region are on the head, not scattered across body."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/fish/tropical_b",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Fish entity UV sheets have no dedicated comparator in the block/item atlas; model-part texture layout is the appropriate comparison.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 mirror, actual decoded PNG and SHA-256; official client SHA-1 could not independently be checked.",
+        "applied_pattern": "Face-specific pixel clusters, sharp silhouettes and restrained Minecraft-like shading; no copied vanilla texture.",
+        "reference_limit": "Reference is a different species and 32x32; this is a 64x64 multi-part atlas, not a block tile.",
+        "native_view": "Actual UV sheet inspected at native and nearest-neighbor enlarged scale.",
+        "context_view": "Assembled side/top orthographic preview inspected; in-game client render not run.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/fish/crucian_carp.png": {
+      "sha256": "e3766037125e0c437e2c6dea0a34116e8fc4a4b43b539bddc05dd650ac2f9c13",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/fish/tropical_b",
+          "minecraft": "1.21.1",
+          "sha256": "3691a0e3f3247b37b55673312818066629d36e2c33ac7b452431c0b36a9f2d00"
+        }
+      ],
+      "comparison": "Compared with vanilla tropical B compact grayscale planes, crucian_carp has round high body and short head; golden scale clusters identify the species. Static UV and assembled orthographic review only.",
+      "findings": {
+        "silhouette": "round high body and short head visible in assembled preview.",
+        "cluster_structure": "golden scale clusters form bounded regions on the flank rather than random noise.",
+        "micro_contrast": "golden scale clusters remain distinct against warm gold flank.",
+        "light_and_volume": "Top/back and underside UVs intentionally use fish countershading; warm gold flank.",
+        "material_continuity": "Head, body and rear use a coordinated warm gold flank; fin colors stay on their own UVs.",
+        "edge_variation": "rounded tail and dorsal use cutout fin edges and distinct attachment points.",
+        "variant_identity": "round high body and short head and golden scale clusters distinguish this species in the 36-fish contact sheet.",
+        "vanilla_comparison": "Reference vanilla tropical B compact grayscale planes was inspected at native size; species-specific geometry differs.",
+        "functional_material_cues": "rounded tail and dorsal convey the anatomy; eyes and gill region are on the head, not scattered across body."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/fish/tropical_b",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Fish entity UV sheets have no dedicated comparator in the block/item atlas; model-part texture layout is the appropriate comparison.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 mirror, actual decoded PNG and SHA-256; official client SHA-1 could not independently be checked.",
+        "applied_pattern": "Face-specific pixel clusters, sharp silhouettes and restrained Minecraft-like shading; no copied vanilla texture.",
+        "reference_limit": "Reference is a different species and 32x32; this is a 64x64 multi-part atlas, not a block tile.",
+        "native_view": "Actual UV sheet inspected at native and nearest-neighbor enlarged scale.",
+        "context_view": "Assembled side/top orthographic preview inspected; in-game client render not run.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/fish/carp.png": {
+      "sha256": "d906a22d63fe5e5a1bb6c27cddf807146d496d182c429301bc566a487c28f03c",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/fish/tropical_b",
+          "minecraft": "1.21.1",
+          "sha256": "3691a0e3f3247b37b55673312818066629d36e2c33ac7b452431c0b36a9f2d00"
+        }
+      ],
+      "comparison": "Compared with vanilla tropical B compact grayscale planes, carp has thick elongated body and barbels; gold-brown scales identify the species. Static UV and assembled orthographic review only.",
+      "findings": {
+        "silhouette": "thick elongated body and barbels visible in assembled preview.",
+        "cluster_structure": "gold-brown scales form bounded regions on the flank rather than random noise.",
+        "micro_contrast": "gold-brown scales remain distinct against ochre flank and darker back.",
+        "light_and_volume": "Top/back and underside UVs intentionally use fish countershading; ochre flank and darker back.",
+        "material_continuity": "Head, body and rear use a coordinated ochre flank and darker back; fin colors stay on their own UVs.",
+        "edge_variation": "long dorsal and paired barbels use cutout fin edges and distinct attachment points.",
+        "variant_identity": "thick elongated body and barbels and gold-brown scales distinguish this species in the 36-fish contact sheet.",
+        "vanilla_comparison": "Reference vanilla tropical B compact grayscale planes was inspected at native size; species-specific geometry differs.",
+        "functional_material_cues": "long dorsal and paired barbels convey the anatomy; eyes and gill region are on the head, not scattered across body."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/fish/tropical_b",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Fish entity UV sheets have no dedicated comparator in the block/item atlas; model-part texture layout is the appropriate comparison.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 mirror, actual decoded PNG and SHA-256; official client SHA-1 could not independently be checked.",
+        "applied_pattern": "Face-specific pixel clusters, sharp silhouettes and restrained Minecraft-like shading; no copied vanilla texture.",
+        "reference_limit": "Reference is a different species and 32x32; this is a 64x64 multi-part atlas, not a block tile.",
+        "native_view": "Actual UV sheet inspected at native and nearest-neighbor enlarged scale.",
+        "context_view": "Assembled side/top orthographic preview inspected; in-game client render not run.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/fish/roach.png": {
+      "sha256": "b3a8d3a6e2fea77df3b3bcd7969bd3255fb7c58d92ed51d8bf6599ec6ead6bf4",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/fish/cod",
+          "minecraft": "1.21.1",
+          "sha256": "4ba0d2d3fc0ee46e4c310b0a9ed9891ed64a3c3263ad562a33d985be18b07345"
+        }
+      ],
+      "comparison": "Compared with vanilla cod beige blocky body, roach has small slender body; silver scale accents identify the species. Static UV and assembled orthographic review only.",
+      "findings": {
+        "silhouette": "small slender body visible in assembled preview.",
+        "cluster_structure": "silver scale accents form bounded regions on the flank rather than random noise.",
+        "micro_contrast": "silver scale accents remain distinct against silver side with red fins.",
+        "light_and_volume": "Top/back and underside UVs intentionally use fish countershading; silver side with red fins.",
+        "material_continuity": "Head, body and rear use a coordinated silver side with red fins; fin colors stay on their own UVs.",
+        "edge_variation": "small red paired fins use cutout fin edges and distinct attachment points.",
+        "variant_identity": "small slender body and silver scale accents distinguish this species in the 36-fish contact sheet.",
+        "vanilla_comparison": "Reference vanilla cod beige blocky body was inspected at native size; species-specific geometry differs.",
+        "functional_material_cues": "small red paired fins convey the anatomy; eyes and gill region are on the head, not scattered across body."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/fish/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Fish entity UV sheets have no dedicated comparator in the block/item atlas; model-part texture layout is the appropriate comparison.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 mirror, actual decoded PNG and SHA-256; official client SHA-1 could not independently be checked.",
+        "applied_pattern": "Face-specific pixel clusters, sharp silhouettes and restrained Minecraft-like shading; no copied vanilla texture.",
+        "reference_limit": "Reference is a different species and 32x32; this is a 64x64 multi-part atlas, not a block tile.",
+        "native_view": "Actual UV sheet inspected at native and nearest-neighbor enlarged scale.",
+        "context_view": "Assembled side/top orthographic preview inspected; in-game client render not run.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/fish/bream.png": {
+      "sha256": "803721fc124c0ea32c325ec21131bf23c5238ee6b68242d5340031fd6a602d4e",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/fish/tropical_b",
+          "minecraft": "1.21.1",
+          "sha256": "3691a0e3f3247b37b55673312818066629d36e2c33ac7b452431c0b36a9f2d00"
+        }
+      ],
+      "comparison": "Compared with vanilla tropical B compact grayscale planes, bream has high laterally compressed body; bronze scale patches identify the species. Static UV and assembled orthographic review only.",
+      "findings": {
+        "silhouette": "high laterally compressed body visible in assembled preview.",
+        "cluster_structure": "bronze scale patches form bounded regions on the flank rather than random noise.",
+        "micro_contrast": "bronze scale patches remain distinct against bronze-grey side.",
+        "light_and_volume": "Top/back and underside UVs intentionally use fish countershading; bronze-grey side.",
+        "material_continuity": "Head, body and rear use a coordinated bronze-grey side; fin colors stay on their own UVs.",
+        "edge_variation": "long ventral anal fin use cutout fin edges and distinct attachment points.",
+        "variant_identity": "high laterally compressed body and bronze scale patches distinguish this species in the 36-fish contact sheet.",
+        "vanilla_comparison": "Reference vanilla tropical B compact grayscale planes was inspected at native size; species-specific geometry differs.",
+        "functional_material_cues": "long ventral anal fin convey the anatomy; eyes and gill region are on the head, not scattered across body."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/fish/tropical_b",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Fish entity UV sheets have no dedicated comparator in the block/item atlas; model-part texture layout is the appropriate comparison.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 mirror, actual decoded PNG and SHA-256; official client SHA-1 could not independently be checked.",
+        "applied_pattern": "Face-specific pixel clusters, sharp silhouettes and restrained Minecraft-like shading; no copied vanilla texture.",
+        "reference_limit": "Reference is a different species and 32x32; this is a 64x64 multi-part atlas, not a block tile.",
+        "native_view": "Actual UV sheet inspected at native and nearest-neighbor enlarged scale.",
+        "context_view": "Assembled side/top orthographic preview inspected; in-game client render not run.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/fish/trout.png": {
+      "sha256": "789e7715f2817a3908c21e441feb12791ed26d90ed58ff6d7e1f076a7b8d66a6",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/fish/salmon",
+          "minecraft": "1.21.1",
+          "sha256": "4e273b660cd2833e24dc177aa9b782324a0fe0c8250369b7e27780b3c4d7ddd0"
+        }
+      ],
+      "comparison": "Compared with vanilla salmon elongated red-green planes, trout has streamlined body and adipose fin; red and dark spots identify the species. Static UV and assembled orthographic review only.",
+      "findings": {
+        "silhouette": "streamlined body and adipose fin visible in assembled preview.",
+        "cluster_structure": "red and dark spots form bounded regions on the flank rather than random noise.",
+        "micro_contrast": "red and dark spots remain distinct against olive side with pale belly.",
+        "light_and_volume": "Top/back and underside UVs intentionally use fish countershading; olive side with pale belly.",
+        "material_continuity": "Head, body and rear use a coordinated olive side with pale belly; fin colors stay on their own UVs.",
+        "edge_variation": "separate small adipose fin use cutout fin edges and distinct attachment points.",
+        "variant_identity": "streamlined body and adipose fin and red and dark spots distinguish this species in the 36-fish contact sheet.",
+        "vanilla_comparison": "Reference vanilla salmon elongated red-green planes was inspected at native size; species-specific geometry differs.",
+        "functional_material_cues": "separate small adipose fin convey the anatomy; eyes and gill region are on the head, not scattered across body."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/fish/salmon",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Fish entity UV sheets have no dedicated comparator in the block/item atlas; model-part texture layout is the appropriate comparison.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 mirror, actual decoded PNG and SHA-256; official client SHA-1 could not independently be checked.",
+        "applied_pattern": "Face-specific pixel clusters, sharp silhouettes and restrained Minecraft-like shading; no copied vanilla texture.",
+        "reference_limit": "Reference is a different species and 32x32; this is a 64x64 multi-part atlas, not a block tile.",
+        "native_view": "Actual UV sheet inspected at native and nearest-neighbor enlarged scale.",
+        "context_view": "Assembled side/top orthographic preview inspected; in-game client render not run.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/fish/grayling.png": {
+      "sha256": "1cdb5bfac555b01dacaa476fa85253454d4cb31c21500ec2d8f72ae0a45f3f39",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/fish/salmon",
+          "minecraft": "1.21.1",
+          "sha256": "4e273b660cd2833e24dc177aa9b782324a0fe0c8250369b7e27780b3c4d7ddd0"
+        }
+      ],
+      "comparison": "Compared with vanilla salmon elongated red-green planes, grayling has slender body with tall sail dorsal; small flank marks identify the species. Static UV and assembled orthographic review only.",
+      "findings": {
+        "silhouette": "slender body with tall sail dorsal visible in assembled preview.",
+        "cluster_structure": "small flank marks form bounded regions on the flank rather than random noise.",
+        "micro_contrast": "small flank marks remain distinct against silver-violet flank.",
+        "light_and_volume": "Top/back and underside UVs intentionally use fish countershading; silver-violet flank.",
+        "material_continuity": "Head, body and rear use a coordinated silver-violet flank; fin colors stay on their own UVs.",
+        "edge_variation": "large purple dorsal sail use cutout fin edges and distinct attachment points.",
+        "variant_identity": "slender body with tall sail dorsal and small flank marks distinguish this species in the 36-fish contact sheet.",
+        "vanilla_comparison": "Reference vanilla salmon elongated red-green planes was inspected at native size; species-specific geometry differs.",
+        "functional_material_cues": "large purple dorsal sail convey the anatomy; eyes and gill region are on the head, not scattered across body."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/fish/salmon",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Fish entity UV sheets have no dedicated comparator in the block/item atlas; model-part texture layout is the appropriate comparison.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 mirror, actual decoded PNG and SHA-256; official client SHA-1 could not independently be checked.",
+        "applied_pattern": "Face-specific pixel clusters, sharp silhouettes and restrained Minecraft-like shading; no copied vanilla texture.",
+        "reference_limit": "Reference is a different species and 32x32; this is a 64x64 multi-part atlas, not a block tile.",
+        "native_view": "Actual UV sheet inspected at native and nearest-neighbor enlarged scale.",
+        "context_view": "Assembled side/top orthographic preview inspected; in-game client render not run.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/fish/char.png": {
+      "sha256": "e7ebc4e5d70216d35ff0551322488ca95925555f3c03daf87c13f893a4a056c6",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/fish/salmon",
+          "minecraft": "1.21.1",
+          "sha256": "4e273b660cd2833e24dc177aa9b782324a0fe0c8250369b7e27780b3c4d7ddd0"
+        }
+      ],
+      "comparison": "Compared with vanilla salmon elongated red-green planes, char has streamlined body and adipose; pale speckled clusters identify the species. Static UV and assembled orthographic review only.",
+      "findings": {
+        "silhouette": "streamlined body and adipose visible in assembled preview.",
+        "cluster_structure": "pale speckled clusters form bounded regions on the flank rather than random noise.",
+        "micro_contrast": "pale speckled clusters remain distinct against blue-green body with orange fins.",
+        "light_and_volume": "Top/back and underside UVs intentionally use fish countershading; blue-green body with orange fins.",
+        "material_continuity": "Head, body and rear use a coordinated blue-green body with orange fins; fin colors stay on their own UVs.",
+        "edge_variation": "small adipose fin use cutout fin edges and distinct attachment points.",
+        "variant_identity": "streamlined body and adipose and pale speckled clusters distinguish this species in the 36-fish contact sheet.",
+        "vanilla_comparison": "Reference vanilla salmon elongated red-green planes was inspected at native size; species-specific geometry differs.",
+        "functional_material_cues": "small adipose fin convey the anatomy; eyes and gill region are on the head, not scattered across body."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/fish/salmon",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Fish entity UV sheets have no dedicated comparator in the block/item atlas; model-part texture layout is the appropriate comparison.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 mirror, actual decoded PNG and SHA-256; official client SHA-1 could not independently be checked.",
+        "applied_pattern": "Face-specific pixel clusters, sharp silhouettes and restrained Minecraft-like shading; no copied vanilla texture.",
+        "reference_limit": "Reference is a different species and 32x32; this is a 64x64 multi-part atlas, not a block tile.",
+        "native_view": "Actual UV sheet inspected at native and nearest-neighbor enlarged scale.",
+        "context_view": "Assembled side/top orthographic preview inspected; in-game client render not run.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/fish/taimen.png": {
+      "sha256": "a5d126bcec116b4d55bb7766ba49c0f0e0b15bdd59f6624e2e1508037cfd59ca",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/fish/salmon",
+          "minecraft": "1.21.1",
+          "sha256": "4e273b660cd2833e24dc177aa9b782324a0fe0c8250369b7e27780b3c4d7ddd0"
+        }
+      ],
+      "comparison": "Compared with vanilla salmon elongated red-green planes, taimen has elongated heavy salmonid body; dark spots on olive flank identify the species. Static UV and assembled orthographic review only.",
+      "findings": {
+        "silhouette": "elongated heavy salmonid body visible in assembled preview.",
+        "cluster_structure": "dark spots on olive flank form bounded regions on the flank rather than random noise.",
+        "micro_contrast": "dark spots on olive flank remain distinct against olive-grey side with red tail.",
+        "light_and_volume": "Top/back and underside UVs intentionally use fish countershading; olive-grey side with red tail.",
+        "material_continuity": "Head, body and rear use a coordinated olive-grey side with red tail; fin colors stay on their own UVs.",
+        "edge_variation": "large red rear fin use cutout fin edges and distinct attachment points.",
+        "variant_identity": "elongated heavy salmonid body and dark spots on olive flank distinguish this species in the 36-fish contact sheet.",
+        "vanilla_comparison": "Reference vanilla salmon elongated red-green planes was inspected at native size; species-specific geometry differs.",
+        "functional_material_cues": "large red rear fin convey the anatomy; eyes and gill region are on the head, not scattered across body."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/fish/salmon",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Fish entity UV sheets have no dedicated comparator in the block/item atlas; model-part texture layout is the appropriate comparison.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 mirror, actual decoded PNG and SHA-256; official client SHA-1 could not independently be checked.",
+        "applied_pattern": "Face-specific pixel clusters, sharp silhouettes and restrained Minecraft-like shading; no copied vanilla texture.",
+        "reference_limit": "Reference is a different species and 32x32; this is a 64x64 multi-part atlas, not a block tile.",
+        "native_view": "Actual UV sheet inspected at native and nearest-neighbor enlarged scale.",
+        "context_view": "Assembled side/top orthographic preview inspected; in-game client render not run.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/fish/whitefish.png": {
+      "sha256": "c6c66fbb96b8d511c98755399f7dbcb53e54353cca2bbe2d0c8b08c2d43d5f9f",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/fish/salmon",
+          "minecraft": "1.21.1",
+          "sha256": "4e273b660cd2833e24dc177aa9b782324a0fe0c8250369b7e27780b3c4d7ddd0"
+        }
+      ],
+      "comparison": "Compared with vanilla salmon elongated red-green planes, whitefish has slender tapering body; subtle silver highlights identify the species. Static UV and assembled orthographic review only.",
+      "findings": {
+        "silhouette": "slender tapering body visible in assembled preview.",
+        "cluster_structure": "subtle silver highlights form bounded regions on the flank rather than random noise.",
+        "micro_contrast": "subtle silver highlights remain distinct against blue-silver flank.",
+        "light_and_volume": "Top/back and underside UVs intentionally use fish countershading; blue-silver flank.",
+        "material_continuity": "Head, body and rear use a coordinated blue-silver flank; fin colors stay on their own UVs.",
+        "edge_variation": "small adipose fin use cutout fin edges and distinct attachment points.",
+        "variant_identity": "slender tapering body and subtle silver highlights distinguish this species in the 36-fish contact sheet.",
+        "vanilla_comparison": "Reference vanilla salmon elongated red-green planes was inspected at native size; species-specific geometry differs.",
+        "functional_material_cues": "small adipose fin convey the anatomy; eyes and gill region are on the head, not scattered across body."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/fish/salmon",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Fish entity UV sheets have no dedicated comparator in the block/item atlas; model-part texture layout is the appropriate comparison.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 mirror, actual decoded PNG and SHA-256; official client SHA-1 could not independently be checked.",
+        "applied_pattern": "Face-specific pixel clusters, sharp silhouettes and restrained Minecraft-like shading; no copied vanilla texture.",
+        "reference_limit": "Reference is a different species and 32x32; this is a 64x64 multi-part atlas, not a block tile.",
+        "native_view": "Actual UV sheet inspected at native and nearest-neighbor enlarged scale.",
+        "context_view": "Assembled side/top orthographic preview inspected; in-game client render not run.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/fish/burbot.png": {
+      "sha256": "434adf827749d5faa37f9cf909e46b5e6bc7990875be83e17455fde9b5d0f239",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/fish/cod",
+          "minecraft": "1.21.1",
+          "sha256": "4ba0d2d3fc0ee46e4c310b0a9ed9891ed64a3c3263ad562a33d985be18b07345"
+        }
+      ],
+      "comparison": "Compared with vanilla cod beige blocky body, burbot has long tapering body and chin barbel; brown mottling identify the species. Static UV and assembled orthographic review only.",
+      "findings": {
+        "silhouette": "long tapering body and chin barbel visible in assembled preview.",
+        "cluster_structure": "brown mottling form bounded regions on the flank rather than random noise.",
+        "micro_contrast": "brown mottling remain distinct against warm brown back and light belly.",
+        "light_and_volume": "Top/back and underside UVs intentionally use fish countershading; warm brown back and light belly.",
+        "material_continuity": "Head, body and rear use a coordinated warm brown back and light belly; fin colors stay on their own UVs.",
+        "edge_variation": "long second dorsal and chin barbel use cutout fin edges and distinct attachment points.",
+        "variant_identity": "long tapering body and chin barbel and brown mottling distinguish this species in the 36-fish contact sheet.",
+        "vanilla_comparison": "Reference vanilla cod beige blocky body was inspected at native size; species-specific geometry differs.",
+        "functional_material_cues": "long second dorsal and chin barbel convey the anatomy; eyes and gill region are on the head, not scattered across body."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/fish/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Fish entity UV sheets have no dedicated comparator in the block/item atlas; model-part texture layout is the appropriate comparison.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 mirror, actual decoded PNG and SHA-256; official client SHA-1 could not independently be checked.",
+        "applied_pattern": "Face-specific pixel clusters, sharp silhouettes and restrained Minecraft-like shading; no copied vanilla texture.",
+        "reference_limit": "Reference is a different species and 32x32; this is a 64x64 multi-part atlas, not a block tile.",
+        "native_view": "Actual UV sheet inspected at native and nearest-neighbor enlarged scale.",
+        "context_view": "Assembled side/top orthographic preview inspected; in-game client render not run.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/fish/catfish.png": {
+      "sha256": "e8cb3854b9857d623b56ada1a09dfb444a92c64d8e969d817a0e14e92af02adf",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/fish/cod",
+          "minecraft": "1.21.1",
+          "sha256": "4ba0d2d3fc0ee46e4c310b0a9ed9891ed64a3c3263ad562a33d985be18b07345"
+        }
+      ],
+      "comparison": "Compared with vanilla cod beige blocky body, catfish has wide flat head and tapering rear; muted dark mottling identify the species. Static UV and assembled orthographic review only.",
+      "findings": {
+        "silhouette": "wide flat head and tapering rear visible in assembled preview.",
+        "cluster_structure": "muted dark mottling form bounded regions on the flank rather than random noise.",
+        "micro_contrast": "muted dark mottling remain distinct against grey-green back and pale belly.",
+        "light_and_volume": "Top/back and underside UVs intentionally use fish countershading; grey-green back and pale belly.",
+        "material_continuity": "Head, body and rear use a coordinated grey-green back and pale belly; fin colors stay on their own UVs.",
+        "edge_variation": "long paired whiskers use cutout fin edges and distinct attachment points.",
+        "variant_identity": "wide flat head and tapering rear and muted dark mottling distinguish this species in the 36-fish contact sheet.",
+        "vanilla_comparison": "Reference vanilla cod beige blocky body was inspected at native size; species-specific geometry differs.",
+        "functional_material_cues": "long paired whiskers convey the anatomy; eyes and gill region are on the head, not scattered across body."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/fish/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Fish entity UV sheets have no dedicated comparator in the block/item atlas; model-part texture layout is the appropriate comparison.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 mirror, actual decoded PNG and SHA-256; official client SHA-1 could not independently be checked.",
+        "applied_pattern": "Face-specific pixel clusters, sharp silhouettes and restrained Minecraft-like shading; no copied vanilla texture.",
+        "reference_limit": "Reference is a different species and 32x32; this is a 64x64 multi-part atlas, not a block tile.",
+        "native_view": "Actual UV sheet inspected at native and nearest-neighbor enlarged scale.",
+        "context_view": "Assembled side/top orthographic preview inspected; in-game client render not run.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/fish/tench.png": {
+      "sha256": "abf8e18541660bf21bbdbb6e0f92d3a54edd812a9ba24f6cd6f3df0af69c3b5a",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/fish/cod",
+          "minecraft": "1.21.1",
+          "sha256": "4ba0d2d3fc0ee46e4c310b0a9ed9891ed64a3c3263ad562a33d985be18b07345"
+        }
+      ],
+      "comparison": "Compared with vanilla cod beige blocky body, tench has rounded body and short fins; olive scale clusters identify the species. Static UV and assembled orthographic review only.",
+      "findings": {
+        "silhouette": "rounded body and short fins visible in assembled preview.",
+        "cluster_structure": "olive scale clusters form bounded regions on the flank rather than random noise.",
+        "micro_contrast": "olive scale clusters remain distinct against dark olive side.",
+        "light_and_volume": "Top/back and underside UVs intentionally use fish countershading; dark olive side.",
+        "material_continuity": "Head, body and rear use a coordinated dark olive side; fin colors stay on their own UVs.",
+        "edge_variation": "small rounded tail use cutout fin edges and distinct attachment points.",
+        "variant_identity": "rounded body and short fins and olive scale clusters distinguish this species in the 36-fish contact sheet.",
+        "vanilla_comparison": "Reference vanilla cod beige blocky body was inspected at native size; species-specific geometry differs.",
+        "functional_material_cues": "small rounded tail convey the anatomy; eyes and gill region are on the head, not scattered across body."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/fish/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Fish entity UV sheets have no dedicated comparator in the block/item atlas; model-part texture layout is the appropriate comparison.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 mirror, actual decoded PNG and SHA-256; official client SHA-1 could not independently be checked.",
+        "applied_pattern": "Face-specific pixel clusters, sharp silhouettes and restrained Minecraft-like shading; no copied vanilla texture.",
+        "reference_limit": "Reference is a different species and 32x32; this is a 64x64 multi-part atlas, not a block tile.",
+        "native_view": "Actual UV sheet inspected at native and nearest-neighbor enlarged scale.",
+        "context_view": "Assembled side/top orthographic preview inspected; in-game client render not run.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/fish/loach.png": {
+      "sha256": "0910dd210931d2b6bb39976182a5c70f5c1d4790b6ef5f7da32c3ec7ed8e2dd8",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/fish/cod",
+          "minecraft": "1.21.1",
+          "sha256": "4ba0d2d3fc0ee46e4c310b0a9ed9891ed64a3c3263ad562a33d985be18b07345"
+        }
+      ],
+      "comparison": "Compared with vanilla cod beige blocky body, loach has thin elongated body; dark stripes along flank identify the species. Static UV and assembled orthographic review only.",
+      "findings": {
+        "silhouette": "thin elongated body visible in assembled preview.",
+        "cluster_structure": "dark stripes along flank form bounded regions on the flank rather than random noise.",
+        "micro_contrast": "dark stripes along flank remain distinct against brown ochre side.",
+        "light_and_volume": "Top/back and underside UVs intentionally use fish countershading; brown ochre side.",
+        "material_continuity": "Head, body and rear use a coordinated brown ochre side; fin colors stay on their own UVs.",
+        "edge_variation": "tiny chin barbel use cutout fin edges and distinct attachment points.",
+        "variant_identity": "thin elongated body and dark stripes along flank distinguish this species in the 36-fish contact sheet.",
+        "vanilla_comparison": "Reference vanilla cod beige blocky body was inspected at native size; species-specific geometry differs.",
+        "functional_material_cues": "tiny chin barbel convey the anatomy; eyes and gill region are on the head, not scattered across body."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/fish/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Fish entity UV sheets have no dedicated comparator in the block/item atlas; model-part texture layout is the appropriate comparison.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 mirror, actual decoded PNG and SHA-256; official client SHA-1 could not independently be checked.",
+        "applied_pattern": "Face-specific pixel clusters, sharp silhouettes and restrained Minecraft-like shading; no copied vanilla texture.",
+        "reference_limit": "Reference is a different species and 32x32; this is a 64x64 multi-part atlas, not a block tile.",
+        "native_view": "Actual UV sheet inspected at native and nearest-neighbor enlarged scale.",
+        "context_view": "Assembled side/top orthographic preview inspected; in-game client render not run.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/fish/rotan.png": {
+      "sha256": "226af36691be2e57c31ebf127ce16adb351ee100233b6d9a83c893fb2b057396",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/fish/cod",
+          "minecraft": "1.21.1",
+          "sha256": "4ba0d2d3fc0ee46e4c310b0a9ed9891ed64a3c3263ad562a33d985be18b07345"
+        }
+      ],
+      "comparison": "Compared with vanilla cod beige blocky body, rotan has compact blunt head and short body; dark mottling identify the species. Static UV and assembled orthographic review only.",
+      "findings": {
+        "silhouette": "compact blunt head and short body visible in assembled preview.",
+        "cluster_structure": "dark mottling form bounded regions on the flank rather than random noise.",
+        "micro_contrast": "dark mottling remain distinct against brown olive flank.",
+        "light_and_volume": "Top/back and underside UVs intentionally use fish countershading; brown olive flank.",
+        "material_continuity": "Head, body and rear use a coordinated brown olive flank; fin colors stay on their own UVs.",
+        "edge_variation": "two short dorsals use cutout fin edges and distinct attachment points.",
+        "variant_identity": "compact blunt head and short body and dark mottling distinguish this species in the 36-fish contact sheet.",
+        "vanilla_comparison": "Reference vanilla cod beige blocky body was inspected at native size; species-specific geometry differs.",
+        "functional_material_cues": "two short dorsals convey the anatomy; eyes and gill region are on the head, not scattered across body."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/fish/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Fish entity UV sheets have no dedicated comparator in the block/item atlas; model-part texture layout is the appropriate comparison.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 mirror, actual decoded PNG and SHA-256; official client SHA-1 could not independently be checked.",
+        "applied_pattern": "Face-specific pixel clusters, sharp silhouettes and restrained Minecraft-like shading; no copied vanilla texture.",
+        "reference_limit": "Reference is a different species and 32x32; this is a 64x64 multi-part atlas, not a block tile.",
+        "native_view": "Actual UV sheet inspected at native and nearest-neighbor enlarged scale.",
+        "context_view": "Assembled side/top orthographic preview inspected; in-game client render not run.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/fish/rudd.png": {
+      "sha256": "cd8527f66635d0235f05b7e93a593f12f7eab131da5316594af93a868387d7f6",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/fish/cod",
+          "minecraft": "1.21.1",
+          "sha256": "4ba0d2d3fc0ee46e4c310b0a9ed9891ed64a3c3263ad562a33d985be18b07345"
+        }
+      ],
+      "comparison": "Compared with vanilla cod beige blocky body, rudd has slender high body; gold scale accents identify the species. Static UV and assembled orthographic review only.",
+      "findings": {
+        "silhouette": "slender high body visible in assembled preview.",
+        "cluster_structure": "gold scale accents form bounded regions on the flank rather than random noise.",
+        "micro_contrast": "gold scale accents remain distinct against golden side with red fins.",
+        "light_and_volume": "Top/back and underside UVs intentionally use fish countershading; golden side with red fins.",
+        "material_continuity": "Head, body and rear use a coordinated golden side with red fins; fin colors stay on their own UVs.",
+        "edge_variation": "red paired fins use cutout fin edges and distinct attachment points.",
+        "variant_identity": "slender high body and gold scale accents distinguish this species in the 36-fish contact sheet.",
+        "vanilla_comparison": "Reference vanilla cod beige blocky body was inspected at native size; species-specific geometry differs.",
+        "functional_material_cues": "red paired fins convey the anatomy; eyes and gill region are on the head, not scattered across body."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/fish/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Fish entity UV sheets have no dedicated comparator in the block/item atlas; model-part texture layout is the appropriate comparison.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 mirror, actual decoded PNG and SHA-256; official client SHA-1 could not independently be checked.",
+        "applied_pattern": "Face-specific pixel clusters, sharp silhouettes and restrained Minecraft-like shading; no copied vanilla texture.",
+        "reference_limit": "Reference is a different species and 32x32; this is a 64x64 multi-part atlas, not a block tile.",
+        "native_view": "Actual UV sheet inspected at native and nearest-neighbor enlarged scale.",
+        "context_view": "Assembled side/top orthographic preview inspected; in-game client render not run.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/fish/bowfin.png": {
+      "sha256": "221d47ea5d8e528790ef7fbbf44b714e358aca0c7647652ab4f9186fd6cac4f5",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/fish/cod",
+          "minecraft": "1.21.1",
+          "sha256": "4ba0d2d3fc0ee46e4c310b0a9ed9891ed64a3c3263ad562a33d985be18b07345"
+        }
+      ],
+      "comparison": "Compared with vanilla cod beige blocky body, bowfin has long body with continuous dorsal; tail eyespot and olive marks identify the species. Static UV and assembled orthographic review only.",
+      "findings": {
+        "silhouette": "long body with continuous dorsal visible in assembled preview.",
+        "cluster_structure": "tail eyespot and olive marks form bounded regions on the flank rather than random noise.",
+        "micro_contrast": "tail eyespot and olive marks remain distinct against olive-brown side.",
+        "light_and_volume": "Top/back and underside UVs intentionally use fish countershading; olive-brown side.",
+        "material_continuity": "Head, body and rear use a coordinated olive-brown side; fin colors stay on their own UVs.",
+        "edge_variation": "low extended dorsal use cutout fin edges and distinct attachment points.",
+        "variant_identity": "long body with continuous dorsal and tail eyespot and olive marks distinguish this species in the 36-fish contact sheet.",
+        "vanilla_comparison": "Reference vanilla cod beige blocky body was inspected at native size; species-specific geometry differs.",
+        "functional_material_cues": "low extended dorsal convey the anatomy; eyes and gill region are on the head, not scattered across body."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/fish/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Fish entity UV sheets have no dedicated comparator in the block/item atlas; model-part texture layout is the appropriate comparison.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 mirror, actual decoded PNG and SHA-256; official client SHA-1 could not independently be checked.",
+        "applied_pattern": "Face-specific pixel clusters, sharp silhouettes and restrained Minecraft-like shading; no copied vanilla texture.",
+        "reference_limit": "Reference is a different species and 32x32; this is a 64x64 multi-part atlas, not a block tile.",
+        "native_view": "Actual UV sheet inspected at native and nearest-neighbor enlarged scale.",
+        "context_view": "Assembled side/top orthographic preview inspected; in-game client render not run.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/fish/piranha.png": {
+      "sha256": "5bece5ab3cf9113f79e5847e17eeff3d6a8f913d7047ea65db8d8c326c1f5231",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/fish/tropical_b",
+          "minecraft": "1.21.1",
+          "sha256": "3691a0e3f3247b37b55673312818066629d36e2c33ac7b452431c0b36a9f2d00"
+        }
+      ],
+      "comparison": "Compared with vanilla tropical B compact grayscale planes, piranha has deep body and protruding jaw; red belly region identify the species. Static UV and assembled orthographic review only.",
+      "findings": {
+        "silhouette": "deep body and protruding jaw visible in assembled preview.",
+        "cluster_structure": "red belly region form bounded regions on the flank rather than random noise.",
+        "micro_contrast": "red belly region remain distinct against grey flank with orange-red belly.",
+        "light_and_volume": "Top/back and underside UVs intentionally use fish countershading; grey flank with orange-red belly.",
+        "material_continuity": "Head, body and rear use a coordinated grey flank with orange-red belly; fin colors stay on their own UVs.",
+        "edge_variation": "strong jaw block use cutout fin edges and distinct attachment points.",
+        "variant_identity": "deep body and protruding jaw and red belly region distinguish this species in the 36-fish contact sheet.",
+        "vanilla_comparison": "Reference vanilla tropical B compact grayscale planes was inspected at native size; species-specific geometry differs.",
+        "functional_material_cues": "strong jaw block convey the anatomy; eyes and gill region are on the head, not scattered across body."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/fish/tropical_b",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Fish entity UV sheets have no dedicated comparator in the block/item atlas; model-part texture layout is the appropriate comparison.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 mirror, actual decoded PNG and SHA-256; official client SHA-1 could not independently be checked.",
+        "applied_pattern": "Face-specific pixel clusters, sharp silhouettes and restrained Minecraft-like shading; no copied vanilla texture.",
+        "reference_limit": "Reference is a different species and 32x32; this is a 64x64 multi-part atlas, not a block tile.",
+        "native_view": "Actual UV sheet inspected at native and nearest-neighbor enlarged scale.",
+        "context_view": "Assembled side/top orthographic preview inspected; in-game client render not run.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/fish/arapaima.png": {
+      "sha256": "0e71abbf752fd0e53fec7df9586087f406b098eeffd1963a80ce92d33d626d5c",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/fish/cod",
+          "minecraft": "1.21.1",
+          "sha256": "4ba0d2d3fc0ee46e4c310b0a9ed9891ed64a3c3263ad562a33d985be18b07345"
+        }
+      ],
+      "comparison": "Compared with vanilla cod beige blocky body, arapaima has long broad body with tapered tail; red rear scales identify the species. Static UV and assembled orthographic review only.",
+      "findings": {
+        "silhouette": "long broad body with tapered tail visible in assembled preview.",
+        "cluster_structure": "red rear scales form bounded regions on the flank rather than random noise.",
+        "micro_contrast": "red rear scales remain distinct against olive side and red rear.",
+        "light_and_volume": "Top/back and underside UVs intentionally use fish countershading; olive side and red rear.",
+        "material_continuity": "Head, body and rear use a coordinated olive side and red rear; fin colors stay on their own UVs.",
+        "edge_variation": "rear-set dorsal and long anal use cutout fin edges and distinct attachment points.",
+        "variant_identity": "long broad body with tapered tail and red rear scales distinguish this species in the 36-fish contact sheet.",
+        "vanilla_comparison": "Reference vanilla cod beige blocky body was inspected at native size; species-specific geometry differs.",
+        "functional_material_cues": "rear-set dorsal and long anal convey the anatomy; eyes and gill region are on the head, not scattered across body."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/fish/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Fish entity UV sheets have no dedicated comparator in the block/item atlas; model-part texture layout is the appropriate comparison.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 mirror, actual decoded PNG and SHA-256; official client SHA-1 could not independently be checked.",
+        "applied_pattern": "Face-specific pixel clusters, sharp silhouettes and restrained Minecraft-like shading; no copied vanilla texture.",
+        "reference_limit": "Reference is a different species and 32x32; this is a 64x64 multi-part atlas, not a block tile.",
+        "native_view": "Actual UV sheet inspected at native and nearest-neighbor enlarged scale.",
+        "context_view": "Assembled side/top orthographic preview inspected; in-game client render not run.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/fish/tilapia.png": {
+      "sha256": "d5bed871085abbd8ca072c22b8396c83f2f0ed7673cd1892d438dc882741b772",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/fish/tropical_b",
+          "minecraft": "1.21.1",
+          "sha256": "3691a0e3f3247b37b55673312818066629d36e2c33ac7b452431c0b36a9f2d00"
+        }
+      ],
+      "comparison": "Compared with vanilla tropical B compact grayscale planes, tilapia has tall compact body; dark vertical bars identify the species. Static UV and assembled orthographic review only.",
+      "findings": {
+        "silhouette": "tall compact body visible in assembled preview.",
+        "cluster_structure": "dark vertical bars form bounded regions on the flank rather than random noise.",
+        "micro_contrast": "dark vertical bars remain distinct against grey olive side.",
+        "light_and_volume": "Top/back and underside UVs intentionally use fish countershading; grey olive side.",
+        "material_continuity": "Head, body and rear use a coordinated grey olive side; fin colors stay on their own UVs.",
+        "edge_variation": "long spiny dorsal use cutout fin edges and distinct attachment points.",
+        "variant_identity": "tall compact body and dark vertical bars distinguish this species in the 36-fish contact sheet.",
+        "vanilla_comparison": "Reference vanilla tropical B compact grayscale planes was inspected at native size; species-specific geometry differs.",
+        "functional_material_cues": "long spiny dorsal convey the anatomy; eyes and gill region are on the head, not scattered across body."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/fish/tropical_b",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Fish entity UV sheets have no dedicated comparator in the block/item atlas; model-part texture layout is the appropriate comparison.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 mirror, actual decoded PNG and SHA-256; official client SHA-1 could not independently be checked.",
+        "applied_pattern": "Face-specific pixel clusters, sharp silhouettes and restrained Minecraft-like shading; no copied vanilla texture.",
+        "reference_limit": "Reference is a different species and 32x32; this is a 64x64 multi-part atlas, not a block tile.",
+        "native_view": "Actual UV sheet inspected at native and nearest-neighbor enlarged scale.",
+        "context_view": "Assembled side/top orthographic preview inspected; in-game client render not run.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/fish/pacu.png": {
+      "sha256": "2d3c6d50df9adc1df3697b48c1669b4fbae6d84990b1c15943305d7b28914b2d",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/fish/tropical_b",
+          "minecraft": "1.21.1",
+          "sha256": "3691a0e3f3247b37b55673312818066629d36e2c33ac7b452431c0b36a9f2d00"
+        }
+      ],
+      "comparison": "Compared with vanilla tropical B compact grayscale planes, pacu has very deep body; dark lower flank identify the species. Static UV and assembled orthographic review only.",
+      "findings": {
+        "silhouette": "very deep body visible in assembled preview.",
+        "cluster_structure": "dark lower flank form bounded regions on the flank rather than random noise.",
+        "micro_contrast": "dark lower flank remain distinct against grey body with dark belly.",
+        "light_and_volume": "Top/back and underside UVs intentionally use fish countershading; grey body with dark belly.",
+        "material_continuity": "Head, body and rear use a coordinated grey body with dark belly; fin colors stay on their own UVs.",
+        "edge_variation": "long anal fin use cutout fin edges and distinct attachment points.",
+        "variant_identity": "very deep body and dark lower flank distinguish this species in the 36-fish contact sheet.",
+        "vanilla_comparison": "Reference vanilla tropical B compact grayscale planes was inspected at native size; species-specific geometry differs.",
+        "functional_material_cues": "long anal fin convey the anatomy; eyes and gill region are on the head, not scattered across body."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/fish/tropical_b",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Fish entity UV sheets have no dedicated comparator in the block/item atlas; model-part texture layout is the appropriate comparison.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 mirror, actual decoded PNG and SHA-256; official client SHA-1 could not independently be checked.",
+        "applied_pattern": "Face-specific pixel clusters, sharp silhouettes and restrained Minecraft-like shading; no copied vanilla texture.",
+        "reference_limit": "Reference is a different species and 32x32; this is a 64x64 multi-part atlas, not a block tile.",
+        "native_view": "Actual UV sheet inspected at native and nearest-neighbor enlarged scale.",
+        "context_view": "Assembled side/top orthographic preview inspected; in-game client render not run.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/fish/snakehead.png": {
+      "sha256": "9f7e3ba1e5a42f7e4c6c3d12ba53deff459b82911cea626b8943932f3d2fd3ef",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/fish/cod",
+          "minecraft": "1.21.1",
+          "sha256": "4ba0d2d3fc0ee46e4c310b0a9ed9891ed64a3c3263ad562a33d985be18b07345"
+        }
+      ],
+      "comparison": "Compared with vanilla cod beige blocky body, snakehead has elongated body and broad head; oblique dark bands identify the species. Static UV and assembled orthographic review only.",
+      "findings": {
+        "silhouette": "elongated body and broad head visible in assembled preview.",
+        "cluster_structure": "oblique dark bands form bounded regions on the flank rather than random noise.",
+        "micro_contrast": "oblique dark bands remain distinct against olive-brown flank.",
+        "light_and_volume": "Top/back and underside UVs intentionally use fish countershading; olive-brown flank.",
+        "material_continuity": "Head, body and rear use a coordinated olive-brown flank; fin colors stay on their own UVs.",
+        "edge_variation": "long dorsal use cutout fin edges and distinct attachment points.",
+        "variant_identity": "elongated body and broad head and oblique dark bands distinguish this species in the 36-fish contact sheet.",
+        "vanilla_comparison": "Reference vanilla cod beige blocky body was inspected at native size; species-specific geometry differs.",
+        "functional_material_cues": "long dorsal convey the anatomy; eyes and gill region are on the head, not scattered across body."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/fish/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Fish entity UV sheets have no dedicated comparator in the block/item atlas; model-part texture layout is the appropriate comparison.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 mirror, actual decoded PNG and SHA-256; official client SHA-1 could not independently be checked.",
+        "applied_pattern": "Face-specific pixel clusters, sharp silhouettes and restrained Minecraft-like shading; no copied vanilla texture.",
+        "reference_limit": "Reference is a different species and 32x32; this is a 64x64 multi-part atlas, not a block tile.",
+        "native_view": "Actual UV sheet inspected at native and nearest-neighbor enlarged scale.",
+        "context_view": "Assembled side/top orthographic preview inspected; in-game client render not run.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/fish/electric_eel.png": {
+      "sha256": "46e9082853083eea43e6ce4f3c0925280e3ae1ba153a9fb114230bb6d0546e3d",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/fish/cod",
+          "minecraft": "1.21.1",
+          "sha256": "4ba0d2d3fc0ee46e4c310b0a9ed9891ed64a3c3263ad562a33d985be18b07345"
+        }
+      ],
+      "comparison": "Compared with vanilla cod beige blocky body, electric_eel has long narrow tapered body; restrained dark shading identify the species. Static UV and assembled orthographic review only.",
+      "findings": {
+        "silhouette": "long narrow tapered body visible in assembled preview.",
+        "cluster_structure": "restrained dark shading form bounded regions on the flank rather than random noise.",
+        "micro_contrast": "restrained dark shading remain distinct against dark olive body with pale underside.",
+        "light_and_volume": "Top/back and underside UVs intentionally use fish countershading; dark olive body with pale underside.",
+        "material_continuity": "Head, body and rear use a coordinated dark olive body with pale underside; fin colors stay on their own UVs.",
+        "edge_variation": "continuous lower fin ribbon use cutout fin edges and distinct attachment points.",
+        "variant_identity": "long narrow tapered body and restrained dark shading distinguish this species in the 36-fish contact sheet.",
+        "vanilla_comparison": "Reference vanilla cod beige blocky body was inspected at native size; species-specific geometry differs.",
+        "functional_material_cues": "continuous lower fin ribbon convey the anatomy; eyes and gill region are on the head, not scattered across body."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/fish/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Fish entity UV sheets have no dedicated comparator in the block/item atlas; model-part texture layout is the appropriate comparison.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 mirror, actual decoded PNG and SHA-256; official client SHA-1 could not independently be checked.",
+        "applied_pattern": "Face-specific pixel clusters, sharp silhouettes and restrained Minecraft-like shading; no copied vanilla texture.",
+        "reference_limit": "Reference is a different species and 32x32; this is a 64x64 multi-part atlas, not a block tile.",
+        "native_view": "Actual UV sheet inspected at native and nearest-neighbor enlarged scale.",
+        "context_view": "Assembled side/top orthographic preview inspected; in-game client render not run.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/fish/atlantic_cod.png": {
+      "sha256": "4accf059dcc43807b47d33b07d2f219b7dd0525e8cea09c4aa1c08d886e52d63",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/fish/cod",
+          "minecraft": "1.21.1",
+          "sha256": "4ba0d2d3fc0ee46e4c310b0a9ed9891ed64a3c3263ad562a33d985be18b07345"
+        }
+      ],
+      "comparison": "Compared with vanilla cod beige blocky body, atlantic_cod has elongated body and chin barbel; brown mottles identify the species. Static UV and assembled orthographic review only.",
+      "findings": {
+        "silhouette": "elongated body and chin barbel visible in assembled preview.",
+        "cluster_structure": "brown mottles form bounded regions on the flank rather than random noise.",
+        "micro_contrast": "brown mottles remain distinct against tan-grey flank.",
+        "light_and_volume": "Top/back and underside UVs intentionally use fish countershading; tan-grey flank.",
+        "material_continuity": "Head, body and rear use a coordinated tan-grey flank; fin colors stay on their own UVs.",
+        "edge_variation": "multiple dorsal sections and chin barbel use cutout fin edges and distinct attachment points.",
+        "variant_identity": "elongated body and chin barbel and brown mottles distinguish this species in the 36-fish contact sheet.",
+        "vanilla_comparison": "Reference vanilla cod beige blocky body was inspected at native size; species-specific geometry differs.",
+        "functional_material_cues": "multiple dorsal sections and chin barbel convey the anatomy; eyes and gill region are on the head, not scattered across body."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/fish/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Fish entity UV sheets have no dedicated comparator in the block/item atlas; model-part texture layout is the appropriate comparison.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 mirror, actual decoded PNG and SHA-256; official client SHA-1 could not independently be checked.",
+        "applied_pattern": "Face-specific pixel clusters, sharp silhouettes and restrained Minecraft-like shading; no copied vanilla texture.",
+        "reference_limit": "Reference is a different species and 32x32; this is a 64x64 multi-part atlas, not a block tile.",
+        "native_view": "Actual UV sheet inspected at native and nearest-neighbor enlarged scale.",
+        "context_view": "Assembled side/top orthographic preview inspected; in-game client render not run.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/fish/herring.png": {
+      "sha256": "f66d33f574c237e3fe42428c056fd18db6dc9c96f19a98cbee6ec02c36c98fea",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/fish/salmon",
+          "minecraft": "1.21.1",
+          "sha256": "4e273b660cd2833e24dc177aa9b782324a0fe0c8250369b7e27780b3c4d7ddd0"
+        }
+      ],
+      "comparison": "Compared with vanilla salmon elongated red-green planes, herring has slender silver body; subtle silvery highlights identify the species. Static UV and assembled orthographic review only.",
+      "findings": {
+        "silhouette": "slender silver body visible in assembled preview.",
+        "cluster_structure": "subtle silvery highlights form bounded regions on the flank rather than random noise.",
+        "micro_contrast": "subtle silvery highlights remain distinct against blue back and silver flank.",
+        "light_and_volume": "Top/back and underside UVs intentionally use fish countershading; blue back and silver flank.",
+        "material_continuity": "Head, body and rear use a coordinated blue back and silver flank; fin colors stay on their own UVs.",
+        "edge_variation": "forked tail use cutout fin edges and distinct attachment points.",
+        "variant_identity": "slender silver body and subtle silvery highlights distinguish this species in the 36-fish contact sheet.",
+        "vanilla_comparison": "Reference vanilla salmon elongated red-green planes was inspected at native size; species-specific geometry differs.",
+        "functional_material_cues": "forked tail convey the anatomy; eyes and gill region are on the head, not scattered across body."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/fish/salmon",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Fish entity UV sheets have no dedicated comparator in the block/item atlas; model-part texture layout is the appropriate comparison.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 mirror, actual decoded PNG and SHA-256; official client SHA-1 could not independently be checked.",
+        "applied_pattern": "Face-specific pixel clusters, sharp silhouettes and restrained Minecraft-like shading; no copied vanilla texture.",
+        "reference_limit": "Reference is a different species and 32x32; this is a 64x64 multi-part atlas, not a block tile.",
+        "native_view": "Actual UV sheet inspected at native and nearest-neighbor enlarged scale.",
+        "context_view": "Assembled side/top orthographic preview inspected; in-game client render not run.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/fish/mackerel.png": {
+      "sha256": "761c5e3c4a8d9f5335a56b81962184dd8e28204ecf16e27e04044592c88b8450",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/fish/salmon",
+          "minecraft": "1.21.1",
+          "sha256": "4e273b660cd2833e24dc177aa9b782324a0fe0c8250369b7e27780b3c4d7ddd0"
+        }
+      ],
+      "comparison": "Compared with vanilla salmon elongated red-green planes, mackerel has streamlined tapered body; dark upper stripes identify the species. Static UV and assembled orthographic review only.",
+      "findings": {
+        "silhouette": "streamlined tapered body visible in assembled preview.",
+        "cluster_structure": "dark upper stripes form bounded regions on the flank rather than random noise.",
+        "micro_contrast": "dark upper stripes remain distinct against blue-green back and pale side.",
+        "light_and_volume": "Top/back and underside UVs intentionally use fish countershading; blue-green back and pale side.",
+        "material_continuity": "Head, body and rear use a coordinated blue-green back and pale side; fin colors stay on their own UVs.",
+        "edge_variation": "finlet series use cutout fin edges and distinct attachment points.",
+        "variant_identity": "streamlined tapered body and dark upper stripes distinguish this species in the 36-fish contact sheet.",
+        "vanilla_comparison": "Reference vanilla salmon elongated red-green planes was inspected at native size; species-specific geometry differs.",
+        "functional_material_cues": "finlet series convey the anatomy; eyes and gill region are on the head, not scattered across body."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/fish/salmon",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Fish entity UV sheets have no dedicated comparator in the block/item atlas; model-part texture layout is the appropriate comparison.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 mirror, actual decoded PNG and SHA-256; official client SHA-1 could not independently be checked.",
+        "applied_pattern": "Face-specific pixel clusters, sharp silhouettes and restrained Minecraft-like shading; no copied vanilla texture.",
+        "reference_limit": "Reference is a different species and 32x32; this is a 64x64 multi-part atlas, not a block tile.",
+        "native_view": "Actual UV sheet inspected at native and nearest-neighbor enlarged scale.",
+        "context_view": "Assembled side/top orthographic preview inspected; in-game client render not run.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/fish/halibut.png": {
+      "sha256": "91637ed46684bc248a4933296b04d3f2e0cd50b472de94a8bd281d42bbda0815",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/fish/cod",
+          "minecraft": "1.21.1",
+          "sha256": "4ba0d2d3fc0ee46e4c310b0a9ed9891ed64a3c3263ad562a33d985be18b07345"
+        }
+      ],
+      "comparison": "Compared with vanilla cod beige blocky body, halibut has wide horizontal flattened body; brown top mottles and top eyes identify the species. Static UV and assembled orthographic review only.",
+      "findings": {
+        "silhouette": "wide horizontal flattened body visible in assembled preview.",
+        "cluster_structure": "brown top mottles and top eyes form bounded regions on the flank rather than random noise.",
+        "micro_contrast": "brown top mottles and top eyes remain distinct against dark upper face and pale underside.",
+        "light_and_volume": "Top/back and underside UVs intentionally use fish countershading; dark upper face and pale underside.",
+        "material_continuity": "Head, body and rear use a coordinated dark upper face and pale underside; fin colors stay on their own UVs.",
+        "edge_variation": "broad horizontal edge fins use cutout fin edges and distinct attachment points.",
+        "variant_identity": "wide horizontal flattened body and brown top mottles and top eyes distinguish this species in the 36-fish contact sheet.",
+        "vanilla_comparison": "Reference vanilla cod beige blocky body was inspected at native size; species-specific geometry differs.",
+        "functional_material_cues": "broad horizontal edge fins convey the anatomy; eyes and gill region are on the head, not scattered across body."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/fish/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Fish entity UV sheets have no dedicated comparator in the block/item atlas; model-part texture layout is the appropriate comparison.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 mirror, actual decoded PNG and SHA-256; official client SHA-1 could not independently be checked.",
+        "applied_pattern": "Face-specific pixel clusters, sharp silhouettes and restrained Minecraft-like shading; no copied vanilla texture.",
+        "reference_limit": "Reference is a different species and 32x32; this is a 64x64 multi-part atlas, not a block tile.",
+        "native_view": "Actual UV sheet inspected at native and nearest-neighbor enlarged scale.",
+        "context_view": "Assembled side/top orthographic preview inspected; in-game client render not run.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/fish/haddock.png": {
+      "sha256": "e902f70d195e0a9a3ad76ea1898026a78fa6ca3cbf36eb120e6624e4cbed5c08",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/fish/cod",
+          "minecraft": "1.21.1",
+          "sha256": "4ba0d2d3fc0ee46e4c310b0a9ed9891ed64a3c3263ad562a33d985be18b07345"
+        }
+      ],
+      "comparison": "Compared with vanilla cod beige blocky body, haddock has elongated narrow body; dark flank thumbprint identify the species. Static UV and assembled orthographic review only.",
+      "findings": {
+        "silhouette": "elongated narrow body visible in assembled preview.",
+        "cluster_structure": "dark flank thumbprint form bounded regions on the flank rather than random noise.",
+        "micro_contrast": "dark flank thumbprint remain distinct against grey silver flank.",
+        "light_and_volume": "Top/back and underside UVs intentionally use fish countershading; grey silver flank.",
+        "material_continuity": "Head, body and rear use a coordinated grey silver flank; fin colors stay on their own UVs.",
+        "edge_variation": "tall front dorsal use cutout fin edges and distinct attachment points.",
+        "variant_identity": "elongated narrow body and dark flank thumbprint distinguish this species in the 36-fish contact sheet.",
+        "vanilla_comparison": "Reference vanilla cod beige blocky body was inspected at native size; species-specific geometry differs.",
+        "functional_material_cues": "tall front dorsal convey the anatomy; eyes and gill region are on the head, not scattered across body."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/fish/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Fish entity UV sheets have no dedicated comparator in the block/item atlas; model-part texture layout is the appropriate comparison.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 mirror, actual decoded PNG and SHA-256; official client SHA-1 could not independently be checked.",
+        "applied_pattern": "Face-specific pixel clusters, sharp silhouettes and restrained Minecraft-like shading; no copied vanilla texture.",
+        "reference_limit": "Reference is a different species and 32x32; this is a 64x64 multi-part atlas, not a block tile.",
+        "native_view": "Actual UV sheet inspected at native and nearest-neighbor enlarged scale.",
+        "context_view": "Assembled side/top orthographic preview inspected; in-game client render not run.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/fish/flounder.png": {
+      "sha256": "ab8e46ecea57626d5b3706877404205f92a98f6883bbcb1c6a5f897b4f8d8f9f",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/fish/cod",
+          "minecraft": "1.21.1",
+          "sha256": "4ba0d2d3fc0ee46e4c310b0a9ed9891ed64a3c3263ad562a33d985be18b07345"
+        }
+      ],
+      "comparison": "Compared with vanilla cod beige blocky body, flounder has small horizontal flattened body; orange top spots and top eyes identify the species. Static UV and assembled orthographic review only.",
+      "findings": {
+        "silhouette": "small horizontal flattened body visible in assembled preview.",
+        "cluster_structure": "orange top spots and top eyes form bounded regions on the flank rather than random noise.",
+        "micro_contrast": "orange top spots and top eyes remain distinct against brown top and pale underside.",
+        "light_and_volume": "Top/back and underside UVs intentionally use fish countershading; brown top and pale underside.",
+        "material_continuity": "Head, body and rear use a coordinated brown top and pale underside; fin colors stay on their own UVs.",
+        "edge_variation": "horizontal edge fins use cutout fin edges and distinct attachment points.",
+        "variant_identity": "small horizontal flattened body and orange top spots and top eyes distinguish this species in the 36-fish contact sheet.",
+        "vanilla_comparison": "Reference vanilla cod beige blocky body was inspected at native size; species-specific geometry differs.",
+        "functional_material_cues": "horizontal edge fins convey the anatomy; eyes and gill region are on the head, not scattered across body."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/fish/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Fish entity UV sheets have no dedicated comparator in the block/item atlas; model-part texture layout is the appropriate comparison.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 mirror, actual decoded PNG and SHA-256; official client SHA-1 could not independently be checked.",
+        "applied_pattern": "Face-specific pixel clusters, sharp silhouettes and restrained Minecraft-like shading; no copied vanilla texture.",
+        "reference_limit": "Reference is a different species and 32x32; this is a 64x64 multi-part atlas, not a block tile.",
+        "native_view": "Actual UV sheet inspected at native and nearest-neighbor enlarged scale.",
+        "context_view": "Assembled side/top orthographic preview inspected; in-game client render not run.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/fish/tuna.png": {
+      "sha256": "85156161710255f60444d633f9866f53486d7399c4087705d0e87439df4e8b69",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/fish/salmon",
+          "minecraft": "1.21.1",
+          "sha256": "4e273b660cd2833e24dc177aa9b782324a0fe0c8250369b7e27780b3c4d7ddd0"
+        }
+      ],
+      "comparison": "Compared with vanilla salmon elongated red-green planes, tuna has thick streamlined body; contrasting yellow finlets identify the species. Static UV and assembled orthographic review only.",
+      "findings": {
+        "silhouette": "thick streamlined body visible in assembled preview.",
+        "cluster_structure": "contrasting yellow finlets form bounded regions on the flank rather than random noise.",
+        "micro_contrast": "contrasting yellow finlets remain distinct against blue-silver flank.",
+        "light_and_volume": "Top/back and underside UVs intentionally use fish countershading; blue-silver flank.",
+        "material_continuity": "Head, body and rear use a coordinated blue-silver flank; fin colors stay on their own UVs.",
+        "edge_variation": "large tail and finlets use cutout fin edges and distinct attachment points.",
+        "variant_identity": "thick streamlined body and contrasting yellow finlets distinguish this species in the 36-fish contact sheet.",
+        "vanilla_comparison": "Reference vanilla salmon elongated red-green planes was inspected at native size; species-specific geometry differs.",
+        "functional_material_cues": "large tail and finlets convey the anatomy; eyes and gill region are on the head, not scattered across body."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/fish/salmon",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Fish entity UV sheets have no dedicated comparator in the block/item atlas; model-part texture layout is the appropriate comparison.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 mirror, actual decoded PNG and SHA-256; official client SHA-1 could not independently be checked.",
+        "applied_pattern": "Face-specific pixel clusters, sharp silhouettes and restrained Minecraft-like shading; no copied vanilla texture.",
+        "reference_limit": "Reference is a different species and 32x32; this is a 64x64 multi-part atlas, not a block tile.",
+        "native_view": "Actual UV sheet inspected at native and nearest-neighbor enlarged scale.",
+        "context_view": "Assembled side/top orthographic preview inspected; in-game client render not run.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/fish/barracuda.png": {
+      "sha256": "0855805d7e569bf9fd8a93ef93dc56c277c587920eb793e087ece8b94e4b5347",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/fish/cod",
+          "minecraft": "1.21.1",
+          "sha256": "4ba0d2d3fc0ee46e4c310b0a9ed9891ed64a3c3263ad562a33d985be18b07345"
+        }
+      ],
+      "comparison": "Compared with vanilla cod beige blocky body, barracuda has long narrow jaw and body; dark slashes identify the species. Static UV and assembled orthographic review only.",
+      "findings": {
+        "silhouette": "long narrow jaw and body visible in assembled preview.",
+        "cluster_structure": "dark slashes form bounded regions on the flank rather than random noise.",
+        "micro_contrast": "dark slashes remain distinct against silver grey flank.",
+        "light_and_volume": "Top/back and underside UVs intentionally use fish countershading; silver grey flank.",
+        "material_continuity": "Head, body and rear use a coordinated silver grey flank; fin colors stay on their own UVs.",
+        "edge_variation": "two small dorsals use cutout fin edges and distinct attachment points.",
+        "variant_identity": "long narrow jaw and body and dark slashes distinguish this species in the 36-fish contact sheet.",
+        "vanilla_comparison": "Reference vanilla cod beige blocky body was inspected at native size; species-specific geometry differs.",
+        "functional_material_cues": "two small dorsals convey the anatomy; eyes and gill region are on the head, not scattered across body."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/fish/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Fish entity UV sheets have no dedicated comparator in the block/item atlas; model-part texture layout is the appropriate comparison.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 mirror, actual decoded PNG and SHA-256; official client SHA-1 could not independently be checked.",
+        "applied_pattern": "Face-specific pixel clusters, sharp silhouettes and restrained Minecraft-like shading; no copied vanilla texture.",
+        "reference_limit": "Reference is a different species and 32x32; this is a 64x64 multi-part atlas, not a block tile.",
+        "native_view": "Actual UV sheet inspected at native and nearest-neighbor enlarged scale.",
+        "context_view": "Assembled side/top orthographic preview inspected; in-game client render not run.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/fish/grouper.png": {
+      "sha256": "6b03d5a199e205f9547db64c3b9eced837fb9db7946405637e539c0679f84cda",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/fish/tropical_b",
+          "minecraft": "1.21.1",
+          "sha256": "3691a0e3f3247b37b55673312818066629d36e2c33ac7b452431c0b36a9f2d00"
+        }
+      ],
+      "comparison": "Compared with vanilla tropical B compact grayscale planes, grouper has heavy broad head and short body; tan-brown mottling identify the species. Static UV and assembled orthographic review only.",
+      "findings": {
+        "silhouette": "heavy broad head and short body visible in assembled preview.",
+        "cluster_structure": "tan-brown mottling form bounded regions on the flank rather than random noise.",
+        "micro_contrast": "tan-brown mottling remain distinct against brown-grey flank.",
+        "light_and_volume": "Top/back and underside UVs intentionally use fish countershading; brown-grey flank.",
+        "material_continuity": "Head, body and rear use a coordinated brown-grey flank; fin colors stay on their own UVs.",
+        "edge_variation": "large spiny dorsal use cutout fin edges and distinct attachment points.",
+        "variant_identity": "heavy broad head and short body and tan-brown mottling distinguish this species in the 36-fish contact sheet.",
+        "vanilla_comparison": "Reference vanilla tropical B compact grayscale planes was inspected at native size; species-specific geometry differs.",
+        "functional_material_cues": "large spiny dorsal convey the anatomy; eyes and gill region are on the head, not scattered across body."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/fish/tropical_b",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Fish entity UV sheets have no dedicated comparator in the block/item atlas; model-part texture layout is the appropriate comparison.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 mirror, actual decoded PNG and SHA-256; official client SHA-1 could not independently be checked.",
+        "applied_pattern": "Face-specific pixel clusters, sharp silhouettes and restrained Minecraft-like shading; no copied vanilla texture.",
+        "reference_limit": "Reference is a different species and 32x32; this is a 64x64 multi-part atlas, not a block tile.",
+        "native_view": "Actual UV sheet inspected at native and nearest-neighbor enlarged scale.",
+        "context_view": "Assembled side/top orthographic preview inspected; in-game client render not run.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/fish/snapper.png": {
+      "sha256": "c4580c4995667cb8e3bed169c375ed43a6c8ad92c1735da4c4dc3ed393f97516",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/fish/tropical_b",
+          "minecraft": "1.21.1",
+          "sha256": "3691a0e3f3247b37b55673312818066629d36e2c33ac7b452431c0b36a9f2d00"
+        }
+      ],
+      "comparison": "Compared with vanilla tropical B compact grayscale planes, snapper has deep tapering body; red flank patches identify the species. Static UV and assembled orthographic review only.",
+      "findings": {
+        "silhouette": "deep tapering body visible in assembled preview.",
+        "cluster_structure": "red flank patches form bounded regions on the flank rather than random noise.",
+        "micro_contrast": "red flank patches remain distinct against red-pink side.",
+        "light_and_volume": "Top/back and underside UVs intentionally use fish countershading; red-pink side.",
+        "material_continuity": "Head, body and rear use a coordinated red-pink side; fin colors stay on their own UVs.",
+        "edge_variation": "high dorsal use cutout fin edges and distinct attachment points.",
+        "variant_identity": "deep tapering body and red flank patches distinguish this species in the 36-fish contact sheet.",
+        "vanilla_comparison": "Reference vanilla tropical B compact grayscale planes was inspected at native size; species-specific geometry differs.",
+        "functional_material_cues": "high dorsal convey the anatomy; eyes and gill region are on the head, not scattered across body."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/fish/tropical_b",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Fish entity UV sheets have no dedicated comparator in the block/item atlas; model-part texture layout is the appropriate comparison.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 mirror, actual decoded PNG and SHA-256; official client SHA-1 could not independently be checked.",
+        "applied_pattern": "Face-specific pixel clusters, sharp silhouettes and restrained Minecraft-like shading; no copied vanilla texture.",
+        "reference_limit": "Reference is a different species and 32x32; this is a 64x64 multi-part atlas, not a block tile.",
+        "native_view": "Actual UV sheet inspected at native and nearest-neighbor enlarged scale.",
+        "context_view": "Assembled side/top orthographic preview inspected; in-game client render not run.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/fish/mahi_mahi.png": {
+      "sha256": "6bb29684da35c2860f27a3bb50554a4f19c5f775a6deba08af7263a953211036",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/fish/cod",
+          "minecraft": "1.21.1",
+          "sha256": "4ba0d2d3fc0ee46e4c310b0a9ed9891ed64a3c3263ad562a33d985be18b07345"
+        }
+      ],
+      "comparison": "Compared with vanilla cod beige blocky body, mahi_mahi has high forehead and long dorsal; yellow-green side patches identify the species. Static UV and assembled orthographic review only.",
+      "findings": {
+        "silhouette": "high forehead and long dorsal visible in assembled preview.",
+        "cluster_structure": "yellow-green side patches form bounded regions on the flank rather than random noise.",
+        "micro_contrast": "yellow-green side patches remain distinct against blue-green back and yellow side.",
+        "light_and_volume": "Top/back and underside UVs intentionally use fish countershading; blue-green back and yellow side.",
+        "material_continuity": "Head, body and rear use a coordinated blue-green back and yellow side; fin colors stay on their own UVs.",
+        "edge_variation": "long dorsal fan use cutout fin edges and distinct attachment points.",
+        "variant_identity": "high forehead and long dorsal and yellow-green side patches distinguish this species in the 36-fish contact sheet.",
+        "vanilla_comparison": "Reference vanilla cod beige blocky body was inspected at native size; species-specific geometry differs.",
+        "functional_material_cues": "long dorsal fan convey the anatomy; eyes and gill region are on the head, not scattered across body."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/fish/cod",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Fish entity UV sheets have no dedicated comparator in the block/item atlas; model-part texture layout is the appropriate comparison.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 mirror, actual decoded PNG and SHA-256; official client SHA-1 could not independently be checked.",
+        "applied_pattern": "Face-specific pixel clusters, sharp silhouettes and restrained Minecraft-like shading; no copied vanilla texture.",
+        "reference_limit": "Reference is a different species and 32x32; this is a 64x64 multi-part atlas, not a block tile.",
+        "native_view": "Actual UV sheet inspected at native and nearest-neighbor enlarged scale.",
+        "context_view": "Assembled side/top orthographic preview inspected; in-game client render not run.",
+        "context_type": "model_uv"
+      }
+    },
+    "projects/worldlogic-aquaculture-1.21.1-neoforge/src/main/resources/assets/aquaculture/textures/entity/fish/parrotfish.png": {
+      "sha256": "2af9c158e2516fcff7adb7f12271d24c615ed299e491f2036f31fa000950fa82",
+      "verdict": "PASS",
+      "material_profile": "other",
+      "references": [
+        {
+          "id": "minecraft:entity/fish/tropical_b",
+          "minecraft": "1.21.1",
+          "sha256": "3691a0e3f3247b37b55673312818066629d36e2c33ac7b452431c0b36a9f2d00"
+        }
+      ],
+      "comparison": "Compared with vanilla tropical B compact grayscale planes, parrotfish has deep compact body and beak; pink fin accents identify the species. Static UV and assembled orthographic review only.",
+      "findings": {
+        "silhouette": "deep compact body and beak visible in assembled preview.",
+        "cluster_structure": "pink fin accents form bounded regions on the flank rather than random noise.",
+        "micro_contrast": "pink fin accents remain distinct against turquoise flank.",
+        "light_and_volume": "Top/back and underside UVs intentionally use fish countershading; turquoise flank.",
+        "material_continuity": "Head, body and rear use a coordinated turquoise flank; fin colors stay on their own UVs.",
+        "edge_variation": "cream beak and bright fins use cutout fin edges and distinct attachment points.",
+        "variant_identity": "deep compact body and beak and pink fin accents distinguish this species in the 36-fish contact sheet.",
+        "vanilla_comparison": "Reference vanilla tropical B compact grayscale planes was inspected at native size; species-specific geometry differs.",
+        "functional_material_cues": "cream beak and bright fins convey the anatomy; eyes and gill region are on the head, not scattered across body."
+      },
+      "atlas": {
+        "revision": "r9",
+        "rule": "custom",
+        "reference": "minecraft:entity/fish/tropical_b",
+        "reference_minecraft": "1.21.1",
+        "custom_reason": "Fish entity UV sheets have no dedicated comparator in the block/item atlas; model-part texture layout is the appropriate comparison.",
+        "reference_source": "Version-pinned InventivetalentDev/minecraft-assets 1.21.1 mirror, actual decoded PNG and SHA-256; official client SHA-1 could not independently be checked.",
+        "applied_pattern": "Face-specific pixel clusters, sharp silhouettes and restrained Minecraft-like shading; no copied vanilla texture.",
+        "reference_limit": "Reference is a different species and 32x32; this is a 64x64 multi-part atlas, not a block tile.",
+        "native_view": "Actual UV sheet inspected at native and nearest-neighbor enlarged scale.",
+        "context_view": "Assembled side/top orthographic preview inspected; in-game client render not run.",
+        "context_type": "model_uv"
+      }
+    }
+  }
+}

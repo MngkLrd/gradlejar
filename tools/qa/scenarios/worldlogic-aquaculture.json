@@ -1651,6 +1651,402 @@
           "name": "All 36 species: reachability, weighted selection, saturation and native physical spawn"
         }
       ]
+    },
+    {
+      "id": "visual-pike",
+      "kind": "mechanic",
+      "subject": "aquaculture:pike",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-perch",
+      "kind": "mechanic",
+      "subject": "aquaculture:perch",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-crucian_carp",
+      "kind": "mechanic",
+      "subject": "aquaculture:crucian_carp",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-carp",
+      "kind": "mechanic",
+      "subject": "aquaculture:carp",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-roach",
+      "kind": "mechanic",
+      "subject": "aquaculture:roach",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-bream",
+      "kind": "mechanic",
+      "subject": "aquaculture:bream",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-trout",
+      "kind": "mechanic",
+      "subject": "aquaculture:trout",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-grayling",
+      "kind": "mechanic",
+      "subject": "aquaculture:grayling",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-char",
+      "kind": "mechanic",
+      "subject": "aquaculture:char",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-taimen",
+      "kind": "mechanic",
+      "subject": "aquaculture:taimen",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-whitefish",
+      "kind": "mechanic",
+      "subject": "aquaculture:whitefish",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-burbot",
+      "kind": "mechanic",
+      "subject": "aquaculture:burbot",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-catfish",
+      "kind": "mechanic",
+      "subject": "aquaculture:catfish",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-tench",
+      "kind": "mechanic",
+      "subject": "aquaculture:tench",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-loach",
+      "kind": "mechanic",
+      "subject": "aquaculture:loach",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-rotan",
+      "kind": "mechanic",
+      "subject": "aquaculture:rotan",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-rudd",
+      "kind": "mechanic",
+      "subject": "aquaculture:rudd",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-bowfin",
+      "kind": "mechanic",
+      "subject": "aquaculture:bowfin",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-piranha",
+      "kind": "mechanic",
+      "subject": "aquaculture:piranha",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-arapaima",
+      "kind": "mechanic",
+      "subject": "aquaculture:arapaima",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-tilapia",
+      "kind": "mechanic",
+      "subject": "aquaculture:tilapia",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-pacu",
+      "kind": "mechanic",
+      "subject": "aquaculture:pacu",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-snakehead",
+      "kind": "mechanic",
+      "subject": "aquaculture:snakehead",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-electric_eel",
+      "kind": "mechanic",
+      "subject": "aquaculture:electric_eel",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-atlantic_cod",
+      "kind": "mechanic",
+      "subject": "aquaculture:atlantic_cod",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-herring",
+      "kind": "mechanic",
+      "subject": "aquaculture:herring",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-mackerel",
+      "kind": "mechanic",
+      "subject": "aquaculture:mackerel",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-halibut",
+      "kind": "mechanic",
+      "subject": "aquaculture:halibut",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-haddock",
+      "kind": "mechanic",
+      "subject": "aquaculture:haddock",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-flounder",
+      "kind": "mechanic",
+      "subject": "aquaculture:flounder",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-tuna",
+      "kind": "mechanic",
+      "subject": "aquaculture:tuna",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-barracuda",
+      "kind": "mechanic",
+      "subject": "aquaculture:barracuda",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-grouper",
+      "kind": "mechanic",
+      "subject": "aquaculture:grouper",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-snapper",
+      "kind": "mechanic",
+      "subject": "aquaculture:snapper",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-mahi_mahi",
+      "kind": "mechanic",
+      "subject": "aquaculture:mahi_mahi",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
+    },
+    {
+      "id": "visual-parrotfish",
+      "kind": "mechanic",
+      "subject": "aquaculture:parrotfish",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)"
+        }
+      ]
     }
   ],
   "steps": [
@@ -1683,6 +2079,12 @@
       "name": "All 36 species: reachability, weighted selection, saturation and native physical spawn",
       "command": "aquaculture spawn_selftest",
       "expect": "AQUA_SPAWN_36_PASS",
+      "assertion": true
+    },
+    {
+      "name": "All 36 species: geometry, unique PNG assets, visual length sync and pose math (not client rendering)",
+      "command": "aquaculture visual_selftest",
+      "expect": "AQUA_VISUAL_ASSETS_SIZE_36_PASS",
       "assertion": true
     }
   ]
