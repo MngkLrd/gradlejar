@@ -1,0 +1,123 @@
+name: MineMods Gradle environment cache pilot
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/qa-gradle-cache-pilot.yml'
+      - 'tools/qa/cache_pilot.py'
+      - 'tools/qa/tests/test_cache_pilot.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+env:
+  PILOT_PROJECT: projects/worldlogic-1.21.1-neoforge
+  PILOT_KEY: minemods-env-pilot-v1-linux-x64-j21-g9.2.1-mc1.21.1-nf21.1.262-moddev2.0.148-${{ github.run_id }}-${{ github.run_attempt }}
+jobs:
+  seed:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Validate exact pilot toolchain
+        run: |
+          python3 -m unittest tools.qa.tests.test_cache_pilot -v
+          python3 -m tools.qa.cache_pilot check "$PILOT_PROJECT"
+          echo "GRADLE_USER_HOME=$RUNNER_TEMP/minemods-isolated-gradle" >> "$GITHUB_ENV"
+      - name: Begin timing cold preparation
+        run: python3 -m tools.qa.cache_pilot mark seed-start
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.2.1'
+          cache-disabled: true
+      - name: Compile fresh with an empty target-specific environment
+        run: |
+          python3 -m tools.qa.cache_pilot mark seed-build-start
+          gradle -p "$PILOT_PROJECT" --no-daemon --no-build-cache clean build
+          python3 tools/verify_build_output.py "$PILOT_PROJECT"
+          python3 -m tools.qa.cache_pilot mark seed-build-end
+          du -sh "$GRADLE_USER_HOME/caches"
+      - name: Save isolated Gradle dependencies and Minecraft tooling
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ env.GRADLE_USER_HOME }}/caches
+          key: ${{ env.PILOT_KEY }}
+      - name: Record cold preparation cost
+        run: |
+          python3 -m tools.qa.cache_pilot mark seed-end
+          python3 -m tools.qa.cache_pilot report seed
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cache-pilot-seed
+          path: cache-pilot/
+          if-no-files-found: warn
+          retention-days: 7
+
+  compare:
+    needs: seed
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        mode: [broad, scoped]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Validate exact pilot toolchain
+        run: python3 -m tools.qa.cache_pilot check "$PILOT_PROJECT"
+      - name: Set independent home for scoped experiment
+        if: matrix.mode == 'scoped'
+        run: echo "GRADLE_USER_HOME=$RUNNER_TEMP/minemods-isolated-gradle" >> "$GITHUB_ENV"
+      - name: Begin timing
+        run: python3 -m tools.qa.cache_pilot mark compare-start
+      - name: Current broad Gradle cache policy
+        if: matrix.mode == 'broad'
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.2.1'
+          cache-read-only: true
+      - name: Install same Gradle with broad cache disabled
+        if: matrix.mode == 'scoped'
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.2.1'
+          cache-disabled: true
+      - name: Restore only the exact seeded environment
+        if: matrix.mode == 'scoped'
+        id: exact
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ env.GRADLE_USER_HOME }}/caches
+          key: ${{ env.PILOT_KEY }}
+          fail-on-cache-miss: true
+      - name: Confirm exact hit and measure environment
+        env:
+          MODE: ${{ matrix.mode }}
+          EXACT_HIT: ${{ steps.exact.outputs.cache-hit }}
+        run: |
+          if [ "$MODE" = scoped ]; then test "$EXACT_HIT" = true; fi
+          python3 -m tools.qa.cache_pilot mark compare-build-start
+          du -sh "${GRADLE_USER_HOME:-$HOME/.gradle}/caches" || true
+      - name: Compile actual sources and validate output without task-output cache
+        run: |
+          gradle -p "$PILOT_PROJECT" --no-daemon --no-build-cache clean build
+          python3 tools/verify_build_output.py "$PILOT_PROJECT"
+          python3 -m tools.qa.cache_pilot mark compare-build-end
+      - name: Record warm build comparison
+        env:
+          MODE: ${{ matrix.mode }}
+        run: python3 -m tools.qa.cache_pilot report "$MODE"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cache-pilot-${{ matrix.mode }}
+          path: cache-pilot/
+          if-no-files-found: warn
+          retention-days: 7
