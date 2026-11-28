@@ -16,7 +16,7 @@ final class GeneratedOreAudit {
   if(b.is(BlockTags.EMERALD_ORES))return GeologyModel.Ore.EMERALD;
   if(b.is(BlockTags.LAPIS_ORES))return GeologyModel.Ore.LAPIS;
   if(b.is(BlockTags.REDSTONE_ORES))return GeologyModel.Ore.REDSTONE;
-  return null;
+  return MineralContent.type(b);
  }
  static String scan(ServerLevel l,BlockPos origin){
   var gen=l.getChunkSource().getGenerator();

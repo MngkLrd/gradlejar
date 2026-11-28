@@ -24,6 +24,14 @@ public final class VesselChecks {
    v.write(s,WaterBatch.empty());require(v.read(s).ml()==0,"empty write "+i);
    var empty=dev.minemods.hydration.api.HydrationApi.liquidPhysics(s).orElseThrow();require(empty.volumeM3()==0&&empty.massKg()==0&&!empty.known(),"empty physical volume "+i);
   }
+  var medical=new ItemStack(items[2]);items[2].write(medical,new WaterBatch(600,WaterBalance.Quality.DRINKABLE,.2,.08,Set.of("SPRING"),100));
+  var plan=WaterWithdrawal.plan(medical,125,24100).orElseThrow();
+  require(plan.dose().mB()==125&&plan.dose().risk()>.08&&plan.dose().origins().contains("SPRING")&&items[2].read(plan.remaining()).mB()==475&&items[2].read(medical).mB()==600,"exact refreshed withdrawal preview");
+  require(WaterWithdrawal.plan(medical,601,24100).isEmpty()&&WaterWithdrawal.plan(medical,0,24100).isEmpty()&&WaterWithdrawal.plan(ItemStack.EMPTY,125,24100).isEmpty(),"reject invalid withdrawal");
+  var bottle=net.minecraft.world.item.alchemy.PotionContents.createItemStack(net.minecraft.world.item.Items.POTION,net.minecraft.world.item.alchemy.Potions.WATER);
+  require(WaterWithdrawal.plan(bottle,125,24100).isEmpty()&&WaterWithdrawal.plan(bottle,250,24100).orElseThrow().remaining().is(net.minecraft.world.item.Items.GLASS_BOTTLE),"bottle whole-only remainder");
+  require(WaterWithdrawal.plan(new ItemStack(net.minecraft.world.item.Items.STICK),1,24100).isEmpty(),"wrong liquid");
+  ProcessingCatalog.verify();
   require(!items[0].heatproof&&!items[1].heatproof&&items[2].heatproof&&items[3].heatproof,"heatproof boundary");
   var a=new ItemStack(items[2]);var d=new ItemStack(items[0]);
   items[2].write(a,new WaterBatch(1200,b.quality(),b.salinity(),b.risk(),b.origins()));

@@ -16,12 +16,13 @@ public final class Body {
  static final class State {long recoverUntil,lastBreak,lastSprint;int streak,wet,web,ladderTicks;long shieldUntil,sharpUntil;String lastFamily;net.minecraft.world.item.Item lastTool;boolean water;int lastAir=300;long pocketCheck;AirAndFire.Pocket pocket;}
  private static final Map<Player,State> STATES=new WeakHashMap<>();
  static State state(Player p){return STATES.computeIfAbsent(p,k->new State());}
+ static void adminRestore(Player p){STATES.remove(p);}
  public static void logout(PlayerEvent.PlayerLoggedOutEvent e){STATES.remove(e.getEntity());}
  public static void onBreak(BlockEvent.BreakEvent e){if(e.isCanceled()||!(e.getLevel() instanceof ServerLevel l)||!Rules.on("tool_momentum"))return;var p=e.getPlayer();var s=state(p);var tool=p.getMainHandItem().getItem();var block=Material.family(e.getState());s.streak=(s.lastTool==tool&&block.equals(s.lastFamily)&&l.getGameTime()-s.lastBreak<=40)?Math.min(4,s.streak+1):1;s.lastBreak=l.getGameTime();s.lastTool=tool;s.lastFamily=block;if(p instanceof net.minecraft.server.level.ServerPlayer server)RuleSync.send(server);}
  public static void breakSpeed(PlayerEvent.BreakSpeed e){var p=e.getEntity();if(p.level().isClientSide){e.setNewSpeed(e.getNewSpeed()*RuleSync.mining(p,e.getState())*(RuleSync.clientCramped()?EnvironmentPhysics.miningFactor(p):1));return;}if(!(p.level() instanceof ServerLevel l))return;e.setNewSpeed(e.getNewSpeed()*(float)Trauma.mining(p)*(Rules.on("cramped_mining")?EnvironmentPhysics.miningFactor(p):1));if(!Rules.on("tool_momentum"))return;var s=state(p);if(Material.family(e.getState()).equals(s.lastFamily)&&s.lastTool==p.getMainHandItem().getItem()&&l.getGameTime()-s.lastBreak<=40)e.setNewSpeed(e.getNewSpeed()*(1+.03f*s.streak));}
  public static void jump(LivingEvent.LivingJumpEvent e){if(Rules.on("landing_recovery")&&e.getEntity() instanceof Player p&&p.level() instanceof ServerLevel l&&state(p).recoverUntil>l.getGameTime()){Vec3 v=p.getDeltaMovement();p.setDeltaMovement(v.x,v.y*.45,v.z);p.hurtMarked=true;}}
  public static void tick(PlayerTickEvent.Post e){
-  Player p=e.getEntity();if(!(p.level() instanceof ServerLevel l))return;if(p.isCreative()||p.isSpectator()){speedPenalty(p,0);return;}State s=state(p);long now=l.getGameTime();
+  Player p=e.getEntity();if(!(p.level() instanceof ServerLevel l))return;ExertionModifiers.apply(p);if(p.isCreative()||p.isSpectator()){speedPenalty(p,0);return;}State s=state(p);long now=l.getGameTime();
   if(p.isSprinting())s.lastSprint=now;
   if(Rules.on("landing_recovery")&&s.recoverUntil>now)p.setSprinting(false);
   double penalty=0;

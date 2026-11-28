@@ -1,0 +1,13 @@
+{
+  "name": "Stationary Filter",
+  "category": "worldlogic:hydration",
+  "icon": "hydration:stationary_filter",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "hydration:stationary_filter",
+      "link_recipe": true,
+      "text": "Capacity: 6000 mB. Insert charcoal filter; one cartridge processes 12000 mB."
+    }
+  ]
+}

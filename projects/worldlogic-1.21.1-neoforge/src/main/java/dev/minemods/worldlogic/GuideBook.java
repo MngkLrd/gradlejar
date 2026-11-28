@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 /** Data-only guide contract. Shared with server QA; no client or addon class references. */
 public final class GuideBook{
  private GuideBook(){}
- public static final List<String> BUILTIN=List.of("core","water","hydration","weather","thermal","trauma","treechopper","terrarian","geology","biomes");
+ public static final List<String> BUILTIN=List.of("core","water","hydration","weather","thermal","trauma","treechopper","terrarian","geology","aqua","metabolism","structures","biomes");
  public record Local(String ru,String en){public String get(boolean russian){return russian?ru:en;}}
  public record Text(List<String> ru,List<String> en){public List<String> get(boolean russian){return russian?ru:en;}}
  public record Page(String id,Local title,List<ResourceLocation> models,Text body,List<ResourceLocation> icons){}
@@ -55,7 +55,7 @@ public final class GuideBook{
    if(c.pages().stream().anyMatch(page->page.models().isEmpty()))throw new IllegalStateException("missing illustrations "+name);
    all.add(c);
   }}
-  if(visible(all,"worldlogic"::equals).size()!=5||visible(all,v->true).size()!=10||visible(all,v->false).size()!=0||catalog(all,v->false).size()!=10||!catalog(all,v->false).getLast().id().equals("biomes"))throw new IllegalStateException("addon visibility");
+  if(visible(all,"worldlogic"::equals).size()!=5||visible(all,v->true).size()!=13||visible(all,v->false).size()!=0||catalog(all,v->false).size()!=13||!catalog(all,v->false).getLast().id().equals("biomes"))throw new IllegalStateException("addon visibility");
   for(var c:all)for(var page:c.pages())for(var model:page.models())if(model.getNamespace().equals("minecraft")||model.getNamespace().equals("worldlogic"))if(!net.minecraft.core.registries.BuiltInRegistries.ITEM.containsKey(model))throw new IllegalStateException("missing core guide item "+model);
   var external=read(new StringReader("{\"schema\":1,\"id\":\"future\",\"requires\":\"futuremod\",\"order\":90,\"source\":\"fixture\",\"title\":{\"ru\":\"Дополнение\",\"en\":\"Addon\"},\"pages\":[{\"id\":\"intro\",\"title\":{\"ru\":\"Начало\",\"en\":\"Intro\"},\"models\":[\"minecraft:book\"],\"body\":{\"ru\":[\"Тест\"],\"en\":[\"Test\"]}}]}"));
   if(visible(List.of(external),"futuremod"::equals).size()!=1||!visible(List.of(external),"worldlogic"::equals).isEmpty())throw new IllegalStateException("external chapter filtering");
@@ -84,7 +84,16 @@ public final class GuideBook{
     for(var page:chapter.pages()){
      var entry=packaged(root+"/entries/"+name+"/"+page.id()+".json");
      var pages=entry.getAsJsonArray("pages");var text=new ArrayList<String>();
-     for(var e:pages){var obj=e.getAsJsonObject();if(obj.get("type").getAsString().equals("patchouli:text"))text.add(obj.get("text").getAsString());}
+     if(pages.size()%2!=0)throw new IllegalStateException("Patchouli odd filler "+name+"/"+page.id());
+     var actualModels=new HashSet<String>();
+     for(var pe:pages){var obj=pe.getAsJsonObject();String type=obj.get("type").getAsString();
+      if(type.equals("patchouli:spotlight"))actualModels.add(obj.get("item").getAsString());
+      if(type.equals("patchouli:empty")&&(!obj.has("draw_filler")||obj.get("draw_filler").getAsBoolean()))throw new IllegalStateException("Patchouli placeholder cube");
+     }
+     var primary=page.models().stream().filter(m->m.getNamespace().equals("worldlogic")||(!chapter.requires().equals("worldlogic")&&GuideCatalog.owns(m.getNamespace()))).findFirst();
+     if(primary.isPresent()&&!actualModels.contains(primary.get().toString()))throw new IllegalStateException("missing Patchouli spotlight "+primary.get());
+     if(actualModels.stream().anyMatch(m->!GuideCatalog.owns(ResourceLocation.parse(m).getNamespace())))throw new IllegalStateException("non-ecosystem placeholder spotlight");
+     for(var e:pages){var obj=e.getAsJsonObject();if(Set.of("patchouli:text","patchouli:spotlight").contains(obj.get("type").getAsString())){String content=obj.get("text").getAsString();if(content.contains("Предмет или блок, связанный")||content.contains("Item or block referenced"))throw new IllegalStateException("placeholder guide text");text.add(content);}}
      String original=String.join(" ",page.body().get(lang.equals("ru_ru"))).replaceAll("\\s+"," ").strip();
      if(!String.join(" ",text).equals(original))throw new IllegalStateException("Patchouli text loss "+name+"/"+page.id()+"/"+lang);
      count++;

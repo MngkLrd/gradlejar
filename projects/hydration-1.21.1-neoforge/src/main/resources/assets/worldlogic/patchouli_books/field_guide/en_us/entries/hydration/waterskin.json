@@ -1,0 +1,13 @@
+{
+  "name": "Waterskin",
+  "category": "worldlogic:hydration",
+  "icon": "hydration:waterskin",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "hydration:waterskin",
+      "link_recipe": true,
+      "text": "Capacity: 1500 mB."
+    }
+  ]
+}

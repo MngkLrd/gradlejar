@@ -1,0 +1,13 @@
+{
+  "name": "Copper Condenser",
+  "category": "worldlogic:hydration",
+  "icon": "hydration:copper_condenser",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "hydration:copper_condenser",
+      "link_recipe": true,
+      "text": "Sneak-use a heatproof filled vessel (at least 100 mB) on a lit campfire with copper condenser in offhand; keep both until finished. Duration 160 ticks + volume/5; yields 70% fresh water."
+    }
+  ]
+}

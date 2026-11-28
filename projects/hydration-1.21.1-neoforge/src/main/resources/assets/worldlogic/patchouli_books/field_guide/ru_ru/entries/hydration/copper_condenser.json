@@ -1,0 +1,13 @@
+{
+  "name": "Медный конденсатор",
+  "category": "worldlogic:hydration",
+  "icon": "hydration:copper_condenser",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "hydration:copper_condenser",
+      "link_recipe": true,
+      "text": "Присядьте и используйте термостойкую ёмкость (от 100 мБ) на горящем костре, держа медный конденсатор во второй руке. Время: 160 тиков + объём/5; выход 70% пресной воды."
+    }
+  ]
+}

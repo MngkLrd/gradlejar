@@ -1,0 +1,13 @@
+{
+  "name": "Rain Collector",
+  "category": "worldlogic:hydration",
+  "icon": "hydration:rain_collector",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "hydration:rain_collector",
+      "link_recipe": true,
+      "text": "Capacity: 8000 mB. Collects rain under open sky."
+    }
+  ]
+}

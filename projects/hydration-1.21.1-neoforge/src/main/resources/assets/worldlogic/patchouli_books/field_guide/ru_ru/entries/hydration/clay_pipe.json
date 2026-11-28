@@ -1,0 +1,13 @@
+{
+  "name": "Глиняная труба",
+  "category": "worldlogic:hydration",
+  "icon": "hydration:clay_pipe",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "hydration:clay_pipe",
+      "link_recipe": true,
+      "text": "Направленный самотёк вниз; максимальная длина маршрута 24 блока. Сигнал редстоуна останавливает поток."
+    }
+  ]
+}

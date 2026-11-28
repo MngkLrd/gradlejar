@@ -1,0 +1,13 @@
+{
+  "name": "Wooden Cup",
+  "category": "worldlogic:hydration",
+  "icon": "hydration:wooden_cup",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "hydration:wooden_cup",
+      "link_recipe": true,
+      "text": "Capacity: 500 mB."
+    }
+  ]
+}

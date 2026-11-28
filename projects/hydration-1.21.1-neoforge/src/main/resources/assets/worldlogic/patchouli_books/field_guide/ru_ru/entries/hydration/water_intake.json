@@ -1,0 +1,13 @@
+{
+  "name": "Водозаборник",
+  "category": "worldlogic:hydration",
+  "icon": "hydration:water_intake",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "hydration:water_intake",
+      "link_recipe": true,
+      "text": "Вместимость: 1000 мБ. Забирает воду из источника непосредственно над блоком."
+    }
+  ]
+}

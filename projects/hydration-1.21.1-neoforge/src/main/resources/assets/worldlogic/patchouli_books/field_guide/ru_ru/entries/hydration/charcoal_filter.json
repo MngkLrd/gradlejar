@@ -1,0 +1,13 @@
+{
+  "name": "Угольный фильтр",
+  "category": "worldlogic:hydration",
+  "icon": "hydration:charcoal_filter",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "hydration:charcoal_filter",
+      "link_recipe": true,
+      "text": "Присядьте и используйте наполненную ёмкость (до 3000 мБ), держа угольный фильтр во второй руке. Расходуется один фильтр, загрязнение уменьшается, соль остаётся."
+    }
+  ]
+}

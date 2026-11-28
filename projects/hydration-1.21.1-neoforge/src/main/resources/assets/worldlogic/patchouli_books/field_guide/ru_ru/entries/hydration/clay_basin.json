@@ -1,0 +1,13 @@
+{
+  "name": "Глиняная чаша",
+  "category": "worldlogic:hydration",
+  "icon": "hydration:clay_basin",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "hydration:clay_basin",
+      "link_recipe": true,
+      "text": "Вместимость: 3000 мБ."
+    }
+  ]
+}

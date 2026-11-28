@@ -1,0 +1,13 @@
+{
+  "name": "Стационарный фильтр",
+  "category": "worldlogic:hydration",
+  "icon": "hydration:stationary_filter",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "hydration:stationary_filter",
+      "link_recipe": true,
+      "text": "Вместимость: 6000 мБ. Вставьте угольный фильтр; один картридж обрабатывает 12000 мБ."
+    }
+  ]
+}

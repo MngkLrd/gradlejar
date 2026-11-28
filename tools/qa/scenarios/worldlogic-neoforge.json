@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "World Logic NeoForge 1.2.1 development / RC54 addon physical API",
+  "name": "World Logic NeoForge 1.5.1 / Core 6 inter-addon integration",
   "steps": [
     {
       "command": "worldlogic preset realistic",
@@ -143,7 +143,7 @@
       "assertion": true
     },
     {
-      "name": "All eight mineral types replace actual rock while preserving cave air and bedrock",
+      "name": "All 18 mineral types replace actual rock while preserving cave air and bedrock",
       "command": "worldlogic qa ore_bodies",
       "expect": "WORLDLOGIC_ORE_BODIES_PASSED",
       "assertion": true
@@ -1109,7 +1109,7 @@
       "checks": [
         {
           "backend": "server",
-          "name": "All eight mineral types replace actual rock while preserving cave air and bedrock"
+          "name": "All 18 mineral types replace actual rock while preserving cave air and bedrock"
         }
       ]
     },
@@ -1974,6 +1974,175 @@
       "id": "rc54-surface",
       "kind": "mechanic",
       "subject": "Actual loaded block contact response stone, wool, timber, air and invalid location",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Live support and falling debris, material tags and saved data"
+        }
+      ]
+    },
+    {
+      "id": "rc54-subtropical-biome-correction",
+      "kind": "mechanic",
+      "subject": "Subtropical warm broadleaf/rainforest humidity partition with inland and wetland negative controls; 2320-point two-seed survey retained plus independent offset rare-biome probe, all 58 required",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Worker-safe deterministic habitat API, soil controls and ten refined climate biome fixtures"
+        },
+        {
+          "backend": "server",
+          "name": "All 58 biomes reached in seeded generation survey"
+        }
+      ]
+    },
+    {
+      "id": "rc55-presentation-contracts",
+      "kind": "mechanic",
+      "subject": "Recipe descriptors, dashboard immutability, capability negotiation, water render identities and shader inheritance",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core calculations and furnace mixin"
+        }
+      ]
+    },
+    {
+      "id": "rc55-patchouli-resources",
+      "kind": "mechanic",
+      "subject": "Generated Patchouli spotlight pages, recipe catalog and no cube filler",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Guide chapter resources, actual item IDs, absent addon filtering and external chapter schema"
+        }
+      ]
+    },
+    {
+      "id": "core-creative-catalog",
+      "kind": "mechanic",
+      "subject": "Core creative tab exact registry coverage, no duplicate stacks, all registered soils and water buckets",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Live support and falling debris, material tags and saved data"
+        }
+      ]
+    },
+    {
+      "id": "rc55-native-gutter",
+      "kind": "mechanic",
+      "subject": "Native anatomy rail width and minimum window geometry; narrow window retains full original panel",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Exertion API, shared jump fatigue, bounds and stamina icons scale"
+        }
+      ]
+    },
+    {
+      "id": "rc55-daylight-spawn-policy",
+      "kind": "mechanic",
+      "subject": "Real spawn-placement event veto in Overworld daytime; night vanilla default, passive, command and spawner controls",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Live support and falling debris, material tags and saved data"
+        }
+      ]
+    },
+    {
+      "id": "rc55-exertion-attributes",
+      "kind": "mechanic",
+      "subject": "Actual attack/mining attributes, proportional fatigue, no mining-fatigue potion mutation and cleanup",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Live support and falling debris, material tags and saved data"
+        }
+      ]
+    },
+    {
+      "id": "rc55-water-interface-regression",
+      "kind": "mechanic",
+      "subject": "Render equivalence at native/vanilla and waterlogged block interfaces, air/lava/stone negative controls, shader water material mapping and explicit mapping preservation; client geometry remains separate",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core calculations and furnace mixin"
+        }
+      ]
+    },
+    {
+      "id": "rc55-tree-descent-filter",
+      "kind": "mechanic",
+      "subject": "Vertical log eligibility with plank, stair, leaf and horizontal log negative controls; player input QA separately pending",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Core calculations and furnace mixin"
+        }
+      ]
+    },
+    {
+      "id": "rc55-guide-catalog",
+      "kind": "mechanic",
+      "subject": "Live guide item registry coverage including enabled features, no duplicate IDs, excludes vanilla items from ecosystem catalog",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Live support and falling debris, material tags and saved data"
+        }
+      ]
+    },
+    {
+      "id": "rc55-dense-subtropical-diagnostic",
+      "kind": "mechanic",
+      "subject": "Independent dense seeded climate search; require both raw biome and reconciled dry inland palette to match at actual terrain height; original 2320-point and all 58-biome gate retained",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 58 biomes reached in seeded generation survey"
+        }
+      ]
+    },
+    {
+      "id": "rc56-mineral-content",
+      "kind": "mechanic",
+      "subject": "Ten new minerals, 20 registered block variants and specimens, mineral composition, actual synthetic district placement, old cave and bedrock controls",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "All 18 mineral types replace actual rock while preserving cave air and bedrock"
+        }
+      ]
+    },
+    {
+      "id": "core6-rest-policy",
+      "kind": "mechanic",
+      "subject": "Fractional 3/5/7/10/12 second rest rate math and standalone legacy rest controls",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Stamina active recovery, sprint, hunger and airborne controls"
+        }
+      ]
+    },
+    {
+      "id": "core6-break-protection",
+      "kind": "mechanic",
+      "subject": "Protection marker scope, late denial and unchanged block/stamina, confirmed real break once, original proxy composition and all ten mineral processing destinations",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Live support and falling debris, material tags and saved data"
+        }
+      ]
+    },
+    {
+      "id": "core6-admin-heal",
+      "kind": "mechanic",
+      "subject": "Core admin restore health, hunger, stamina and legacy state; absent optional providers do not fail standalone heal",
       "checks": [
         {
           "backend": "server",

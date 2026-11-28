@@ -16,6 +16,12 @@ final class GroundChecks{
  private static void require(boolean v,String s){if(!v)throw new IllegalStateException("ground: "+s);}
  static void verify(ServerLevel l){
   VolcanicTerrain.verify();
+  require(GroundMaterials.whiteSand("tropical_sandy_coast",.27,80,false,.15),"wider warm beach sand coverage");
+  require(!GroundMaterials.whiteSand("tropical_sandy_coast",.1,80,true,.9),"cold coast exclusion");
+  require(!GroundMaterials.whiteSand("tropical_sandy_coast",.5,120,true,.9),"distant coast exclusion");
+  require(GroundMaterials.volcanicSand(290,100,.15)&&!GroundMaterials.volcanicSand(301,100,.9),"bounded volcanic sand");
+  require(GroundMaterials.soil("prairie",.1,.52,.06,.12).equals("chernozem"),"wider chernozem patches");
+  require(GroundMaterials.soil("prairie",.1,.52,.06,-.2).isEmpty(),"retain ordinary soil patches");
   require(GroundMaterials.soil("prairie",.1,.52,.06,.65).equals("chernozem"),"steppe chernozem");
   require(GroundMaterials.soil("hot_desert",.7,.1,.02,.9).isEmpty(),"desert cannot form chernozem");
   require(GroundMaterials.soil("equatorial_rainforest",.6,.8,.1,.8).equals("laterite"),"humid weathered laterite");

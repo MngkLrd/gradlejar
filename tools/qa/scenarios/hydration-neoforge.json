@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "name": "Hydration 0.5.2: RC54 solution properties and existing gameplay",
+  "name": "Hydration 0.6.0: ecosystem contracts, renal regulation, exact withdrawal and processing",
   "coverage": [
     {
       "id": "water-balance",
@@ -263,6 +263,39 @@
       "id": "vessel-physical-api",
       "kind": "mechanic",
       "subject": "Core solution data, copy, empty, distilled, arbitrary mixed and unknown controls",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Vessel capacities and component persistence"
+        }
+      ]
+    },
+    {
+      "id": "renal-regulation",
+      "kind": "mechanic",
+      "subject": "Neutral renal fallback and bounded basal/electrolyte regulation, reset values",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Model rules"
+        }
+      ]
+    },
+    {
+      "id": "exact-withdrawal-preview",
+      "kind": "mechanic",
+      "subject": "Exact aged dose/remainder, no preview mutation, invalid and bottle controls",
+      "checks": [
+        {
+          "backend": "server",
+          "name": "Vessel capacities and component persistence"
+        }
+      ]
+    },
+    {
+      "id": "processing-catalog",
+      "kind": "mechanic",
+      "subject": "Eight registered processing examples match actual treatment outputs",
       "checks": [
         {
           "backend": "server",

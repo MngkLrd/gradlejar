@@ -53,7 +53,7 @@ final class UndergroundRegressionChecks{
    int cx=ax*64,cz=az*64;
    for(int gx=cx-12;gx<=cx+12;gx++)for(int gz=cz-12;gz<=cz+12;gz++){
     var d=GeologyModel.district(42,gx,gz);
-    if(d.province()!=GeologyModel.Province.CARBONATE||!d.caves().get(0).shaft())continue;
+    if(d.province()!=GeologyModel.Province.CARBONATE||!d.caves().get(0).shaft()||d.caves().get(0).surfaceOpening())continue;
     var c=d.caves().get(0);int x=(int)Math.floor(c.x()),z=(int)Math.floor(c.z());
     candidates++;
     if(gen.getBaseHeight(x,z,Heightmap.Types.OCEAN_FLOOR_WG,bounds,state)<72)continue;
@@ -97,13 +97,21 @@ final class UndergroundRegressionChecks{
    if(s.isAir())existing.add(pos.immutable());else if(GeologyGeneration.rock(s))rockBefore++;
   }
   require(rockBefore>0,"real rock fixture");
+  int roofTop=chosen.shaftTop(surface);
+  var roof=new ArrayList<BlockPos>();
+  for(int y=roofTop+1;y<=surface;y++){
+   var pos=p.set(center.getX(),y,center.getZ());
+   if(GeologyGeneration.rock(chunk.getBlockState(pos)))roof.add(pos.immutable());
+  }
+  require(!roof.isEmpty(),"actual rock roof fixture");
   GeologyGeneration.carve(42,chunk);
+  for(var pos:roof)require(!chunk.getBlockState(pos).isAir(),"buried shaft breached original rock roof "+pos);
   int open=0;
-  for(int y=(int)Math.ceil(chosen.y());y<surface;y++){
+  for(int y=(int)Math.ceil(chosen.y());y<=roofTop;y++){
    var s=chunk.getBlockState(p.set(center.getX(),y,center.getZ()));
    if(s.isAir()||s.getFluidState().is(FluidTags.WATER))open++;
   }
-  require(open>=surface-(int)Math.ceil(chosen.y())-3,"actual-column shaft continuity "+open+"/"+(surface-(int)Math.ceil(chosen.y())));
+  require(open>=roofTop-(int)Math.ceil(chosen.y())-2,"actual-column buried shaft continuity "+open+"/"+(roofTop-(int)Math.ceil(chosen.y())+1));
   GeologyGeneration.mineralize(42,chunk);
   for(var pos:existing)require(chunk.getBlockState(pos).isAir(),"original noise cavity refilled");
   var h=gen.getBiomeSource().getNoiseBiome(center.getX()>>2,surface>>2,center.getZ()>>2,state.sampler());

@@ -8,7 +8,7 @@ on:
         default: physics
         type: string
   pull_request:
-    branches: [worldlogic-hydration-0.1.0, worldlogic-hydration-0.5.0, worldlogic-hydration-0.5.1-material-physics]
+    branches: [worldlogic-hydration-0.1.0, worldlogic-hydration-0.5.0, worldlogic-hydration-0.5.1-material-physics, worldlogic-hydration-0.5.2-rc54]
     paths:
       - 'projects/worldlogic-trauma-1.21.1-neoforge/**'
       - 'projects/hydration-1.21.1-neoforge/**'
@@ -43,7 +43,7 @@ jobs:
       - name: Resolve pack
         id: pack
         env:
-          PACK_ID: ${{ github.event_name == 'workflow_dispatch' && inputs.pack || (github.event_name == 'pull_request' && (github.head_ref == 'worldlogic-hydration-0.5.0' || github.head_ref == 'worldlogic-hydration-0.5.1-material-physics' || github.head_ref == 'worldlogic-hydration-0.5.2-rc54') && 'worldlogic-hydration') || 'physics' }}
+          PACK_ID: ${{ github.event_name == 'workflow_dispatch' && inputs.pack || (github.event_name == 'pull_request' && (github.head_ref == 'worldlogic-hydration-0.5.0' || github.head_ref == 'worldlogic-hydration-0.5.1-material-physics' || github.head_ref == 'worldlogic-hydration-0.5.2-rc54' || github.head_ref == 'worldlogic-hydration-0.6.0-integration') && 'worldlogic-hydration') || 'physics' }}
         run: |
           [[ "$PACK_ID" =~ ^[a-z][a-z0-9_-]{0,60}$ ]]
           echo "id=$PACK_ID" >> "$GITHUB_OUTPUT"
@@ -91,6 +91,22 @@ jobs:
           jar="$GITHUB_WORKSPACE/pinned-rc54/worldlogic-neoforge-mc1.21.1-1.2.1.jar"
           echo "33d2ce25db884ba8f3044d672f5970430de968c863b83372ed188774572cfb56  $jar" | sha256sum -c -
           echo "HYDRATION_CORE_JAR=$jar" >> "$GITHUB_ENV"
+      - name: Fetch exact Core 1.5.1 upstream binary
+        if: github.head_ref == 'worldlogic-hydration-0.6.0-integration' && matrix.member.slug == 'hydration'
+        uses: actions/download-artifact@v4
+        with:
+          name: jar-worldlogic-1.21.1-neoforge-1.5.1-0
+          run-id: 46123087105
+          github-token: ${{ github.token }}
+          path: pinned-core151
+      - name: Verify Core 1.5.1 binary and integration manifest
+        if: github.head_ref == 'worldlogic-hydration-0.6.0-integration' && matrix.member.slug == 'hydration'
+        run: |
+          set -euo pipefail
+          jar="$GITHUB_WORKSPACE/pinned-core151/worldlogic-neoforge-mc1.21.1-1.5.1.jar"
+          echo "a966fb939988e794586cd6a1ea18fafe340296447b67ef8a9827963328e20548  $jar" | sha256sum -c -
+          echo "HYDRATION_CORE_JAR=$jar" >> "$GITHUB_ENV"
+          python3 -m tools.qa.ecosystem --check-project projects/hydration-1.21.1-neoforge
       - name: Compile production mod (no dev fallback)
         env:
           PROJECT: ${{ matrix.member.project }}
@@ -120,6 +136,21 @@ jobs:
           HYDRATION_JAR: ${{ steps.jar.outputs.jar_path }}
         run: |
           python3 projects/hydration-1.21.1-neoforge/qa/exact_core_runtime.py
+      - name: Test Hydration production JAR with exact Core 1.5.1
+        if: github.head_ref == 'worldlogic-hydration-0.6.0-integration' && matrix.member.slug == 'hydration'
+        env:
+          HYDRATION_JAR: ${{ steps.jar.outputs.jar_path }}
+        run: python3 projects/hydration-1.21.1-neoforge/qa/exact_core_151.py
+      - name: Upload Core 1.5.1 runtime evidence
+        if: always() && github.head_ref == 'worldlogic-hydration-0.6.0-integration' && matrix.member.slug == 'hydration'
+        uses: actions/upload-artifact@v4
+        with:
+          name: hydration-core151-exact-binary-evidence-${{ github.run_attempt }}
+          path: |
+            hydration-exact-evidence/report.json
+            hydration-exact-evidence/runtime/logs/
+          if-no-files-found: warn
+          retention-days: 30
       - name: Upload exact upstream binary runtime evidence
         if: always() && github.head_ref == 'worldlogic-hydration-0.5.2-rc54' && matrix.member.slug == 'hydration'
         uses: actions/upload-artifact@v4

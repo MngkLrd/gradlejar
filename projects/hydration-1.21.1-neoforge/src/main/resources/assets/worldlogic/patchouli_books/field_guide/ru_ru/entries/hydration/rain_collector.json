@@ -1,0 +1,13 @@
+{
+  "name": "Дождесборник",
+  "category": "worldlogic:hydration",
+  "icon": "hydration:rain_collector",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "hydration:rain_collector",
+      "link_recipe": true,
+      "text": "Вместимость: 8000 мБ. Собирает дождь под открытым небом."
+    }
+  ]
+}

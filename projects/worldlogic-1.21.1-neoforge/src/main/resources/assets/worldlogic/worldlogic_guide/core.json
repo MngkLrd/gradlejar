@@ -7,7 +7,7 @@
     "ru": "Начало и выживание",
     "en": "Getting started and survival"
   },
-  "source": "WorldLogic RC33",
+  "source": "WorldLogic Core 1.5.0",
   "pages": [
     {
       "id": "start",
@@ -16,20 +16,19 @@
         "en": "Getting started"
       },
       "models": [
-        "minecraft:book",
-        "minecraft:compass",
+        "worldlogic:guidebook",
         "minecraft:campfire"
       ],
       "body": {
         "ru": [
-          "WorldLogic меняет природные законы мира. Для новой игры используется Realistic: отдельного облегчённого режима нет. Установи одинаковые версии ядра и нужных аддонов на клиент и сервер.",
-          "Осмотрись: оцени воду, укрытие, погоду и растительность. Сначала обеспечь безопасный путь обратно и место отдыха. Спринт и тяжёлая работа расходуют силы.",
-          "Здесь собраны механики установленных дополнений. Предметы в иллюстрациях — реальные игровые модели, а не рецепты. Старые миры сохраняют ранее созданные чанки."
+          "Первые минуты: не трать силы на бег без необходимости. Найди безопасный путь к воде и место для укрытия; не спрыгивай с высоты и не стой под нестабильными блоками.",
+          "Сверь погоду и состояние персонажа. Если энергия падает, прекрати тяжёлую работу и отдохни на месте. Не путай энергию ядра с жаждой, температурой и питанием дополнительных модулей.",
+          "Перед первой ночью собери материалы для укрытия и источника света. Осмотри ближайшие склоны и воду. В следующих разделах объяснены конкретные риски, методы восстановления и природные ресурсы."
         ],
         "en": [
-          "WorldLogic changes natural laws. New worlds use Realistic, without a separate easy mode. Match Core and addon versions on client and server.",
-          "Look for water, shelter, weather and vegetation. Establish a safe route home and a place to rest. Sprinting and heavy work consume energy.",
-          "This book shows installed modules. Illustrations use real game models, not recipes. Existing worlds retain generated chunks."
+          "First minutes: avoid unnecessary sprinting. Find a safe route to water and shelter; avoid jumping from heights and standing under unstable blocks.",
+          "Check weather and character condition. Stop heavy work and rest when energy falls. Core stamina is distinct from addon thirst, temperature and nutrition.",
+          "Before night, gather shelter materials and light. Inspect nearby slopes and water. Later sections explain specific risks, recovery and natural resources."
         ]
       }
     },
@@ -103,6 +102,70 @@
           "Open WorldLogic analytics in the pause menu for air, water, soil, impact, ecology and history.",
           "Values are local estimates rather than laboratory measurements. Nearby cells help compare pollution and soil condition.",
           "Some data requires local observations; missing data does not prove that a process is absent."
+        ]
+      }
+    },
+    {
+      "id": "tree_descent",
+      "title": {
+        "ru": "Спуск по деревьям",
+        "en": "Tree descent"
+      },
+      "models": [
+        "minecraft:oak_log",
+        "minecraft:spruce_log"
+      ],
+      "body": {
+        "ru": [
+          "С пустой основной рукой удерживай Shift, повернись лицом к вертикальному стволу и осторожно шагни с края. При близком контакте с двумя вертикальными брёвнами медленный спуск начинается автоматически; ПКМ по боковой грани остаётся дополнительным способом.",
+          "Не прыгай к стволу с большой высоты: автоматический захват рассчитан на медленное движение вниз. Отпускание Shift, потеря опоры, усталость и препятствия прекращают спуск. Листва, доски и горизонтальные брёвна не заменяют вертикальный ствол."
+        ],
+        "en": [
+          "With an empty main hand, hold Shift, face a vertical trunk and carefully step off the edge. Close contact with two upright logs automatically starts slow descent; right-clicking the side remains an alternate method.",
+          "Do not jump toward a trunk from a great height: automatic grip is for slow downward movement. Releasing Shift, losing contact, exhaustion and obstacles end descent. Leaves, planks and horizontal logs do not substitute for a vertical trunk."
+        ]
+      }
+    },
+    {
+      "id": "light",
+      "title": {
+        "ru": "Свет под дождём",
+        "en": "Light in rain"
+      },
+      "models": [
+        "minecraft:torch",
+        "minecraft:flint_and_steel"
+      ],
+      "body": {
+        "ru": [
+          "Обычный факел может промокнуть под открытым небом и погаснуть. Размещай освещение под крышей, если ожидается дождь.",
+          "Погасший факел можно снова зажечь огнивом. Не рассчитывай на постоянное освещение открытых троп в плохую погоду."
+        ],
+        "en": [
+          "An exposed ordinary torch may become wet and extinguish. Place lights beneath shelter when rain is expected.",
+          "Relight an extinguished torch with flint and steel. Do not rely on permanent lighting along exposed paths in bad weather."
+        ]
+      }
+    },
+    {
+      "id": "traction",
+      "title": {
+        "ru": "Сцепление и крутые склоны",
+        "en": "Traction and steep slopes"
+      },
+      "models": [
+        "minecraft:gravel",
+        "minecraft:stone",
+        "minecraft:ice"
+      ],
+      "body": {
+        "ru": [
+          "На рыхлом песке и гравии торможение отличается от твёрдых поверхностей. Мокрый камень, глина и лёд хуже удерживают ноги. Не разгоняйся перед крутым спуском: при быстрой потере высоты можно потерять равновесие и упасть.",
+          "Приседание и медленное движение снижают риск. В темноте лучше использовать источник света: настройка яркости не заменяет освещение."
+        ],
+        "en": [
+          "Loose sand and gravel brake differently from solid surfaces. Wet stone, clay and ice reduce footing. Avoid sprinting down steep slopes: rapid descent can cause a fall.",
+          "Sneak or move slowly on slopes. Carry light in the dark; brightness settings cannot replace illumination."
         ]
       }
     }

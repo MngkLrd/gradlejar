@@ -142,6 +142,17 @@ public final class PhysicalMaterials {
  private static void liquid(String n,double d,double k,double cp,double visc){m(n,Phase.LIQUID,d,N,N,N,N,N,0,k,cp,N,N,0,N,N,visc);}
  static {
   m("air",Phase.GAS,1.204,N,N,N,N,N,0,.026,1005,N,N,0,N,N,1.81e-5);
+  // Nominal mineral density / Mohs only. Unmeasured engineering parameters remain unknown.
+  m("hematite",Phase.SOLID,5260,5.5,N,N,N,N,0,N,N,N,N,0,N,N,N);
+  m("magnetite",Phase.SOLID,5170,5.5,N,N,N,N,0,N,N,N,N,0,N,N,N);
+  m("cassiterite",Phase.SOLID,6900,6.5,N,N,N,N,0,N,N,N,N,0,N,N,N);
+  m("galena",Phase.SOLID,7500,2.5,N,N,N,N,0,N,N,N,N,0,N,N,N);
+  m("sphalerite",Phase.SOLID,4000,3.8,N,N,N,N,0,N,N,N,N,0,N,N,N);
+  m("pyrite",Phase.SOLID,5000,6.2,N,N,N,N,0,N,N,N,N,0,N,N,N);
+  m("malachite",Phase.SOLID,3950,3.8,N,N,N,N,0,N,N,N,N,0,N,N,N);
+  m("bauxite",Phase.SOLID,2500,2.5,N,N,N,N,0,N,N,N,N,0,N,N,N);
+  m("fluorite",Phase.SOLID,3180,4,N,N,N,N,0,N,N,N,N,0,N,N,N);
+  m("cinnabar",Phase.SOLID,8100,2.2,N,N,N,N,0,N,N,N,N,0,N,N,N);
   rock("stone",2650,6,120,8,45,.03,2.5);
   rock("granite",2700,6.5,160,10,55,.015,3);
   rock("diorite",2800,6,170,11,60,.02,2.7);
@@ -298,6 +309,11 @@ public final class PhysicalMaterials {
   String p=key.getPath(); boolean known=key.getNamespace().equals("minecraft")||key.getNamespace().equals("worldlogic");
   Evidence e=known?Evidence.BUILTIN:Evidence.ESTIMATED;
   if(p.equals("air")||p.equals("cave_air")||p.equals("void_air"))return single("air",1,Evidence.BUILTIN);
+  if(key.getNamespace().equals("worldlogic")&&p.endsWith("_ore")){
+   String mineral=p.replaceFirst("^deepslate_","").replaceFirst("_ore$","");
+   if(java.util.Set.of("hematite","magnetite","cassiterite","galena","sphalerite","pyrite","malachite","bauxite","fluorite","cinnabar").contains(mineral))
+    return new ObjectProfile(List.of(new Component(id(p.startsWith("deepslate_")?"deepslate":"stone"),.88),new Component(id(mineral),.12)),Evidence.ESTIMATED);
+  }
   if(p.endsWith("_ore")||p.equals("ancient_debris")){
    String host=p.startsWith("deepslate_")?"deepslate":p.startsWith("nether_")||p.equals("ancient_debris")?"netherrack":"stone";
    String mineral=solidName(p.replace("deepslate_","").replace("nether_","").replace("_ore",""));
@@ -375,6 +391,7 @@ public final class PhysicalMaterials {
   return new ObjectProfile(List.of(new Component(id(a),va),new Component(id(b),vb)),Evidence.ESTIMATED);
  }
  private static ObjectProfile builtinItem(ResourceLocation key){
+  if(key.getNamespace().equals("worldlogic")&&java.util.Set.of("hematite","magnetite","cassiterite","galena","sphalerite","pyrite","malachite","bauxite","fluorite","cinnabar").contains(key.getPath()))return single(key.getPath(),.00008,Evidence.ESTIMATED);
   String p=key.getPath(),s=solidName(p);
   if(p.equals("stick"))return single("generic_wood",.00015,Evidence.ESTIMATED);
   if(p.equals("feather"))return single("plant",.000005,Evidence.ESTIMATED);
@@ -534,7 +551,13 @@ public final class PhysicalMaterials {
  public static Optional<Result> placed(ServerLevel level,BlockPos pos,State supplied){
   if(!level.getServer().isSameThread())throw new IllegalStateException("server thread required");
   if(level.isOutsideBuildHeight(pos)||!level.hasChunkAt(pos))return Optional.empty();
-  BlockState b=level.getBlockState(pos);
+  return atState(level,pos,level.getBlockState(pos),supplied);
+ }
+ /** Caller-owned original state at an already loaded location, e.g. an excavation proxy. Does not mutate terrain. */
+ static Optional<Result> atState(ServerLevel level,BlockPos pos,BlockState b,State supplied){
+  Objects.requireNonNull(b);
+  if(!level.getServer().isSameThread())throw new IllegalStateException("server thread required");
+  if(level.isOutsideBuildHeight(pos)||!level.hasChunkAt(pos))return Optional.empty();
   if(b.getBlock() instanceof net.minecraft.world.level.block.LiquidBlock)return Optional.of(evaluate(fluidBlock(b.getFluidState()),supplied==null?State.reference():supplied));
   if(supplied!=null)return Optional.of(evaluate(block(b),supplied));
   ObjectProfile p=block(b);double wet=N;
