@@ -119,6 +119,17 @@ public final class HudStatusLayoutCheck {
         }
         System.out.println("PASS: gait asymmetry, independent climb arms, monotonic phase under packet jitter");
         System.out.println("PASS: seven independent zones, centered lower inventory, 96 HUD layouts, injury palette and status bounds");
+        int dashboards=0;
+        for(int w:new int[]{330,360,400,480,640,960})for(int h:new int[]{202,220,240,270,480}){
+            var l=MedicalDashboardLayout.of(w,h);
+            require(l.x()>0&&l.y()>0&&l.x()+l.width()<w&&l.y()+l.height()<h,"dashboard margins");
+            require(l.bodyX()+48*l.bodyScale()<l.regionX()&&l.regionX()<l.regionRight()&&l.regionRight()<l.organX(),"separate anatomy and organs");
+            require(l.bodyY()+82*l.bodyScale()<=l.footerY()&&l.rowTop()+7*l.regionRow()<=l.footerY()&&l.rowTop()+9*l.organRow()<=l.footerY(),"all rows above footer");
+            require(l.organRow()>=12&&l.regionRow()>=15&&l.backX()+74<=l.x()+l.width(),"minimum readable rows and back button");
+            dashboards++;
+        }
+        require(!MedicalDashboardLayout.available(320,200),"too small");
+        System.out.println("PASS: "+dashboards+" exclusive medical dashboard layouts");
         System.out.println("PASS: 16 combinations, "+transitions+" removal transitions, timer boundaries and visibility");
     }
 }

@@ -6,18 +6,33 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
-public record SyncBodyStatePacket(float[] hp,byte[] bleeding,byte[] wounds,boolean[] fracture,boolean[] stabilized,int concussion,int painkiller,int thermalStage,float bloodMl,float pain,int shock,int illnessKind,int illnessStage,boolean illnessTreated) implements CustomPacketPayload {
+public record SyncBodyStatePacket(float[] hp,byte[] bleeding,byte[] wounds,boolean[] fracture,boolean[] stabilized,int concussion,int painkiller,int thermalStage,float bloodMl,float pain,int shock,int illnessKind,int illnessStage,boolean illnessTreated,Clinical clinical) implements CustomPacketPayload {
+    public record Clinical(float[] integrity,float[] internalBleeding,float oxygen,float perfusion,float delivery,float renal,float digestive,float repair,float shockLoad,boolean unconscious){
+        public static Clinical from(BodyState b){
+            var o=b.organs();int n=OrganState.Organ.values().length;float[] hp=new float[n],bleed=new float[n];
+            for(var organ:OrganState.Organ.values()){hp[organ.ordinal()]=o.integrity(organ);bleed[organ.ordinal()]=o.bleeding(organ);}
+            return new Clinical(hp,bleed,o.oxygen(),o.perfusion(b.bloodFraction()),o.delivery(b.bloodFraction()),o.renalFunction(),o.digestiveFunction(),o.repairFactor(b.bloodFraction()),o.shockLoad(),o.unconscious());
+        }
+        void write(RegistryFriendlyByteBuf buf){
+            for(int i=0;i<OrganState.Organ.values().length;i++){buf.writeFloat(integrity[i]);buf.writeFloat(internalBleeding[i]);}
+            buf.writeFloat(oxygen);buf.writeFloat(perfusion);buf.writeFloat(delivery);buf.writeFloat(renal);buf.writeFloat(digestive);buf.writeFloat(repair);buf.writeFloat(shockLoad);buf.writeBoolean(unconscious);
+        }
+        static Clinical read(RegistryFriendlyByteBuf buf){
+            int n=OrganState.Organ.values().length;float[] hp=new float[n],bleed=new float[n];for(int i=0;i<n;i++){hp[i]=buf.readFloat();bleed[i]=buf.readFloat();}
+            return new Clinical(hp,bleed,buf.readFloat(),buf.readFloat(),buf.readFloat(),buf.readFloat(),buf.readFloat(),buf.readFloat(),buf.readFloat(),buf.readBoolean());
+        }
+    }
     public static final Type<SyncBodyStatePacket> TYPE=new Type<>(ResourceLocation.fromNamespaceAndPath(TraumaCraft.MOD_ID,"body_sync"));
     public static final StreamCodec<RegistryFriendlyByteBuf,SyncBodyStatePacket> STREAM_CODEC=StreamCodec.of((buf,m)->{
         for(int i=0;i<BodyPart.values().length;i++){
             buf.writeFloat(m.hp[i]);buf.writeByte(m.bleeding[i]);buf.writeByte(m.wounds[i]);buf.writeBoolean(m.fracture[i]);buf.writeBoolean(m.stabilized[i]);
         }
-        buf.writeVarInt(m.concussion);buf.writeVarInt(m.painkiller);buf.writeVarInt(m.thermalStage);buf.writeFloat(m.bloodMl);buf.writeFloat(m.pain);buf.writeVarInt(m.shock);buf.writeVarInt(m.illnessKind);buf.writeVarInt(m.illnessStage);buf.writeBoolean(m.illnessTreated);
+        buf.writeVarInt(m.concussion);buf.writeVarInt(m.painkiller);buf.writeVarInt(m.thermalStage);buf.writeFloat(m.bloodMl);buf.writeFloat(m.pain);buf.writeVarInt(m.shock);buf.writeVarInt(m.illnessKind);buf.writeVarInt(m.illnessStage);buf.writeBoolean(m.illnessTreated);m.clinical.write(buf);
     },buf->{
         int n=BodyPart.values().length;
         float[] h=new float[n];byte[] bleed=new byte[n],wounds=new byte[n];boolean[] f=new boolean[n],s=new boolean[n];
         for(int i=0;i<n;i++){h[i]=buf.readFloat();bleed[i]=buf.readByte();wounds[i]=buf.readByte();f[i]=buf.readBoolean();s[i]=buf.readBoolean();}
-        return new SyncBodyStatePacket(h,bleed,wounds,f,s,buf.readVarInt(),buf.readVarInt(),buf.readVarInt(),buf.readFloat(),buf.readFloat(),buf.readVarInt(),buf.readVarInt(),buf.readVarInt(),buf.readBoolean());
+        return new SyncBodyStatePacket(h,bleed,wounds,f,s,buf.readVarInt(),buf.readVarInt(),buf.readVarInt(),buf.readFloat(),buf.readFloat(),buf.readVarInt(),buf.readVarInt(),buf.readVarInt(),buf.readBoolean(),Clinical.read(buf));
     });
     @Override public Type<? extends CustomPacketPayload> type(){return TYPE;}
     public static SyncBodyStatePacket from(BodyState b,int thermalStage){return from(b,thermalStage,DiseaseModel.State.HEALTHY);}
@@ -25,6 +40,6 @@ public record SyncBodyStatePacket(float[] hp,byte[] bleeding,byte[] wounds,boole
         int n=BodyPart.values().length;
         float[] h=new float[n];byte[] bleed=new byte[n],wounds=new byte[n];boolean[] f=new boolean[n],s=new boolean[n];
         for(BodyPart p:BodyPart.values()){int i=p.ordinal();h[i]=b.health(p);bleed[i]=(byte)b.bleeding(p);wounds[i]=(byte)b.wounds(p);f[i]=b.fractured(p);s[i]=b.stabilized(p);}
-        return new SyncBodyStatePacket(h,bleed,wounds,f,s,b.concussionTicks(),b.painkillerTicks(),thermalStage,b.bloodMl(),b.pain(),b.shockStage(),illness.symptomatic()?illness.kind().ordinal():0,illness.symptomatic()?illness.stage().ordinal():0,illness.symptomatic()&&illness.support()>0);
+        return new SyncBodyStatePacket(h,bleed,wounds,f,s,b.concussionTicks(),b.painkillerTicks(),thermalStage,b.bloodMl(),b.pain(),b.shockStage(),illness.symptomatic()?illness.kind().ordinal():0,illness.symptomatic()?illness.stage().ordinal():0,illness.symptomatic()&&illness.support()>0,Clinical.from(b));
     }
 }
