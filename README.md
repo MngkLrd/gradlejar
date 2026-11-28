@@ -6,6 +6,8 @@ Shared Gradle build infrastructure for real Minecraft mods. The bootstrap projec
 
 **Task-specific references:** [Gameplay QA assignment](docs/QA-ASSIGNMENT-TEMPLATE.md) · [Bot actions](docs/BOT-ACTIONS.md) · [Recipe QA](docs/RECIPE-QA.md) · [Visual QA and art standard](docs/VISUAL-QA.md) · [Mandatory vanilla art atlas](docs/VANILLA-ART-ATLAS.md) · [Visual research status](docs/VANILLA-RESEARCH.md). Read the current main documents; historical/pending branches are not current policy.
 
+**Naming and versions:** [Mandatory mod naming standard](docs/MOD-NAMING.md). Use three numeric product version components and the standardized player-facing JAR name; do not confuse it with the older internal Build Hub filename.
+
 ## Build
 Open [Build Hub Actions](https://github.com/MngkLrd/gradlejar/actions/workflows/build.yml) → **Minecraft Mod Build Hub** → **Run workflow**. Enter a project directory, `.` for FieldKit, or `@slug` to run every enrolled QA port of a mod. Main pushes build affected projects across the complete commit range. Pull requests do not publish.
 

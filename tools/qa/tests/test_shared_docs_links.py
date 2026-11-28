@@ -11,6 +11,7 @@ DOCS = (
     "AGENTS.md", "README.md", "docs/QA-V2.md", "docs/QA-ASSIGNMENT-TEMPLATE.md",
     "docs/BOT-ACTIONS.md", "docs/RECIPE-QA.md", "docs/VISUAL-QA.md",
     "docs/VANILLA-ART-ATLAS.md", "docs/VANILLA-RESEARCH.md", "docs/VANILLA-REAL-ART-REVIEW.md",
+    "docs/MOD-NAMING.md",
 )
 INLINE = re.compile(r"!?\[[^\]\n]*\]\((?:<([^>\n]+)>|([^\s)\n]+))(?:[ \t]+[\"'][^)\n]*[\"'])?\)")
 HEADING = re.compile(r"^ {0,3}#{1,6}\s+(.+?)\s*#*\s*$")
