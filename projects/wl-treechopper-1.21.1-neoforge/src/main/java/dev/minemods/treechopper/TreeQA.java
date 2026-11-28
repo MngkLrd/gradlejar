@@ -208,6 +208,13 @@ final class TreeQA {
             var box=new net.minecraft.world.phys.AABB(target).expandTowards(1,0,0);
             if(FallingTree.crushLeaves(l,fake,box)!=1||!l.getBlockState(target).isAir()||!l.getBlockState(target.east()).is(oak.getBlock()))return 0;
             if(ChopEffort.workPerHit(2,1,1,8,.5,16)>=ChopEffort.workPerHit(2,1,1,8,.5,4)||ChopEffort.depth(999)!=7)return 0;
+            if(CutGeometry.count()!=981)return 0;
+            for(int n=0;n<=8;n++)for(int s=0;s<=8;s++)for(int w=0;w<=8;w++)for(int e=0;e<=8;e++){
+                if(n+s+w+e>10)continue;
+                int[] d={n,s,w,e};
+                int[] work={125*n,125*s,125*w,125*e};
+                if(!java.util.Arrays.equals(d,CutGeometry.depths(CutGeometry.profile(work))))return 0;
+            }
             c.getSource().sendSuccess(()->Component.literal("TreeChopper crown ownership PASS"),false);return 1;
           }))
           .then(Commands.literal("qa_leafless_cut").executes(c->{

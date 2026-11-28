@@ -258,7 +258,7 @@ public final class TreeChopper {
         int proposed=Math.min(ChopEffort.COMPLETE,work[idx]+ChopEffort.workPerHit(speed,resistance,power,Math.max(4,equivalent),level.random.nextDouble(),tree.stream().filter(Piece::log).mapToInt(p->p.pos.getY()-pos.getY()).max().orElse(1)));
         work[idx]=FallBalance.counterWork(work,idx,guide,proposed);
         if(!FallBalance.validGuide(work,guide))guide=-1;
-        for(int face=0;face<4;face++)damaged=damaged.setValue(CutBlock.side(SIDES[face]),ChopEffort.depth(work[face]));
+        damaged=CutBlock.withWork(damaged,work);
         boolean severed=ChopEffort.severed(work);
         boolean allReady=severed&&readySupports(level,supports,pos,work)==supports.size();
         int wear=allReady?ChopEffort.fellingWear(upperLogs(tree)+extraCore,true):1;

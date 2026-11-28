@@ -7,7 +7,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-/** Per-face work is saved on the cut block; geometry remains a compact 4-stage blockstate. */
+/** Persisted per-face work is authoritative; compact visual profile is rebuilt after old-save load. */
 final class CutProgress extends BlockEntity {
     private static final Direction[] FACES={Direction.NORTH,Direction.SOUTH,Direction.WEST,Direction.EAST};
     private int[] work;
@@ -26,6 +26,11 @@ final class CutProgress extends BlockEntity {
     void rememberMoisture(double value){if(Double.isFinite(value)&&value>=0&&value<=250){moisturePercent=value;setChanged();}}
     void write(int[] value){write(value,-1);}
     void write(int[] value,int face){work=value.clone();guide=FallBalance.validGuide(work,face)?face:-1;setChanged();}
+    @Override public void onLoad(){
+        super.onLoad();
+        if(work!=null&&level instanceof net.minecraft.server.level.ServerLevel server&&getBlockState().getBlock() instanceof CutBlock)
+            server.scheduleTick(worldPosition,getBlockState().getBlock(),1);
+    }
     @Override protected void saveAdditional(CompoundTag tag,HolderLookup.Provider lookup){
         super.saveAdditional(tag,lookup);if(work!=null)tag.putIntArray("work",work);if(guide>=0)tag.putInt("guide",guide);if(Double.isFinite(moisturePercent))tag.putDouble("moisturePercent",moisturePercent);
     }

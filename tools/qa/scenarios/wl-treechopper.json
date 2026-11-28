@@ -638,7 +638,7 @@
       "wait": 3
     },
     {
-      "command": "setblock 1040 200 1028 wl_treechopper:cut_oak[north=1,south=0,east=0,west=0]",
+      "command": "setblock 1040 200 1028 wl_treechopper:cut_oak[profile=274]",
       "expect": "Changed the block|Successfully filled|Filled"
     },
     {
@@ -717,7 +717,7 @@
       "expect": "Changed the block|Successfully filled|Filled"
     },
     {
-      "command": "setblock 1048 200 1018 wl_treechopper:cut_oak[north=6,south=0,east=0,west=0]",
+      "command": "setblock 1048 200 1018 wl_treechopper:cut_oak[profile=916]",
       "expect": "Changed the block|Successfully filled|Filled"
     },
     {
@@ -738,7 +738,7 @@
       "expect": "Changed the block|Successfully filled|Filled"
     },
     {
-      "command": "setblock 1038 200 1018 wl_treechopper:cut_oak[north=6,south=0,east=0,west=0]",
+      "command": "setblock 1038 200 1018 wl_treechopper:cut_oak[profile=916]",
       "expect": "Changed the block|Successfully filled|Filled"
     },
     {
@@ -1010,7 +1010,7 @@
       "expect": "Changed the block|Successfully filled|Filled"
     },
     {
-      "command": "setblock 1010 200 1038 wl_treechopper:cut_oak[north=6,south=0,east=0,west=0]",
+      "command": "setblock 1010 200 1038 wl_treechopper:cut_oak[profile=916]",
       "expect": "Changed the block|Successfully filled|Filled"
     },
     {

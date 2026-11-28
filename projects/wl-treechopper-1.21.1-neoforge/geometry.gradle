@@ -14,6 +14,11 @@ tasks.register('generateTreeGeometry') {
         en.putAll(['message.wl_treechopper.landing_blocked':'Tree fall is obstructed. Clear the path or strike from another side.','message.wl_treechopper.find_notch':'Strike the visible notch.','message.wl_treechopper.notch_order':'Process the preceding notch first.']); ru.putAll(['message.wl_treechopper.landing_blocked':'Путь падения перекрыт. Освободи его или ударь с другой стороны.','message.wl_treechopper.find_notch':'Ударь по зазубрине на стволе.','message.wl_treechopper.notch_order':'Сначала обработай предыдущую зазубрину.']);
         en['message.wl_treechopper.supports']='Cut supports: %s/%s'; ru['message.wl_treechopper.supports']='Прорублено опор: %s/%s'
         en['message.wl_treechopper.directed_cut']='Directional notch and back cut'; ru['message.wl_treechopper.directed_cut']='Направляющий сруб и обратный пропил'
+        // Stable enumeration mirrors CutGeometry; no Cartesian explosion of independent states.
+        def profiles=[]
+        (0..8).each { n -> (0..8).each { south -> (0..8).each { w -> (0..8).each { e ->
+            if(n+south+w+e<=10)profiles << [n,south,w,e]
+        }}}}
         species.each { s ->
             def namespace=custom.contains(s)?'worldlogicterrain':'minecraft'
             def bark="${namespace}:block/${s}_log"
@@ -82,11 +87,11 @@ tasks.register('generateTreeGeometry') {
             def multi=[[apply:bottom],[apply:top]]
             [[4,6,1],[6,10,0],[10,12,1]].eachWithIndex { band,i ->
                 (0..7).each { x -> (0..7).each { z ->
-                    def cond=[:]
-                    [west:x,east:7-x,north:z,south:7-z].each { key,limit ->
-                        cond[key]=(0..Math.min(8,limit+band[2])).join('|')
+                    def valid=[]
+                    profiles.eachWithIndex { d, p ->
+                        if(d[0]<=z+band[2]&&d[1]<=7-z+band[2]&&d[2]<=x+band[2]&&d[3]<=7-x+band[2])valid << p
                     }
-                    multi << [when:cond,apply:model(cut+"_${i}_${x}_${z}",x*2,band[0],z*2,x*2+2,band[1],z*2+2)]
+                    if(!valid.isEmpty())multi << [when:[profile:valid.join('|')],apply:model(cut+"_${i}_${x}_${z}",x*2,band[0],z*2,x*2+2,band[1],z*2+2)]
                 }}
             }
             emit(asset+"blockstates/${cut}.json",[multipart:multi])
