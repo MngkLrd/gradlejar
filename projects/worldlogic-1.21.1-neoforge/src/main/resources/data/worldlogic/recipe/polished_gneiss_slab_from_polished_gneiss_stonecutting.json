@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "worldlogic:polished_gneiss"
+  },
+  "result": {
+    "id": "worldlogic:polished_gneiss_slab",
+    "count": 2
+  }
+}

@@ -41,7 +41,7 @@ public final class Survival {
    boolean warm=speed<.25&&AirAndFire.nearHeat(l,p.blockPosition(),2);
    rest(p,recoveryRate(p.getFoodData().getFoodLevel(),speed,p.isShiftKeyDown(),warm));
   }
-  if(fatigue(p)>=75){p.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN,35,0,false,false,false));if(fatigue(p)>=92)p.setSprinting(false);}
+  ExertionModifiers.apply(p);
  }
  static boolean active(Player p){return p.level() instanceof ServerLevel&&!p.isCreative()&&!p.isSpectator();}
  public static double fatigue(Player p){return Math.max(0,Math.min(100,p.getPersistentData().getDouble(FATIGUE)));}
@@ -55,11 +55,11 @@ public final class Survival {
  static boolean injured(Player p,long now){return Rules.on("injuries")&&p.getPersistentData().getLong(INJURY)>now;}
  public static double penalty(Player p,long now){
   double result=0;
-  if(Rules.on("exertion"))result=Math.max(result,Math.max(0,fatigue(p)-40)*.005);
+  if(Rules.on("exertion"))result=Math.max(result,1-ExertionModifiers.current(p).movement());
   if(Rules.on("injuries")&&p.getPersistentData().getLong(INJURY)>now)result=Math.max(result,.25);
   return result;
  }
- public static void logout(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent e){clearExertionTracking(e.getEntity());}
+ public static void logout(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent e){clearExertionTracking(e.getEntity());ExertionModifiers.clear(e.getEntity());}
  public static void tick(PlayerTickEvent.Post e){
   Player p=e.getEntity();if(!active(p)||!(p.level() instanceof ServerLevel l))return;long now=l.getGameTime();
   if(now%20!=0)return;

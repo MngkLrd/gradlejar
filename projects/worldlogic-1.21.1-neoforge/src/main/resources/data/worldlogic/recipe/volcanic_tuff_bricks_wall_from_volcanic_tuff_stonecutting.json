@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "worldlogic:volcanic_tuff"
+  },
+  "result": {
+    "id": "worldlogic:volcanic_tuff_bricks_wall",
+    "count": 1
+  }
+}

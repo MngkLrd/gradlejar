@@ -26,7 +26,7 @@ public final class Soil {
   if(l.random.nextFloat()<Math.min(.8,v*.09*Rules.strength("ecology")))e.setResult(net.neoforged.neoforge.event.level.block.CropGrowEvent.Pre.Result.DO_NOT_GROW);
  }
  public static void fertilize(PlayerInteractEvent.RightClickBlock e){
-  if(!Rules.on("soil_fatigue")||e.isCanceled()||!(e.getLevel() instanceof ServerLevel l)||!e.getItemStack().is(Items.BONE_MEAL)||!l.getBlockState(e.getPos()).is(Blocks.FARMLAND))return;
+  if(!Rules.on("soil_fatigue")||e.isCanceled()||!(e.getLevel() instanceof ServerLevel l)||!e.getItemStack().is(Items.BONE_MEAL)||!(l.getBlockState(e.getPos()).getBlock() instanceof FarmBlock))return;
   var d=WorldState.get(l);long k=e.getPos().asLong();int v=depletion(d,k,l.getGameTime());if(v<=0)return;
   d.soil.put(k,Math.max(0,v-3));d.soilTime.put(k,l.getGameTime());d.setDirty();if(!e.getEntity().isCreative())e.getItemStack().shrink(1);l.levelEvent(1505,e.getPos(),0);e.getEntity().displayClientMessage(Component.literal("Soil fertility restored."),true);e.setCancellationResult(InteractionResult.SUCCESS);e.setCanceled(true);
  }

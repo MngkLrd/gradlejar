@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "worldlogic:block/slate_slab"
+    },
+    "type=top": {
+      "model": "worldlogic:block/slate_slab_top"
+    },
+    "type=double": {
+      "model": "worldlogic:block/slate"
+    }
+  }
+}
