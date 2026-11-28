@@ -56,10 +56,22 @@ public final class Fish extends Cod {
   }
   return super.mobInteract(player,hand);
  }
+ @Override public void remove(RemovalReason reason){
+  if(reason.shouldDestroy()&&level() instanceof net.minecraft.server.level.ServerLevel l)PopulationData.get(l).remove(getUUID());
+  super.remove(reason);
+ }
  @Override public void tick(){
   super.tick();
   if(level() instanceof net.minecraft.server.level.ServerLevel l){
-   if(tickCount==1){Species s=Aquaculture.species(this);if(s!=null)Aquaculture.traits(this,s);}
+   if(tickCount==1||(tickCount+getId())%100==0){
+    Species s=Aquaculture.species(this);
+    if(s!=null&&isAlive()){
+     setPersistenceRequired();
+     FishLife.age(this,s,l.getGameTime());
+     var h=Aquaculture.habitat(l,blockPosition());
+     if(h!=null&&PopulationData.valid(h.kind()))PopulationData.get(l).observe(getUUID(),PopulationData.area(blockPosition(),h.kind()),s);
+    }
+   }
    if((tickCount+getId())%10==0){
     Species s=Aquaculture.species(this);if(s!=null)FishEcology.step(l,this,s);
    }

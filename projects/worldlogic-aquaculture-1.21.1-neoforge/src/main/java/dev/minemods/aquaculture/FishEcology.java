@@ -42,7 +42,7 @@ public final class FishEcology {
  }
  private static Vec3 center(Fish f){return f.position().add(0,Math.min(.2,f.getBbHeight()*.5),0);}
  private static boolean reachable(ServerLevel l,Fish fish,Vec3 target){return clearWaterPath(l,center(fish),target);}
- private static void steer(ServerLevel l,Fish fish,Vec3 target,double speed){
+ static void steer(ServerLevel l,Fish fish,Vec3 target,double speed){
   Vec3 here=center(fish),dir=target.subtract(here);
   if(dir.lengthSqr()<.04||!clearWaterPath(l,here,target))return;
   Vec3 next=fish.getDeltaMovement().scale(.65).add(dir.normalize().scale(speed*.35));
@@ -178,6 +178,7 @@ public final class FishEcology {
     }
    }
   }
+  if(sample&&FishLife.courtship(l,f,s)){tag.putString("wl_fish_activity","courtship");return;}
   Vec3 school=schoolTarget(f,s,neighbors);
   if(school!=null&&reachable(l,f,school)){steer(l,f,school,.12);tag.putString("wl_fish_activity","schooling");return;}
   if(sample){

@@ -15,9 +15,11 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 public final class ClientRegistration {
  private static ModelLayerLocation layer(Species s){return new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(Aquaculture.ID,s.id()),"main");}
  @SubscribeEvent public static void layers(EntityRenderersEvent.RegisterLayerDefinitions e){
+  for(String style:RoeRenderer.STYLES)e.registerLayerDefinition(RoeRenderer.location(style),()->RoeRenderer.layer(style));
   for(var s:Species.ALL)e.registerLayerDefinition(layer(s),()->AquaFishModel.layer(FishVisualGeometry.get(s.id())));
  }
  @SubscribeEvent public static void register(EntityRenderersEvent.RegisterRenderers e){
+  e.registerEntityRenderer(Aquaculture.ROE.get(),RoeRenderer::new);
   for(var s:Species.ALL)e.registerEntityRenderer(Aquaculture.TYPES.get(s.id()).get(),ctx->new RegionalFishRenderer(ctx,s));
  }
  private static final class RegionalFishRenderer extends MobRenderer<Cod,AquaFishModel>{

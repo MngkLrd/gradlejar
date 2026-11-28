@@ -36,6 +36,7 @@ public final class Aquaculture {
  public static final DeferredRegister<EntityType<?>> ENTITIES=DeferredRegister.create(Registries.ENTITY_TYPE,ID);
  public static final DeferredRegister<Item> ITEMS=DeferredRegister.create(Registries.ITEM,ID);
  public static final Map<String,Supplier<EntityType<Cod>>> TYPES=new LinkedHashMap<>();
+ public static final Supplier<EntityType<RoeClutch>> ROE=ENTITIES.register("roe_clutch",()->EntityType.Builder.<RoeClutch>of(RoeClutch::new,MobCategory.MISC).sized(.65f,.35f).clientTrackingRange(6).build(ID+":roe_clutch"));
  public static final Map<String,Supplier<Item>> RAW=new LinkedHashMap<>();
  static {
   for(Species s:Species.ALL){
@@ -46,7 +47,7 @@ public final class Aquaculture {
  }
  public Aquaculture(IEventBus bus){
   ENTITIES.register(bus);ITEMS.register(bus);bus.addListener(this::attributes);
-  NeoForge.EVENT_BUS.addListener(this::tick);NeoForge.EVENT_BUS.addListener(this::drops);NeoForge.EVENT_BUS.addListener(this::commands);
+  NeoForge.EVENT_BUS.addListener(PopulationRuntime::tick);NeoForge.EVENT_BUS.addListener(PopulationRuntime::load);NeoForge.EVENT_BUS.addListener(PopulationRuntime::unload);NeoForge.EVENT_BUS.addListener(this::drops);NeoForge.EVENT_BUS.addListener(this::commands);
  }
  private void attributes(EntityAttributeCreationEvent e){
   for(Species s:Species.ALL)e.put(TYPES.get(s.id()).get(),Cod.createAttributes().build());
@@ -116,42 +117,10 @@ public final class Aquaculture {
   fish.moveTo(pos.getX()+.5,pos.getY()+.1,pos.getZ()+.5,level.random.nextFloat()*360,0);
   if(!level.noCollision(fish)||!FishWater.contact(fish))return null;
   traits(fish,s);
-  return level.addFreshEntity(fish)?fish:null;
- }
- private void tick(ServerTickEvent.Post event){
-  var server=event.getServer();
-  if(server.getTickCount()%60!=0)return;
-  for(ServerPlayer player:server.getPlayerList().getPlayers()){
-   if(player.isSpectator())continue;
-   ServerLevel level=player.serverLevel();
-   if(!level.dimension().equals(Level.OVERWORLD))continue;
-   BlockPos origin=player.blockPosition();
-   var nearby=level.getEntitiesOfClass(Fish.class,new AABB(origin).inflate(48));
-   if(nearby.size()>=SpawnSelection.LOCAL_CAP)continue;
-   Map<String,Integer> counts=new HashMap<>();
-   for(Fish fish:nearby){Species s=species(fish);if(s!=null)counts.merge(s.id(),1,Integer::sum);}
-   int added=0;
-   // Alternate nearby shore/river samples and more distant open-water samples.
-   for(int a=0;a<16&&added<2&&nearby.size()+added<SpawnSelection.LOCAL_CAP;a++){
-    int radius=a%2==0?18:40;
-    int dx=level.random.nextInt(radius*2+1)-radius,dz=level.random.nextInt(radius*2+1)-radius;
-    if(dx*dx+dz*dz<36||dx*dx+dz*dz>radius*radius)continue;
-    int x=origin.getX()+dx,z=origin.getZ()+dz;
-    BlockPos surface=findWaterColumn(level,x,z,origin.getY());
-    if(surface==null)continue;
-    for(int b=0;b<6;b++){
-     BlockPos pos=surface.below(b);
-     if(!water(level,pos)||Math.abs(pos.getY()-origin.getY())>48)break;
-     Habitat h=habitat(level,pos);
-     if(h==null)continue;
-     Map<String,Integer> adjusted=new HashMap<>(counts);
-     AquaEcologyData.get(level).pressures(pos,h.kind(),level.getGameTime()).forEach((id,n)->adjusted.merge(id,n,Integer::sum));
-     Species s=SpawnSelection.choose(h,adjusted,level.random);
-     if(s==null)continue;
-     if(spawn(level,pos,s,h)!=null){counts.merge(s.id(),1,Integer::sum);added++;break;}
-    }
-   }
-  }
+  fish.setPersistenceRequired();
+  if(!level.addFreshEntity(fish))return null;
+  PopulationData.get(level).observe(fish.getUUID(),PopulationData.area(pos,h.kind()),s);
+  return fish;
  }
  public static ItemStack catchStack(Fish fish,Species s){
   var stack=new ItemStack(RAW.get(s.id()).get());
@@ -174,6 +143,17 @@ public final class Aquaculture {
  }
  private void commands(RegisterCommandsEvent e){
   e.getDispatcher().register(Commands.literal("aquaculture").requires(src->src.hasPermission(2))
+   .then(Commands.literal("population_selftest").executes(c->{
+    PopulationChecks.run(c.getSource().getLevel());
+    c.getSource().sendSuccess(()->Component.literal("AQUA_POPULATION_PASS"),false);
+    return Command.SINGLE_SUCCESS;
+   }))
+   .then(Commands.literal("population").executes(c->{
+    var l=c.getSource().getLevel();var p=BlockPos.containing(c.getSource().getPosition());var h=habitat(l,p);
+    if(h==null)return 0;var data=PopulationData.get(l);var area=PopulationData.area(p,h.kind());
+    var list=new java.util.LinkedHashMap<String,Integer>();for(Species s:Species.ALL){int n=data.total(area,s.id());if(n>0)list.put(s.id(),n);}
+    c.getSource().sendSuccess(()->Component.literal("Aqua population (fish + reserved eggs): "+list),false);return Command.SINGLE_SUCCESS;
+   }))
    .then(Commands.literal("ecology_selftest").executes(c->{
     EcologyChecks.run(c.getSource().getLevel());
     c.getSource().sendSuccess(()->Component.literal("AQUA_ECOLOGY_PASS"),false);
