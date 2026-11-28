@@ -14,6 +14,7 @@ on:
 
 permissions:
   contents: write
+  actions: read
 
 jobs:
   plan:
@@ -290,6 +291,11 @@ jobs:
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y --no-install-recommends espeak-ng ffmpeg
+      - name: Restore exact Actions dependency JARs when declared
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PROJECT_DIR: ${{ steps.profile.outputs.project_dir }}
+        run: python3 -m tools.qa.actions_dependency "$PROJECT_DIR"
       - name: Compile production mod
         env:
           PROJECT_DIR: ${{ steps.profile.outputs.project_dir }}
