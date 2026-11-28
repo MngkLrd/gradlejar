@@ -155,6 +155,88 @@ public final class GeoModel {
   Surface b=local(lx,rz,gx,gz);if(lx!=rx)b=mix(b,local(rx,rz,gx,gz),wx);
   return mix(a,b,wz);
  }
+ /** Directed river centerlines on the original globally aligned D8 grid.
+  * The original raw relief and drainage tile remain unchanged. */
+ record RiverSegment(int x,int z,int endX,int endZ,double discharge,double radius){
+  double bend(){return 2.8*Math.sin(x*.021+z*.017+endX*.007);}
+  double cx(double u){return lerp(x,endX,u)-(endZ-z)/Math.hypot(endX-x,endZ-z)*bend()*Math.sin(Math.PI*u);}
+  double cz(double u){return lerp(z,endZ,u)+(endX-x)/Math.hypot(endX-x,endZ-z)*bend()*Math.sin(Math.PI*u);}
+  double fraction(double px,double pz){
+   double best=Double.POSITIVE_INFINITY,u=0;
+   // Project onto eight connected subsegments of a smooth arc.
+   for(int i=0;i<8;i++){double a=i/8.0,b=(i+1)/8.0,ax=cx(a),az=cz(a),dx=cx(b)-ax,dz=cz(b)-az;
+    double f=clamp(((px-ax)*dx+(pz-az)*dz)/(dx*dx+dz*dz),0,1),d=Math.hypot(px-ax-f*dx,pz-az-f*dz);
+    if(d<best){best=d;u=lerp(a,b,f);}
+   }return u;
+  }
+  double distance(double px,double pz){double u=fraction(px,pz);return Math.hypot(px-cx(u),pz-cz(u));}
+  net.minecraft.world.phys.Vec3 direction(double px,double pz){double u=fraction(px,pz),a=Math.max(0,u-.03),b=Math.min(1,u+.03);return new net.minecraft.world.phys.Vec3(cx(b)-cx(a),0,cz(b)-cz(a)).normalize();}
+ }
+ static boolean channelEligible(double height,double discharge){return height>=63.5&&discharge>=6;}
+ static double channelRadius(double discharge){
+  if(discharge<12)return lerp(2.4,3.8,clamp((discharge-6)/6,0,1));
+  return clamp(3.2+Math.log1p(discharge/12)*2.1,3.8,9.5);
+ }
+ record DrainEnd(int x,int z,boolean ocean,boolean resolved,int steps){}
+ record RiverBasin(int x,int z,double radius,double discharge,double rim){}
+ private record GridPoint(int x,int z){}
+ private final Cache<GridPoint,DrainEnd> outlets=CacheBuilder.newBuilder().maximumSize(32768).build();
+ private GridPoint next(int x,int z){
+  double high=raw(x,z),best=0;GridPoint out=new GridPoint(x,z);
+  for(int dz=-1;dz<=1;dz++)for(int dx=-1;dx<=1;dx++){
+   if(dx==0&&dz==0)continue;
+   int nx=x+dx*STEP,nz=z+dz*STEP;
+   double slope=(high-raw(nx,nz))/Math.hypot(dx,dz);
+   if(slope>best+1e-8){best=slope;out=new GridPoint(nx,nz);}
+  }
+  return out;
+ }
+ DrainEnd outlet(int x,int z){
+  var key=new GridPoint(x,z);
+  try{return outlets.get(key,()->{
+   GridPoint point=key;
+   for(int step=0;step<192;step++){
+    if(raw(point.x,point.z)<63.5)return new DrainEnd(point.x,point.z,true,true,step);
+    var n=next(point.x,point.z);
+    if(n.equals(point))return new DrainEnd(point.x,point.z,false,true,step);
+    point=n;
+   }
+   return new DrainEnd(point.x,point.z,false,false,192);
+  });}catch(ExecutionException e){throw new IllegalStateException("river outlet",e.getCause());}
+ }
+ private RiverBasin basin(int x,int z){
+  double h=raw(x,z),flow=surface(x,z).flow;
+  if(h<65||flow<6||!next(x,z).equals(new GridPoint(x,z)))return null;
+  double rim=Double.POSITIVE_INFINITY;
+  for(int dz=-1;dz<=1;dz++)for(int dx=-1;dx<=1;dx++){
+   if(dx==0&&dz==0)continue;
+   rim=Math.min(rim,raw(x+dx*STEP,z+dz*STEP));
+  }
+  // An actual closed macro depression, not an arbitrary circle at every junction.
+  if(rim-h<.3)return null;
+  return new RiverBasin(x,z,clamp(4+Math.log1p(flow/6)*3,5,12),flow,rim);
+ }
+ List<RiverBasin> basins(int minX,int minZ,int maxX,int maxZ){
+  var out=new ArrayList<RiverBasin>();
+  for(int gz=Math.floorDiv(minZ,STEP)-1;gz<=Math.floorDiv(maxZ,STEP)+1;gz++)
+   for(int gx=Math.floorDiv(minX,STEP)-1;gx<=Math.floorDiv(maxX,STEP)+1;gx++){
+    var b=basin(gx*STEP,gz*STEP);if(b!=null)out.add(b);
+   }
+  return List.copyOf(out);
+ }
+ List<RiverSegment> rivers(int minX,int minZ,int maxX,int maxZ){
+  var out=new ArrayList<RiverSegment>();
+  for(int gz=Math.floorDiv(minZ,STEP)-1;gz<=Math.floorDiv(maxZ,STEP)+1;gz++)
+   for(int gx=Math.floorDiv(minX,STEP)-1;gx<=Math.floorDiv(maxX,STEP)+1;gx++){
+    int x=gx*STEP,z=gz*STEP;double high=raw(x,z),discharge=surface(x,z).flow;
+    if(!channelEligible(high,discharge))continue;
+    var n=next(x,z);if(n.x==x&&n.z==z)continue;
+    var end=outlet(x,z);
+    if(!end.resolved||!end.ocean&&basin(end.x,end.z)==null)continue;
+    out.add(new RiverSegment(x,z,n.x,n.z,discharge,channelRadius(discharge)));
+   }
+  return List.copyOf(out);
+ }
  // RC19 only. Climate calculations must not change the legacy drainage or terrain.
  static double biomeTemperature(double thermal,double humidity,double height){
   // The vanilla hottest land row is desert at ALL humidity levels.
@@ -185,6 +267,21 @@ public final class GeoModel {
   Surface s=surface(x,z);ClimateSample c=climate(x,z,s.height);
   return new dev.minemods.worldlogic.api.WorldLogicApi.RegionalClimate(c.thermal,(c.humidity+1)*.5,c.latitude*90,c.windX,c.windZ,s.height);
  }
+ /** Immutable terrain-only sample. Existing RC22 density, drainage and climate are unchanged. */
+ WorldgenSite site(int x,int z,boolean extended){
+  Surface s=surface(x,z);var regional=regional(x,z);
+  double h=height(s.height,extended);
+  double dx=(height(surface(x+16,z).height,extended)-height(surface(x-16,z).height,extended))/32;
+  double dz=(height(surface(x,z+16).height,extended)-height(surface(x,z-16).height,extended))/32;
+  double slope=Math.toDegrees(Math.atan(Math.hypot(dx,dz)));
+  double wx=regional.prevailingWindX(),wz=regional.prevailingWindZ();
+  double up=height(raw(x-wx*192,z-wz*192),extended);
+  double exposure=clamp(.52+(h-up)*.012+.25*(dx*wx+dz*wz),0,1);
+  double thermal=clamp(regional.thermalIndex()-(h-s.height)*.065/28,-1,1);
+  return new WorldgenSite(h,thermal,regional.moistureIndex(),s.flow,slope,exposure,wx,wz);
+ }
+ private static double height(double y,boolean extended){return extended&&y>110?110+(y-110)*1.6:y;}
+ record WorldgenSite(double height,double thermal,double moisture,double drainage,double slope,double exposure,double windX,double windZ){}
  double value(String field,int x,int z){
   Sample previous=lastSample.get();
   Surface s;if(previous!=null&&previous.x==x&&previous.z==z)s=previous.surface;
@@ -193,6 +290,9 @@ public final class GeoModel {
   return switch(field){
    case "offset" -> (h-128)/128;
    case "continents" -> h<63?clamp(-.18-(63-h)*.014,-1.15,-.18):clamp(-.10+(h-63)*.013,-.10,.85);
+   // Only the biome router uses this field. Classify the shallow transitional shelf as coast,
+   // so quantized 4-block climate sampling and the physical surface offset cannot label inland flats ocean.
+   case "biome_continents" -> h<59?clamp(-.25-(59-h)*.014,-1.15,-.25):clamp(-.17+(h-59)*.018,-.17,.85);
    case "erosion" -> clamp(.58-Math.max(0,h-75)*.011+d(x,z,.12)*.18,-.9,.85);
    case "ridges" -> h<78&&s.flow>30?0:clamp(t(x,z)*1.25,-1,1);
    case "climate_temperature" -> climate(x,z,h).biomeTemperature;

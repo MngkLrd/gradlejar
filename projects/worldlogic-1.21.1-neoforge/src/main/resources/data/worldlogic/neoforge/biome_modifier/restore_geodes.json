@@ -1,0 +1,8 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#worldlogic:underground_features",
+  "features": [
+    "minecraft:amethyst_geode"
+  ],
+  "step": "local_modifications"
+}

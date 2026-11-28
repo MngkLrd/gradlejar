@@ -1,0 +1,9 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#worldlogic:underground_features",
+  "features": [
+    "minecraft:monster_room",
+    "minecraft:monster_room_deep"
+  ],
+  "step": "underground_structures"
+}
